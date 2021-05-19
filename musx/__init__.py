@@ -33,7 +33,7 @@ from .scales import *
 from .tools import *
 from .ran import *
 from .envelopes import *
-from .scheduler import *
+from .score import *
 from .spectral import *
 from .pc import *
 

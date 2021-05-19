@@ -1,20 +1,20 @@
 ###############################################################################
 """
 This module implements a scheduling queue for generating musical scores.
-The scheduler runs 'composers' (python generators) that output musical events
+The Score runs 'composers' (python generators) that output musical events
 to sequences and score files.
 
 Example
 -------
 ```py
 seq = MidiSeq()
-queue = Scheduler(out=seq)
-def bach(queue, num):
+sco = Score(out=seq)
+def bach(sco, num):
     for i in range(num):
         m = MidiEvent(time=queue.now, key=60+i)
-        queue.out.addevent(m)
+        sco.add(m)
         yield .125
-queue.compose(bach(queue, 10))
+sco.compose(bach(sco, 10))
 ```
 
 See the examples directory for many examples of composing!
@@ -24,13 +24,13 @@ import types
 from .midi import midiseq
 
 
-class Scheduler:
+class Score:
     """
-    Runs composers in a time sorted queue. A composer is a python generator
-    that is evaluated by the scheduler. Each time a composer executes it
-    can write musical events to a score and even add new composers to the
-    scheduler. To continue running a composer yields back a delta time 
-    indicating the next time point that the composer should compose 
+    Runs composers in time sorted order. A composer is a python generator
+    that is evaluated by the Score. When a composer executes it
+    can add musical events or new composers to the score. To continue
+    running a composer yields back a delta time indicating the next time
+    point that the composer should compose 
     something. A composer stops running when it stops yielding delta
     times or it yields a negative delta time.
     """
@@ -129,7 +129,7 @@ class Scheduler:
         """
         The scheduling loop that processes queued composers until there are
         no more composers to run. To process the current composer in the
-        queue the scheduler performs the following tasks:
+        queue the Score performs the following tasks:
 
         * the current (first) composer is popped off the queue.
         * the queue's self.now and self.elapsed times are updated.
@@ -169,13 +169,13 @@ class Scheduler:
  
     out = None
     """
-    An optional object a composer can add musical events to. The scheduler
+    An optional object a composer can add musical events to. The Score
     does not examine the contents this variable.
     """
 
 
     running = False
-    """True if the scheduler is running."""
+    """True if the Score is running."""
 
 
     now = 0
@@ -187,7 +187,7 @@ class Scheduler:
     elapsed = 0
     """
     The amount of time the currently executing composer has been running since
-    it was added to the scheduler.
+    it was added to the Score.
     """
  
 
@@ -211,7 +211,7 @@ class Scheduler:
             for _ in range(num):
                 print("simp at", q.now, "plays", key)
                 yield rate
-        q=Scheduler()
+        q=Score()
         # running one composer
         q.compose(simp(q, 5, 1, 60))
         # running two at times 0 and 5
@@ -244,16 +244,22 @@ class Scheduler:
                 self._run()
             finally:
                 self._clean()
-                print("Done!")
+                #print("Done!")
+
+    def add(self, event):
+        """
+        Adds an event to the score. 
+        """
+        self.out.add(event)
 
 
 if __name__ == '__main__':
-    print('Scheduler Tests...')
+    print('Score Tests...')
 
     def gen(): yield 0
     def foo(): return 0
     x = []
-    q = Scheduler()
+    q = Score()
 
     print("\ntesting input:", x)
     try: l = q._insure_entries(x)

@@ -13,7 +13,7 @@ python3 -m demos.continuum
 
 
 import random
-from musx.scheduler import Scheduler
+from musx.score import Score
 from musx.generators import jumble, choose
 from musx.tools import setmidiplayer, playfile
 from musx.scales import scale
@@ -21,19 +21,19 @@ from musx.midi import MidiNote, MidiSeq, MidiFile
 from musx.midi.gm import Harpsichord
 
 
-def register (q, rhy, dur, low, high, amp):
+def register (sco, rhy, dur, low, high, amp):
     """
     Generates a chromatic scale betwen low and high choosing notes from the
     scale in random.
     """ 
     pat = jumble(scale(low, high-low+1, 1))
-    while q.elapsed < dur:
+    while sco.elapsed < dur:
         keyn = next(pat)
-        midi = MidiNote(time=q.now, dur=rhy, key=keyn, amp=amp)
-        q.out.addevent(midi)
+        midi = MidiNote(time=sco.now, dur=rhy, key=keyn, amp=amp)
+        sco.add(midi)
         yield rhy
 
-def continuum (q, rhy, minkeys, maxkeys, seclens):
+def continuum (sco, rhy, minkeys, maxkeys, seclens):
     """
     Calls register() to create the next section's material and then
     waits until the section is over before creating another section.
@@ -45,7 +45,7 @@ def continuum (q, rhy, minkeys, maxkeys, seclens):
         # get the section's duration
         secdur = next(pat)
         # sprout the next section
-        q.compose(register(q, rhy, secdur, low, high, .4))
+        sco.compose(register(sco, rhy, secdur, low, high, .4))
         # wait till end of section
         yield secdur
 
@@ -53,11 +53,11 @@ def continuum (q, rhy, minkeys, maxkeys, seclens):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: Harpsichord})
+    tr0 = MidiSeq.metaseq(ins={0: Harpsichord})
     # Track 1 will hold the composition.
-    t1 = MidiSeq()
-    # Create a scheduler and give it t1 as its output object.
-    q = Scheduler(t1)
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
     # Lower bound on keynum choices
     minkeys = [60, 59, 58, 57, 56, 55, 54, 53, 52,
                 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
@@ -72,15 +72,16 @@ if __name__ == '__main__':
     seclens = [.5, 1, 1.5, 2, 2.5]
     # Speed of rhythm
     rate = .075
-    # Start our composer in the scheduler, this creates the composition.
-    q.compose(continuum(q, rate, minkeys, maxkeys, seclens))
-    # Write a midi file with our track data.
-    f = MidiFile("continuum.mid", [t0, t1]).write()
-    # To automatially play demos use setmidiplayer() to assign a shell
-    # command that will play midi files on your computer. Example:
-    #   setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    print(f"Wrote '{f.pathname}'.")
-    playfile(f.pathname)
+    # Create the composition.
+    sco.compose(continuum(sco, rate, minkeys, maxkeys, seclens))
+    # Write the seqs to a midi file in the current directory.
+    file = MidiFile("continuum.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
+    
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)
 
     # Plot the keynum range of the composition if matplotlib is installed.
     try:

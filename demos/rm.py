@@ -14,7 +14,7 @@ python3 -m demos.rm
 import random
 from musx.spectral import rmspectrum
 from musx.generators import choose, jumble, cycle
-from musx.scheduler import Scheduler
+from musx.score import Score
 from musx.scales import keynum, hertz, scale
 from musx.ran import pick
 from musx.tools import setmidiplayer, playfile
@@ -24,14 +24,14 @@ from musx.midi.gm import AcousticGrandPiano, Xylophone, Flute, FretlessBass, Ste
      Clarinet, Marimba, AcousticBass
 
 
-def accompaniment(q, reps, dur, set1, set2):
+def accompaniment(sco, reps, dur, set1, set2):
     """
     Creates the accompanyment part from the ring modulation input specta.
 
     Parameters
     ----------
-    q : Sheduler
-        The scheduling queue
+    sco : Score
+        The musical score.
     reps : int
         The number of sections to compose.
     dur : int
@@ -49,14 +49,14 @@ def accompaniment(q, reps, dur, set1, set2):
         # Iterate the keys, play as a chord.
         for k in keys:
             # Create a midi note at the current time.
-            m = MidiNote(time=q.now, dur=dur, key=k, amp=.3, chan=0)
+            m = MidiNote(time=sco.now, dur=dur, key=k, amp=.3, chan=0)
             # Add it to our output seq.
-            q.out.addevent(m)
+            sco.add(m)
         # Wait till the next chord.
         yield dur
 
 
-def melody(q, reps, dur, set3):
+def melody(sco, reps, dur, set3):
     """
     Creates the melodic part out of the ring modulated output specta.
  
@@ -74,21 +74,21 @@ def melody(q, reps, dur, set3):
     # Create a cycle of the two inputs
     pat = cycle(set3)
     for _ in range(2 * reps):
-        m = MidiNote(time=q.now, dur=dur/2, key=next(pat), amp=.7, chan=1)
-        q.out.addevent(m)
+        m = MidiNote(time=sco.now, dur=dur/2, key=next(pat), amp=.7, chan=1)
+        sco.add(m)
         # Wait till the next note
         yield dur
 
 
-def rmfunky(q, reps, dur, keys):
+def rmfunky(sco, reps, dur, keys):
     """
     Main composer chooses input spectra , creates a ring modulated
     output spectrum and plays them using two parts.
 
     Parameters
     ----------
-    q : Sheduler
-        The scheduling queue
+    sco : Score
+        The musical score to add events to.
     reps : int
         The number of sections to compose.
     dur : int
@@ -110,33 +110,33 @@ def rmfunky(q, reps, dur, keys):
         keys3 = spect.keynums(quant=1, unique=True, minkey=21, maxkey=108)
         # sprout composers to play inputs and output
         playn = pick(3,4,5)
-        q.compose(accompaniment(q, playn, dur, keys1, keys2))
-        q.compose(melody(q, playn, dur, keys3))
-        # do it again after composers finish
+        sco.compose(accompaniment(sco, playn, dur, keys1, keys2))
+        sco.compose(melody(sco, playn, dur, keys3))        # do it again after composers finish
         yield (dur * playn * 2)
 
 
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: Marimba, 1: Clarinet})
+    tr0 = MidiSeq.metaseq(ins={0: Marimba, 1: Clarinet})
     # Track 1 will hold the composition.
-    t1 = MidiSeq()
-    # Create a scheduler and give it t1 as its output object.
-    q = Scheduler(t1)
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
     # Musical material is the cycle of fourths.
     keys = scale(40, 12, 5)
     # Surface rhythm
     rhy = intempo(.25, 74)
-    # Start our composer in the scheduler, this creates the composition.
-    q.compose(rmfunky(q, 24, rhy, keys))
-    # Write a midi file with our track data.
-    f = MidiFile("rm.mid", [t0, t1]).write()
-    # To automatially play demos use setmidiplayer() to assign a shell
-    # command that will play midi files on your computer. Example:
-    #   setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    print(f"Wrote '{f.pathname}'.")
-    playfile(f.pathname)
+    # Create the composition.
+    sco.compose(rmfunky(sco, 24, rhy, keys))
+    # Write the tracks to a midi file in the current directory.
+    file = MidiFile("rm.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
+
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)
 
 
 

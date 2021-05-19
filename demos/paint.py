@@ -15,16 +15,15 @@ from musx.generators import cycle, choose
 from musx.midi import MidiNote
 
 
-def brush(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0, tuning=1):
+def brush(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0, tuning=1):
     """
     Outputs MidiNotes in sequential order, automatically looping parameter
     list values until the algorithm stops.
 
     Parameters
     ----------
-    q : Scheduler
-        The scheduling queue for the generator. The MidiNotes that are
-        created will be added to the MidiSeq assigned to q.out.
+    sco : Score
+        The MidiNotes that are generated will be added to this score.
     len : number
         The number of MIDI events to generate. Either len or end must be
         specified.
@@ -65,9 +64,9 @@ def brush(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0, t
     else:
         if not end: raise TypeError("specify either leng or end.")
         stopitr = end
-        thisitr = (lambda: q.elapsed)
+        thisitr = (lambda: sco.elapsed)
     #max( (x.__len__() if type(x) is list else 1) for x in [rhy,dur,key,amp,chan])
-    # (lambda: counter < stopitr or q.now < stopitr)
+    # (lambda: counter < stopitr or sco.now < stopitr)
     # convert all values into cycles
     cyc = (lambda x: cycle(x if type(x) is list else [x]))
     rhy = cyc(rhy)
@@ -76,7 +75,7 @@ def brush(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0, t
     amp = cyc(amp)
     chan = cyc(chan)
     while (thisitr() < stopitr):
-        t = q.now
+        t = sco.now
         #print("counter=", counter, "now=", t)
         r = next(rhy)
         d = next(dur)
@@ -88,15 +87,15 @@ def brush(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0, t
             if type(k) is list:
                 for j in k: 
                     m = MidiNote(time=t, dur=d, key=j, amp=a, chan=c, tuning=tuning)
-                    q.out.addevent(m)
+                    sco.add(m)
             else:
                 m = MidiNote(time=t, dur=d, key=k, amp=a, chan=c, tuning=tuning)
-                q.out.addevent(m)
+                sco.add(m)
         counter += 1
         yield abs(r)
 
 
-def spray(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, band=0, amp=.5, chan=0, tuning=1):
+def spray(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, band=0, amp=.5, chan=0, tuning=1):
     """
     Generates MidiNotes using discrete random selection. Most parameters allow
     lists of values to be specified, in which case elements are randomly selected
@@ -129,7 +128,7 @@ def spray(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, band=0, amp=.5, c
     else:
         if not end: raise TypeError("specify either leng or end.")
         stopitr = end
-        thisitr = (lambda: q.elapsed)
+        thisitr = (lambda: sco.elapsed)
     # convert each param into a chooser pattern.
     ran = (lambda x: choose(x if type(x) is list else [x]))
     rhy = ran(rhy)
@@ -139,7 +138,7 @@ def spray(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, band=0, amp=.5, c
     chan = ran(chan)
     band = choose( [i for i in range(-band, band+1)] if type(band) is int else band )
     while (thisitr() < stopitr):
-        t = q.now
+        t = sco.now
         #print("counter=", counter, "now=", t)
         r = next(rhy)
         d = next(dur)
@@ -157,9 +156,9 @@ def spray(q, *, len=None, end=None, rhy=.5, dur=None, key= 60, band=0, amp=.5, c
             if type(k) is list:
                 for j in k:
                     m = MidiNote(time=t, dur=d, key=j, amp=a, chan=c, tuning=tuning)
-                    q.out.addevent(m)
+                    sco.add(m)
             else:
                 m = MidiNote(time=t, dur=d, key=k, amp=a, chan=c, tuning=tuning)
-                q.out.addevent(m)
+                sco.add(m)
         counter += 1
         yield abs(r)

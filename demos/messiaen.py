@@ -16,7 +16,7 @@ python3 -m demos.messiaen
 
 
 from musx.midi import MidiNote, MidiSeq, MidiFile
-from musx.scheduler import Scheduler
+from musx.score import Score
 from musx.tools import playfile, setmidiplayer
 from musx.rhythm import rhythm
 from musx.scales import keynum
@@ -50,22 +50,24 @@ cello_color = keynum('c6 e d f# bf5')
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
+    tr0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
     # Track 1 will hold the composition.
-    t1 = MidiSeq()
-    # Create a scheduler and give it t1 as its output object.[84, 88, 86, 90, 82]
-    q = Scheduler(t1)
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
     # Create the piano and cello composers.
-    piano=brush(q, len=len(piano_talea) * 8 + 14, rhy=piano_talea,
+    piano=brush(sco, len=len(piano_talea) * 8 + 14, rhy=piano_talea,
                 key=piano_color, chan=0)
-    cello=brush(q, len=len(cello_talea) * 6, rhy=cello_talea,
+    cello=brush(sco, len=len(cello_talea) * 6, rhy=cello_talea,
                 amp=.2, key=cello_color, chan=1)
-    # Start our composers in the scheduler, this creates the composition.
-    q.compose([[0, piano], [5.5, cello]])
-    # Write a midi file with our track data.
-    f = MidiFile("messiaen.mid", [t0, t1]).write()
-    # To automatially play demos use setmidiplayer() to assign a shell
-    # command that will play midi files on your computer. Example:
-    #   setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    print(f"Wrote '{f.pathname}'.")
-    playfile(f.pathname)
+    # Create the composition.
+    sco.compose([[0, piano], [5.5, cello]])
+    # Write the tracks to a midi file in the current directory.
+    file = MidiFile("messiaen.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
+
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)
+

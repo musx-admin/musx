@@ -19,7 +19,7 @@ import .csound
 import ctcsound
 
 from musx.midi import MidiNote, MidiSeq, MidiFile
-from musx.scheduler import Scheduler
+from musx.score import Score
 from musx.tools import playfile, setmidiplayer
 from musx.rhythm import rhythm
 from musx.scales import keynum
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     # Track 1 will hold the composition.
     t1 = MidiSeq()
     # Create a scheduler and give it t1 as its output object.[84, 88, 86, 90, 82]
-    q = Scheduler(t1)
+    q = Score(t1)
     # Create the piano and cello composers.
     piano=brush(q, len=len(piano_talea) * 8 + 14, rhy=piano_talea,
                 key=piano_color, chan=0)

@@ -5,7 +5,6 @@ midi messages.
 """
 
 
-
 from . import midinote as mn
 from . import midievent as me
 from . import gm
@@ -90,11 +89,11 @@ class MidiSeq:
         """Adds an event to the end of the sequence without checking time."""
         self.events.append(ev)
 
-    def addevent(self, e):
+    def add(self, e):
         """
-        Adds a midi event to the sequence at its appropriate time so the
-        sequence remains in time sorted order. If the added event is a MidiNote
-        it is first converted into a NoteOn and NoteOff pair before being added.
+        Adds a midi event to the sequence in time sorted order. If the added event
+        is a MidiNote it is first converted into a NoteOn and NoteOff pair before
+        being added.
 
         The sorting rules for adding midi events are:
 
@@ -112,9 +111,9 @@ class MidiSeq:
             on = e.noteon()
             off = e.noteoff()
             # print(f"adding noteon {on} to seq, time is {on.time}")
-            self.addevent(on)
+            self.add(on)
             # print(f"adding noteoff {off} to seq, time is {off.time}")
-            self.addevent(off)
+            self.add(off)
             return self
         if e.time > self.endtime():
             self.events.append(e)

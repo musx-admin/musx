@@ -14,7 +14,7 @@ python3 -m demos.foster
 
 from musx.midi import MidiNote, MidiSeq, MidiFile
 from musx.midi.gm import StringEnsemble1
-from musx.scheduler import Scheduler
+from musx.score import Score
 from musx.scales import keynum
 from musx.generators import jumble, cycle, choose, markov
 from musx.tools import setmidiplayer, playfile
@@ -81,7 +81,7 @@ def pattern_stephen_foster():
         })
 
 
-def composer_stephen_foster(q, num, shift=0, chan=0):
+def composer_stephen_foster(sco, num, shift=0, chan=0):
     # A second-order markov process generates the melody.
     melody = pattern_stephen_foster()
     # randomly select rhythmic patterns characterisitic of Foster's style
@@ -92,8 +92,8 @@ def composer_stephen_foster(q, num, shift=0, chan=0):
         for r in next(rhythms):
             k = keynum(next(melody)) + (shift*12)
             r = intempo(r, 200)
-            m = MidiNote(time=q.now+n, dur=r, key=k, amp=.5, chan=chan)
-            q.out.addevent(m)
+            m = MidiNote(time=sco.now+n, dur=r, key=k, amp=.5, chan=chan)
+            sco.add(m)
             n += r
         yield n
 
@@ -101,23 +101,24 @@ def composer_stephen_foster(q, num, shift=0, chan=0):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: StringEnsemble1})
+    tr0 = MidiSeq.metaseq(ins={0: StringEnsemble1})
     # Track 1 will hold the composition.
-    t1 = MidiSeq()
-    # Create a scheduler and give it t1 as its output object.
-    q = Scheduler(t1)
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
     # Compose a 4 voice texture with these octave transposition factors.
     voices = [-1, 0, 1, 2]
-    composers = [composer_stephen_foster(q, 25, t) for t in voices]
-    # Start our composers in the scheduler, this creates the composition.
-    q.compose(composers)
-    # Write a midi file with our track data.
-    f = MidiFile("foster.mid", [t0, t1]).write()
-    # To automatially play demos use setmidiplayer() to assign a shell
-    # command that will play midi files on your computer. Example:
-    #   setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    print(f"Wrote '{f.pathname}'.")
-    playfile(f.pathname)
+    composers = [composer_stephen_foster(sco, 25, t) for t in voices]
+    # Create the composition.
+    sco.compose(composers)
+    # Write the seqs to a midi file in the current directory.
+    file = MidiFile("foster.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
+    
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)
 
 
    

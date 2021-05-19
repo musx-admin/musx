@@ -47,7 +47,7 @@ class OscSeq():
     def __str__(self):
         return f"<OscSeq: len={len(self.messages)} {hex(id(self))}>"
     __repr__ = __str__
-    def addmessage(self, message):
+    def add(self, message):
         """Adds a message to the end of the sequence."""
         self.messages.append(message)
 
@@ -97,21 +97,19 @@ def plain_hunt(q, rhy, dur):
     for b in peals:
         f = freqs[b]
         m = OscMessage(name="/musx", time=q.now, dur=dur, freq=f, amp=.9)
-        q.out.addmessage(m)
+        sco.add(m)
         yield rhy
 
 if __name__ == "__main__":
 
     # Create an osc connection to send messages to SuperCollider
     oscout = pythonosc.udp_client.SimpleUDPClient("127.0.0.1", 57120)
-
-
-
-    # create an OscSeq to hold the composition
+    # oscseq will hold the composition.
     oscseq = OscSeq()
-    # generate the compostiion
-    score = musx.Scheduler(out=oscseq)
-    score.compose(plain_hunt(score, .3, 4))
+    # Create a score and give it oscseq to hold the score event data.
+    sco = musx.Score(out=oscseq)
+    # Create the composition.
+    sco.compose(plain_hunt(sco, .3, 4))
     # play the osc messages in "real time" to SuperCollider
     player = threading.Thread(target=oscplayer, args=(oscseq, oscout))
     player.start()

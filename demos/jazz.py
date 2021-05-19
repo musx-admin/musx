@@ -19,7 +19,7 @@ from musx.midi import MidiNote, MidiSeq, MidiFile
 from musx.midi.gm import AcousticGrandPiano, AcousticBass
 from musx.generators import cycle, choose, jumble
 from musx.rhythm import intempo
-from musx.scheduler import Scheduler
+from musx.score import Score
 from musx.ran import odds, pick, between
 from musx.tools import playfile, setmidiplayer
 from musx.scales import keynum
@@ -38,7 +38,7 @@ jazz_tempo = 120
 """The tempo of the compostion."""
 
 
-def jazz_high_hat(q, tmpo, ampl):
+def jazz_high_hat(sco, tmpo, ampl):
     """
     Plays the High Hat on the second and fourth quarter of every measure and
     rests on the first and third beats. Each sound lasts for the duration one
@@ -51,12 +51,12 @@ def jazz_high_hat(q, tmpo, ampl):
     for _ in range(4):
         x = next(pat)
         if x != 'r':
-            m = MidiNote(time=q.now, dur=dur, key=x, amp=amp * ampl, chan=9)
-            q.out.addevent(m)
+            m = MidiNote(time=sco.now, dur=dur, key=x, amp=amp * ampl, chan=9)
+            sco.add(m)
         yield rhy
 
 
-def jazz_drums(q, tmpo, ampl):
+def jazz_drums(sco, tmpo, ampl):
     """
     Randomly selects between playing the snare, the bass drum or resting one
     quarter of the time. One tenth of the time it produces a very loud tone.
@@ -71,12 +71,12 @@ def jazz_drums(q, tmpo, ampl):
         a = next(amps)
         r = intempo(next(rhys), tmpo)
         if k != 'r':
-            m = MidiNote(time=q.now, dur=r, key=k, amp=a * ampl, chan=9)
-            q.out.addevent(m)
+            m = MidiNote(time=sco.now, dur=r, key=k, amp=a * ampl, chan=9)
+            sco.add(m)
         yield r
 
 
-def jazz_cymbals(q, tmpo, ampl):
+def jazz_cymbals(sco, tmpo, ampl):
     """
     The cymbals process performs a constant stream of triplet eighths in
     which the ride1 cymbal is played on the beginning of every quarter
@@ -113,12 +113,12 @@ def jazz_cymbals(q, tmpo, ampl):
                 k = next(next(k))
             if k != 'r':
                 a = next(amps)
-                m = MidiNote(time=q.now, dur=rhy, key=k, amp=a*ampl, chan=9)
-                q.out.addevent(m)
+                m = MidiNote(time=sco.now, dur=rhy, key=k, amp=a*ampl, chan=9)
+                sco.add(m)
         yield rhy
 
 
-def jazz_piano(q, on, tmpo, ampl):
+def jazz_piano(sco, on, tmpo, ampl):
     """
     The jazz piano improvises jazz chords based on a pattern of root
     changes and a scale pattern that is transposed to each root. The
@@ -133,12 +133,12 @@ def jazz_piano(q, on, tmpo, ampl):
         l = [] if odds(2/5) else [next(scal) for _ in range(between(1,9))]
         for k in l:
             a = pick(.4, .5, .6, .7, .8)
-            m = MidiNote(time=q.now, dur=r, key=on+k, amp=a, chan=0)
-            q.out.addevent(m)
+            m = MidiNote(time=sco.now, dur=r, key=on+k, amp=a, chan=0)
+            sco.add(m)
         yield r
 
 
-def jazz_bass(q, on, tmpo, ampl):
+def jazz_bass(sco, on, tmpo, ampl):
     """
     The bass part plays a melodic line built out of tones from the jazz-scale's
     tonic seventh chord alternating with color tones outside the tonic chord.
@@ -173,12 +173,12 @@ def jazz_bass(q, on, tmpo, ampl):
         if k > -1:
             a = next(amps)
             d = next(durs)
-            m = MidiNote(time=q.now, dur=d, key=on+k, amp=ampl*a, chan=1)
-            q.out.addevent(m)
+            m = MidiNote(time=sco.now, dur=d, key=on+k, amp=ampl*a, chan=1)
+            sco.add(m)
         yield rhy
 
 
-def jazz_combo(q, measures, tempo):
+def jazz_combo(sco, measures, tempo):
     """
     The conductor process adds combo parts for each meaure to the schedule 
     generate sound. By adding parts at each measure the conductor could make
@@ -190,22 +190,22 @@ def jazz_combo(q, measures, tempo):
         root = next(roots)
         if  0 == meas % 12:
            ampl = between(.5, 1)
-        q.compose(jazz_piano(q, root, tempo, ampl))
-        q.compose(jazz_cymbals(q, tempo, ampl))
-        q.compose(jazz_high_hat(q, tempo, ampl))
-        q.compose(jazz_drums(q, tempo, ampl))
-        q.compose(jazz_bass(q, root-12, tempo, ampl))
+        sco.compose(jazz_piano(sco, root, tempo, ampl))
+        sco.compose(jazz_cymbals(sco, tempo, ampl))
+        sco.compose(jazz_high_hat(sco, tempo, ampl))
+        sco.compose(jazz_drums(sco, tempo, ampl))
+        sco.compose(jazz_bass(sco, root-12, tempo, ampl))
         yield intempo(4,tempo)
     
 
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: AcousticBass})
+    tr0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: AcousticBass})
     # Track 1 will hold the composition.
-    t1 = MidiSeq()
-    # Create a scheduler and give it t1 as its output object.
-    q = Scheduler(t1)
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
 
     # c=[]
     # for t in range(0, 15, 2): # t -> 0 2 4 6 8 10 12 14
@@ -216,11 +216,13 @@ if __name__ == '__main__':
     #           [t, jazz_bass(q, 46, 120, .9)]
     #           ]
 
-    q.compose(jazz_combo(q, 48, 120))
-    # Write a midi file with our track data.
-    f = MidiFile("jazz.mid", [t0, t1]).write()
-    # To automatially play demos use setmidiplayer() to assign a shell
-    # command that will play midi files on your computer. Example:
-    #   setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    print(f"Wrote '{f.pathname}'.")
-    playfile(f.pathname)
+    # Create the composition.
+    sco.compose(jazz_combo(sco, 48, 120))
+    # Write the seqs to a midi file in the current directory.
+    file = MidiFile("jazz.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
+    
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)

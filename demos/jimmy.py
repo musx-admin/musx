@@ -2,7 +2,7 @@
 A wild ride on the drum track.
 """
 
-from musx import MidiNote, MidiSeq, MidiFile, Scheduler
+from musx import MidiNote, MidiSeq, MidiFile, Score
 from .paint import brush
 
 pphase = [127, 117, 126, 117.5, 125, 119, 124.5, 119.5,
@@ -28,12 +28,23 @@ pphase = [127, 117, 126, 117.5, 125, 119, 124.5, 119.5,
 arf = [0, 3, 7, 0, 3, 7, 0, 3, 7, 0, 3, 7, 0, 3, 7, 0]
 
 if __name__ == '__main__':
-    t0 = MidiSeq.metaseq(tuning=4)
-    t1 = MidiSeq()
-    q = Scheduler(out=t1)
-    q.compose( [brush(q, len=1000, key=pphase, rhy=1/16, dur=1, amp=0.75, chan=9, tuning=4),
-                brush(q, len=828, key=pphase, rhy=1/32, dur=7, amp=0.75, chan=1, tuning=4) ,
-                brush(q, len=1000, key=arf, rhy=1/8, dur=1, amp=1, chan=1, tuning=4) , 
-                brush(q, len=200, key=pphase, rhy=1/2, dur=7, amp=0.75, chan=1, tuning=4)])
-    f = MidiFile("jimmy.mid", [t0, t1]).write()
+    # It's good practice to add any metadata such as tempo, midi instrument
+    # assignments, micro tuning, etc. to track 0 in your midi file.
+    tr0 = MidiSeq.metaseq(tuning=4)
+    # Track 1 holds the composition.
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
+    # Create the composition.
+    sco.compose( [brush(sco, len=1000, key=pphase, rhy=1/16, dur=1, amp=0.75, chan=9, tuning=4),
+                brush(sco, len=828, key=pphase, rhy=1/32, dur=7, amp=0.75, chan=1, tuning=4) ,
+                brush(sco, len=1000, key=arf, rhy=1/8, dur=1, amp=1, chan=1, tuning=4) , 
+                brush(sco, len=200, key=pphase, rhy=1/2, dur=7, amp=0.75, chan=1, tuning=4)])
+    # Write the tracks to a midi file in the current directory.
+    file = MidiFile("jimmy.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
 
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)

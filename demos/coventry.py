@@ -41,7 +41,7 @@ _conventry_fkeys = {b: [keynum(h, filt=None) for h in l]
                        for b,l in coventry_bells.items()}
 
 
-def playbells(q, peal, bells, rhy, dur, amp):
+def playbells(sco, peal, bells, rhy, dur, amp):
     # each bell represented by its 'prime' harmonic.
     primes = {k: bells[k][1] for k in bells.keys()}
     # play the peal (the ordered list of bells to play)
@@ -50,12 +50,12 @@ def playbells(q, peal, bells, rhy, dur, amp):
         if b in ['a','j']: 
             # keynums are quantized to 25 cents
             for k in [x for x in bells[b]]:
-                m = MidiNote(time=q.now, dur=dur*4, key=k, amp=amp, tuning=4)            
-                q.out.addevent(m)
+                m = MidiNote(time=sco.now, dur=dur*4, key=k, amp=amp, tuning=4)            
+                sco.add(m)
         else: # else play single 'prime' note 
             k = primes[b]
-            m = MidiNote(time=q.now, dur=dur, key=k, amp=amp, tuning=4)
-            q.out.addevent(m)
+            m = MidiNote(time=sco.now, dur=dur, key=k, amp=amp, tuning=4)
+            sco.add(m)
         yield rhy
 
 
@@ -63,15 +63,27 @@ if __name__ == '__main__':
     from musx.midi.gm import Celesta, Glockenspiel, MusicBox, Vibraphone,\
         Marimba, Xylophone, TubularBells
     from musx import MidiSeq, MidiFile
-    from musx import Scheduler
+    from musx import Score
 
     # Plain Hunt change ringing for 10 bells.
     items = ['a','b','c','d','e','f','g','h','i','j']
     rules = [[0, 2, 1], [1, 2, 1]]
     items = allrotations(items, rules, False, True)
-    m = MidiSeq.metaseq(ins={0: TubularBells, 1: TubularBells, 
-        2: TubularBells, 3: TubularBells}, tuning=4)
-    s = MidiSeq()
-    q = Scheduler(s)
-    q.compose(playbells(q, items, _conventry_fkeys, .25, .6, .8))
-    f = MidiFile("coventry.mid", [m, s]).write()
+    # It's good practice to add any metadata such as tempo, midi instrument
+    # assignments, micro tuning, etc. to track 0 in your midi file.
+    tr0 = MidiSeq.metaseq(ins={0: TubularBells, 1: TubularBells, 
+                               2: TubularBells, 3: TubularBells}, tuning=4)
+    # Track 1 will hold the composition.
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
+    # Create the composition.
+    sco.compose(playbells(sco, items, _conventry_fkeys, .25, .6, .8))
+    # Write the tracks to a midi file in the current directory.
+    file = MidiFile("coventry.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
+
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)
