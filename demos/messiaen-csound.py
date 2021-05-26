@@ -15,7 +15,7 @@ Both parts employ a rotational technique taken from isorythmic motets in the
 middle ages that produce cyclical patterns of rhythms (talea) and pitches 
 (color) that don't line up each time they repeat.
 '''
-import .csound
+import musx
 import ctcsound
 
 from musx.midi import MidiNote, MidiSeq, MidiFile
@@ -605,7 +605,7 @@ endin
     '''    
     
     # The "f 0" statement prevents an abrupt cutoff.
-    sco = "f 0 90\n" + csound.to_csound_score(f)
+    sco = "f 0 90\n" + musx.to_csound_score(f)
     print(sco)
     
     csound = ctcsound.Csound()
@@ -614,7 +614,8 @@ endin
     csound.setOption("-m195")
     csound.setOption("-f")
     # Change this for your actual audio configuration, try "aplay -l" to see what they are.
-    csound.setOption("-odac:plughw:1,0")
+    # csound.setOption("-odac:plughw:1,0")
+    csound.setOption("-odac")
     # Can also be a soundfile.
     # csound.setOption("-otest.wav")
     csound.compileOrc(orc)
