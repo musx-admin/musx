@@ -12,7 +12,7 @@ $ git clone https://github.com/ricktaube/musx.git
 
 # Working with musx
 
-The rest of this document explains how to install and work with musx sources using a python virtual environment.  Python virtual environments are local python environments that you customize for individual projects rather than installing everthing in your computer's global python environment.
+The rest of this document explains how to install and work with musx sources using a python virtual environment.  Python virtual environments are local python environments that you customize for individual projects rather than installing everything in your computer's global python environment.
 
 In the explanation that follows, the name *musx_working_directory* refers to the directory on your machine that contains this document.
 
@@ -31,7 +31,7 @@ In the explanation that follows, the name *musx_working_directory* refers to the
   $ source venv/bin/activate
   ```
   
-  By activating your virtual envronment your terminal's `$PATH` variable now has the venv directory prepended to it such that any python calls in this terminal session will be routed to your virtual environment for working with musx.  (
+  By activating your virtual envronment your terminal's `$PATH` variable now has the venv directory prepended to it such that any python calls in this terminal session will be routed to your virtual environment for working with musx.
 * Before installing musx make sure that the pip, setuptool and wheel packages are all up-to-date:
 
   ```
