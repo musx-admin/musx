@@ -13,7 +13,8 @@ time of the first matching note off message and the time of the note on event.
 For unisons, the first note on is also the first note turned off.
 '''
 import math
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from .note import Note
+from musx.midi import MidiSeq, MidiFile
 
 '''
 Assuming the event at the index is a note on event, searches forwards in time 

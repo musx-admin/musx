@@ -10,11 +10,7 @@ python3 -m demos.reich
 """
 
 
-from musx.midi import MidiNote, MidiSeq, MidiFile
-from musx.score import Score
-from musx.generators import cycle
-from musx.scales import keynum
-from musx.tools import setmidiplayer, playfile
+from musx import Score, Note, MidiSeq, MidiFile, cycle, keynum
 
 
 def piano_phase(sco, end, keys, rate):
@@ -39,7 +35,7 @@ def piano_phase(sco, end, keys, rate):
         # Get the next key number.
         knum = next(pattern)
         # Create a midi note to play it.
-        note = MidiNote(time=sco.now, dur=rate, key=knum, amp=.9)
+        note = Note(time=sco.now, dur=rate, key=knum, amp=.9)
         # Add the midi note to the score.
         sco.add(note)
         # Return the amount of time until this composer runs again.

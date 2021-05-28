@@ -11,10 +11,7 @@ python3 -m demos.gamelan
 
 
 if __name__ == '__main__':
-    from musx.midi import MidiNote, MidiSeq, MidiFile
-    from musx.score import Score
-    from musx.generators import cycle, choose
-    from musx.tools import playfile, setmidiplayer
+    from musx import Score, Note, MidiSeq, MidiFile, cycle, choose
     from musx.midi.gm import Vibraphone
     from .paint import brush, spray
 

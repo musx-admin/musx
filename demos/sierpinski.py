@@ -18,10 +18,7 @@ python3 -m demos.sierpinski
 """
 
 
-from musx.tools import playfile, setmidiplayer
-from musx.score import Score
-from musx.scales import keynum
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx import Score, Note, MidiSeq, MidiFile, keynum
 
 
 def sierpinski(sco, tone, shape, trans, levels, dur, amp):
@@ -48,7 +45,7 @@ def sierpinski(sco, tone, shape, trans, levels, dur, amp):
     for i in shape:
         k = tone + i
         # play current tone in melody
-        m = MidiNote(time=sco.now, dur=dur, key=min(k,127), amp=amp, chan=0)
+        m = Note(time=sco.now, dur=dur, key=min(k,127), amp=amp, chan=0)
         sco.add(m)
         if (levels > 1):
             # sprout melody on tone at next level

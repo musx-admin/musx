@@ -2,28 +2,27 @@
 """
 The paint.py module provides two high-level generators that can produce a wide
 variety of interesting textures and music when scheduled as composer functions.
-The `brush()` composer outputs MidiNotes in sequential order, similar to how a 
+The `brush()` composer outputs Notes in sequential order, similar to how a 
 paint brush makes lines on a canvas. In contrast, the `spray()` composer 
-generates MidiNotes by applying random selection to its input parameters.
+generates Notes by applying random selection to its input parameters.
 
 For examples of using paint.py see gamelan.py, blues.py and messiaen.py in
 the demos directory.
 """
 
 
-from musx.generators import cycle, choose
-from musx.midi import MidiNote
+from musx import Note, cycle, choose
 
 
 def brush(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0, tuning=1):
     """
-    Outputs MidiNotes in sequential order, automatically looping parameter
+    Outputs Notes in sequential order, automatically looping parameter
     list values until the algorithm stops.
 
     Parameters
     ----------
     sco : Score
-        The MidiNotes that are generated will be added to this score.
+        The Notes that are generated will be added to this score.
     len : number
         The number of MIDI events to generate. Either len or end must be
         specified.
@@ -51,7 +50,7 @@ def brush(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0,
         for triggering various percussion sounds.
     tuning: int 
         A value 1 to 16 setting the divisions per semitone used for microtonal
-        quantization of floating point keynums. See MidiNote, MidiSeq and the
+        quantization of floating point keynums. See Note, MidiSeq and the
         micro.py demo file for more information. 
     """
     # user must specify either len or end parameter
@@ -86,10 +85,10 @@ def brush(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0,
             if not d: d = r
             if type(k) is list:
                 for j in k: 
-                    m = MidiNote(time=t, dur=d, key=j, amp=a, chan=c, tuning=tuning)
+                    m = Note(time=t, dur=d, key=j, amp=a, chan=c, tuning=tuning)
                     sco.add(m)
             else:
-                m = MidiNote(time=t, dur=d, key=k, amp=a, chan=c, tuning=tuning)
+                m = Note(time=t, dur=d, key=k, amp=a, chan=c, tuning=tuning)
                 sco.add(m)
         counter += 1
         yield abs(r)
@@ -97,7 +96,7 @@ def brush(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0,
 
 def spray(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, band=0, amp=.5, chan=0, tuning=1):
     """
-    Generates MidiNotes using discrete random selection. Most parameters allow
+    Generates Notes using discrete random selection. Most parameters allow
     lists of values to be specified, in which case elements are randomly selected
     from the lists every time an event is output.
 
@@ -155,10 +154,10 @@ def spray(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, band=0, amp=.5,
             if not d: d = r
             if type(k) is list:
                 for j in k:
-                    m = MidiNote(time=t, dur=d, key=j, amp=a, chan=c, tuning=tuning)
+                    m = Note(time=t, dur=d, key=j, amp=a, chan=c, tuning=tuning)
                     sco.add(m)
             else:
-                m = MidiNote(time=t, dur=d, key=k, amp=a, chan=c, tuning=tuning)
+                m = Note(time=t, dur=d, key=k, amp=a, chan=c, tuning=tuning)
                 sco.add(m)
         counter += 1
         yield abs(r)

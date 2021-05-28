@@ -13,11 +13,7 @@ python3 -m demos.continuum
 
 
 import random
-from musx.score import Score
-from musx.generators import jumble, choose
-from musx.tools import setmidiplayer, playfile
-from musx.scales import scale
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx import Score, Note, MidiSeq, MidiFile, jumble, choose, scale
 from musx.midi.gm import Harpsichord
 
 
@@ -29,7 +25,7 @@ def register (sco, rhy, dur, low, high, amp):
     pat = jumble(scale(low, high-low+1, 1))
     while sco.elapsed < dur:
         keyn = next(pat)
-        midi = MidiNote(time=sco.now, dur=rhy, key=keyn, amp=amp)
+        midi = Note(time=sco.now, dur=rhy, key=keyn, amp=amp)
         sco.add(midi)
         yield rhy
 

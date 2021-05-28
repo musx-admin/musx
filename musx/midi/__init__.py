@@ -1,5 +1,3 @@
-# __all__ = ['gm', 'midimsg', 'midifile', 'midievent', 'midinote', 'midiseq']
-
 """
 A package providing full support for reading and writing MIDI data to files
 and ports. The module has several layers:
@@ -8,9 +6,6 @@ and ports. The module has several layers:
 can be easily converted to/from bytearrays.
 * midievent.py : an object oriented layer above midimsg.py that represents
 midi data as class instances with attributes, incuding time stamps.
-* midinote.py : a high-level class that represents a noteOn and noteOff pair.
-MidiNote supports alternate ways to set values and microtonal adjustment
-to pitch.
 * midiseq.py : a high-level representation of a midi notes sequence that
 adds events at the appropriate place according to their time stamp.
 * midifile.py : reads and writes data to midi files.
@@ -19,6 +14,5 @@ adds events at the appropriate place according to their time stamp.
 from .midimsg import *
 from .midifile import *
 from .midievent import *
-from .midinote import *
 from .midiseq import *
 

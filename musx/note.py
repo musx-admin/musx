@@ -3,13 +3,13 @@ A high-level midi class that automatically generates midi note on and off pairs 
 more general representation of time, duration, key number, and amplitude.   
 """
 
-from . import midievent as me
-from . import midimsg as mm
+from .midi import midievent as me
+from .midi import midimsg as mm
 from math import modf
-from ..tools import quantize
+from .tools import quantize
 
 
-class MidiNote:
+class Note:
 
     def __init__(self, time=0.0, dur=1.0, key=60, amp=.5, chan=0, tuning=1, off=127):
         """
@@ -170,14 +170,14 @@ class MidiNote:
             raise ValueError(f"Invalid note off velocity value: {val}.")
 
     def __str__(self):
-        string = f'<MidiNote: time={self.time}, dur={self._dur}, key={self._key}, amp={self._amp}, chan={self._chan}'
+        string = f'<Note: time={self.time}, dur={self._dur}, key={self._key}, amp={self._amp}, chan={self._chan}'
         if self._off != 127:
             string += f', off={self._off}'
         string += f" {id(self)}>"
         return string
 
     def __repr__(self):
-        string = f'MidiNote({self._time}, {self._dur}, {self._key}, {self._amp}, {self._chan}'
+        string = f'Note({self._time}, {self._dur}, {self._key}, {self._amp}, {self._chan}'
         if self._off != 127:
             string += f', off={self._off}'
         string += ')'

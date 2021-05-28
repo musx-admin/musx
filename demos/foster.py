@@ -12,14 +12,8 @@ python3 -m demos.foster
 """
 
 
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx import Score, Note, MidiSeq, MidiFile, keynum, jumble, cycle, choose, markov, intempo
 from musx.midi.gm import StringEnsemble1
-from musx.score import Score
-from musx.scales import keynum
-from musx.generators import jumble, cycle, choose, markov
-from musx.tools import setmidiplayer, playfile
-from musx.rhythm import intempo
-
 
 def pattern_stephen_foster():
     """
@@ -92,7 +86,7 @@ def composer_stephen_foster(sco, num, shift=0, chan=0):
         for r in next(rhythms):
             k = keynum(next(melody)) + (shift*12)
             r = intempo(r, 200)
-            m = MidiNote(time=sco.now+n, dur=r, key=k, amp=.5, chan=chan)
+            m = Note(time=sco.now+n, dur=r, key=k, amp=.5, chan=chan)
             sco.add(m)
             n += r
         yield n

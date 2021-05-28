@@ -11,15 +11,8 @@ python3 -m demos.rm
 """
 
 
-import random
-from musx.spectral import rmspectrum
-from musx.generators import choose, jumble, cycle
-from musx.score import Score
-from musx.scales import keynum, hertz, scale
-from musx.ran import pick
-from musx.tools import setmidiplayer, playfile
-from musx.rhythm import intempo
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx import Score, Note, MidiSeq, MidiFile, rmspectrum, choose,\
+    jumble, cycle, keynum, hertz, scale, pick, intempo
 from musx.midi.gm import AcousticGrandPiano, Xylophone, Flute, FretlessBass, SteelDrums,\
      Clarinet, Marimba, AcousticBass
 
@@ -49,7 +42,7 @@ def accompaniment(sco, reps, dur, set1, set2):
         # Iterate the keys, play as a chord.
         for k in keys:
             # Create a midi note at the current time.
-            m = MidiNote(time=sco.now, dur=dur, key=k, amp=.3, chan=0)
+            m = Note(time=sco.now, dur=dur, key=k, amp=.3, chan=0)
             # Add it to our output seq.
             sco.add(m)
         # Wait till the next chord.
@@ -74,7 +67,7 @@ def melody(sco, reps, dur, set3):
     # Create a cycle of the two inputs
     pat = cycle(set3)
     for _ in range(2 * reps):
-        m = MidiNote(time=sco.now, dur=dur/2, key=next(pat), amp=.7, chan=1)
+        m = Note(time=sco.now, dur=dur/2, key=next(pat), amp=.7, chan=1)
         sco.add(m)
         # Wait till the next note
         yield dur

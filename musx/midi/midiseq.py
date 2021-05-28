@@ -5,7 +5,7 @@ midi messages.
 """
 
 
-from . import midinote as mn
+from ..note import Note
 from . import midievent as me
 from . import gm
 from ..tools import rescale
@@ -107,7 +107,7 @@ class MidiSeq:
         e : MidiEvent | MidiNote
             The MidiEvent or MidiNote
         """
-        if isinstance(e, mn.MidiNote):
+        if isinstance(e, Note):
             on = e.noteon()
             off = e.noteoff()
             # print(f"adding noteon {on} to seq, time is {on.time}")

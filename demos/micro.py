@@ -19,15 +19,15 @@ claim all 16 channels. Note: If your synth hardwires channel 9 to a drum map
 then for microtunings 9 thru 16 you will hear a percussion sound instead of a
 note whenever channel 9 is selected.
 
-For a MidiNote to produce a microtonal sound three conditions must be met:
+For a Note to produce a microtonal sound three conditions must be met:
 
-* The MidiNote's key number must be a floating point value with a fractional
+* The Note's key number must be a floating point value with a fractional
   value greater than 0.
-* The MidiNote's 'tuning' parameter must be greater than 1.
+* The Note's 'tuning' parameter must be greater than 1.
 * Track 0 (the 'metatrack' of the midi file) must be quantized to the same
   divisions per semitone as the 'tuning' parameter. See: MidiSeq.metatrack().
 
-See also: demos fm.py, rm.py, gamelan.py, `MidiSeq.metatrack()`, `MidiNote()`.
+See also: demos fm.py, rm.py, gamelan.py, `MidiSeq.metatrack()`, `Note()`.
 
 To run this script cd to the parent directory of demos/ and do:
 ```bash
@@ -36,14 +36,9 @@ python3 -m demos.micro
 """
 
 
-from musx.midi import MidiNote, MidiSeq, MidiFile, MidiEvent
+from musx import Score, Note, MidiSeq, MidiFile, MidiEvent, odds, divide, \
+     deltas, rescale, scale, jumble, temper
 from musx.midi.gm import TubularBells, Dulcimer, Flute, Vibraphone, Marimba
-from musx.score import Score
-from musx.ran import odds
-from musx.tools import playfile, setmidiplayer, divide, deltas, rescale
-from musx.scales import scale
-from musx.generators import jumble
-from musx.spectral import temper
 
 
 def pitchbends(sco, tuning):
@@ -82,7 +77,7 @@ def microtones(sco, tuning, dur):
     key = 60
     for _ in range(tuning*12+1):
         #print('pre tuning: key',key,end="\t")
-        m = MidiNote(time=sco.now, dur=rhy, key=key, tuning=tuning)
+        m = Note(time=sco.now, dur=rhy, key=key, tuning=tuning)
         #print("post tuning: key", m.key, "chan", m.chan)
         sco.add(m)
         key += 1/tuning
@@ -152,7 +147,7 @@ def playmicropentatonic():
         pat = jumble(keys)
         for _ in range(num):
             k = next(pat)
-            m = MidiNote(time=sco.now, dur=dur*2, key=k, amp=amp, tuning=8)
+            m = Note(time=sco.now, dur=dur*2, key=k, amp=amp, tuning=8)
             sco.add(m)
             yield odds(.2 , 0, dur)
 

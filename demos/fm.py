@@ -13,12 +13,7 @@ python3 -m demos.fm
 
 
 import random
-from musx.spectral import Spectrum, fmspectrum
-from musx.score import Score
-from musx.scales import keynum, hertz
-from musx.ran import odds, between, pick
-from musx.tools import  setmidiplayer, playfile
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx import Note, Score, MidiSeq, MidiFile, Spectrum, fmspectrum, keynum, hertz, odds, between, pick
 
 
 def fm_chords(sco, reps, cen, cm1, cm2, in1, in2, rhy):
@@ -29,7 +24,7 @@ def fm_chords(sco, reps, cen, cm1, cm2, in1, in2, rhy):
     for _ in reps:
         spec = fmspectrum(hertz(cen), between(cm1, cm2), between(in1, in2)) 
         for k in spec.keynums(minkey=48, maxkey=72):
-            m = MidiNote(time=sco.now, dur=rhy, key=k, amp=.5)
+            m = Note(time=sco.now, dur=rhy, key=k, amp=.5)
             sco.add(m)
     yield rhy
 
@@ -61,7 +56,7 @@ def fm_improv(sco, line, beat):
         sub = rhy / len(keys) if ismel else 0
         print("melody:" if ismel else "chord:", "time=", sco.now, "dur=", rhy, "keys=", keys)
         for i, k in enumerate(keys):
-            m = MidiNote(time=sco.now + (i * sub), dur=dur, key=k, amp=amp)
+            m = Note(time=sco.now + (i * sub), dur=dur, key=k, amp=amp)
             sco.add(m)
         yield rhy
 

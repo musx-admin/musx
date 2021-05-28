@@ -11,13 +11,8 @@ python3 -m demos.gestures
 
 
 import random
-from musx.generators import jumble
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx import Score, Note, MidiSeq, MidiFile, jumble, odds, between, quantize, interp
 from musx.midi.gm import AcousticGrandPiano, Marimba, OrchestralHarp
-from musx.score import Score
-from musx.ran import odds, between
-from musx.tools import quantize, playfile, setmidiplayer
-from musx.envelopes import interp
 
 
 def motive1(sco, octave, limit, chan):
@@ -45,7 +40,7 @@ def motive1(sco, octave, limit, chan):
     offset = random.randrange(limit)
     for _ in range(3):
         knum = next(pitches) + (octave * 12) + offset
-        note = MidiNote(time=sco.now, dur=.1, key=knum, amp=next(amps), chan=chan)
+        note = Note(time=sco.now, dur=.1, key=knum, amp=next(amps), chan=chan)
         sco.add(note)
         yield .2
     
@@ -57,7 +52,7 @@ def motive2(sco, octave, limit, chan):
     offset = random.randrange(limit)
     for _ in range(3):
         knum = 0 + (octave * 12) + offset
-        note = MidiNote(time=sco.now, dur=.1, key=knum, amp=next(amps), chan=chan)
+        note = Note(time=sco.now, dur=.1, key=knum, amp=next(amps), chan=chan)
         sco.add(note)
         yield next(rhys)
 

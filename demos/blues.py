@@ -12,10 +12,7 @@ python3 -m demos.blues
 
 if __name__ == '__main__':
 
-    from musx.midi import MidiSeq, MidiFile
-    from musx.ran import pick
-    from musx.tools import playfile, setmidiplayer
-    from musx.score import Score
+    from musx import Score, MidiSeq, MidiFile, pick
     from .paint import spray
     
     # The blues scale.

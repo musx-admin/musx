@@ -2,7 +2,7 @@
 A wild ride on the drum track.
 """
 
-from musx import MidiNote, MidiSeq, MidiFile, Score
+from musx import Score, Note, MidiSeq, MidiFile 
 from .paint import brush
 
 pphase = [127, 117, 126, 117.5, 125, 119, 124.5, 119.5,

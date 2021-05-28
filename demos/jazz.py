@@ -15,15 +15,10 @@ python3 -m demos.jazz
 """
 
 
-from musx.midi import MidiNote, MidiSeq, MidiFile
-from musx.midi.gm import AcousticGrandPiano, AcousticBass
-from musx.generators import cycle, choose, jumble
-from musx.rhythm import intempo
-from musx.score import Score
-from musx.ran import odds, pick, between
-from musx.tools import playfile, setmidiplayer
-from musx.scales import keynum
 import types
+from musx import Score, Note, MidiSeq, MidiFile, keynum, cycle, \
+    choose, jumble, intempo, odds, pick, between
+from musx.midi.gm import AcousticGrandPiano, AcousticBass
 
 
 jazz_scale = [0, 2, 3, 5, 7, 9, 10, 12, 14]
@@ -51,7 +46,7 @@ def jazz_high_hat(sco, tmpo, ampl):
     for _ in range(4):
         x = next(pat)
         if x != 'r':
-            m = MidiNote(time=sco.now, dur=dur, key=x, amp=amp * ampl, chan=9)
+            m = Note(time=sco.now, dur=dur, key=x, amp=amp * ampl, chan=9)
             sco.add(m)
         yield rhy
 
@@ -71,7 +66,7 @@ def jazz_drums(sco, tmpo, ampl):
         a = next(amps)
         r = intempo(next(rhys), tmpo)
         if k != 'r':
-            m = MidiNote(time=sco.now, dur=r, key=k, amp=a * ampl, chan=9)
+            m = Note(time=sco.now, dur=r, key=k, amp=a * ampl, chan=9)
             sco.add(m)
         yield r
 
@@ -113,7 +108,7 @@ def jazz_cymbals(sco, tmpo, ampl):
                 k = next(next(k))
             if k != 'r':
                 a = next(amps)
-                m = MidiNote(time=sco.now, dur=rhy, key=k, amp=a*ampl, chan=9)
+                m = Note(time=sco.now, dur=rhy, key=k, amp=a*ampl, chan=9)
                 sco.add(m)
         yield rhy
 
@@ -133,7 +128,7 @@ def jazz_piano(sco, on, tmpo, ampl):
         l = [] if odds(2/5) else [next(scal) for _ in range(between(1,9))]
         for k in l:
             a = pick(.4, .5, .6, .7, .8)
-            m = MidiNote(time=sco.now, dur=r, key=on+k, amp=a, chan=0)
+            m = Note(time=sco.now, dur=r, key=on+k, amp=a, chan=0)
             sco.add(m)
         yield r
 
@@ -173,7 +168,7 @@ def jazz_bass(sco, on, tmpo, ampl):
         if k > -1:
             a = next(amps)
             d = next(durs)
-            m = MidiNote(time=sco.now, dur=d, key=on+k, amp=ampl*a, chan=1)
+            m = Note(time=sco.now, dur=d, key=on+k, amp=ampl*a, chan=1)
             sco.add(m)
         yield rhy
 

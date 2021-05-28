@@ -17,12 +17,7 @@ middle ages that produce cyclical patterns of rhythms (talea) and pitches
 '''
 import musx
 import ctcsound
-
-from musx.midi import MidiNote, MidiSeq, MidiFile
-from musx.score import Score
-from musx.tools import playfile, setmidiplayer
-from musx.rhythm import rhythm
-from musx.scales import keynum
+from musx import Score, Note, MidiSeq, MidiFile, rhythm, keynum
 from musx.midi.gm import AcousticGrandPiano, Violin
 from .paint import brush, spray
 

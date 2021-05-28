@@ -14,11 +14,7 @@ python3 -m demos.ghosts
 from random import choice
 import musx
 import ctcsound
-from musx.generators import steps
-from musx.ran import between
-from musx.tools import playfile, setmidiplayer
-from musx.score import Score
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx.midi import Score, Note, MidiSeq, MidiFile, steps, between
 from musx.midi.gm import Flute, Clarinet, Cello, OrchestralHarp
 
 
@@ -35,7 +31,7 @@ def flute(sco, knum, dur):
     dur : int | float
         The duration of the note.
     """
-    sco.add(MidiNote(time=sco.now, dur=dur, key=knum+24, amp=.2, chan=0))
+    sco.add(Note(time=sco.now, dur=dur, key=knum+24, amp=.2, chan=0))
     yield -1
 
 
@@ -50,8 +46,8 @@ def cello(sco, knum):
     knum : int
         The midi key number of the clarinet.
     """
-    sco.add(MidiNote(time=sco.now, dur=.05, key=knum-18, amp=.9, chan=2))
-    sco.add(MidiNote(time=sco.now, dur=.05, key=knum-23, amp=.9, chan=2))
+    sco.add(Note(time=sco.now, dur=.05, key=knum-18, amp=.9, chan=2))
+    sco.add(Note(time=sco.now, dur=.05, key=knum-23, amp=.9, chan=2))
     yield -1
 
 
@@ -69,7 +65,7 @@ def harp(sco, knum, rate):
         The rhythm of the arpeggio.
     """
     for k in steps(39 + (knum % 13),  13, 5):
-        m = MidiNote(time=sco.now, dur=10, key=k, amp=.5, chan=3)
+        m = Note(time=sco.now, dur=10, key=k, amp=.5, chan=3)
         sco.add(m)
         yield rate
 
@@ -92,7 +88,7 @@ def ghosts(sco):
         amp = .2 if high else .4
         rhy = choice([1/4, 1/2, 3/4])
         # the clarinet line
-        midi = MidiNote(time=sco.now, dur=rhy + .2, key=melody, amp=amp, chan=1)
+        midi = Note(time=sco.now, dur=rhy + .2, key=melody, amp=amp, chan=1)
         sco.add(midi)
         # add decorations to the clarinet melody
         if high:

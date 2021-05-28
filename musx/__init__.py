@@ -16,18 +16,17 @@ python3 -m demos.gamelan
 ```
 """
 
-# Do not edit the next line, the version number will be set by musxdist.zsh.
 version="0.0.0"
 
 from .rhythm import *
 from .midi import gm
 from .midi.midimsg import *
-from .midi.midinote import *
 from .midi.midievent import *
 from .midi.midifile import *
 from .midi.midiseq import *
 from .generators import *
 from .pitch import *
+from .note import *
 from .interval import *
 from .scales import *
 from .tools import *

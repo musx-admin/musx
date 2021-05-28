@@ -10,11 +10,8 @@ To run this script cd to the parent directory of demos/ and do:
 python3 -m demos.coventry
 ```
 """
-__pdoc__ = {
-    'conventry_fkeys': False,
-}
 
-from musx import keynum, MidiNote, allrotations
+from musx import keynum, Note, allrotations
 
 
 coventry_bells = {
@@ -50,11 +47,11 @@ def playbells(sco, peal, bells, rhy, dur, amp):
         if b in ['a','j']: 
             # keynums are quantized to 25 cents
             for k in [x for x in bells[b]]:
-                m = MidiNote(time=sco.now, dur=dur*4, key=k, amp=amp, tuning=4)            
+                m = Note(time=sco.now, dur=dur*4, key=k, amp=amp, tuning=4)            
                 sco.add(m)
         else: # else play single 'prime' note 
             k = primes[b]
-            m = MidiNote(time=sco.now, dur=dur, key=k, amp=amp, tuning=4)
+            m = Note(time=sco.now, dur=dur, key=k, amp=amp, tuning=4)
             sco.add(m)
         yield rhy
 
