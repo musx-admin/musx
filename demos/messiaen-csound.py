@@ -88,21 +88,12 @@ gi_ampmidicurve_dynamic_range init .375
 gi_ampmidicurve_exponent init 5
 
 prealloc "ZakianFlute", 4
-prealloc "Guitar", 4
-prealloc "Harpsichord", 4
-prealloc "YiString", 4
-prealloc "Bower", 4
+prealloc "Harpsichord", 20
 
-connect "Guitar", "outleft", "ReverbSC", "inleft"
-connect "Guitar", "outleft", "ReverbSC", "inleft"
 connect "ZakianFlute", "outleft", "ReverbSC", "inleft"
-connect "ZakianFlute", "outleft", "ReverbSC", "inleft"
+connect "ZakianFlute", "outright", "ReverbSC", "inright"
 connect "Harpsichord", "outleft", "ReverbSC", "inleft"
 connect "Harpsichord", "outright", "ReverbSC", "inright"
-connect "YiString", "outleft", "ReverbSC", "inleft"
-connect "YiString", "outright", "ReverbSC", "inright"
-connect "Bower", "outleft", "ReverbSC", "inleft"
-connect "Bower", "outright", "ReverbSC", "inright"
 connect "ReverbSC", "outleft", "MasterOutput", "inleft"
 connect "ReverbSC", "outright", "MasterOutput", "inright"
 
@@ -112,6 +103,7 @@ alwayson "MasterOutput"
 gk_overlap init .0125
 
 gk_Harpsichord_level init 0
+gk_Harpsichord_pan init .3
 gk_Harpsichord_pick init .275
 gk_Harpsichord_reflection init .75
 gk_Harpsichord_pluck init .5
@@ -128,7 +120,7 @@ i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
 k_space_front_to_back = p6
-k_space_left_to_right = .2
+k_space_left_to_right = gk_Harpsichord_pan
 k_space_bottom_to_top = p8
 i_phase = p9
 i_amplitude ampmidicurve i_midi_velocity, gi_ampmidicurve_dynamic_range, gi_ampmidicurve_exponent
@@ -154,7 +146,7 @@ a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_s
 outletv "outbformat", a_bsignal
 outleta "out", a_spatial_reverb_send
 #else
-a_out_left, a_out_right pan2 a_signal, p1/6
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
@@ -176,7 +168,7 @@ printks2 "kafter  %9.4f\\n", kafter
 endin
 
 gk_ZakianFlute_level init 12
-gk_ZakianFlute_pan init (2 / 7 - .5)
+gk_ZakianFlute_pan init .7
 gi_ZakianFLute_seed init .5
 gif2 ftgen 0, 0, 16, -2, 40, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 10240
 gif26 ftgen 0, 0, 65536, -10, 2000, 489, 74, 219, 125, 9, 33, 5, 5
@@ -206,7 +198,7 @@ i_duration = p3
 i_midi_key = p4
 i_midi_velocity = p5
 k_space_front_to_back = p6
-k_space_left_to_right = p1/6
+k_space_left_to_right = gk_ZakianFlute_pan
 k_space_bottom_to_top = p8
 i_phase = p9
 i_overall_amps = 65
@@ -401,160 +393,11 @@ a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_s
 outletv "outbformat", a_bsignal
 outleta "out", a_spatial_reverb_send
 #else
-a_out_left, a_out_right pan2 a_signal, p1/6
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
 prints "ZakianFlute    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
-endin
-
-gk_Guitar_level init 16
-instr Guitar
-; Michael Gogins
-if p3 == -1 goto indefinite
-goto non_indefinite
-indefinite:
-  p3 = 1000000
-non_indefinite:
-i_instrument = p1
-i_time = p2
-i_duration = p3
-i_midi_key = p4
-i_midi_velocity = p5
-k_space_front_to_back = p6
-k_space_left_to_right = p1/6
-k_space_bottom_to_top = p8
-i_phase = p9
-i_frequency = cpsmidinn(i_midi_key)
-i_amplitude ampmidicurve i_midi_velocity, gi_ampmidicurve_dynamic_range, gi_ampmidicurve_exponent
-k_gain = ampdb(gk_Guitar_level)
-acomp pluck i_amplitude, 440.0, 440.0, 0, 1, .1
-i_frequency2 = i_frequency / 2.0
-kHz = k(i_frequency)
-iattack = 0.004
-isustain = p3
-irelease = 0.05
-p3 = iattack + isustain + irelease
-asigcomp pluck 1.0, 440, 440, 0, 1
-asig pluck 1.0, i_frequency, i_frequency, 0, 1
-af1 reson asig, 110, 80
-af2 reson asig, 220, 100
-af3 reson asig, 440, 80
-aout balance 0.6 * af1 + af2 + 0.6 * af3 + 0.4 * asig, asigcomp
-aexp expseg 1.0, iattack, 2.0, isustain, 1.0, irelease, 1.0
-aenv = aexp - 1.0
-a_signal = aout * aenv
-a_declicking linsegr 0, iattack, 1, isustain, 1, irelease, 0
-a_signal = a_signal * i_amplitude * a_declicking * k_gain
-#ifdef USE_SPATIALIZATION
-a_spatial_reverb_send init 0
-a_bsignal[] init 16
-a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
-outletv "outbformat", a_bsignal
-outleta "out", a_spatial_reverb_send
-#else
-a_out_left, a_out_right pan2 a_signal, p1/6
-outleta "outleft", a_out_left
-outleta "outright", a_out_right
-#endif
-prints "Guitar         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
-endin
-
-gk_YiString_level init 8
-gk_YiString_reverb_send init .5
-gk_YiString_chorus_send init .5
-gi_YiString_overlap init .1
-instr YiString
- //////////////////////////////////////////////
- // Original by Steven Yi.
- // Adapted by Michael Gogins.
- //////////////////////////////////////////////
-if p3 == -1 goto indefinite
-goto non_indefinite
-indefinite:
-  p3 = 1000000
-non_indefinite:
-i_instrument = p1
-i_time = p2
-i_duration = p3
-i_midi_key = p4
-i_midi_velocity = p5
-k_space_front_to_back = p6
-k_space_left_to_right = p1/6
-k_space_bottom_to_top = p8
-i_phase = p9
-i_frequency = cpsmidinn(i_midi_key)
-i_amplitude ampmidicurve i_midi_velocity, gi_ampmidicurve_dynamic_range, gi_ampmidicurve_exponent
-k_gain = ampdb(gk_YiString_level)
-iattack = gi_YiString_overlap
-isustain = p3
-idecay = gi_YiString_overlap
-p3 = iattack + isustain + idecay
-aenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
-;ampenv = madsr:a(1, 0.1, 0.95, 0.5)
-asignal = vco2(1, i_frequency)
-asignal = moogladder(asignal, 6000, 0.1)
-a_signal = asignal * aenvelope
-i_attack = .002
-i_release = 0.01
-i_sustain = p3 - (i_attack + i_release)
-a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * i_amplitude * a_declicking * k_gain
-#ifdef USE_SPATIALIZATION
-a_spatial_reverb_send init 0
-a_bsignal[] init 16
-a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
-outletv "outbformat", a_bsignal
-outleta "out", a_spatial_reverb_send
-#else
-a_out_left, a_out_right pan2 a_signal, p1/6
-outleta "outleft", a_out_left * gk_YiString_reverb_send
-outleta "outright", a_out_right * gk_YiString_reverb_send
-outleta "chorusleft", a_out_left * gk_YiString_chorus_send
-outleta "chorusright", a_out_right * gk_YiString_chorus_send
-#endif
-prints  "YiString       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
-endin
-
-gk_Bower_level init 9
-gk_Bower_pressure init 4.2
-gisine ftgen 0,0,65536,10,1
-instr Bower
-if p3 == -1 goto indefinite
-goto non_indefinite
-indefinite:
-  p3 = 1000000
-non_indefinite:
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p6
-ipan = (4 / 7 - .5)
-iamp ampmidicurve ivelocity, gi_ampmidicurve_dynamic_range, gi_ampmidicurve_exponent
-iattack = i(gk_overlap)
-idecay = i(gk_overlap)
-isustain = p3 - i(gk_overlap)
-p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-kamp = kenvelope
-kfreq = ihertz
-kpres = 0.25
-krat rspline 0.006,0.988,1,2
-kvibf = 4.5
-kvibamp = 0
-iminfreq = 30
-aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gisine,iminfreq
-aleft, aright pan2 aSig / 7, p1/6
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
-kgain = ampdb(gk_Bower_level)
-outleta "outleft", aleft * kgain
-outleta "outright", aright * kgain
-prints "Bower          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
 gk_Reverb_feedback init 0.5
