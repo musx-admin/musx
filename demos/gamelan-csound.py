@@ -635,7 +635,7 @@ outleta "outright", arightout
 prints "ReverbSC       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
-gk_MasterOutput_level init -15
+gk_MasterOutput_level init 0
 gS_MasterOutput_filename init ""
 instr MasterOutput
 aleft inleta "inleft"
