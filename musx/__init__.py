@@ -36,5 +36,6 @@ from .envelopes import *
 from .score import *
 from .spectral import *
 from .pc import *
+from .csound import *
 
 

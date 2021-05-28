@@ -1,80 +1,91 @@
-'''
-Author: Michael Gogins, based on messaien.py example by Rick Taube.
+################################################################################
+"""
+gamelan.py generates a gamelan composition using the `brush()` and `spray()`
+generators in paint.py. Composer: Ming-ching Chiu.
 
-This file demonstrates how to use musx with Csound. This works for both live 
-audio and for off-line rendering.
-
-To use with Csound, install Csound from: https://urldefense.com/v3/__https://github.com/csound/csound/releases__;!!DZ3fjg!p6ftG-GIiysAvL8NJ1JDdw0dmp1CX_YskbwlDiJFBO4iL4bCDKzmOwjSNQ9CIhF0$ .
-For Linux, build from sources according to: https://urldefense.com/v3/__https://github.com/csound/csound/blob/develop/BUILD.md__;!!DZ3fjg!p6ftG-GIiysAvL8NJ1JDdw0dmp1CX_YskbwlDiJFBO4iL4bCDKzmOwjSNeuiN7nU$ .
-Copy ctcsound.py to your Python's site-packages directory.
-This file is otherwise completely self-contained.
-
-Isorhythmic piano and cello parts to Liturgie de Cristal, by Olivier Messiaen.
-
-Both parts employ a rotational technique taken from isorythmic motets in the 
-middle ages that produce cyclical patterns of rhythms (talea) and pitches 
-(color) that don't line up each time they repeat.
-'''
-import .csound
+To run this script cd to the parent directory of demos/ and do:
+```bash
+python3 -m demos.gamelan
+```
+"""
+import musx
 import ctcsound
 
-from musx.midi import MidiNote, MidiSeq, MidiFile
-from musx.score import Score
-from musx.tools import playfile, setmidiplayer
-from musx.rhythm import rhythm
-from musx.scales import keynum
-from musx.midi.gm import AcousticGrandPiano, Violin
-from .paint import brush, spray
-
-
-piano_talea = rhythm('q q q e e. e e e e e. e. e. s e e. q h', tempo=80)
-
-
-piano_color = keynum(["f3 g bf c4 ef b e5",  "f3 g bf c4 e a d5", 
-                      "f3 af bf df4 ef a d5", "f3 af bf df4 ef g c5",
-                      "f3 g bf d4 fs b c5", "f3 g bf d4 e a c5",
-                      "f3 a c4 d g cs5 fs", "f3 g c4 d g b e5", 
-                      "f3 bf df4 gf e5", "f3 b d4 g e5 g", "f3 c4 ef af g5", 
-                      "f3 cs4 e a g5 b", "af3 ef4 gf bf ef5 gf cf6", 
-                      "af3 ef4 f bf df5 f5 bf5", "gf3 df4 af ef af cf6 ef", 
-                      "gf3 df4 bf d5 f bf d6", "a3 c4 d fs bf df5 gf bf df6", 
-                      "bf3 cs e gs c5 d gs c6", "c4 d f a4 cs5 e a", 
-                      "cs4 e fs bf d5 f", "fs4 g bf d5 fs a",
-                      "fs4 a b ds5 es gs", "f4 bf d5 e g", 
-                      "e4 af cs5 d", "d4 g b cs5 e", "cs4 f bf b f5",
-                      "b3 e4 af bf", "af3 cs4 f g", "gf3 cf4 ef f"])
-
-
-cello_talea = rhythm('h q. h h e e q. e e e e q. e e h', tempo=80)
-
-
-cello_color = keynum('c6 e d f# bf5')
-
-
 if __name__ == '__main__':
+    from musx.midi import MidiNote, MidiSeq, MidiFile
+    from musx.score import Score
+    from musx.generators import cycle, choose
+    from musx.tools import playfile, setmidiplayer
+    from musx.midi.gm import Vibraphone
+    from .paint import brush, spray
+
+    # Scale1 is a 7-tone microtonal scale that evokes the Pelog scale.
+    scale1 = [0, 2.2, 3.8, 6.6, 7.1, 9.3, 10, 12, 14.4, 15.8, 18.6, 19.1]
+    # Scale2 is a 5-tone pentatonic scale that evokes the Slendro scale.
+    scale2 = [0, 2, 3.7, 6.9, 9.1]
+    scale3 = [[0, 6.9], [2, 6.9], [3.7, 9.1], [9.1, 14], [3.7, 12]]
+    melody = [[36, 43.1, 46], [42.6, 50.2], [38.2, 48, 51.8], [39.8, 46, 54.6],
+              [54.6, 62.2, 66.6], [57.3, 66.6, 69.3], [58, 62.2, 67.1], 
+              [36, 45.3, 48], [60, 66.6, 69.3], [46, 55.1, 60], 
+              [42.6, 50.2, 57.3], [46, 55.1, 60], [57, 66.6, 69.3], 
+              [57.3, 66.6, 69.3], [54.6, 62.2, 66.6]]
+    # Amplitude scaler to adapt to different sound fonts. this is for fluidsynth
+    def A(a): return ([s * 1.35 for s in a] if type(a) is list else a*1.5)
+    # Microtonal divisions of the semitone. 2 is quartertone (50 cents) etc.
+    tuning=7
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
-    # Track 1 will hold the composition.
-    t1 = MidiSeq()
-    # Create a scheduler and give it t1 as its output object.[84, 88, 86, 90, 82]
-    q = Score(t1)
-    # Create the piano and cello composers.
-    piano=brush(q, len=len(piano_talea) * 8 + 14, rhy=piano_talea,
-                key=piano_color, chan=0)
-    cello=brush(q, len=len(cello_talea) * 6, rhy=cello_talea,
-                amp=.2, key=cello_color, chan=1)
-    # Start our composers in the scheduler, this creates the composition.
-    q.compose([[0, piano], [5.5, cello]])
-    # Write a midi file with our track data.
-    f = MidiFile("messiaen.mid", [t0, t1]).write()
-    # To automatially play demos use setmidiplayer() to assign a shell
-    # command that will play midi files on your computer. Example:
-    #   setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    print(f"Wrote '{f.pathname}'.")
-    #playfile(f.pathname)
-  
-    
+    tr0 = MidiSeq.metaseq(ins={i: Vibraphone for i in range(tuning)}, tuning=tuning)
+    # Track 1 holds the composition.
+    tr1 = MidiSeq()
+    # Create a score and give it tr1 to hold the score event data.
+    sco = Score(out=tr1)
+    # The sections of the piece
+    s1=spray(sco, key=48, dur=3, rhy=[1, .5], amp=A([.3, .35, .4]),
+                band=scale1, end=40, tuning=tuning)
+    s2=spray(sco, key=48, dur=3, rhy=[1, .5], amp=A([.4, .45, .5]), 
+                band=scale3, end=25, tuning=tuning)
+    s3=spray(sco, key=72, dur=3, rhy=[.75, .25, .5], amp=A([.4, .3, .35]),
+                band=[3.8, 7.1, [9.3, 14.4]], end=35, tuning=tuning)
+    s4=spray(sco, key=72, dur=3, rhy=[.75, .25, .5], amp=A([.6, .5, .55]),
+                band=[9.3, 12, 14.2, 18.6, [26.2, 30.6]], end=30, tuning=tuning)
+    s5=spray(sco, key=84,  dur=3, rhy=[.75, .25, .5], amp=A([.6, .5, .55]),
+                band=[3.8, 7.1, 9.3, [7.1, 12]],  end=15, tuning=tuning)
+    s6=spray(sco, key=24,  dur=5, rhy=[1, 1, .5, 2, 2], amp=A(.5),
+                band=scale2, end=55, tuning=tuning)
+
+    s7=brush(sco, key=[86.2, 93.3, 87.8, 91.1], dur=4, rhy=[.25, .25, .5], 
+                amp=A(.3), end=50, tuning=tuning)
+    s8=brush(sco, key=[86.2, [93.3, 98.8], 87.8, 91.1], dur=4,
+                rhy=[.25, .25, .25, .25, .5], amp=A(.25), end=10, tuning=tuning)
+    s9=brush(sco, key=[81.3, 74.4, 78.6, 72], dur=2, rhy=[.5, .25, .25],
+                amp=A(.25), end=50, tuning=tuning)
+    s10=brush(sco, key=melody, dur=8,
+                 rhy=[2, 1, 1, .5, .5, 3, 1.5, 1.5, 4, 2, 1, 1, .5, .5, 3, 1.5, 1.5, 1.5, .5, 4],
+                 amp=A([.3, .4, .35, .35]), end=40, tuning=tuning)
+
+    s11=spray(sco, key=72, dur=2, rhy=1/3, amp=A(.18),
+                 band=[[0, 14.4], [3.8, 12], [15.8, 7.1], [2.2, 9.3], [0, 10],
+                       [9.3, 2.2], [7.1, 14.4], [0, 9.3], [3.8, 12]],
+                 end=36, tuning=tuning)
+    s12=spray(sco, key=60, dur=2, rhy=.5, amp=A(.25), band=scale2, end=41, tuning=tuning)
+    s13=spray(sco, key=48, dur=4, rhy=[1, 1, 2, 1, 1, 1, 1, 1, .5, .5, 2, 1, .5, .5, 1, 1, 2, 2, .5, .5, 1, 4],
+                 amp=A(.35), band=scale3, end=32, tuning=tuning)
+    s14=brush(sco, key=[[36, 42.6, 43.1, 48, 51.8, 57.3, 63.8, 86.4], [12, 24, 31.1, 36, 42.6]],
+                 len=2, dur=8, rhy=[4, 8], amp=A(.25), tuning=tuning)
+    # Create the composition.
+    sco.compose([[0, s1], [40, s2], [10, s3], [40, s4], [50, s5], [20, s6],
+               [65, s7], [80, s8], [73, s9], [79, s10],
+               [121, s11], [121, s12], [129, s13], [162, s14] ] )
+    # Write the tracks to a midi file in the current directory.
+    file = MidiFile("gamelan.mid", [tr0, tr1]).write()
+    print(f"Wrote '{file.pathname}'.")
+
+    # To automatially play demos use setmidiplayer() and playfile().
+    # Example:
+    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+    #     playfile(file.pathname)
+
     # Now the Csound stuff.
     
     orc  = '''
@@ -87,14 +98,8 @@ nchnls = 2
 gi_ampmidicurve_dynamic_range init .375
 gi_ampmidicurve_exponent init 5
 
-prealloc "ZakianFlute", 4
-prealloc "Guitar", 4
-prealloc "Harpsichord", 4
-prealloc "YiString", 4
-prealloc "Bower", 4
-
-connect "Guitar", "outleft", "ReverbSC", "inleft"
-connect "Guitar", "outleft", "ReverbSC", "inleft"
+connect "FMWaterBell", "outleft", "ReverbSC", "inleft"
+connect "FMWaterBell", "outleft", "ReverbSC", "inleft"
 connect "ZakianFlute", "outleft", "ReverbSC", "inleft"
 connect "ZakianFlute", "outleft", "ReverbSC", "inleft"
 connect "Harpsichord", "outleft", "ReverbSC", "inleft"
@@ -110,6 +115,63 @@ alwayson "ReverbSC"
 alwayson "MasterOutput"
 
 gk_overlap init .0125
+
+prealloc "FMWaterBell", 4
+prealloc "ZakianFlute", 4
+prealloc "Guitar", 4
+prealloc "Harpsichord", 4
+prealloc "YiString", 4
+prealloc "Bower", 4
+
+//////////////////////////////////////////////
+// Original by Steven Yi.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+gk_FMWaterBell_level init 12
+gi_FMWaterBell_attack init 0.002
+gi_FMWaterBell_release init 0.01
+gi_FMWaterBell_sustain init 20
+gi_FMWaterBell_sustain_level init .1
+gk_FMWaterBell_index init .5
+gk_FMWaterBell_crossfade init .5
+gk_FMWaterBell_vibrato_depth init 0.05
+gk_FMWaterBell_vibrato_rate init 6
+gk_FMWaterBell_midi_dynamic_range init 30
+gi_FMWaterBell_cosine ftgen 0, 0, 65537, 11, 1
+instr FMWaterBell
+i_instrument = p1
+i_time = p2
+i_duration = p3
+; One of the envelopes in this instrument should be releasing, and use this:
+i_sustain = 1000
+;xtratim gi_FMWaterBell_attack + gi_FMWaterBell_release
+xtratim gi_FMWaterBell_attack + gi_FMWaterBell_release
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_FMWaterBell_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 81
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization * 1.6
+k_gain = ampdb(gk_FMWaterBell_level)
+a_signal fmbell	1, i_frequency, gk_FMWaterBell_index, gk_FMWaterBell_crossfade, gk_FMWaterBell_vibrato_depth, gk_FMWaterBell_vibrato_rate, gi_FMWaterBell_cosine, gi_FMWaterBell_cosine, gi_FMWaterBell_cosine, gi_FMWaterBell_cosine, gi_FMWaterBell_cosine ;, gi_FMWaterBell_sustain
+;a_envelope linsegr 0, gi_FMWaterBell_attack, 1, i_sustain, gi_FMWaterBell_sustain_level, gi_FMWaterBell_release, 0
+a_envelope linsegr 0, gi_FMWaterBell_attack, 1, i_sustain, 1, gi_FMWaterBell_release, 0
+; ares transegr ia, idur, itype, ib [, idur2] [, itype] [, ic] ...
+; a_envelope transegr 0, gi_FMWaterBell_attack, 12, 1, i_sustain, 12, gi_FMWaterBell_sustain_level, gi_FMWaterBell_release, 12, 0
+a_signal = a_signal * i_amplitude * a_envelope * k_gain
+;_signal = a_signal * i_amplitude * k_gain
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+; printks "FMWaterBell    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
+endin
 
 gk_Harpsichord_level init 0
 gk_Harpsichord_pick init .275
@@ -516,6 +578,7 @@ outleta "chorusright", a_out_right * gk_YiString_chorus_send
 prints  "YiString       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
+gk_overlap init .1
 gk_Bower_level init 9
 gk_Bower_pressure init 4.2
 gisine ftgen 0,0,65536,10,1
@@ -572,7 +635,7 @@ outleta "outright", arightout
 prints "ReverbSC       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
-gk_MasterOutput_level init -15
+gk_MasterOutput_level init 0
 gS_MasterOutput_filename init ""
 instr MasterOutput
 aleft inleta "inleft"
@@ -605,7 +668,7 @@ endin
     '''    
     
     # The "f 0" statement prevents an abrupt cutoff.
-    sco = "f 0 90\n" + csound.to_csound_score(f)
+    sco = "f 0 90\n" + musx.to_csound_score(file)
     print(sco)
     
     csound = ctcsound.Csound()
@@ -614,7 +677,8 @@ endin
     csound.setOption("-m195")
     csound.setOption("-f")
     # Change this for your actual audio configuration, try "aplay -l" to see what they are.
-    csound.setOption("-odac:plughw:1,0")
+    # csound.setOption("-odac:plughw:1,0")
+    csound.setOption("-odac")
     # Can also be a soundfile.
     # csound.setOption("-otest.wav")
     csound.compileOrc(orc)
@@ -625,6 +689,3 @@ endin
     thread = ctcsound.CsoundPerformanceThread(csound.csound())
     thread.play()    
     thread.join()
-
-
-
