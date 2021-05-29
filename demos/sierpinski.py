@@ -18,7 +18,7 @@ python3 -m demos.sierpinski
 """
 
 
-from musx import Score, Note, MidiSeq, MidiFile, keynum
+from musx import Score, Note, Seq, MidiFile, keynum
 
 
 def sierpinski(sco, tone, shape, trans, levels, dur, amp):
@@ -57,9 +57,9 @@ def sierpinski(sco, tone, shape, trans, levels, dur, amp):
 if __name__ == "__main__":
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq()
+    tr0 = Seq.metaseq()
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a scheduler and give it t1 as its output object.
     sco = Score(out=tr1)
     # Create the composition. Specify levels and melody length with care!

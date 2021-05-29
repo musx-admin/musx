@@ -13,7 +13,7 @@ python3 -m demos.continuum
 
 
 import random
-from musx import Score, Note, MidiSeq, MidiFile, jumble, choose, scale
+from musx import Score, Note, Seq, MidiFile, jumble, choose, scale
 from musx.midi.gm import Harpsichord
 
 
@@ -49,9 +49,9 @@ def continuum (sco, rhy, minkeys, maxkeys, seclens):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: Harpsichord})
+    tr0 = Seq.metaseq(ins={0: Harpsichord})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Lower bound on keynum choices

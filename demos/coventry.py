@@ -11,7 +11,8 @@ python3 -m demos.coventry
 ```
 """
 
-from musx import keynum, Note, allrotations
+
+from musx import Note, keynum, allrotations
 
 
 coventry_bells = {
@@ -59,7 +60,7 @@ def playbells(sco, peal, bells, rhy, dur, amp):
 if __name__ == '__main__':
     from musx.midi.gm import Celesta, Glockenspiel, MusicBox, Vibraphone,\
         Marimba, Xylophone, TubularBells
-    from musx import MidiSeq, MidiFile
+    from musx import Seq, MidiFile
     from musx import Score
 
     # Plain Hunt change ringing for 10 bells.
@@ -68,10 +69,10 @@ if __name__ == '__main__':
     items = allrotations(items, rules, False, True)
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: TubularBells, 1: TubularBells, 
+    tr0 = Seq.metaseq(ins={0: TubularBells, 1: TubularBells, 
                                2: TubularBells, 3: TubularBells}, tuning=4)
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Create the composition.

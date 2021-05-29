@@ -12,7 +12,7 @@ import musx
 import ctcsound
 
 if __name__ == '__main__':
-    from musx import Score, Note, MidiSeq, MidiFile, cycle, choose
+    from musx import Score, Note, Seq, MidiFile, cycle, choose
     from musx.midi.gm import Vibraphone
     from .paint import brush, spray
 
@@ -32,9 +32,9 @@ if __name__ == '__main__':
     tuning=7
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={i: Vibraphone for i in range(tuning)}, tuning=tuning)
+    tr0 = Seq.metaseq(ins={i: Vibraphone for i in range(tuning)}, tuning=tuning)
     # Track 1 holds the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # The sections of the piece

@@ -11,7 +11,7 @@ python3 -m demos.ghosts
 """
 
 
-from musx import Score, Note, MidiSeq, MidiFile, between, pick, steps
+from musx import Score, Note, Seq, MidiFile, between, pick, steps
 from musx.midi.gm import Flute, Clarinet, Cello, OrchestralHarp
 
 
@@ -100,9 +100,9 @@ if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
     inst = {0: Flute, 1: Clarinet, 2: Cello, 3: OrchestralHarp}
-    tr0 = MidiSeq.metaseq(ins=inst)
+    tr0 = Seq.metaseq(ins=inst)
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Start our composer in the scheduler, this creates the composition.

@@ -50,7 +50,7 @@ def brush(sco, *, len=None, end=None, rhy=.5, dur=None, key= 60, amp=.5, chan=0,
         for triggering various percussion sounds.
     tuning: int 
         A value 1 to 16 setting the divisions per semitone used for microtonal
-        quantization of floating point keynums. See Note, MidiSeq and the
+        quantization of floating point keynums. See Note, Seq and the
         micro.py demo file for more information. 
     """
     # user must specify either len or end parameter

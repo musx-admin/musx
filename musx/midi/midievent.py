@@ -1178,7 +1178,8 @@ m.tostring()
 MidiEvent.chanprefixmeta(12)
 MidiEvent.noteon(0,60, 90)
 
-from midi import MidiEvent, MidiSeq, MidiFile
+from ..seq import Seq
+from midi import MidiEvent, MidiFile
 m = MidiFile()
 m.read_file("/Users/taube/Classes/205/Resources/reich.mid")
 m.track(0)

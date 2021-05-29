@@ -16,7 +16,7 @@ python3 -m demos.jazz
 
 
 import types
-from musx import Score, Note, MidiSeq, MidiFile, keynum, cycle, \
+from musx import Score, Note, Seq, MidiFile, keynum, cycle, \
     choose, jumble, intempo, odds, pick, between
 from musx.midi.gm import AcousticGrandPiano, AcousticBass
 
@@ -196,9 +196,9 @@ def jazz_combo(sco, measures, tempo):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: AcousticBass})
+    tr0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: AcousticBass})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
 

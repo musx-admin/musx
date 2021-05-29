@@ -15,7 +15,7 @@ python3 -m demos.messiaen
 """
 
 
-from musx import Score, Note, MidiSeq, MidiFile, rhythm, keynum
+from musx import Score, Note, Seq, MidiFile, rhythm, keynum
 from musx.midi.gm import AcousticGrandPiano, Violin
 from .paint import brush, spray
 
@@ -46,9 +46,9 @@ cello_color = keynum('c6 e d f# bf5')
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
+    tr0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Create the piano and cello composers.

@@ -7,7 +7,7 @@ The midifile module provide support for reading and writing midi files.
 import os.path
 from . import midimsg as mm
 from . import midievent as me
-from . import midiseq as ms
+from ..seq import Seq
 
 
 class MidiFile:
@@ -20,7 +20,7 @@ class MidiFile:
 
     tracks = []
     """
-    The tracks of the MidiFile. Each track is a MidiSeq. Your first track
+    The tracks of the MidiFile. Each track is a Seq. Your first track
     should start with a tempo message otherwise the file will be performed
     at the midi default tempo of mm=120.
     """
@@ -42,7 +42,7 @@ class MidiFile:
         path : string
             The pathname to the midi file on disk.
         tracks : list
-            A list of one or more tracks, each track is a MidiSeq.
+            A list of one or more tracks, each track is a Seq.
         divs : int
             The midi file's ticks-per-quarter setting, defaults to 480.
         """
@@ -52,7 +52,7 @@ class MidiFile:
             tracks = [tracks]
         else:
             tracks = tracks.copy() # always copy user's list
-        if any(not isinstance(t, ms.MidiSeq) for t in tracks):
+        if any(not isinstance(t, Seq) for t in tracks):
             raise TypeError(f"{tracks} is not a valid list of midi tracks.")
         if not isinstance(divs, int) and divs > 0:
             raise ValueError(f"{divs} is not a valid divisions-per-quarter.")
@@ -269,7 +269,7 @@ class MidiFile:
             time = abs_delta / self.divisions if tosecs else abs_delta
             trk.append(me.MidiEvent(msg, time))
         # add the track as a sequence in the midi file
-        self.tracks.append(ms.MidiSeq(trk))
+        self.tracks.append(Seq(trk))
 
 
     def write_track(self, stream, track, divs, force_tempo=False):
@@ -305,7 +305,7 @@ class MidiFile:
     def read(self, secs=True):
         """
         Reads the file in MidiFile.pathname and collects the track data
-        as a list of MidiSeqs. Any existing tracks in the MidiFile will be
+        as a list of Seqs. Any existing tracks in the MidiFile will be
         cleared before reading.
         
         Parameters
@@ -386,12 +386,12 @@ class MidiFile:
 
     def addtrack(self, seq):
         """
-        Appends a MidiSeq to the midi file's track list.
+        Appends a Seq to the midi file's track list.
         
         Parameters
         ----------
-        seq : MidiSeq
-            The MidiSeq to append to the current tracks in the MidiFile.
+        seq : Seq
+            The Seq to append to the current tracks in the MidiFile.
         """
         self.tracks.append(seq)
 
@@ -410,7 +410,7 @@ class MidiFile:
             0 is often a "meta track" of a midi file.
         hints : bool
             If true then hints are printed in the printed listing,
-            otherwise they are not. See: MidiSequence.print().
+            otherwise they are not. 
 
         Returns
         -------

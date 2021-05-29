@@ -11,7 +11,7 @@ python3 -m demos.rm
 """
 
 
-from musx import Score, Note, MidiSeq, MidiFile, rmspectrum, choose,\
+from musx import Score, Note, Seq, MidiFile, rmspectrum, choose,\
     jumble, cycle, keynum, hertz, scale, pick, intempo
 from musx.midi.gm import AcousticGrandPiano, Xylophone, Flute, FretlessBass, SteelDrums,\
      Clarinet, Marimba, AcousticBass
@@ -111,9 +111,9 @@ def rmfunky(sco, reps, dur, keys):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: Marimba, 1: Clarinet})
+    tr0 = Seq.metaseq(ins={0: Marimba, 1: Clarinet})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Musical material is the cycle of fourths.

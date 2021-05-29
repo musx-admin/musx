@@ -10,7 +10,7 @@ python3 -m demos.reich
 """
 
 
-from musx import Score, Note, MidiSeq, MidiFile, cycle, keynum
+from musx import Note, Seq, Score, MidiFile, cycle, keynum
 
 
 def piano_phase(sco, end, keys, rate):
@@ -45,9 +45,9 @@ def piano_phase(sco, end, keys, rate):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq()
+    tr0 = Seq.metaseq()
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Convert Reich's notes to a list of midi key numbers to phase.

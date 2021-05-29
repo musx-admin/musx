@@ -12,16 +12,16 @@ python3 -m demos.blues
 
 if __name__ == '__main__':
 
-    from musx import Score, MidiSeq, MidiFile, pick
+    from musx import Score, Seq, MidiFile, pick
     from .paint import spray
     
     # The blues scale.
     blues = [0, 3, 5, 6, 7, 10, 12]
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq()
+    tr0 = Seq.metaseq()
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # The sections of the piece

@@ -12,7 +12,7 @@ python3 -m demos.foster
 """
 
 
-from musx import Score, Note, MidiSeq, MidiFile, keynum, jumble, cycle, choose, markov, intempo
+from musx import Score, Note, Seq, MidiFile, keynum, jumble, cycle, choose, markov, intempo
 from musx.midi.gm import StringEnsemble1
 
 def pattern_stephen_foster():
@@ -95,9 +95,9 @@ def composer_stephen_foster(sco, num, shift=0, chan=0):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: StringEnsemble1})
+    tr0 = Seq.metaseq(ins={0: StringEnsemble1})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Compose a 4 voice texture with these octave transposition factors.

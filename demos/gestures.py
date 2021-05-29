@@ -11,7 +11,7 @@ python3 -m demos.gestures
 
 
 import random
-from musx import Score, Note, MidiSeq, MidiFile, jumble, odds, between, quantize, interp
+from musx import Score, Note, Seq, MidiFile, jumble, odds, between, quantize, interp
 from musx.midi.gm import AcousticGrandPiano, Marimba, OrchestralHarp
 
 
@@ -110,9 +110,9 @@ def gesture4(sco, numtimes, lowoctave, highoctave, limit, chan, hiwait, lowwait)
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: Marimba, 2: OrchestralHarp})
+    tr0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: Marimba, 2: OrchestralHarp})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
 

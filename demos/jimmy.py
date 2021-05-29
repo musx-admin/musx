@@ -2,7 +2,7 @@
 A wild ride on the drum track.
 """
 
-from musx import Score, Note, MidiSeq, MidiFile 
+from musx import Score, Note, Seq, MidiFile 
 from .paint import brush
 
 pphase = [127, 117, 126, 117.5, 125, 119, 124.5, 119.5,
@@ -30,9 +30,9 @@ arf = [0, 3, 7, 0, 3, 7, 0, 3, 7, 0, 3, 7, 0, 3, 7, 0]
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(tuning=4)
+    tr0 = Seq.metaseq(tuning=4)
     # Track 1 holds the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Create the composition.

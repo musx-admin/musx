@@ -14,7 +14,8 @@ For unisons, the first note on is also the first note turned off.
 '''
 import math
 from .note import Note
-from musx.midi import MidiSeq, MidiFile
+from .seq import Seq
+from musx.midi import MidiFile
 
 '''
 Assuming the event at the index is a note on event, searches forwards in time 

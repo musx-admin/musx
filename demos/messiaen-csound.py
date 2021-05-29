@@ -17,7 +17,7 @@ middle ages that produce cyclical patterns of rhythms (talea) and pitches
 '''
 import musx
 import ctcsound
-from musx import Score, Note, MidiSeq, MidiFile, rhythm, keynum
+from musx import Score, Note, Seq, MidiFile, rhythm, keynum
 from musx.midi.gm import AcousticGrandPiano, Violin
 from .paint import brush, spray
 
@@ -49,9 +49,9 @@ cello_color = keynum('c6 e d f# bf5')
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
+    t0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
     # Track 1 will hold the composition.
-    t1 = MidiSeq()
+    t1 = Seq()
     # Create a scheduler and give it t1 as its output object.[84, 88, 86, 90, 82]
     q = Score(t1)
     # Create the piano and cello composers.

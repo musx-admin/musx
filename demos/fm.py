@@ -13,7 +13,7 @@ python3 -m demos.fm
 
 
 import random
-from musx import Note, Score, MidiSeq, MidiFile, Spectrum, fmspectrum, keynum, hertz, odds, between, pick
+from musx import Score, Note, Seq, MidiFile, Spectrum, fmspectrum, keynum, hertz, odds, between, pick
 
 
 def fm_chords(sco, reps, cen, cm1, cm2, in1, in2, rhy):
@@ -64,9 +64,9 @@ def fm_improv(sco, line, beat):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq()
+    tr0 = Seq.metaseq()
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Create the composition.

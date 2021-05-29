@@ -38,7 +38,7 @@ class Note:
             channels for quarter-tone tuning, and a value of 16 will use
             all 16 channels to quantize to 16 divisions per semitone 
             (6.25 cents), which is very close to the frequency limen.
-            See MidiSeq and the micro.py demo file for more information.
+            See Seq and the micro.py demo file for more information.
         off : int | float
             A note off velocity 0 to 127, defaults to 127.
 

@@ -25,9 +25,9 @@ For a Note to produce a microtonal sound three conditions must be met:
   value greater than 0.
 * The Note's 'tuning' parameter must be greater than 1.
 * Track 0 (the 'metatrack' of the midi file) must be quantized to the same
-  divisions per semitone as the 'tuning' parameter. See: MidiSeq.metatrack().
+  divisions per semitone as the 'tuning' parameter. See: Seq.metatrack().
 
-See also: demos fm.py, rm.py, gamelan.py, `MidiSeq.metatrack()`, `Note()`.
+See also: demos fm.py, rm.py, gamelan.py, `Seq.metatrack()`, `Note()`.
 
 To run this script cd to the parent directory of demos/ and do:
 ```bash
@@ -36,7 +36,7 @@ python3 -m demos.micro
 """
 
 
-from musx import Score, Note, MidiSeq, MidiFile, MidiEvent, odds, divide, \
+from musx import Score, Note, Seq, MidiFile, MidiEvent, odds, divide, \
      deltas, rescale, scale, jumble, temper
 from musx.midi.gm import TubularBells, Dulcimer, Flute, Vibraphone, Marimba
 
@@ -52,7 +52,7 @@ def pitchbends(sco, tuning):
     tuning : int
         A value 1 to 16 specificing the divisions per semitone of the tuning.
     """
-    values = MidiSeq.channeltuning(tuning)
+    values = Seq.channeltuning(tuning)
     for chan,value in enumerate(values):
         # calculate the pitch bend value
         bend = round(rescale(value, -2,  2,  0, 16383))
@@ -93,9 +93,9 @@ def playmicrosteps():
     """
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq()
+    tr0 = Seq.metaseq()
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
     # Create composers for each semitonal division from 1 to 16
@@ -137,9 +137,9 @@ def playmicropentatonic():
 
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={i: Vibraphone for i in range(16)}, tuning=8)
+    tr0 = Seq.metaseq(ins={i: Vibraphone for i in range(16)}, tuning=8)
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    tr1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
     sco = Score(out=tr1)
 

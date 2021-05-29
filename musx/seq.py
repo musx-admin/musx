@@ -1,25 +1,24 @@
 ################################################################################
 """
-The midiseq module provide support for reading and writing sequences of
-midi messages.
+The seq module provide support for reading and writing sequences of Notes.
 """
 
 
-from ..note import Note
-from . import midievent as me
-from . import gm
-from ..tools import rescale
+from .note import Note
+from .midi import midievent as me
+from .midi import gm
+from .tools import rescale
 import sys
 import time
 import threading
 
-class MidiSeq:
+class Seq:
     
     def __init__(self, events=[]):
         """
         A time ordered sequence of MidiEvents.
 
-        A MidiSeq is an iterable so its events can be iterated, sliced and 
+        A Seq is an iterable so its events can be iterated, sliced and 
         mapped, e.g. `for ev in midiseq: print(ev)`.
 
         Parameters
@@ -36,7 +35,7 @@ class MidiSeq:
             raise ValueError(f"events is not a list ({events})")
 
     def __str__(self):
-        return f"<MidiSeq: len={len(self)}, endtime={self.endtime()} {hex(id(self))}>"
+        return f"<Seq: len={len(self)}, endtime={self.endtime()} {hex(id(self))}>"
 
     __repr__ = __str__
 
@@ -201,7 +200,7 @@ class MidiSeq:
                 # calculate the pitch bend value
                 b = round(rescale(v, -2,  2,  0, 16383))
                 meta.append(me.MidiEvent.pitch_bend(c, b))
-        return MidiSeq(meta)
+        return Seq(meta)
 
     @staticmethod
     def channeltuning(tuning):
@@ -267,7 +266,7 @@ class MidiSeq:
         if not 1 <= divs <= 16:
             raise ValueError(f"tuning divisions not between 1 and 16 inclusive ({divs})")
         meta = []
-        values = MidiSeq.channeltuning(divs)
+        values = Seq.channeltuning(divs)
         for c,v in enumerate(values):
             # calculate the pitch bend value
             b = round(rescale(v, -2,  2,  0, 16383))
