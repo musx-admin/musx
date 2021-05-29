@@ -72,79 +72,88 @@ class Seq:
         """
         if end is None:
             end = len(self.events)
-        col1 = len(str(end))
-        col2 = len(str(round(self.events[end-1].time, 3)))
-        fmat = "{:" + str(col1) + "} {:" + str(col2) + "} {}"
-        if hints:
-            fmat += "\t# {}"
-            for i in range(start, end):
-                e = self.events[i]
-                print(fmat.format(i, round(e.time, 3), e.message, e.hint()))
-        else:
-            for i in range(start, end):
-                e = self.events[i]
-                print(fmat.format(i, round(e.time, 3), e.message))
+        for i in range(start, end):
+            e = self.events[i]
+            print(i, e.time, e, sep='\t')
+        # col1 = len(str(end))
+        # col2 = len(str(round(self.events[end-1].time, 3)))
+        # fmat = "{:" + str(col1) + "} {:" + str(col2) + "} {}"
+        # if hints:
+        #     fmat += "\t# {}"
+        #     for i in range(start, end):
+        #         e = self.events[i]
+        #         print(fmat.format(i, round(e.time, 3), e.message, e.hint()))
+        # else:
+        #     for i in range(start, end):
+        #         e = self.events[i]
+        #         print(fmat.format(i, round(e.time, 3), e.message))
 
     def append(self, ev):
         """Adds an event to the end of the sequence without checking time."""
         self.events.append(ev)
 
     def add(self, e):
-        """
-        Adds a midi event to the sequence in time sorted order. If the added event
-        is a MidiNote it is first converted into a NoteOn and NoteOff pair before
-        being added.
+        i = 0; l = len(self.events)
+        while i < l and self.events[i].time <= e.time:
+            i += 1
+        self.events.insert(i, e) 
 
-        The sorting rules for adding midi events are:
+    # def add(self, e):
+    #     """
+    #     Adds a midi event to the sequence in time sorted order. If the added event
+    #     is a MidiNote it is first converted into a NoteOn and NoteOff pair before
+    #     being added.
 
-        * an event later than the last event in the sequence is appended to the sequence.
-        * a NoteOn is added after all other messages with the same time stamp.
-        * a NoteOff is added before all other messages with the same time stamp.
-        * all other events are added after NoteOff events with the same time stamp.
+    #     The sorting rules for adding midi events are:
 
-        Parameters
-        ---------
-        e : MidiEvent | MidiNote
-            The MidiEvent or MidiNote
-        """
-        if isinstance(e, Note):
-            on = e.noteon()
-            off = e.noteoff()
-            # print(f"adding noteon {on} to seq, time is {on.time}")
-            self.add(on)
-            # print(f"adding noteoff {off} to seq, time is {off.time}")
-            self.add(off)
-            return self
-        if e.time > self.endtime():
-            self.events.append(e)
-            return self
-        seqlen = len(self.events)
-        if e.is_note_on():
-            # note ons come after all other messages at the same time
-            i = 0
-            # stop when events[i] is stricty larger
-            while i < seqlen and self.events[i].time <= e.time:
-                i += 1
-            # i == seqlen or i.time > e.time
-            self.events.insert(i, e)  # inserting at len() ok
-        elif e.is_note_off():
-            # note offs come before all other messages at the same time
-            i = 0
-            # stop when events[i] is >= e.time
-            while i < seqlen and self.events[i].time < e.time:
-                i += 1
-            # i == len or i.time == e.time or i.time > e.time
-            self.events.insert(i, e)
-        else:
-            # other messages are inserted after any offs at the same time
-            i = 0
-            while i < seqlen and self.events[i].time < e.time:
-                i += 1
-            # i == len or i.time == e.time or i.time > e.time
-            while i < seqlen and self.events[i] == e.time and self.events[i].isnoteoff():
-                i += 1
-            self.events.insert(i, e)
-        return self
+    #     * an event later than the last event in the sequence is appended to the sequence.
+    #     * a NoteOn is added after all other messages with the same time stamp.
+    #     * a NoteOff is added before all other messages with the same time stamp.
+    #     * all other events are added after NoteOff events with the same time stamp.
+
+    #     Parameters
+    #     ---------
+    #     e : MidiEvent | MidiNote
+    #         The MidiEvent or MidiNote
+    #     """
+    #     if isinstance(e, Note):
+    #         on = e.noteon()
+    #         off = e.noteoff()
+    #         # print(f"adding noteon {on} to seq, time is {on.time}")
+    #         self.add(on)
+    #         # print(f"adding noteoff {off} to seq, time is {off.time}")
+    #         self.add(off)
+    #         return self
+    #     if e.time > self.endtime():
+    #         self.events.append(e)
+    #         return self
+    #     seqlen = len(self.events)
+    #     if e.is_note_on():
+    #         # note ons come after all other messages at the same time
+    #         i = 0
+    #         # stop when events[i] is stricty larger
+    #         while i < seqlen and self.events[i].time <= e.time:
+    #             i += 1
+    #         # i == seqlen or i.time > e.time
+    #         self.events.insert(i, e)  # inserting at len() ok
+    #     elif e.is_note_off():
+    #         # note offs come before all other messages at the same time
+    #         i = 0
+    #         # stop when events[i] is >= e.time
+    #         while i < seqlen and self.events[i].time < e.time:
+    #             i += 1
+    #         # i == len or i.time == e.time or i.time > e.time
+    #         self.events.insert(i, e)
+    #     else:
+    #         # other messages are inserted after any offs at the same time
+    #         i = 0
+    #         while i < seqlen and self.events[i].time < e.time:
+    #             i += 1
+    #         # i == len or i.time == e.time or i.time > e.time
+    #         while i < seqlen and self.events[i] == e.time and self.events[i].isnoteoff():
+    #             i += 1
+    #         self.events.insert(i, e)
+    #     return self
     
     @classmethod
     def metaseq(cls, tempo=60, timesig=[4,4], keysig=[0,0], ins={}, tuning=1):

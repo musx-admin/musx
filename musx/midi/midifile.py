@@ -8,7 +8,7 @@ import os.path
 from . import midimsg as mm
 from . import midievent as me
 from ..seq import Seq
-
+from ..note import Note
 
 class MidiFile:
 
@@ -283,13 +283,41 @@ class MidiFile:
         if force_tempo:
             MidiFile.write_varlen_value(stream, 0)
             MidiFile.write_message(stream, mm.meta_tempo(1000000))
+
+        # pending queue of note offs, used if the track contains Note objects.
+        off_queue = []
+
+        def enqueue_off(off, q):
+            """Adds a note off to the queue at the latest possible position."""
+            i = 0
+            l = len(q)
+            while i < l and q[i].time <= off.time:
+                i += 1
+            q.insert(i, off)
+ 
         for ev in track:
-            # convert absolute time to time in ticks.
+            while (off_queue and (off_queue[0].time <= ev.time)):
+                print("writing off: time=", off_queue[0].time, "msg=", off_queue[0])
+                MidiFile.write_varlen_value(stream, int((off_queue[0].time - previous_time) * divs))
+                MidiFile.write_message(stream, off_queue[0].message)
+                previous_time = off_queue.pop(0).time
+            if isinstance(ev, Note):
+                foo = ev.noteoff()
+                print("enquing future off: time=", foo.time, "ev=", foo)
+                enqueue_off(foo, off_queue)
+                ev = ev.noteon()
             delta = int((ev.time - previous_time) * divs)
-            #print(delta, "\t", ev.message)
+            print("writing non off: prev=", previous_time, "time=", ev.time, "delta=", delta, "ev=", ev)
             MidiFile.write_varlen_value(stream, delta)
             MidiFile.write_message(stream, ev.message)
             previous_time = ev.time
+            print("---")
+        # flush any remaining note offs.
+        while (off_queue):
+            MidiFile.write_varlen_value(stream, int((off_queue[0].time - previous_time) * divs))
+            MidiFile.write_message(stream, off_queue[0].message)
+            previous_time = off_queue.pop(0).time      
+        
         # add a 0 delta and EOT
         MidiFile.write_varlen_value(stream, 0)
         MidiFile.write_message(stream, mm.meta_eot())
@@ -373,7 +401,7 @@ class MidiFile:
             force_tempo = False
             # if the first event in the first track is not a
             # tempo event then force tempo==60.
-            if not self.tracks[0][0].is_meta(mm.kTempo):
+            if not isinstance(self.tracks[0][0], me.MidiEvent) or not self.tracks[0][0].is_meta(mm.kTempo):
                 force_tempo = True
             for t in self.tracks:
                 self.write_track(stream, t, divs, force_tempo)
