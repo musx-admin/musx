@@ -24,14 +24,13 @@ from .midi.midimsg import *
 from .midi.midievent import *
 from .midi.midifile import *
 from .seq import *
-from .generators import *
+from .gens import *
 from .pitch import *
 from .note import *
 from .interval import *
-from .scales import *
 from .tools import *
 from .ran import *
-from .envelopes import *
+from .envs import *
 from .score import *
 from .spectral import *
 from .pc import *

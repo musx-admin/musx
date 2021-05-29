@@ -4,13 +4,14 @@ The seq module provide support for reading and writing sequences of Notes.
 """
 
 
+import sys
+import time
+import threading
 from .note import Note
 from .midi import midievent as me
 from .midi import gm
 from .tools import rescale
-import sys
-import time
-import threading
+
 
 class Seq:
     

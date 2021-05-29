@@ -1,8 +1,7 @@
 ################################################################################
 """
 rhythm.py provides a mapping between alternate representations of rhythmic 
-values: fractions, rhythmic symbols, lists of the same or strings of the same
-separated by commas and/or spaces.
+values: fractions, rhythmic symbols, lists of the same or strings of the same.
 
 A fraction  is a ratio (or Fraction) of a whole note, e.g. 
 1/4=quarter note, 1/8=eighth note, 3/2= dotted whole note (three half-notes),

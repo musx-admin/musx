@@ -5,7 +5,6 @@ more general representation of time, duration, key number, and amplitude.
 
 from .midi import midievent as me
 from .midi import midimsg as mm
-from math import modf
 from .tools import quantize
 
 
