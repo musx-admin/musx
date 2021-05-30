@@ -276,48 +276,42 @@ class MidiFile:
         self.write_chunk_length(stream, b'MTrk', 0)
         # save the begin position of this track.
         track_beg = stream.tell()
-        previous_time = 0
+        # the previous time, used to calculate delta times between events.
+        prev_time = 0
         # If force_tempo is True then this is the first track
         # and the user did not provide a tempo marking. In
         # this case write an initial tempo message for mm=60
         if force_tempo:
             MidiFile.write_varlen_value(stream, 0)
             MidiFile.write_message(stream, mm.meta_tempo(1000000))
-
         # pending queue of note offs, used if the track contains Note objects.
         off_queue = []
-
-        def enqueue_off(off, q):
-            """Adds a note off to the queue at the latest possible position."""
-            i = 0
-            l = len(q)
-            while i < l and q[i].time <= off.time:
+        # Adds a note off to the note off queue at the latest possible position.
+        def enqueue_off(off, queue):
+            i = 0; l = len(queue)
+            while i < l and queue[i].time <= off.time:
                 i += 1
-            q.insert(i, off)
- 
+            queue.insert(i, off)
+        # Writes out pending offs that are <= current time, returns updated previous time
+        def write_pending_offs(stream, queue, time, prev, divs, all=False):
+            while (queue and (all or (queue[0].time <= time))):
+                MidiFile.write_varlen_value(stream, int((queue[0].time - prev) * divs))
+                MidiFile.write_message(stream, queue[0].message)
+                prev = queue.pop(0).time
+            return prev
+        # write out all the events in the track
         for ev in track:
-            while (off_queue and (off_queue[0].time <= ev.time)):
-                print("writing off: time=", off_queue[0].time, "msg=", off_queue[0])
-                MidiFile.write_varlen_value(stream, int((off_queue[0].time - previous_time) * divs))
-                MidiFile.write_message(stream, off_queue[0].message)
-                previous_time = off_queue.pop(0).time
+            prev_time = write_pending_offs(stream, off_queue, ev.time, prev_time, divs)
+            # if we encounter a Note object, schedule its note off and write its note on immediately.
             if isinstance(ev, Note):
-                foo = ev.noteoff()
-                print("enquing future off: time=", foo.time, "ev=", foo)
-                enqueue_off(foo, off_queue)
+                enqueue_off(ev.noteoff(), off_queue)
                 ev = ev.noteon()
-            delta = int((ev.time - previous_time) * divs)
-            print("writing non off: prev=", previous_time, "time=", ev.time, "delta=", delta, "ev=", ev)
+            delta = int((ev.time - prev_time) * divs)
             MidiFile.write_varlen_value(stream, delta)
             MidiFile.write_message(stream, ev.message)
-            previous_time = ev.time
-            print("---")
+            prev_time = ev.time
         # flush any remaining note offs.
-        while (off_queue):
-            MidiFile.write_varlen_value(stream, int((off_queue[0].time - previous_time) * divs))
-            MidiFile.write_message(stream, off_queue[0].message)
-            previous_time = off_queue.pop(0).time      
-        
+        write_pending_offs(stream, off_queue, prev_time, prev_time, divs, True)   
         # add a 0 delta and EOT
         MidiFile.write_varlen_value(stream, 0)
         MidiFile.write_message(stream, mm.meta_eot())
