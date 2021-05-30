@@ -1,6 +1,6 @@
 """
-A high-level midi class that automatically generates midi note on and off pairs from a
-more general representation of time, duration, key number, and amplitude.   
+A high-level event class that automatically generates midi note on and off pairs from a
+more general representation of time, duration, pitch, and amplitude.   
 """
 
 from .midi import midievent as me
@@ -10,7 +10,7 @@ from .tools import quantize
 
 class Note:
 
-    def __init__(self, time=0.0, dur=1.0, key=60, amp=.5, chan=0, tuning=1, off=127):
+    def __init__(self, time=0.0, dur=1.0, key=60, amp=.5, chan=0, tuning=1):
         """
         Creates a MidiNote from its arguments.
 
@@ -38,8 +38,6 @@ class Note:
             all 16 channels to quantize to 16 divisions per semitone 
             (6.25 cents), which is very close to the frequency limen.
             See Seq and the micro.py demo file for more information.
-        off : int | float
-            A note off velocity 0 to 127, defaults to 127.
 
         Raises 
         ------
@@ -50,7 +48,6 @@ class Note:
         self.key = key
         self.amp = amp
         self.chan = chan
-        self.off = off
 
         if not (1 <= tuning <= 16):
             raise ValueError(f"not a valid microtuning value: {tuning}.")
@@ -150,36 +147,13 @@ class Note:
         else:
             raise ValueError(f"Invalid channel value: {val}.")
 
-    @property
-    def off(self):
-        """
-        The note off velocity. The default value is 127.
-        
-        Raises
-        ------
-        A ValueError if off is not a number between 0 and 127 inclusive.
-        """
-        return self._off
-
-    @off.setter
-    def off(self, val):
-        if isinstance(val, int) and 0 <= val <= 127:
-            self._off = val
-        else:
-            raise ValueError(f"Invalid note off velocity value: {val}.")
-
     def __str__(self):
         string = f'<Note: time={self.time}, dur={self._dur}, key={self._key}, amp={self._amp}, chan={self._chan}'
-        if self._off != 127:
-            string += f', off={self._off}'
         string += f" {id(self)}>"
         return string
 
     def __repr__(self):
-        string = f'Note({self._time}, {self._dur}, {self._key}, {self._amp}, {self._chan}'
-        if self._off != 127:
-            string += f', off={self._off}'
-        string += ')'
+        string = f'Note({self._time}, {self._dur}, {self._key}, {self._amp}, {self._chan})'
         return string
 
     def _microtune(self, div):
@@ -207,7 +181,7 @@ class Note:
     def noteoff(self):
         """Returns a note off MidiEvent for the note."""
         return me.MidiEvent([mm.kNoteOff | (self._chan & 0xf),
-                             int(self._key), self._off], self._time + self._dur)
+                             int(self._key), 127], self._time + self._dur)
 
 if __name__ == '__main__':
     # from musx.midi.midinote import mtest

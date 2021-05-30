@@ -249,7 +249,9 @@ class Score:
         """
         Adds an event to the score. 
         """
-        self.out.add(event)
+        #self.out.add(event)
+        # Since the score is a scheduler we can just append the event to the seq.
+        self.out.append(event)
 
 
 if __name__ == '__main__':
