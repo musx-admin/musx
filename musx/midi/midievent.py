@@ -6,9 +6,9 @@ The midifile module provides object oriented support for midi messages.
 
 from . import midimsg as mm
 from . import gm
+from ..note import Event
 
-
-class MidiEvent:
+class MidiEvent (Event):
     def __init__(self, message, time=0.0):
         """
         A class that wraps lists of midi message bytes so they can be treated 
@@ -25,8 +25,9 @@ class MidiEvent:
         time : number
             The time to give the midi message. The units for this are application-specific.
         """
+        super().__init__(time)
         self.message = message
-        self.time = time
+        # self.time = time
 
     def __str__(self):
         """The print() string shows the raw data."""
@@ -1059,14 +1060,12 @@ class MidiEvent:
 
     # Support code.
 
-    # FIXME tables should be class attributes!
     def tostring(self, hint=False):
         text = f"{self.message}"
         if hint:
             text += " # " + self.hint()
         return text
 
-    # FIXME tables should be class attributes!
     def hint(self):
         stat = self.status()
         if stat < mm.kSysEx:  # channel message
@@ -1101,7 +1100,6 @@ class MidiEvent:
             text = MidiEvent._print_table[stat][0][1]
         return text
 
-    # FIXME tables should be class attributes!
     def toextern(self):
         stat = self.status()
         if stat == mm.kReset:  # NB: midi makes kReset status same as kMetaMsg

@@ -8,8 +8,41 @@ from .midi import midimsg as mm
 from .tools import quantize
 from .pitch import Pitch
 
+class Event:
+    """
+    A base class for defining musical events.
 
-class Note:
+    Parameters
+    ----------
+    time : int | float
+        The onset time in seconds, defaults to 0.0.  For ways to specify
+        time and duration metrically, see: `rhythm()` and `intempo()`.
+    """
+      
+    def __init__(self, time):
+        self.time = time
+
+    @property
+    def time(self):
+        """
+        The start time of the note in seconds, defaults to 0.0.  For ways
+        to specify time metrically, see: `rhythm()` and `intempo()`.
+
+        Raises
+        ------
+        ValueError if the time value is not a number >= 0.
+        """
+        return self._time
+
+    @time.setter
+    def time(self, val):
+        if isinstance(val, (int, float)) and val >= 0:
+            self._time = val
+        else:
+            raise ValueError(f"Invalid time value: {val}.")
+
+
+class Note (Event):
 
     def __init__(self, time=0.0, duration=1.0, pitch=60, amplitude=.5, instrument=0, microdivs=1):
         """
@@ -48,7 +81,8 @@ class Note:
         ------
         ValueError if the microdivs value is not a number between 1 and 16, inclusive.
         """
-        self.time = time
+        #self.time = time
+        super().__init__(time)
         self.duration = duration
         self.pitch = pitch
         self.amplitude = amplitude
