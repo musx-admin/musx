@@ -17,19 +17,19 @@ from musx import Score, Note, Seq, MidiFile, jumble, choose, scale
 from musx.midi.gm import Harpsichord
 
 
-def register (sco, rhy, dur, low, high, amp):
+def register (score, rhy, dur, low, high, amp):
     """
     Generates a chromatic scale betwen low and high choosing notes from the
     scale in random.
     """ 
     pat = jumble(scale(low, high-low+1, 1))
-    while sco.elapsed < dur:
+    while score.elapsed < dur:
         keyn = next(pat)
-        midi = Note(time=sco.now, dur=rhy, key=keyn, amp=amp)
-        sco.add(midi)
+        note = Note(time=score.now, duration=rhy, pitch=keyn, amplitude=amp)
+        score.add(note)
         yield rhy
 
-def continuum (sco, rhy, minkeys, maxkeys, seclens):
+def continuum (score, rhy, minkeys, maxkeys, seclens):
     """
     Calls register() to create the next section's material and then
     waits until the section is over before creating another section.
@@ -41,7 +41,7 @@ def continuum (sco, rhy, minkeys, maxkeys, seclens):
         # get the section's duration
         secdur = next(pat)
         # sprout the next section
-        sco.compose(register(sco, rhy, secdur, low, high, .4))
+        score.compose(register(score, rhy, secdur, low, high, .4))
         # wait till end of section
         yield secdur
 
@@ -49,11 +49,11 @@ def continuum (sco, rhy, minkeys, maxkeys, seclens):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = Seq.metaseq(ins={0: Harpsichord})
+    track0 = Seq.metaseq(ins={0: Harpsichord})
     # Track 1 will hold the composition.
-    tr1 = Seq()
+    track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
-    sco = Score(out=tr1)
+    score = Score(out=track1)
     # Lower bound on keynum choices
     minkeys = [60, 59, 58, 57, 56, 55, 54, 53, 52,
                 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
@@ -69,9 +69,9 @@ if __name__ == '__main__':
     # Speed of rhythm
     rate = .075
     # Create the composition.
-    sco.compose(continuum(sco, rate, minkeys, maxkeys, seclens))
+    score.compose(continuum(score, rate, minkeys, maxkeys, seclens))
     # Write the seqs to a midi file in the current directory.
-    file = MidiFile("continuum.mid", [tr0, tr1]).write()
+    file = MidiFile("continuum.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
     
     # To automatially play demos use setmidiplayer() and playfile().

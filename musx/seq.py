@@ -93,10 +93,17 @@ class Seq:
         self.events.append(ev)
 
     def add(self, e):
-        i = 0; l = len(self.events)
-        while i < l and self.events[i].time <= e.time:
-            i += 1
-        self.events.insert(i, e) 
+        """
+        Adds an event to the sequence in time sorted order, with the event
+        postioned after any other events with the same time stamp.
+        """
+        if self.endtime() <= e.time:
+            self.events.append(e)
+        else:
+            i = 0; l = len(self.events)
+            while i < l and self.events[i].time <= e.time:
+                i += 1
+            self.events.insert(i, e) 
 
     # def add(self, e):
     #     """
@@ -156,7 +163,7 @@ class Seq:
     #     return self
     
     @classmethod
-    def metaseq(cls, tempo=60, timesig=[4,4], keysig=[0,0], ins={}, tuning=1):
+    def metaseq(cls, tempo=60, timesig=[4,4], keysig=[0,0], ins={}, microdivs=1):
         """
         Returns a sequence containing midi meta events declaring the midifile's
         tempo, time signature, key signature, instrument assignments, and 
@@ -182,7 +189,7 @@ class Seq:
             general midi program asignment 0 to 127 (in musx channel and
             program values are zero based, not 1 based). See musx.midi.gm
             for the list of instument constants.
-        tuning : int
+        microdivs : int
             A value 1 to 16 setting the divisions per semitone used for
             microtonal quantization of floating point keynums. See MidiNote
             and the micro.py demo file for more information.
@@ -203,9 +210,9 @@ class Seq:
         keysig = me.MidiEvent.meta_key_signature(keysig[0], keysig[1])
         meta = [tempo, timesig, keysig]
         meta += [me.MidiEvent.program_change(c,p) for c,p in insts.items()]
-        # channel tuning
-        if 2 <= tuning <= 16:
-            values = cls.channeltuning(tuning)
+        # channel microdivs
+        if 2 <= microdivs <= 16:
+            values = cls.channeltuning(microdivs)
             for c,v in enumerate(values):
                 # calculate the pitch bend value
                 b = round(rescale(v, -2,  2,  0, 16383))
@@ -213,35 +220,35 @@ class Seq:
         return Seq(meta)
 
     @staticmethod
-    def channeltuning(tuning):
+    def channeltuning(microdivs):
         """
-        Internal funtion that converts the tuning value 
+        Internal funtion that converts the microdivs value 
         (the number of divisions per semitone) into a 
         sequence of cent values above the standard midi
         key number and then repeatedly assigns the sequence
         across all 16 midi channels.
 
-        Example: if tuning is 2, then the semitone is divided
-        into two 50 cent steps [0, .5], this tuning is then
+        Example: if microdivs is 2, then the semitone is divided
+        into two 50 cent steps [0, .5], this microdivs is then
         repeated eight times over the sixteen midi channels
         [0, .5, 0, .5, ... 0, 5] yielding eight pairs of channels
         at indexes 0, 2, 4, ... 14 tuned for quarter tones.
 
         Parameters
         ----------
-        tuning : int 
+        microdivs : int 
             The number of divisions per semitone, 1 is semitone,
             2 is quarter tone, etc.
 
         Returns
         -------
-        A sequence of tuning adjustments for all 16 channels.
+        A sequence of microdivs adjustments for all 16 channels.
         """
 
-        tuning = max(1, min(16, tuning))
+        microdivs = max(1, min(16, microdivs))
         cents = [0.0]
-        for i in range(1, tuning):
-            cents.append(1.0 * i/tuning)
+        for i in range(1, microdivs):
+            cents.append(1.0 * i/microdivs)
         # return a row of 16 repeating cent values
         return [cents[i % len(cents)] for i in range(16)]
 

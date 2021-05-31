@@ -295,50 +295,37 @@ class Pitch (PitchBase):
         else:
             raise ValueError(f"'{let}' is not a valid pitch letter.")
 
-    def __str__(self):
-        """
-        Returns a string displaying information about the pitch within angle
-        brackets. Information includes the class name, the pitch text, and
-        the id of the object. It is important that you implement the __str__ 
-        method precisely. In particular, for __str__ you want to see 
-        '<', '>', '0x' in your output string.  The format of your output 
-        strings from your version of this function must look EXACTLY the
-        same as in the two examples below.
-        
-        Example
-        -------   
-            >>> str(Pitch("C#6"))
-            '<Pitch: C#6 0x7fdb17e2e950>'
-            >>> str(Pitch())
-            '<Pitch: empty 0x7fdb1898fa70>'
-        """
-        s = self.string()
-        return f'<Pitch: {s if s else "empty"} {hex(id(self))}>'
-
     def __repr__(self):
         """
-        Prints the external form of the Pitch that, if evaluated, would create
+        Prints an external form that, if evaluated, will create
         a Pitch with the same content as this pitch.
-        
-        Note: It is the __repr__ (not the __str__) function that the autograder
-        uses to compare results. So it is very important that you implement this
-        method precisely. In particular, for __repr__ you want to see double
-        quotes inside single quotes and NOT the other way around. The format of
-        your output strings from your version of this function must look 
-        EXACTLY the same as in the two examples below.
-
-        Example
-        -------
-            >>> str(Pitch("C#6"))
-            '<Pitch: C#6 0x7fdb17e2e950>'
-
-            >>> repr(Pitch("Bbb3"))
-            'Pitch("Bbb3")'
         """
         s = self.string()
         if s:
             return f'Pitch("{s}")'
         return 'Pitch()'
+
+        __str__ == __repr__
+
+    # def __str__(self):
+    #     """
+    #     Returns a string displaying information about the pitch within angle
+    #     brackets. Information includes the class name, the pitch text, and
+    #     the id of the object. It is important that you implement the __str__ 
+    #     method precisely. In particular, for __str__ you want to see 
+    #     '<', '>', '0x' in your output string.  The format of your output 
+    #     strings from your version of this function must look EXACTLY the
+    #     same as in the two examples below.
+        
+    #     Example
+    #     -------   
+    #         >>> str(Pitch("C#6"))
+    #         '<Pitch: C#6 0x7fdb17e2e950>'
+    #         >>> str(Pitch())
+    #         '<Pitch: empty 0x7fdb1898fa70>'
+    #     """
+    #     s = self.string()
+    #     return f'<Pitch: {s if s else "empty"} {hex(id(self))}>'
 
     def __lt__(self, other):
         """

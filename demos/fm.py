@@ -13,19 +13,19 @@ python3 -m demos.fm
 
 
 import random
-from musx import Score, Note, Seq, MidiFile, Spectrum, fmspectrum, keynum, hertz, odds, between, pick
+from musx import Score, Note, Seq, MidiFile, fmspectrum, keynum, hertz, odds, between, pick
 
 
-def fm_chords(sco, reps, cen, cm1, cm2, in1, in2, rhy):
+def fm_chords(score, reps, cen, cm1, cm2, in1, in2, rhy):
     """
     Generates a series of FM chords with random fluctuations in its
     C/M ratios and indexes to yield variations of chordal notes.
     """
     for _ in reps:
         spec = fmspectrum(hertz(cen), between(cm1, cm2), between(in1, in2)) 
-        for k in spec.keynums(minkey=48, maxkey=72):
-            m = Note(time=sco.now, dur=rhy, key=k, amp=.5)
-            sco.add(m)
+        for k in spec.keynums(minpitch=48, maxpitch=72):
+            m = Note(time=score.now, duration=rhy, pitch=k, amplitude=.5)
+            score.add(m)
     yield rhy
 
 
@@ -34,7 +34,7 @@ contour = keynum("a4 g f e a4 b c d gs b c5 ef fs g a5 bf g f e a5 b c d \
                   g bf c5 cs e4 f gs d4 c b a4 e5 f g a5")
 
 
-def fm_improv(sco, line, beat):
+def fm_improv(score, line, beat):
     """
     Uses a contour line of carrier frequencies (specified as midi keynums)
     to produces fm spectra that creates both melodic and harmoinc gestures.
@@ -54,28 +54,28 @@ def fm_improv(sco, line, beat):
         if ismel:
             random.shuffle(keys)
         sub = rhy / len(keys) if ismel else 0
-        print("melody:" if ismel else "chord:", "time=", sco.now, "dur=", rhy, "keys=", keys)
+        print("melody:" if ismel else "chord:", "time=", score.now, "duration=", rhy, "keys=", keys)
         for i, k in enumerate(keys):
-            m = Note(time=sco.now + (i * sub), dur=dur, key=k, amp=amp)
-            sco.add(m)
+            m = Note(time=score.now + (i * sub), duration=dur, pitch=k, amplitude=amp)
+            score.add(m)
         yield rhy
 
 
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = Seq.metaseq()
+    track0 = Seq.metaseq()
     # Track 1 will hold the composition.
-    tr1 = Seq()
+    track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
-    sco = Score(out=tr1)
+    score = Score(out=track1)
     # Create the composition.
 
     # sco.compose(fm_chords(sco, 12, 60, 1.0, 2.0, 2.0, 4.0, .8))
-    sco.compose(fm_improv(sco, contour, 1))
+    score.compose(fm_improv(score, contour, 1))
 
     #  Write the tracks to a midi file in the current directory.
-    file = MidiFile("fm.mid", [tr0, tr1]).write()
+    file = MidiFile("fm.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
 
     # To automatially play demos use setmidiplayer() and playfile().

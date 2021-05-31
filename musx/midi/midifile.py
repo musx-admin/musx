@@ -472,13 +472,3 @@ class MidiFile:
 
     # def beats_to_ticks(self, val):
     #     return int(val * self.time_format)
-
-"""
-m = midi.MidiFile()
-m = midi.MidiFile("/Users/taube/Classes/205/Resources/reich.mid").read()
-m = midi.MidiFile("/Users/taube/Classes/205/Resources/jimmy.mid").read()
-m = midi.MidiFile("/Users/taube/Classes/205/Resources/messiaen.mid").read()
-m = midi.MidiFile("/Users/taube/Classes/205/Resources/samba.mid").read()
-m = midi.MidiFile("/Users/taube/Classes/205/Resources/castles.mid").read()
-m = midi.MidiFile("/Users/taube/Classes/205/Resources/tam-tam-1.aiff").read()
-"""

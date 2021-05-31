@@ -11,19 +11,18 @@ python3 -m demos.rm
 """
 
 
-from musx import Score, Note, Seq, MidiFile, rmspectrum, choose,\
-    jumble, cycle, keynum, hertz, scale, pick, intempo
-from musx.midi.gm import AcousticGrandPiano, Xylophone, Flute, FretlessBass, SteelDrums,\
-     Clarinet, Marimba, AcousticBass
+from musx import Score, Note, Seq, MidiFile, rmspectrum, choose, jumble,\
+     cycle, hertz, scale, pick, intempo
+from musx.midi.gm import Clarinet, Marimba
 
 
-def accompaniment(sco, reps, dur, set1, set2):
+def accompaniment(score, reps, dur, set1, set2):
     """
     Creates the accompanyment part from the ring modulation input specta.
 
     Parameters
     ----------
-    sco : Score
+    score : Score
         The musical score.
     reps : int
         The number of sections to compose.
@@ -42,21 +41,21 @@ def accompaniment(sco, reps, dur, set1, set2):
         # Iterate the keys, play as a chord.
         for k in keys:
             # Create a midi note at the current time.
-            m = Note(time=sco.now, dur=dur, key=k, amp=.3, chan=0)
+            n = Note(time=score.now, duration=dur, pitch=k, amplitude=.3, instrument=0)
             # Add it to our output seq.
-            sco.add(m)
+            score.add(n)
         # Wait till the next chord.
         yield dur
 
 
-def melody(sco, reps, dur, set3):
+def melody(score, reps, dur, set3):
     """
     Creates the melodic part out of the ring modulated output specta.
  
     Parameters
     ----------
-    q : Sheduler
-        The scheduling queue.
+    score : Score
+        The musical score.
     reps : int
         The number of sections to compose.
     dur : int
@@ -67,21 +66,21 @@ def melody(sco, reps, dur, set3):
     # Create a cycle of the two inputs
     pat = cycle(set3)
     for _ in range(2 * reps):
-        m = Note(time=sco.now, dur=dur/2, key=next(pat), amp=.7, chan=1)
-        sco.add(m)
+        n = Note(time=score.now, duration=dur/2, pitch=next(pat), amplitude=.7, instrument=1)
+        score.add(n)
         # Wait till the next note
         yield dur
 
 
-def rmfunky(sco, reps, dur, keys):
+def rmfunky(score, reps, dur, keys):
     """
     Main composer chooses input spectra , creates a ring modulated
     output spectrum and plays them using two parts.
 
     Parameters
     ----------
-    sco : Score
-        The musical score to add events to.
+    score : Score
+        The musical score.
     reps : int
         The number of sections to compose.
     dur : int
@@ -103,27 +102,27 @@ def rmfunky(sco, reps, dur, keys):
         keys3 = spect.keynums(quant=1, unique=True, minkey=21, maxkey=108)
         # sprout composers to play inputs and output
         playn = pick(3,4,5)
-        sco.compose(accompaniment(sco, playn, dur, keys1, keys2))
-        sco.compose(melody(sco, playn, dur, keys3))        # do it again after composers finish
+        score.compose(accompaniment(score, playn, dur, keys1, keys2))
+        score.compose(melody(score, playn, dur, keys3))        # do it again after composers finish
         yield (dur * playn * 2)
 
 
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = Seq.metaseq(ins={0: Marimba, 1: Clarinet})
+    track0 = Seq.metaseq(ins={0: Marimba, 1: Clarinet})
     # Track 1 will hold the composition.
-    tr1 = Seq()
+    track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
-    sco = Score(out=tr1)
+    score = Score(out=track1)
     # Musical material is the cycle of fourths.
     keys = scale(40, 12, 5)
     # Surface rhythm
     rhy = intempo(.25, 74)
     # Create the composition.
-    sco.compose(rmfunky(sco, 24, rhy, keys))
+    score.compose(rmfunky(score, 24, rhy, keys))
     # Write the tracks to a midi file in the current directory.
-    file = MidiFile("rm.mid", [tr0, tr1]).write()
+    file = MidiFile("rm.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
 
     # To automatially play demos use setmidiplayer() and playfile().

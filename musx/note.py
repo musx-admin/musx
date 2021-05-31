@@ -6,62 +6,68 @@ more general representation of time, duration, pitch, and amplitude.
 from .midi import midievent as me
 from .midi import midimsg as mm
 from .tools import quantize
+from .pitch import Pitch
 
 
 class Note:
 
-    def __init__(self, time=0.0, dur=1.0, key=60, amp=.5, chan=0, tuning=1):
+    def __init__(self, time=0.0, duration=1.0, pitch=60, amplitude=.5, instrument=0, microdivs=1):
         """
-        Creates a MidiNote from its arguments.
+        Creates Note from its arguments.
 
         Parameters
         ----------
         time : int | float
-            The start time of the midi message in seconds. Defaults to 0.0.
-        dur : int | float
-            The duration in seconds, defaults to 1.0.
-        key : int | float 
-            A key number 0 to 127, defaults to 60 (C4). This value can
-            also be a floating point value kk.cc where kk is the midi
-            key and cc is cents above the midi key's equal-tempered
-            frequency. See the tuning parameter for more information.
-        amp : int | float
+            The onset time in seconds, defaults to 0.0.  For ways to specify
+            time and duration metrically, see: `rhythm()` and `intempo()`.
+        duration : int | float
+            The duration in seconds, defaults to 1.0. For ways to specify
+            duration and time metrically, see: `rhythm()` and `intempo()`.
+        pitch : int | float | Pitch
+            An int or float key number 0 to 127, or a Pitch object. 
+            Defaults to 60 (C4). If pitch is a float kkk.cc then
+            kkk is the midi key number and cc is cents above that midi
+            key's equal tempered frequency. See microdivs for more information.
+        amplitude : int | float
             An amplitude 0.0 to 1.0, defaults to 0.5.
-        chan : int
-            A midi channel 0 to 15, defaults to 0.
-        tuning : int
-            A value 1 to 16 setting the divisions per semitone used for
-            microtonal quantization of floating point keynums.  A value of
-            1 (the default) means standard semitonal tuning, so no 
-            microtones occur. A value of 2 claims successive pairs of 
-            channels for quarter-tone tuning, and a value of 16 will use
-            all 16 channels to quantize to 16 divisions per semitone 
-            (6.25 cents), which is very close to the frequency limen.
-            See Seq and the micro.py demo file for more information.
+        instrument : value
+            An instrument designation of some kind. If you are generating midi
+            events then the value should be a channel integer 0 to 15, inclusive.
+        microdivs : int
+            Specifies the microtonal divisions per semitone when pitch is a floating
+            point key number. The default value is 1, so semitone/1 = semitone. 
+            A value of 2 means semitone/2 = 50 cents, e.g quartertone tuning. 
+            When used with midi output and `Seq.metaseq()`, this triggers channel
+            tuning, where microdivs of 2 claims successive pairs of channels for 
+            quarter-tone tuning, and a value of 16 will use all 16 channels to 
+            quantize to 16 divisions per semitone, or 6.25 cents, which is very 
+            close to the frequency limen. For more information see: `Seq.metaseq()`
+            and the micro.py demo file.
 
         Raises 
         ------
-        A ValueError if the tuning value is not a number between 1 and 16, inclusive.
+        ValueError if the microdivs value is not a number between 1 and 16, inclusive.
         """
         self.time = time
-        self.dur = dur
-        self.key = key
-        self.amp = amp
-        self.chan = chan
+        self.duration = duration
+        self.pitch = pitch
+        self.amplitude = amplitude
+        self.instrument = instrument
 
-        if not (1 <= tuning <= 16):
-            raise ValueError(f"not a valid microtuning value: {tuning}.")
-        elif type(key) is float and key - int(key) > 0.0:
-            self._microtune(tuning)
+        if not (1 <= microdivs <= 16):
+            raise ValueError(f"not a valid microtuning value: {microdivs}.")
+        elif type(pitch) is float and pitch - int(pitch) > 0.0:
+            self._microtune(microdivs)
 
     @property
     def time(self):
         """
-        The start time of the midi note in seconds. The default value is 0.0.
+        The start time of the note in seconds, defaults to 0.0.  For ways
+        to specify time metrically, see: `rhythm()` and `intempo()`.
 
         Raises
         ------
-        A ValueError if the time value is not a number >= 0.
+        ValueError if the time value is not a number >= 0.
         """
         return self._time
 
@@ -73,88 +79,81 @@ class Note:
             raise ValueError(f"Invalid time value: {val}.")
 
     @property
-    def dur(self):
+    def duration(self):
         """
-        The duration of the midi note in seconds. The default value is 1.0.
+        The duration of the note in seconds, defaults to 1.0. For ways
+        to specify time metrically, see: `rhythm()` and `intempo()`.
  
         Raises
         ------
-        A ValueError if the duration value is not a number greater than 0.
+        ValueError if the duration value is not a number greater than 0.
         """
-        return self._dur
+        return self._duration
 
-    @dur.setter
-    def dur(self, val):
+    @duration.setter
+    def duration(self, val):
         if isinstance(val, (int, float)) and val > 0:
-            self._dur = val
+            self._duration = val
         else:
             raise ValueError(f"Invalid duration value: {val}.")
 
     @property
-    def key(self):
+    def pitch(self):
         """
-        The midi key number of the midi note. The default value is 60.
+        A Pitch object or an int or float key number, defaults to 60.
  
         Raises
         ------
-        A ValueError if the key number is not a number between 0 and 127 inclusive.
+        ValueError if the pitch is not a Pitch or a number between 0 and 127 inclusive.
         """
-        return self._key
+        return self._pitch
 
-    @key.setter
-    def key(self, val):
-        if isinstance(val, (int, float)) and 0 <= val <= 127:
-            self._key = val
+    @pitch.setter
+    def pitch(self, val):
+        if isinstance(val, Pitch) or (isinstance(val, (int, float)) and 0 <= val <= 127):
+            self._pitch = val
         else:
-            raise ValueError(f"Invalid key number value: {val}.")
+            raise ValueError(f"Invalid pitch value: {val}.")
 
     @property
-    def amp(self):
+    def amplitude(self):
         """
-        The amplitude of the midi note. The value can be a float between
-        between 0 and 1.0, or a velocity value between 2 and 127 inclusive.
-        Defaults to .5.
+        A value between 0.0 and 1.0 inclusive, defaults to 0.5.
 
         Raises
         ------
-        A ValueError if the amplitude value is a number less than 0 or greater than 127.
+        ValueError if the amplitude value is not a number between 0 and 1 inclusive.
         """
+        return self._amplitude
 
-        return self._amp
-
-    @amp.setter
-    def amp(self, val):
-        if isinstance(val, (int, float)) and 0 <= val <= 127:
-            self._amp = val if val <= 1 else (val / 127)
+    @amplitude.setter
+    def amplitude(self, val):
+        if isinstance(val, (int, float)) and 0 <= 1.0:
+            self._amplitude = val
         else:
             raise ValueError(f"Invalid amplitude value: {val}.")
 
     @property
-    def chan(self):
+    def instrument(self):
         """
-        The midi channel 0-15 of the midi note. The default value is 0.
-        
-        Raises
-        ------
-        A ValueError if the channel is not a number between 0 and 15 inclusive.
+        A value designating the note's instrument, defalts to 0. For midi output
+        the instrument must be a midi channel value 0 to 15 inclusive.
         """
-        return self._chan
+        return self._instrument
 
-    @chan.setter
-    def chan(self, val):
-        if isinstance(val, int) and 0 <= val < 16:
-            self._chan = val
-        else:
-            raise ValueError(f"Invalid channel value: {val}.")
-
-    def __str__(self):
-        string = f'<Note: time={self.time}, dur={self._dur}, key={self._key}, amp={self._amp}, chan={self._chan}'
-        string += f" {id(self)}>"
-        return string
+    @instrument.setter
+    def instrument(self, val):
+        self._instrument = val
 
     def __repr__(self):
-        string = f'Note({self._time}, {self._dur}, {self._key}, {self._amp}, {self._chan})'
-        return string
+        return f'Note({self._time}, {self._duration}, {self._pitch}, {self._amplitude}, {self._instrument})'
+
+    __str__ = __repr__
+
+    def _pitchtokey(self):
+        if isinstance(self._pitch, Pitch):
+            return self._pitch.keynum()
+        return self._pitch
 
     def _microtune(self, div):
         """
@@ -162,7 +161,7 @@ class Note:
         per semitone. 
         """
         micro = 1.0 / div   # microtonal increment
-        raw = self._key     # existing keynum
+        raw = self._pitchtokey()     # existing keynum
         key = int(raw)      # int version
         rem = raw - key     # float's fractional portion is microtones
         col = 0             # the microtonal channel to shift to
@@ -170,31 +169,31 @@ class Note:
             if micro*i <= rem < micro*(i + 1): # found rem in this bucket!
                 col = i     # offset to microtuned channel in midi file.
                 break
-        self._key = key     # convert floating point keynum to int
-        self._chan += col   # shift note to microtuned channel
+        self._pitch = key     # convert floating point keynum to int
+        self._instrument += col   # shift note to microtuned instrumentnel
   
     def noteon(self):
         """Returns a note on MidiEvent for the note."""
-        return me.MidiEvent([mm.kNoteOn | (self._chan & 0xf),
-                             int(self._key), int(self._amp * 127)], self._time)
+        return me.MidiEvent([mm.kNoteOn | (self._instrument & 0xf),
+                             int(self._pitchtokey()), int(self._amplitude * 127)], self._time)
 
     def noteoff(self):
         """Returns a note off MidiEvent for the note."""
-        return me.MidiEvent([mm.kNoteOff | (self._chan & 0xf),
-                             int(self._key), 127], self._time + self._dur)
+        return me.MidiEvent([mm.kNoteOff | (self._instrument & 0xf),
+                             int(self._pitchtokey()), 127], self._time + self._duration)
 
-if __name__ == '__main__':
-    # from musx.midi.midinote import mtest
-    # mtest()
-    def mtest(raw, div):
-        micro = 1.0 / div
-        key = int(raw)
-        rem = raw - key
-        col=0
-        # find the bucket that rem is in, this will be the channel increment.
-        for i in range(0, div+1):
-            if micro*i <= rem < micro*(i + 1):
-                col = i
-                break
-        print([micro*d for d in range(div)]+[micro*div]) 
-        print("raw=", raw, "div=", div, "micro", micro, "key=", key, "rem=", rem, "col=", col)
+# if __name__ == '__main__':
+#     # from musx.midi.midinote import mtest
+#     # mtest()
+#     def mtest(raw, div):
+#         micro = 1.0 / div
+#         key = int(raw)
+#         rem = raw - key
+#         col=0
+#         # find the bucket that rem is in, this will be the channel increment.
+#         for i in range(0, div+1):
+#             if micro*i <= rem < micro*(i + 1):
+#                 col = i
+#                 break
+#         print([micro*d for d in range(div)]+[micro*div]) 
+#         print("raw=", raw, "div=", div, "micro", micro, "key=", key, "rem=", rem, "col=", col)

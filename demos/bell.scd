@@ -73,7 +73,7 @@ b=[[1.0,             0.0,               0.0425,             0.3,    1.0         
 
 s.waitForBoot({
   SynthDef(\bell, {
-		arg freq = 351.75, amp=0.3, dur=15, pan=0, gate=1;
+		arg freq = 351.75, amplitude=0.3, duration=15, pan=0, gate=1;
 		var oscs;
 		oscs = b.collect({arg x;
 			var hertz = x.at(0) * freq;

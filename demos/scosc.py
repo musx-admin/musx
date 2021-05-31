@@ -28,7 +28,7 @@ class OscMessage():
     """
     A class to represent the OSC messages sent to SuperCollider
     """
-    def __init__(self, name, time, freq=440, dur=.5, amp=.5):
+    def __init__(self, name, time, freq=440, duration=.5, amplitude=.5):
         self.name = name
         self.data = [time, freq, dur, amp]
     def __str__(self):
@@ -96,7 +96,7 @@ def plain_hunt(q, rhy, dur):
     # write OscMessages to the OscSeq
     for b in peals:
         f = freqs[b]
-        m = OscMessage(name="/musx", time=q.now, dur=dur, freq=f, amp=.9)
+        m = OscMessage(name="/musx", time=q.now, duration=dur, freq=f, amplitude=.9)
         sco.add(m)
         yield rhy
 

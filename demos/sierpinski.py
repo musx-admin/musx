@@ -21,14 +21,14 @@ python3 -m demos.sierpinski
 from musx import Score, Note, Seq, MidiFile, keynum
 
 
-def sierpinski(sco, tone, shape, trans, levels, dur, amp):
+def sierpinski(score, tone, shape, trans, levels, dur, amp):
     """
     Generates a melodic shape based on successive transpositions (levels) of
     itself. 
     
     Parameters
     ----------
-    sco : Score
+    score : Score
         The musical score to add events to.
     tone : keynum
         The melodic tone on which to base the melody for the current level.
@@ -45,11 +45,11 @@ def sierpinski(sco, tone, shape, trans, levels, dur, amp):
     for i in shape:
         k = tone + i
         # play current tone in melody
-        m = Note(time=sco.now, dur=dur, key=min(k,127), amp=amp, chan=0)
-        sco.add(m)
+        n = Note(time=score.now, duration=dur, pitch=min(k,127), amplitude=amp, instrument=0)
+        score.add(n)
         if (levels > 1):
             # sprout melody on tone at next level
-            sco.compose(sierpinski(sco, (k + trans), shape,
+            score.compose(sierpinski(score, (k + trans), shape,
                         trans, levels - 1, dur / num,  amp))
         yield dur
     
@@ -57,21 +57,21 @@ def sierpinski(sco, tone, shape, trans, levels, dur, amp):
 if __name__ == "__main__":
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = Seq.metaseq()
+    track0 = Seq.metaseq()
     # Track 1 will hold the composition.
-    tr1 = Seq()
+    track1 = Seq()
     # Create a scheduler and give it t1 as its output object.
-    sco = Score(out=tr1)
+    score = Score(out=track1)
     # Create the composition. Specify levels and melody length with care!
     # The number of events that are generateed is exponentially related to
     # the length of the melody and the number of levels. For example the
     # first compose() generates 120 events, the second 726, and the third 2728!
-    sco.compose(sierpinski(sco, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
-    # sco.compose(sierpinski(q, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
-    # sco.compose(sierpinski(q, keynum('a0'), [0, -1, 2, 13], 12, 5, 24, .5))
+    #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
+    #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
+    score.compose(sierpinski(score, keynum('a0'), [0, -1, 2, 13], 12, 5, 24, .5))
  
     # Write the tracks to a midi file in the current directory.
-    file = MidiFile("sierpinski.mid", [tr0, tr1]).write()
+    file = MidiFile("sierpinski.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
     
     # To automatially play demos use setmidiplayer() and playfile().

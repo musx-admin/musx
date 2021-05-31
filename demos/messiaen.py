@@ -15,9 +15,9 @@ python3 -m demos.messiaen
 """
 
 
-from musx import Score, Note, Seq, MidiFile, rhythm, keynum
+from musx import Score, Seq, MidiFile, rhythm, keynum
 from musx.midi.gm import AcousticGrandPiano, Violin
-from .paint import brush, spray
+from .paint import brush
 
 piano_talea = rhythm('q q q e e. e e e e e. e. e. s e e. q h', tempo=80)
 
@@ -46,20 +46,20 @@ cello_color = keynum('c6 e d f# bf5')
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
+    track0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
     # Track 1 will hold the composition.
-    tr1 = Seq()
+    track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
-    sco = Score(out=tr1)
+    score = Score(out=track1)
     # Create the piano and cello composers.
-    piano=brush(sco, len=len(piano_talea) * 8 + 14, rhy=piano_talea,
-                key=piano_color, chan=0)
-    cello=brush(sco, len=len(cello_talea) * 6, rhy=cello_talea,
-                amp=.2, key=cello_color, chan=1)
+    piano = brush(score, length=len(piano_talea) * 8 + 14, rhythm=piano_talea,
+                pitch=piano_color, instrument=0)
+    cello = brush(score, length=len(cello_talea) * 6, rhythm=cello_talea,
+                amplitude=.2, pitch=cello_color, instrument=1)
     # Create the composition.
-    sco.compose([[0, piano], [5.5, cello]])
+    score.compose([[0, piano], [5.5, cello]])
     # Write the tracks to a midi file in the current directory.
-    file = MidiFile("messiaen.mid", [tr0, tr1]).write()
+    file = MidiFile("messiaen.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
 
     # To automatially play demos use setmidiplayer() and playfile().
