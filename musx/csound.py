@@ -22,14 +22,13 @@ def to_i_statement(channel, tyme, duration, midi_key, midi_velocity):
     return i_statement
     
 '''
-Returns a Csound score file as a single string, translated from the MidiFile object.
-It is assumed that times are in seconds.
+Returns a Csound score file as a single multi-line string, translated from the 
+MidiFile object. It is assumed that times are in seconds.
 '''
 def to_csound_score(midifile):
     csound_score = []
     for track in midifile:
         for event in track:
-            print(type(event), event)
             if isinstance(event, Note) == True:
                 i_statement = to_i_statement(event.instrument, event.time, event.duration, event.pitch, event.amplitude)
                 csound_score.append(i_statement + "\n")
