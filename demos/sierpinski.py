@@ -57,18 +57,19 @@ def sierpinski(score, tone, shape, trans, levels, dur, amp):
 if __name__ == "__main__":
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = Seq.metaseq()
+    track0 = MidiFile.metatrack()
     # Track 1 will hold the composition.
     track1 = Seq()
     # Create a scheduler and give it t1 as its output object.
     score = Score(out=track1)
+
     # Create the composition. Specify levels and melody length with care!
     # The number of events that are generateed is exponentially related to
     # the length of the melody and the number of levels. For example the
     # first compose() generates 120 events, the second 726, and the third 2728!
-    #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
+    score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
     #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
-    score.compose(sierpinski(score, keynum('a0'), [0, -1, 2, 13], 12, 5, 24, .5))
+    #score.compose(sierpinski(score, keynum('a0'), [0, -1, 2, 13], 12, 5, 24, .5))
  
     # Write the tracks to a midi file in the current directory.
     file = MidiFile("sierpinski.mid", [track0, track1]).write()

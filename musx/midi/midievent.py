@@ -1,6 +1,9 @@
 ###############################################################################
 """
-The midifile module provides object oriented support for midi messages.
+The midievent module provides object oriented support for working with midi
+messages. To represent basic midi on and off data you should use a `Note` 
+object because it provides a more flexible represention that will automatically
+convert to on and off messages when written to files and ports.
 """
 
 
@@ -8,23 +11,24 @@ from . import midimsg as mm
 from . import gm
 from ..note import Event
 
+
 class MidiEvent (Event):
+    """
+    A class that wraps lists of midi message bytes so they can be treated 
+    as time stamped objects. Unless you know what you are doing you should
+    probably not call this constructor directly and use the class message
+    constructors to create defined below.
+
+    Parameters
+    ----------
+    message : list
+        The list of message byte values. The constructor does not check these values!
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    """
+
     def __init__(self, message, time=0.0):
-        """
-        A class that wraps lists of midi message bytes so they can be treated 
-        as time stamped objects. 
 
-        Unless you know what you are doing you should not call this constuctor
-        directly and instead use the static class constructors to create specific
-        types of MidiEvents.
-
-        Parameters
-        ----------
-        message : list
-            The list of message byte values. The constructor does not check these values!
-        time : number
-            The time to give the midi message. The units for this are application-specific.
-        """
         super().__init__(time)
         self.message = message
         # self.time = time

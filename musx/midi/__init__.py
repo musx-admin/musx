@@ -1,11 +1,10 @@
 """
-A package providing full support for reading and writing MIDI data to files
+A package providing full support for reading and writing data to midi files
 and ports. The module has several layers:
 
-* midimsg.py : a functional interface for creating midi messages lists that 
-can be easily converted to/from bytearrays.
+* midimsg.py : a functional interface for creating low-level midi message lists.
 * midievent.py : an object oriented layer above midimsg.py that represents
-midi data as class instances with attributes, incuding time stamps..
+midi data as class instances with attributes time and message.
 * midifile.py : reads and writes data to midi files.
 """
 

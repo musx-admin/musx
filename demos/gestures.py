@@ -110,7 +110,7 @@ def gesture4(score, numtimes, lowoctave, highoctave, limit, chan, hiwait, lowwai
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: Marimba, 2: OrchestralHarp})
+    track0 = MidiFile.metatrack(ins={0: AcousticGrandPiano, 1: Marimba, 2: OrchestralHarp})
     # Track 1 will hold the composition.
     track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.

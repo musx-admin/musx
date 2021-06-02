@@ -196,7 +196,7 @@ def jazz_combo(score, measures, tempo):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: AcousticBass})
+    track0 = MidiFile.metatrack(ins={0: AcousticGrandPiano, 1: AcousticBass})
     # Track 1 will hold the composition.
     track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
