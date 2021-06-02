@@ -24,32 +24,17 @@ import threading, time
 import musx
 
 
-class OscMessage():
+class OscMessage(musx.Event):
     """
     A class to represent the OSC messages sent to SuperCollider
     """
-    def __init__(self, name, time, freq=440, duration=.5, amplitude=.5):
+    def __init__(self, name, time, freq=440, dur=.5, amp=.5):
+        super().__init__(time)
         self.name = name
         self.data = [time, freq, dur, amp]
     def __str__(self):
         return f"<OscMessage: '{self.name}' {self.data} {hex(id(self))}>"
     __repr__ = __str__
-    def time(self):
-        return self.data[0]
-
-    
-class OscSeq():
-    """
-    A time sorted sequence of OSC messages.
-    """
-    def __init__(self):
-        self.messages = []
-    def __str__(self):
-        return f"<OscSeq: len={len(self.messages)} {hex(id(self))}>"
-    __repr__ = __str__
-    def add(self, message):
-        """Adds a message to the end of the sequence."""
-        self.messages.append(message)
 
         
 def oscplayer(oscseq, oscout):
@@ -69,13 +54,13 @@ def oscplayer(oscseq, oscout):
     nexttime = thistime
     i = 0
     while i < length:
-        if messages[i].time() == thistime:
+        if messages[i].time == thistime:
             #print(f'playing {messages[i]}')
             oscout.send_message(messages[i].name, messages[i].data)
             i += 1
             continue
         # if here then midi[i] is later than thistime so sleep
-        nexttime = messages[i].time()
+        nexttime = messages[i].time
         #print(f'waiting {nexttime-thistime}')
         time.sleep(nexttime - thistime) 
         thistime = nexttime
@@ -83,7 +68,7 @@ def oscplayer(oscseq, oscout):
 def plain_hunt(q, rhy, dur):
     """
     A composer function that generates osc messages using the
-    Plain Hunt change ringing pattern. See also: `cring.py`.
+    Plain Hunt change ringing pattern.
     """
     # one octave of bells numbered 8, 7, ... 1
     bells = [n for n in range(8, 0, -1)]
@@ -105,7 +90,7 @@ if __name__ == "__main__":
     # Create an osc connection to send messages to SuperCollider
     oscout = pythonosc.udp_client.SimpleUDPClient("127.0.0.1", 57120)
     # oscseq will hold the composition.
-    oscseq = OscSeq()
+    oscseq = musx.Seq()
     # Create a score and give it oscseq to hold the score event data.
     sco = musx.Score(out=oscseq)
     # Create the composition.

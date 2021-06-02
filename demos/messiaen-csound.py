@@ -49,7 +49,7 @@ cello_color = keynum('c6 e d f# bf5')
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = Seq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
+    track0 = MidiFile.metatrack(ins={0: AcousticGrandPiano, 1: Violin})
     # Track 1 will hold the composition.
     track1 = Seq()
     # Create a scheduler and give it t1 as its output object.[84, 88, 86, 90, 82]

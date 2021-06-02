@@ -20,7 +20,7 @@ Simple expressions involving rhythmic symbols can be formed using +, -, and
 """
 
 from fractions import Fraction
-from musx.tools import parse_string_sequence
+from .tools import parse_string_sequence
 
 def rhythm(ref, tempo=60, beat=1/4):
     """

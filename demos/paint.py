@@ -82,16 +82,16 @@ def brush(score, *, length=None, end=None, rhythm=.5, duration=None, pitch=60, a
             if not d: d = r
             if type(k) is list:
                 for j in k: 
-                    m = Note(time=t, duration=d, pitch=j, amplitude=a, instrument=c, microdivs=microdivs)
+                    m = Note(time=t, duration=d, pitch=j, amplitude=a, instrument=c)
                     score.add(m)
             else:
-                m = Note(time=t, duration=d, pitch=k, amplitude=a, instrument=c, microdivs=microdivs)
+                m = Note(time=t, duration=d, pitch=k, amplitude=a, instrument=c)
                 score.add(m)
         counter += 1
         yield abs(r)
 
 
-def spray(score, *, length=None, end=None, rhythm=.5, duration=None, pitch= 60, band=0, amplitude=.5, instrument=0, microdivs=1):
+def spray(score, *, length=None, end=None, rhythm=.5, duration=None, pitch= 60, band=0, amplitude=.5, instrument=0):
     """
     Generates Notes using discrete random selection. Most parameters allow
     lists of values to be specified, in which case elements are randomly selected
@@ -150,10 +150,10 @@ def spray(score, *, length=None, end=None, rhythm=.5, duration=None, pitch= 60, 
             if not d: d = r
             if type(k) is list:
                 for j in k:
-                    m = Note(time=t, duration=d, pitch=j, amplitude=a, instrument=c, microdivs=microdivs)
+                    m = Note(time=t, duration=d, pitch=j, amplitude=a, instrument=c)
                     score.add(m)
             else:
-                m = Note(time=t, duration=d, pitch=k, amplitude=a, instrument=c, microdivs=microdivs)
+                m = Note(time=t, duration=d, pitch=k, amplitude=a, instrument=c)
                 score.add(m)
         counter += 1
         yield abs(r)

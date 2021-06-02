@@ -1,6 +1,6 @@
 ################################################################################
 """
-Some examples of generating microtonal music with midi.
+Two examples of generating microtonal music with midi.
 
 musx implements 'channel tuning', a method that quantizes midi frequency and
 channel space into 'divisions per semitone' and routes midi notes with microtonal 
@@ -23,11 +23,8 @@ For a Note to produce a microtonal sound three conditions must be met:
 
 * The Note's key number must be a floating point value with a fractional
   value greater than 0.
-* The Note's 'tuning' parameter must be greater than 1.
-* Track 0 (the 'metatrack' of the midi file) must be quantized to the same
-  divisions per semitone as the 'tuning' parameter. See: Seq.metatrack().
-
-See also: demos fm.py, rm.py, gamelan.py, `Seq.metatrack()`, `Note()`.
+* Track 0 (the 'metatrack' of the midi file) must be quantized to a microtonal
+division 1-16. See MidiFile.metatrack() for more information.
 
 To run this script cd to the parent directory of demos/ and do:
 ```bash
@@ -35,90 +32,38 @@ python3 -m demos.micro
 ```
 """
 
-
 from musx import Score, Note, Seq, MidiFile, MidiEvent, odds, divide, \
      deltas, rescale, scale, jumble, temper
 from musx.midi.gm import Vibraphone
 
 
-def pitchbends(score, tuning):
+def play_micro_divisions(divs):
     """
-    Called by playmicrosteps() to outputs pitchbends to establish a microtuning.
+    Plays one octave of microtones quantized to 1/divs semitones.
 
     Parameters
     ----------
-    sco : Score
-        The musical score to add events to.
-    tuning : int
-        A value 1 to 16 specificing the divisions per semitone of the tuning.
+    divs : int 1 to 16
+        A value of 1 produces 1/1 = 1 = 100 cents (standard semitonal tuning)
+        a value of 2 produces 1/2 = .5 = 50 cents (quarter tone tuning) and so on.
     """
-    values = Seq.channeltuning(tuning)
-    for chan,value in enumerate(values):
-        # calculate the pitch bend value
-        bend = round(rescale(value, -2,  2,  0, 16383))
-        score.add(MidiEvent.pitch_bend(chan, bend, time=score.now))
-    yield -1
-
-    
-def microtones(score, tuning, dur):
-    """
-    Called by playmicrosteps() to play individual tuning steps over dur seconds.
-    
-    Parameters
-    ----------
-    sco : Score
-        The musical score to add events to.
-    tuning : int
-        A value 1 to 16 specificing the divisions per semitone of the tuning.
-    dur : number
-        The duration over which the tuning steps will be performed.
-    """
-    rhy = dur*(1/(tuning*12))
-    key = 60
-    for _ in range(tuning*12+1):
-        #print('pre tuning: key',key,end="\t")
-        n = Note(time=score.now, duration=rhy, pitch=key, microdivs=tuning)
-        #print("post tuning: key", m.key, "chan", m.chan)
-        score.add(n)
-        key += 1/tuning
-        yield rhy
-
-
-def playmicrosteps():
-    """
-    Performs the microsteps of all semitonal division from 1 (semitones)
-    upto 16 divisions per semitone. NOTE: Depending on your midi synth if
-    the tuning spans channel 9 you may hear a drum map tone instead of a
-    micotonal pitch!
-    """
-    # It's good practice to add any metadata such as tempo, midi instrument
-    # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = Seq.metaseq()
-    # Track 1 will hold the composition.
+    def playmicro(score, key, rhy, divs):
+        inc = 1/divs
+        for i in range(12 * divs + 1):
+            note = Note(time=score.now, duration=rhy, pitch=key)
+            score.add(note)
+            key += inc
+            yield rhy
+    # divs can be a value from 1 to 16 
+    track0 = MidiFile.metatrack(microdivs=divs)
     track1 = Seq()
-    # Create a score and give it tr1 to hold the score event data.
     score = Score(out=track1)
-    # Create composers for each semitonal division from 1 to 16
-    composers = []
-    now = 0
-    dur = 6
-    for div in range(1, 16):
-        # for each division the first composer outputs pitchbends,
-        # and the second outputs the microtonal pitches.
-        composers += [[now, pitchbends(score,div)], [now, microtones(score,div,dur)]]
-        now += dur+1
-    # Create the composition.
-    score.compose(composers)
-    # Write the tracks to a midi file in the current directory.
-    file = MidiFile("micro.mid", [track0, track1]).write()
-    print(f"Wrote '{file.pathname}'.")
+    score.compose(playmicro(score, 60, .5, divs))
+    file = MidiFile("microdivs.mid", [track0, track1]).write()
+    print(f"Wrote '{file.pathname}'.") 
 
-    # To automatially play demos use setmidiplayer() and playfile().
-    # Example:
-    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    #     playfile(file.pathname)
 
-def playmicropentatonic():
+def play_micro_pentatonic():
     """
     Plays a lovely microtonal pentatonic scale consisting of the prime
     numbered harmonics in the 5th octave of the harmonic series:
@@ -136,7 +81,7 @@ def playmicropentatonic():
 
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = Seq.metaseq(ins={i: Vibraphone for i in range(16)}, microdivs=8)
+    track0 = MidiFile.metatrack(ins={i: Vibraphone for i in range(16)}, microdivs=8)
     # Track 1 will hold the composition.
     track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
@@ -146,7 +91,7 @@ def playmicropentatonic():
         pat = jumble(keys)
         for _ in range(num):
             k = next(pat)
-            n = Note(time=score.now, duration=dur*2, pitch=k, amplitude=amp, microdivs=8)
+            n = Note(time=score.now, duration=dur*2, pitch=k, amplitude=amp)
             score.add(n)
             yield odds(.2 , 0, dur)
 
@@ -155,7 +100,7 @@ def playmicropentatonic():
     low = playpenta(score, 23, 1.2, .8, scale(24, 10, *penta))
     score.compose([top, [.3*4, bot], [.3*12, low]])
     # Write a midi file with our track data.
-    file = MidiFile("micro.mid", [track0, track1]).write()
+    file = MidiFile("micropenta.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
 
     # To automatially play demos use setmidiplayer() and playfile().
@@ -165,6 +110,6 @@ def playmicropentatonic():
 
 
 if __name__ == '__main__':
-    #playmicrosteps()
-    playmicropentatonic()
+    play_micro_divisions(2)
+    play_micro_pentatonic()
 

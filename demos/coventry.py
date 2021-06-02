@@ -48,11 +48,11 @@ def playbells(score, peal, bells, rhy, dur, amp):
         if b in ['a','j']: 
             # keynums are quantized to 25 cents
             for k in [x for x in bells[b]]:
-                m = Note(time=score.now, duration=dur*4, pitch=k, amplitude=amp, microdivs=4)            
+                m = Note(time=score.now, duration=dur*4, pitch=k, amplitude=amp)            
                 score.add(m)
         else: # else play single 'prime' note 
             k = primes[b]
-            m = Note(time=score.now, duration=dur, pitch=k, amplitude=amp, microdivs=4)
+            m = Note(time=score.now, duration=dur, pitch=k, amplitude=amp)
             score.add(m)
         yield rhy
 
@@ -69,8 +69,8 @@ if __name__ == '__main__':
     items = allrotations(items, rules, False, True)
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = Seq.metaseq(ins={0: TubularBells, 1: TubularBells, 
-                               2: TubularBells, 3: TubularBells}, microdivs=4)
+    track0 = MidiFile.metatrack(ins={0: TubularBells, 1: TubularBells, 
+                               2: TubularBells, 3: TubularBells})
     # Track 1 will hold the composition.
     track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
