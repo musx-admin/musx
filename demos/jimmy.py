@@ -2,7 +2,7 @@
 A wild ride on the drum track.
 """
 
-from musx import MidiNote, MidiSeq, MidiFile, Score
+from musx import Score, Note, Seq, MidiFile 
 from .paint import brush
 
 pphase = [127, 117, 126, 117.5, 125, 119, 124.5, 119.5,
@@ -30,18 +30,18 @@ arf = [0, 3, 7, 0, 3, 7, 0, 3, 7, 0, 3, 7, 0, 3, 7, 0]
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(tuning=4)
+    track0 = MidiFile.metatrack(microdivs=4)
     # Track 1 holds the composition.
-    tr1 = MidiSeq()
+    track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
-    sco = Score(out=tr1)
+    score = Score(out=track1)
     # Create the composition.
-    sco.compose( [brush(sco, len=1000, key=pphase, rhy=1/16, dur=1, amp=0.75, chan=9, tuning=4),
-                brush(sco, len=828, key=pphase, rhy=1/32, dur=7, amp=0.75, chan=1, tuning=4) ,
-                brush(sco, len=1000, key=arf, rhy=1/8, dur=1, amp=1, chan=1, tuning=4) , 
-                brush(sco, len=200, key=pphase, rhy=1/2, dur=7, amp=0.75, chan=1, tuning=4)])
+    score.compose([brush(score, length=1000, pitch=pphase, rhythm=1/16, duration=1, amplitude=0.75, instrument=9, microdivs=4),
+                brush(score, length=828, pitch=pphase, rhythm=1/32, duration=7, amplitude=0.75, instrument=1, microdivs=4) ,
+                brush(score, length=1000, pitch=arf, rhythm=1/8, duration=1, amplitude=1, instrument=1, microdivs=4) , 
+                brush(score, length=200, pitch=pphase, rhythm=1/2, duration=7, amplitude=0.75, instrument=1, microdivs=4)])
     # Write the tracks to a midi file in the current directory.
-    file = MidiFile("jimmy.mid", [tr0, tr1]).write()
+    file = MidiFile("jimmy.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
 
     # To automatially play demos use setmidiplayer() and playfile().

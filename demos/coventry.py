@@ -10,11 +10,9 @@ To run this script cd to the parent directory of demos/ and do:
 python3 -m demos.coventry
 ```
 """
-__pdoc__ = {
-    'conventry_fkeys': False,
-}
 
-from musx import keynum, MidiNote, allrotations
+
+from musx import Note, keynum, allrotations
 
 
 coventry_bells = {
@@ -41,7 +39,7 @@ _conventry_fkeys = {b: [keynum(h, filt=None) for h in l]
                        for b,l in coventry_bells.items()}
 
 
-def playbells(sco, peal, bells, rhy, dur, amp):
+def playbells(score, peal, bells, rhy, dur, amp):
     # each bell represented by its 'prime' harmonic.
     primes = {k: bells[k][1] for k in bells.keys()}
     # play the peal (the ordered list of bells to play)
@@ -50,19 +48,19 @@ def playbells(sco, peal, bells, rhy, dur, amp):
         if b in ['a','j']: 
             # keynums are quantized to 25 cents
             for k in [x for x in bells[b]]:
-                m = MidiNote(time=sco.now, dur=dur*4, key=k, amp=amp, tuning=4)            
-                sco.add(m)
+                m = Note(time=score.now, duration=dur*4, pitch=k, amplitude=amp)            
+                score.add(m)
         else: # else play single 'prime' note 
             k = primes[b]
-            m = MidiNote(time=sco.now, dur=dur, key=k, amp=amp, tuning=4)
-            sco.add(m)
+            m = Note(time=score.now, duration=dur, pitch=k, amplitude=amp)
+            score.add(m)
         yield rhy
 
 
 if __name__ == '__main__':
     from musx.midi.gm import Celesta, Glockenspiel, MusicBox, Vibraphone,\
         Marimba, Xylophone, TubularBells
-    from musx import MidiSeq, MidiFile
+    from musx import Seq, MidiFile
     from musx import Score
 
     # Plain Hunt change ringing for 10 bells.
@@ -71,16 +69,16 @@ if __name__ == '__main__':
     items = allrotations(items, rules, False, True)
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: TubularBells, 1: TubularBells, 
-                               2: TubularBells, 3: TubularBells}, tuning=4)
+    track0 = MidiFile.metatrack(ins={0: TubularBells, 1: TubularBells, 
+                               2: TubularBells, 3: TubularBells})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
-    sco = Score(out=tr1)
+    sco = Score(out=track1)
     # Create the composition.
     sco.compose(playbells(sco, items, _conventry_fkeys, .25, .6, .8))
     # Write the tracks to a midi file in the current directory.
-    file = MidiFile("coventry.mid", [tr0, tr1]).write()
+    file = MidiFile("coventry.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
 
     # To automatially play demos use setmidiplayer() and playfile().

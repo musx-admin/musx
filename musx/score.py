@@ -7,12 +7,12 @@ to sequences and score files.
 Example
 -------
 ```py
-seq = MidiSeq()
+seq = Seq()
 sco = Score(out=seq)
 def bach(sco, num):
     for i in range(num):
-        m = MidiEvent(time=queue.now, key=60+i)
-        sco.add(m)
+        n = Note(time=queue.now, key=60+i)
+        sco.add(n)
         yield .125
 sco.compose(bach(sco, 10))
 ```
@@ -21,7 +21,6 @@ See the examples directory for many examples of composing!
 """
 
 import types
-from .midi import midiseq
 
 
 class Score:
@@ -251,6 +250,8 @@ class Score:
         Adds an event to the score. 
         """
         self.out.add(event)
+        # Since the score is a scheduler we can just append the event to the seq.
+        #self.out.append(event)
 
 
 if __name__ == '__main__':

@@ -7,8 +7,8 @@ chains, cellular automata and chaos.
 
 import random as ran
 from sys import maxsize as max_int
-from musx.ran import between
-from musx.tools import isnum, isseq, isgen
+from .ran import between
+from .tools import isnum, isseq, isgen
 
 def cycle(items, stop=None):
     """

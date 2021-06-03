@@ -1,6 +1,6 @@
-from .tools import rescale
 import random
 import math
+from .tools import rescale
 
 # moved: between, odds, pick to here
 

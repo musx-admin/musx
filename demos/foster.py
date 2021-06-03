@@ -12,14 +12,8 @@ python3 -m demos.foster
 """
 
 
-from musx.midi import MidiNote, MidiSeq, MidiFile
+from musx import Score, Note, Seq, MidiFile, keynum, choose, markov, intempo
 from musx.midi.gm import StringEnsemble1
-from musx.score import Score
-from musx.scales import keynum
-from musx.generators import jumble, cycle, choose, markov
-from musx.tools import setmidiplayer, playfile
-from musx.rhythm import intempo
-
 
 def pattern_stephen_foster():
     """
@@ -81,7 +75,7 @@ def pattern_stephen_foster():
         })
 
 
-def composer_stephen_foster(sco, num, shift=0, chan=0):
+def composer_stephen_foster(score, num, shift=0, chan=0):
     # A second-order markov process generates the melody.
     melody = pattern_stephen_foster()
     # randomly select rhythmic patterns characterisitic of Foster's style
@@ -92,8 +86,8 @@ def composer_stephen_foster(sco, num, shift=0, chan=0):
         for r in next(rhythms):
             k = keynum(next(melody)) + (shift*12)
             r = intempo(r, 200)
-            m = MidiNote(time=sco.now+n, dur=r, key=k, amp=.5, chan=chan)
-            sco.add(m)
+            m = Note(time=score.now+n, duration=r, pitch=k, amplitude=.5, instrument=chan)
+            score.add(m)
             n += r
         yield n
 
@@ -101,18 +95,18 @@ def composer_stephen_foster(sco, num, shift=0, chan=0):
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    tr0 = MidiSeq.metaseq(ins={0: StringEnsemble1})
+    track0 = MidiFile.metatrack(ins={0: StringEnsemble1})
     # Track 1 will hold the composition.
-    tr1 = MidiSeq()
+    track1 = Seq()
     # Create a score and give it tr1 to hold the score event data.
-    sco = Score(out=tr1)
+    score = Score(out=track1)
     # Compose a 4 voice texture with these octave transposition factors.
     voices = [-1, 0, 1, 2]
-    composers = [composer_stephen_foster(sco, 25, t) for t in voices]
+    composers = [composer_stephen_foster(score, 25, t) for t in voices]
     # Create the composition.
-    sco.compose(composers)
+    score.compose(composers)
     # Write the seqs to a midi file in the current directory.
-    file = MidiFile("foster.mid", [tr0, tr1]).write()
+    file = MidiFile("foster.mid", [track0, track1]).write()
     print(f"Wrote '{file.pathname}'.")
     
     # To automatially play demos use setmidiplayer() and playfile().

@@ -17,14 +17,9 @@ middle ages that produce cyclical patterns of rhythms (talea) and pitches
 '''
 import musx
 import ctcsound
-
-from musx.midi import MidiNote, MidiSeq, MidiFile
-from musx.score import Score
-from musx.tools import playfile, setmidiplayer
-from musx.rhythm import rhythm
-from musx.scales import keynum
+from musx import Score, Seq, MidiFile, rhythm, keynum
 from musx.midi.gm import AcousticGrandPiano, Violin
-from .paint import brush, spray
+from .paint import brush
 
 
 piano_talea = rhythm('q q q e e. e e e e e. e. e. s e e. q h', tempo=80)
@@ -54,20 +49,20 @@ cello_color = keynum('c6 e d f# bf5')
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
-    t0 = MidiSeq.metaseq(ins={0: AcousticGrandPiano, 1: Violin})
+    track0 = MidiFile.metatrack(ins={0: AcousticGrandPiano, 1: Violin})
     # Track 1 will hold the composition.
-    t1 = MidiSeq()
+    track1 = Seq()
     # Create a scheduler and give it t1 as its output object.[84, 88, 86, 90, 82]
-    q = Score(t1)
+    score = Score(track1)
     # Create the piano and cello composers.
-    piano=brush(q, len=len(piano_talea) * 8 + 14, rhy=piano_talea,
-                key=piano_color, chan=0)
-    cello=brush(q, len=len(cello_talea) * 6, rhy=cello_talea,
-                amp=.2, key=cello_color, chan=1)
+    piano=brush(score, length=len(piano_talea) * 8 + 14, rhythm=piano_talea,
+                pitch=piano_color, instrument=0)
+    cello=brush(score, length=len(cello_talea) * 6, rhythm=cello_talea,
+                amplitude=.2, pitch=cello_color, instrument=1)
     # Start our composers in the scheduler, this creates the composition.
-    q.compose([[0, piano], [5.5, cello]])
+    score.compose([[0, piano], [5.5, cello]])
     # Write a midi file with our track data.
-    f = MidiFile("messiaen.mid", [t0, t1]).write()
+    f = MidiFile("messiaen.mid", [track0, track1]).write()
     # To automatially play demos use setmidiplayer() to assign a shell
     # command that will play midi files on your computer. Example:
     #   setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")

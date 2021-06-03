@@ -7,7 +7,7 @@ micro.py, gamelan.py, fm.py, and rm.py.
 
 import math
 import fractions
-from .scales import keynum
+from .pitch import keynum
 from .tools import quantize
 
 
