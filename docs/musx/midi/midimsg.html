@@ -1,0 +1,2345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.midi.midimsg API documentation</title>
+<meta name="description" content="A module that defines low level constructors and accessors for manipulating
+lists of bytes as midi messsages." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.midi.midimsg</code></h1>
+</header>
+<section id="section-intro">
+<p>A module that defines low level constructors and accessors for manipulating
+lists of bytes as midi messsages.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+A module that defines low level constructors and accessors for manipulating 
+lists of bytes as midi messsages.
+&#34;&#34;&#34;
+
+# Channel Messages
+kNoteOff     = 0b10000000
+kNoteOn      = 0b10010000
+kAftertouch  = 0b10100000
+kCtrlChange  = 0b10110000
+kProgChange  = 0b11000000
+kChanPress   = 0b11010000
+kPitchBend   = 0b11100000
+
+# Channel Messages masks
+kChannelMask = 0b00001111
+kStatusMask  = 0b11110000
+
+# System Common Messages
+kSysEx       = 0b11110000
+kTimeCode    = 0b11110001
+kSongPos     = 0b11110010
+kSongSel     = 0b11110011
+kTuneReq     = 0b11110110
+kEOE         = 0b11110111
+
+# System RealTime Messages
+kTimingClock = 0b11111000
+kStart       = 0b11111010
+kContinue    = 0b11111011
+kStop        = 0b11111100
+kActiveSens  = 0b11111110
+kReset       = 0b11111111
+
+# MetaMessages (only exist in midi file)
+kMetaMsg     = 0b11111111 # equals kReset but kReset is never found in midi files.
+kSeqNumber   = 0b00000000
+kText        = 0b00000001
+kCopyRight   = 0b00000010
+kTrackName   = 0b00000011
+kInstName    = 0b00000100
+kLyric       = 0b00000101
+kMarker      = 0b00000110
+kCuePoint    = 0b00000111
+kProgName    = 0b00001000
+kDevName     = 0b00001001
+kChanPrefix  = 0b00100000
+kMidiPort    = 0b00100001
+kEOT         = 0b00101111
+kTempo       = 0b01010001
+kSMPTEOff    = 0b00101010
+kTimeSig     = 0b01011000
+kKeySig      = 0b01011001
+kSeqEvent    = 0b01111111
+
+# SMPTE Frame Formats
+kfps24     = 0
+kfps25     = 1
+kfps30drop = 2
+kfps30     = 3
+
+
+def status(msg):
+    &#34;&#34;&#34;Returns the status byte of the message.&#34;&#34;&#34;
+    return (msg[0] &amp; kStatusMask) if is_channel_message(msg) else msg[0]
+
+
+def has_status(msg, stat):
+    &#34;&#34;&#34;Returns true if the message is of the specified status type.&#34;&#34;&#34;
+    return status(msg) == stat
+
+
+# Channel Messages
+
+
+def is_channel_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a channel message.&#34;&#34;&#34;
+    return msg[0] &lt; kSysEx
+
+
+def channel(msg):
+    &#34;&#34;&#34;Returns the channel number of the message.&#34;&#34;&#34;
+    return msg[0] &amp; kChannelMask
+
+
+# Note Off and Note On
+
+
+def note_off(chan, key, vel):
+    &#34;&#34;&#34;
+    Creates a note off message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    key : byte
+        The midi key number.
+    vel : byte
+        The velocity of the key up.
+    &#34;&#34;&#34;
+    return [kNoteOff | chan, key, vel]
+
+
+def note_on(chan, key, vel):
+    &#34;&#34;&#34;
+    Creates a note on message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    key : byte
+        The midi key number.
+    vel : byte
+        The velocity of the key down.
+    &#34;&#34;&#34;
+    return [kNoteOn | chan, key, vel]
+
+
+def keynum(msg):
+    &#34;&#34;&#34;Returns the key number of a note on, off, or aftertouch message.&#34;&#34;&#34;
+    return msg[1]
+
+
+def velocity(msg):
+    &#34;&#34;&#34;Returns the velocity value of a note on or off message.&#34;&#34;&#34;
+    return msg[2]
+
+
+# Aftertouch
+
+
+def aftertouch(chan, key, press):
+    &#34;&#34;&#34;
+    Creates an aftertouch message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    key : byte
+        The midi key number.
+    press : byte
+        The pressure value.
+    &#34;&#34;&#34;
+    return [kAftertouch | chan, key, press]
+
+
+def touch(msg):
+    &#34;&#34;&#34;Returns the value of an aftertouch message.&#34;&#34;&#34;
+    return msg[2]
+
+
+# Control Change
+
+
+def control_change(chan, ctrl, val):
+    &#34;&#34;&#34;
+    Creates a control change message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    ctrl : byte
+        The controller number.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34; 
+    return [kCtrlChange | chan, ctrl, val]
+
+
+def controller(msg):
+    &#34;&#34;&#34;Returns the controller number of a control change message.&#34;&#34;&#34;
+    return msg[1]
+
+
+def control(msg):
+    &#34;&#34;&#34;Returns the controller value of a control change message.&#34;&#34;&#34;
+    return msg[2]
+
+
+# Program Change
+
+
+def program_change(chan, prog):
+    &#34;&#34;&#34;
+    Creates a program change message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    prog : byte
+        The program value.
+    &#34;&#34;&#34;
+    return [kProgChange | chan, prog]
+
+
+def program(msg):
+    &#34;&#34;&#34;Returns the program value of a program change message.&#34;&#34;&#34;
+    return msg[1]
+
+
+# Channel Pressure
+
+
+def channel_pressure(chan, press):
+    &#34;&#34;&#34;
+    Creates a channel pressure message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    press : byte
+        The pressure value.
+    &#34;&#34;&#34; 
+    return [kChanPress | chan, press]
+
+
+def pressure(msg):
+    &#34;&#34;&#34;Returns the pressure value of a channel pressure message.&#34;&#34;&#34;
+    if status(msg) == kAftertouch:
+        assert False, &#34;shouldnt happen&#34;
+    return msg[1]
+
+
+# Pitch Bend
+
+
+def pitch_bend(chan, value):
+    &#34;&#34;&#34;
+    Creates a pitch bend message.
+    
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    value : integer
+        The 14-bit pitch bend value.
+    &#34;&#34;&#34;
+    return [kPitchBend | chan, value &amp; 0x7F, (value &gt;&gt; 7) &amp; 0x7F]
+
+
+def bend(msg):
+    &#34;&#34;&#34;Returns the pitch bend value of a pitch bend message.&#34;&#34;&#34;
+    return (msg[2] &amp; 0x7F) &lt;&lt; 7 | (msg[1] &amp; 0x7F)
+
+
+# Channel Mode Messages (these are just control changes 120-127)
+
+
+def all_sounds_off(chan, val):
+    &#34;&#34;&#34;
+    Creates an &#39;all sounds off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34;
+    return control_change(chan, 120, val)
+
+
+def reset_all_controllers(chan, val):
+    &#34;&#34;&#34;
+    Creates a &#39;reset all controllers&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34;
+    return control_change(chan, 121, val)
+
+
+def local_control(chan, val):
+    &#34;&#34;&#34;
+    Creates a &#39;local control&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34;
+    return control_change(chan, 122, val)
+
+
+def all_notes_off(chan):
+    &#34;&#34;&#34;
+    Creates an &#39;all notes off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 123, 0)
+
+
+def omni_mode_off(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;omni mode off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 124, 0)
+
+
+def omni_mode_on(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;omni mode on&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 125, 0)
+
+
+def mono_mode_on(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;mono mode on&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 126, 0)
+
+
+def mono_mode_off(chan, chans):
+    &#34;&#34;&#34;
+    Creates a &#39;mono mode off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    chans : byte
+        The channels.
+    &#34;&#34;&#34;
+    return control_change(chan, 126, chans)
+
+
+def poly_mode_on(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;poly mode on&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 127, 0)
+
+
+def is_system_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a system message.&#34;&#34;&#34;
+    return msg[0] &gt;= kSysEx
+
+
+def is_system_common_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a system common message.&#34;&#34;&#34;
+    return kSysEx &lt;= msg[0] &lt;= kEOE
+
+
+def is_system_realtime_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a system realtime message.&#34;&#34;&#34;
+    return kTimingClock &lt;= msg[0] &lt;= kReset
+
+
+# System Common Messages. (these are not valid in midi files.)
+
+
+def sysex(data):
+    &#34;&#34;&#34;
+    Creates a system exclusive message ending with EOE.
+
+    Parameters
+    ----------
+    data : list
+        A list of data bytes ending with EOE.
+    &#34;&#34;&#34;
+    if data[-1] != kEOE:
+        data.append(kEOE)  # make sure data includes EOE
+    return [kSysEx, len(data), bytes(data)]
+
+
+def midi_time_code(typ, val):
+    &#34;&#34;&#34;
+    Creates a time code message.
+
+    Parameters
+    ----------
+    type : 0-15
+        The time code type.
+    value : byte
+        The type code value.
+    &#34;&#34;&#34;
+    return [kTimeCode, (typ &lt;&lt; 4) | val]
+
+
+def midi_song_position(pos):
+    &#34;&#34;&#34;
+    Creates a song position message.
+
+    Parameters
+    ----------
+    pos : int
+        A 14 bit song pointer position.
+    &#34;&#34;&#34;
+    lsb = pos &amp; 0x7F
+    msb = pos &gt;&gt; 7
+    return [kSongPos, lsb, msb]
+
+
+def midi_song_select(song):
+    &#34;&#34;&#34;
+    Creates a song select message.
+
+    Parameters
+    ----------
+    song : byte
+        The song number to set.
+    &#34;&#34;&#34;
+    return [kSongSel, song]
+
+
+def midi_tune_request():
+    &#34;&#34;&#34;Creates a midi tune request message.&#34;&#34;&#34;
+    return [kTuneReq]
+
+
+def midi_end_of_exclusive():
+    &#34;&#34;&#34;Creates an end of exclusive message.&#34;&#34;&#34;
+    return [kEOE]
+
+
+# System Real Time Messages (these are not valid in midi files.)
+
+
+def midi_clock():
+    &#34;&#34;&#34;Creates a midi clock message.&#34;&#34;&#34;
+    return [kTimingClock]
+
+
+def midi_start():
+    &#34;&#34;&#34;Creates a midi start message.&#34;&#34;&#34;
+    return [kStart]
+
+
+def midi_continue():
+    &#34;&#34;&#34;Creates a midi continue message.&#34;&#34;&#34;
+    return [kContinue]
+
+
+def midi_stop():
+    &#34;&#34;&#34;Creates a midi stop message.&#34;&#34;&#34;
+    return [kStop]
+
+
+def active_sensing():
+    &#34;&#34;&#34;Creates an active sensing midi message.&#34;&#34;&#34;
+    return [kActiveSens]
+
+
+def midi_reset():
+    &#34;&#34;&#34;Creates a midi reset message.&#34;&#34;&#34;
+    return [kReset]
+
+
+# Midi Meta Messages. (these have the same upper byte value 0xFF as
+# as system messages but they are mutually exclusive: system messages cannot
+# appear in midi files and meta messages cannot be sent to devices)
+
+
+def is_meta_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a midi meta message.&#34;&#34;&#34;
+    return msg[0] == kMetaMsg and len(msg) &gt;= 3
+
+
+def is_meta_message_type(msg, typ):
+    &#34;&#34;&#34;Returns true if the message is a midi meta message of the specified type.&#34;&#34;&#34;
+    return is_meta_message(msg) and msg[1] == typ
+
+
+def int_to_vlq(val):
+    &#34;&#34;&#34;
+    Converts an integer value into a variable length quantity (list).
+    &#34;&#34;&#34;
+    vlq = []
+    for i in range(21, 0, -7):
+        if val &gt;= (1 &lt;&lt; i):
+            vlq.append(((val &gt;&gt; i) &amp; 0x7F) | 0x80)
+    vlq.append(val &amp; 0x7F)
+    return vlq
+
+
+def meta_seq_number(num):
+    &#34;&#34;&#34;
+    Creates a sequence number meta message.
+
+    Parameters
+    ----------
+    num : byte
+        The sequence number
+    &#34;&#34;&#34;
+    msb = num &amp; (0x7F &lt;&lt; 7)
+    lsb = num &amp; 0x7f
+    return [kMetaMsg, kSeqNumber, 2, msb, lsb]
+
+
+def text_meta_message(metatype, txt):
+    &#34;&#34;&#34;
+    Creates a meta text message.
+
+    Parameters
+    ----------
+    metatype : byte
+        The meta type id of the message.
+    txt : string
+        The text string for the message.
+    &#34;&#34;&#34;
+    data = txt.encode(&#39;ascii&#39;) if isinstance(txt, str) else txt
+    assert isinstance(data, bytes), &#34;meta text message data is not bytes().&#34;
+    return [kMetaMsg, metatype, len(data), data]
+
+
+def text(meta):
+    &#34;&#34;&#34;
+    Returns the meta message&#39;s text as a string.
+    &#34;&#34;&#34;
+    return meta[3].decode(&#39;ascii&#39;)
+
+
+def meta_text(txt):
+    &#34;&#34;&#34;
+    Creates a text meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The text string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kText, txt)
+
+
+def meta_copyright(txt):
+    &#34;&#34;&#34;
+    Creates a copyright message.
+
+    Parameters
+    ----------
+    txt : string
+        The copyright string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kCopyRight, txt)
+
+
+def meta_track_name(txt):
+    &#34;&#34;&#34;
+    Creates a track name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The track name for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kTrackName, txt)
+
+
+def meta_inst_name(txt):
+    &#34;&#34;&#34;
+    Creates an instrument name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The instrument name for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kInstName, txt)
+
+
+def meta_lyric(txt):
+    &#34;&#34;&#34;
+    Creates a lyric meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The lyrics string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kLyric, txt)
+
+
+def meta_marker(txt):
+    &#34;&#34;&#34;
+    Creates a marker meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The meta marker text for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kMarker, txt)
+
+
+def meta_cue(txt):
+    &#34;&#34;&#34;
+    Creates a cue meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The cueing string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kCuePoint, txt)
+
+
+def meta_program_name(txt):
+    &#34;&#34;&#34;
+    Creates a program name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The cue string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kProgName, txt)
+
+
+def meta_device_name(txt):
+    &#34;&#34;&#34;
+    Creates a device name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The device name.
+    &#34;&#34;&#34;
+    return text_meta_message(kDevName, txt)
+
+
+def meta_chan_prefix(chan):
+    &#34;&#34;&#34;
+    Creates a channel prefix meta message.
+
+    Parameters
+    ----------
+    chan : byte
+    The channel prefix number.
+    &#34;&#34;&#34;
+    return [kMetaMsg, kChanPrefix, 1, chan]
+
+
+def meta_port(port):
+    &#34;&#34;&#34;
+    Creates a port meta message.
+    Note: **This meta event is depreciated in the midi spec.**
+    &#34;&#34;&#34;
+    return [kMetaMsg, kMidiPort, 1, port]
+
+ 
+def meta_eot():
+    &#34;&#34;&#34;Creates an end of track meta message.&#34;&#34;&#34;
+    return [kMetaMsg, kEOT, 0]
+
+
+def meta_tempo(usecs_per_quarter):
+    &#34;&#34;&#34;
+    Creates a tempo meta message.
+
+    Parameters
+    ----------
+    usecs_per_quarter : int
+        The number of microseconds in a quarter note.
+    &#34;&#34;&#34;
+    msg = [kMetaMsg, kTempo, 3]
+    for i in range(16, -1, -8):
+        msg.append((usecs_per_quarter &amp; (0xff &lt;&lt; i)) &gt;&gt; i)
+    return msg
+
+
+def tempo(msg):
+    &#34;&#34;&#34;Returns the usec tempo value from a tempo meta message.&#34;&#34;&#34;
+    return (msg[3] &lt;&lt; 16) + (msg[4] &lt;&lt; 8) + msg[5]
+
+
+def meta_time_sig(top, bot, clocks=24, tsecs=8):
+    &#34;&#34;&#34;
+    Creates a time signature meta message.
+
+    Parameters
+    ----------
+    top : byte
+        The top number of the time signature
+    bot : byte
+        The power of 2 of the bottom number: 0 is top/1, 2 is top/4, etc.
+    clocks : byte
+        The number of MIDI clocks between metronome clicks.
+    tsecs : byte
+        the number of 32nds in a quarter note (usually 8).
+    &#34;&#34;&#34;
+    return [kMetaMsg, kTimeSig, 4, top, bot, clocks, tsecs]
+
+
+def meta_key_sig(sf, mode):
+    &#34;&#34;&#34;
+    Creates a key signature meta message.
+
+    Parameters
+    ----------
+    sf : -7 to 7 
+        Negative numbers name flat keys (Eb is -3 etc.) and positive numbers name sharp keys (A is 3 etc.).
+    mode : 0 or 1
+        Specify 0 for major keys and 1 for minor keys.
+    &#34;&#34;&#34;
+    return [kMetaMsg, kKeySig, 2, sf, mode]
+
+
+def meta_seq_event(data):
+    &#34;&#34;&#34;
+    Creates a sequencer specific meta message.
+
+    Parameters
+    ----------
+    data : list
+        A list of bytes to send to the sequencer.   
+    &#34;&#34;&#34;
+    return [kMetaMsg, kSeqEvent, len(data), bytes(data)]</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="musx.midi.midimsg.active_sensing"><code class="name flex">
+<span>def <span class="ident">active_sensing</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an active sensing midi message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def active_sensing():
+    &#34;&#34;&#34;Creates an active sensing midi message.&#34;&#34;&#34;
+    return [kActiveSens]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.aftertouch"><code class="name flex">
+<span>def <span class="ident">aftertouch</span></span>(<span>chan, key, press)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an aftertouch message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>key</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The midi key number.</dd>
+<dt><strong><code>press</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The pressure value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def aftertouch(chan, key, press):
+    &#34;&#34;&#34;
+    Creates an aftertouch message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    key : byte
+        The midi key number.
+    press : byte
+        The pressure value.
+    &#34;&#34;&#34;
+    return [kAftertouch | chan, key, press]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.all_notes_off"><code class="name flex">
+<span>def <span class="ident">all_notes_off</span></span>(<span>chan)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an 'all notes off' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def all_notes_off(chan):
+    &#34;&#34;&#34;
+    Creates an &#39;all notes off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 123, 0)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.all_sounds_off"><code class="name flex">
+<span>def <span class="ident">all_sounds_off</span></span>(<span>chan, val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an 'all sounds off' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>val</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The controller value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def all_sounds_off(chan, val):
+    &#34;&#34;&#34;
+    Creates an &#39;all sounds off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34;
+    return control_change(chan, 120, val)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.bend"><code class="name flex">
+<span>def <span class="ident">bend</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the pitch bend value of a pitch bend message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bend(msg):
+    &#34;&#34;&#34;Returns the pitch bend value of a pitch bend message.&#34;&#34;&#34;
+    return (msg[2] &amp; 0x7F) &lt;&lt; 7 | (msg[1] &amp; 0x7F)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.channel"><code class="name flex">
+<span>def <span class="ident">channel</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the channel number of the message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def channel(msg):
+    &#34;&#34;&#34;Returns the channel number of the message.&#34;&#34;&#34;
+    return msg[0] &amp; kChannelMask</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.channel_pressure"><code class="name flex">
+<span>def <span class="ident">channel_pressure</span></span>(<span>chan, press)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a channel pressure message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>press</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The pressure value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def channel_pressure(chan, press):
+    &#34;&#34;&#34;
+    Creates a channel pressure message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    press : byte
+        The pressure value.
+    &#34;&#34;&#34; 
+    return [kChanPress | chan, press]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.control"><code class="name flex">
+<span>def <span class="ident">control</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the controller value of a control change message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def control(msg):
+    &#34;&#34;&#34;Returns the controller value of a control change message.&#34;&#34;&#34;
+    return msg[2]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.control_change"><code class="name flex">
+<span>def <span class="ident">control_change</span></span>(<span>chan, ctrl, val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a control change message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>ctrl</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The controller number.</dd>
+<dt><strong><code>val</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The controller value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def control_change(chan, ctrl, val):
+    &#34;&#34;&#34;
+    Creates a control change message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    ctrl : byte
+        The controller number.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34; 
+    return [kCtrlChange | chan, ctrl, val]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.controller"><code class="name flex">
+<span>def <span class="ident">controller</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the controller number of a control change message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def controller(msg):
+    &#34;&#34;&#34;Returns the controller number of a control change message.&#34;&#34;&#34;
+    return msg[1]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.has_status"><code class="name flex">
+<span>def <span class="ident">has_status</span></span>(<span>msg, stat)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is of the specified status type.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def has_status(msg, stat):
+    &#34;&#34;&#34;Returns true if the message is of the specified status type.&#34;&#34;&#34;
+    return status(msg) == stat</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.int_to_vlq"><code class="name flex">
+<span>def <span class="ident">int_to_vlq</span></span>(<span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts an integer value into a variable length quantity (list).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def int_to_vlq(val):
+    &#34;&#34;&#34;
+    Converts an integer value into a variable length quantity (list).
+    &#34;&#34;&#34;
+    vlq = []
+    for i in range(21, 0, -7):
+        if val &gt;= (1 &lt;&lt; i):
+            vlq.append(((val &gt;&gt; i) &amp; 0x7F) | 0x80)
+    vlq.append(val &amp; 0x7F)
+    return vlq</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.is_channel_message"><code class="name flex">
+<span>def <span class="ident">is_channel_message</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a channel message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_channel_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a channel message.&#34;&#34;&#34;
+    return msg[0] &lt; kSysEx</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.is_meta_message"><code class="name flex">
+<span>def <span class="ident">is_meta_message</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a midi meta message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_meta_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a midi meta message.&#34;&#34;&#34;
+    return msg[0] == kMetaMsg and len(msg) &gt;= 3</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.is_meta_message_type"><code class="name flex">
+<span>def <span class="ident">is_meta_message_type</span></span>(<span>msg, typ)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a midi meta message of the specified type.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_meta_message_type(msg, typ):
+    &#34;&#34;&#34;Returns true if the message is a midi meta message of the specified type.&#34;&#34;&#34;
+    return is_meta_message(msg) and msg[1] == typ</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.is_system_common_message"><code class="name flex">
+<span>def <span class="ident">is_system_common_message</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a system common message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_system_common_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a system common message.&#34;&#34;&#34;
+    return kSysEx &lt;= msg[0] &lt;= kEOE</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.is_system_message"><code class="name flex">
+<span>def <span class="ident">is_system_message</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a system message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_system_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a system message.&#34;&#34;&#34;
+    return msg[0] &gt;= kSysEx</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.is_system_realtime_message"><code class="name flex">
+<span>def <span class="ident">is_system_realtime_message</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a system realtime message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_system_realtime_message(msg):
+    &#34;&#34;&#34;Returns true if the message is a system realtime message.&#34;&#34;&#34;
+    return kTimingClock &lt;= msg[0] &lt;= kReset</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.keynum"><code class="name flex">
+<span>def <span class="ident">keynum</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the key number of a note on, off, or aftertouch message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def keynum(msg):
+    &#34;&#34;&#34;Returns the key number of a note on, off, or aftertouch message.&#34;&#34;&#34;
+    return msg[1]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.local_control"><code class="name flex">
+<span>def <span class="ident">local_control</span></span>(<span>chan, val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a 'local control' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>val</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The controller value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def local_control(chan, val):
+    &#34;&#34;&#34;
+    Creates a &#39;local control&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34;
+    return control_change(chan, 122, val)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_chan_prefix"><code class="name flex">
+<span>def <span class="ident">meta_chan_prefix</span></span>(<span>chan)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a channel prefix meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>byte</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>The channel prefix number.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_chan_prefix(chan):
+    &#34;&#34;&#34;
+    Creates a channel prefix meta message.
+
+    Parameters
+    ----------
+    chan : byte
+    The channel prefix number.
+    &#34;&#34;&#34;
+    return [kMetaMsg, kChanPrefix, 1, chan]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_copyright"><code class="name flex">
+<span>def <span class="ident">meta_copyright</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a copyright message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The copyright string for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_copyright(txt):
+    &#34;&#34;&#34;
+    Creates a copyright message.
+
+    Parameters
+    ----------
+    txt : string
+        The copyright string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kCopyRight, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_cue"><code class="name flex">
+<span>def <span class="ident">meta_cue</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a cue meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The cueing string for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_cue(txt):
+    &#34;&#34;&#34;
+    Creates a cue meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The cueing string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kCuePoint, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_device_name"><code class="name flex">
+<span>def <span class="ident">meta_device_name</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a device name meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The device name.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_device_name(txt):
+    &#34;&#34;&#34;
+    Creates a device name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The device name.
+    &#34;&#34;&#34;
+    return text_meta_message(kDevName, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_eot"><code class="name flex">
+<span>def <span class="ident">meta_eot</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an end of track meta message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_eot():
+    &#34;&#34;&#34;Creates an end of track meta message.&#34;&#34;&#34;
+    return [kMetaMsg, kEOT, 0]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_inst_name"><code class="name flex">
+<span>def <span class="ident">meta_inst_name</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instrument name meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The instrument name for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_inst_name(txt):
+    &#34;&#34;&#34;
+    Creates an instrument name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The instrument name for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kInstName, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_key_sig"><code class="name flex">
+<span>def <span class="ident">meta_key_sig</span></span>(<span>sf, mode)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a key signature meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>sf</code></strong> :&ensp;<code>-7 to 7</code></dt>
+<dd>Negative numbers name flat keys (Eb is -3 etc.) and positive numbers name sharp keys (A is 3 etc.).</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>0</code> or <code>1</code></dt>
+<dd>Specify 0 for major keys and 1 for minor keys.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_key_sig(sf, mode):
+    &#34;&#34;&#34;
+    Creates a key signature meta message.
+
+    Parameters
+    ----------
+    sf : -7 to 7 
+        Negative numbers name flat keys (Eb is -3 etc.) and positive numbers name sharp keys (A is 3 etc.).
+    mode : 0 or 1
+        Specify 0 for major keys and 1 for minor keys.
+    &#34;&#34;&#34;
+    return [kMetaMsg, kKeySig, 2, sf, mode]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_lyric"><code class="name flex">
+<span>def <span class="ident">meta_lyric</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a lyric meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The lyrics string for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_lyric(txt):
+    &#34;&#34;&#34;
+    Creates a lyric meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The lyrics string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kLyric, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_marker"><code class="name flex">
+<span>def <span class="ident">meta_marker</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a marker meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The meta marker text for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_marker(txt):
+    &#34;&#34;&#34;
+    Creates a marker meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The meta marker text for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kMarker, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_port"><code class="name flex">
+<span>def <span class="ident">meta_port</span></span>(<span>port)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a port meta message.
+Note: <strong>This meta event is depreciated in the midi spec.</strong></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_port(port):
+    &#34;&#34;&#34;
+    Creates a port meta message.
+    Note: **This meta event is depreciated in the midi spec.**
+    &#34;&#34;&#34;
+    return [kMetaMsg, kMidiPort, 1, port]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_program_name"><code class="name flex">
+<span>def <span class="ident">meta_program_name</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a program name meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The cue string for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_program_name(txt):
+    &#34;&#34;&#34;
+    Creates a program name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The cue string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kProgName, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_seq_event"><code class="name flex">
+<span>def <span class="ident">meta_seq_event</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a sequencer specific meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of bytes to send to the sequencer.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_seq_event(data):
+    &#34;&#34;&#34;
+    Creates a sequencer specific meta message.
+
+    Parameters
+    ----------
+    data : list
+        A list of bytes to send to the sequencer.   
+    &#34;&#34;&#34;
+    return [kMetaMsg, kSeqEvent, len(data), bytes(data)]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_seq_number"><code class="name flex">
+<span>def <span class="ident">meta_seq_number</span></span>(<span>num)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a sequence number meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>num</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The sequence number</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_seq_number(num):
+    &#34;&#34;&#34;
+    Creates a sequence number meta message.
+
+    Parameters
+    ----------
+    num : byte
+        The sequence number
+    &#34;&#34;&#34;
+    msb = num &amp; (0x7F &lt;&lt; 7)
+    lsb = num &amp; 0x7f
+    return [kMetaMsg, kSeqNumber, 2, msb, lsb]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_tempo"><code class="name flex">
+<span>def <span class="ident">meta_tempo</span></span>(<span>usecs_per_quarter)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a tempo meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>usecs_per_quarter</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of microseconds in a quarter note.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_tempo(usecs_per_quarter):
+    &#34;&#34;&#34;
+    Creates a tempo meta message.
+
+    Parameters
+    ----------
+    usecs_per_quarter : int
+        The number of microseconds in a quarter note.
+    &#34;&#34;&#34;
+    msg = [kMetaMsg, kTempo, 3]
+    for i in range(16, -1, -8):
+        msg.append((usecs_per_quarter &amp; (0xff &lt;&lt; i)) &gt;&gt; i)
+    return msg</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_text"><code class="name flex">
+<span>def <span class="ident">meta_text</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a text meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_text(txt):
+    &#34;&#34;&#34;
+    Creates a text meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The text string for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kText, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_time_sig"><code class="name flex">
+<span>def <span class="ident">meta_time_sig</span></span>(<span>top, bot, clocks=24, tsecs=8)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a time signature meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>top</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The top number of the time signature</dd>
+<dt><strong><code>bot</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The power of 2 of the bottom number: 0 is top/1, 2 is top/4, etc.</dd>
+<dt><strong><code>clocks</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The number of MIDI clocks between metronome clicks.</dd>
+<dt><strong><code>tsecs</code></strong> :&ensp;<code>byte</code></dt>
+<dd>the number of 32nds in a quarter note (usually 8).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_time_sig(top, bot, clocks=24, tsecs=8):
+    &#34;&#34;&#34;
+    Creates a time signature meta message.
+
+    Parameters
+    ----------
+    top : byte
+        The top number of the time signature
+    bot : byte
+        The power of 2 of the bottom number: 0 is top/1, 2 is top/4, etc.
+    clocks : byte
+        The number of MIDI clocks between metronome clicks.
+    tsecs : byte
+        the number of 32nds in a quarter note (usually 8).
+    &#34;&#34;&#34;
+    return [kMetaMsg, kTimeSig, 4, top, bot, clocks, tsecs]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.meta_track_name"><code class="name flex">
+<span>def <span class="ident">meta_track_name</span></span>(<span>txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a track name meta message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The track name for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def meta_track_name(txt):
+    &#34;&#34;&#34;
+    Creates a track name meta message.
+
+    Parameters
+    ----------
+    txt : string
+        The track name for the message.
+    &#34;&#34;&#34;
+    return text_meta_message(kTrackName, txt)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_clock"><code class="name flex">
+<span>def <span class="ident">midi_clock</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi clock message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_clock():
+    &#34;&#34;&#34;Creates a midi clock message.&#34;&#34;&#34;
+    return [kTimingClock]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_continue"><code class="name flex">
+<span>def <span class="ident">midi_continue</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi continue message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_continue():
+    &#34;&#34;&#34;Creates a midi continue message.&#34;&#34;&#34;
+    return [kContinue]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_end_of_exclusive"><code class="name flex">
+<span>def <span class="ident">midi_end_of_exclusive</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an end of exclusive message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_end_of_exclusive():
+    &#34;&#34;&#34;Creates an end of exclusive message.&#34;&#34;&#34;
+    return [kEOE]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_reset"><code class="name flex">
+<span>def <span class="ident">midi_reset</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi reset message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_reset():
+    &#34;&#34;&#34;Creates a midi reset message.&#34;&#34;&#34;
+    return [kReset]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_song_position"><code class="name flex">
+<span>def <span class="ident">midi_song_position</span></span>(<span>pos)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a song position message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>pos</code></strong> :&ensp;<code>int</code></dt>
+<dd>A 14 bit song pointer position.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_song_position(pos):
+    &#34;&#34;&#34;
+    Creates a song position message.
+
+    Parameters
+    ----------
+    pos : int
+        A 14 bit song pointer position.
+    &#34;&#34;&#34;
+    lsb = pos &amp; 0x7F
+    msb = pos &gt;&gt; 7
+    return [kSongPos, lsb, msb]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_song_select"><code class="name flex">
+<span>def <span class="ident">midi_song_select</span></span>(<span>song)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a song select message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>song</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The song number to set.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_song_select(song):
+    &#34;&#34;&#34;
+    Creates a song select message.
+
+    Parameters
+    ----------
+    song : byte
+        The song number to set.
+    &#34;&#34;&#34;
+    return [kSongSel, song]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_start"><code class="name flex">
+<span>def <span class="ident">midi_start</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi start message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_start():
+    &#34;&#34;&#34;Creates a midi start message.&#34;&#34;&#34;
+    return [kStart]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_stop"><code class="name flex">
+<span>def <span class="ident">midi_stop</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi stop message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_stop():
+    &#34;&#34;&#34;Creates a midi stop message.&#34;&#34;&#34;
+    return [kStop]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_time_code"><code class="name flex">
+<span>def <span class="ident">midi_time_code</span></span>(<span>typ, val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a time code message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>type</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The time code type.</dd>
+<dt><strong><code>value</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The type code value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_time_code(typ, val):
+    &#34;&#34;&#34;
+    Creates a time code message.
+
+    Parameters
+    ----------
+    type : 0-15
+        The time code type.
+    value : byte
+        The type code value.
+    &#34;&#34;&#34;
+    return [kTimeCode, (typ &lt;&lt; 4) | val]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.midi_tune_request"><code class="name flex">
+<span>def <span class="ident">midi_tune_request</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi tune request message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midi_tune_request():
+    &#34;&#34;&#34;Creates a midi tune request message.&#34;&#34;&#34;
+    return [kTuneReq]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.mono_mode_off"><code class="name flex">
+<span>def <span class="ident">mono_mode_off</span></span>(<span>chan, chans)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a 'mono mode off' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>chans</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The channels.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mono_mode_off(chan, chans):
+    &#34;&#34;&#34;
+    Creates a &#39;mono mode off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    chans : byte
+        The channels.
+    &#34;&#34;&#34;
+    return control_change(chan, 126, chans)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.mono_mode_on"><code class="name flex">
+<span>def <span class="ident">mono_mode_on</span></span>(<span>chan)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a 'mono mode on' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mono_mode_on(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;mono mode on&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 126, 0)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.note_off"><code class="name flex">
+<span>def <span class="ident">note_off</span></span>(<span>chan, key, vel)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a note off message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>key</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The midi key number.</dd>
+<dt><strong><code>vel</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The velocity of the key up.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def note_off(chan, key, vel):
+    &#34;&#34;&#34;
+    Creates a note off message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    key : byte
+        The midi key number.
+    vel : byte
+        The velocity of the key up.
+    &#34;&#34;&#34;
+    return [kNoteOff | chan, key, vel]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.note_on"><code class="name flex">
+<span>def <span class="ident">note_on</span></span>(<span>chan, key, vel)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a note on message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>key</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The midi key number.</dd>
+<dt><strong><code>vel</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The velocity of the key down.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def note_on(chan, key, vel):
+    &#34;&#34;&#34;
+    Creates a note on message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    key : byte
+        The midi key number.
+    vel : byte
+        The velocity of the key down.
+    &#34;&#34;&#34;
+    return [kNoteOn | chan, key, vel]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.omni_mode_off"><code class="name flex">
+<span>def <span class="ident">omni_mode_off</span></span>(<span>chan)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a 'omni mode off' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def omni_mode_off(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;omni mode off&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 124, 0)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.omni_mode_on"><code class="name flex">
+<span>def <span class="ident">omni_mode_on</span></span>(<span>chan)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a 'omni mode on' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def omni_mode_on(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;omni mode on&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 125, 0)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.pitch_bend"><code class="name flex">
+<span>def <span class="ident">pitch_bend</span></span>(<span>chan, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a pitch bend message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>value</code></strong> :&ensp;<code>integer</code></dt>
+<dd>The 14-bit pitch bend value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pitch_bend(chan, value):
+    &#34;&#34;&#34;
+    Creates a pitch bend message.
+    
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    value : integer
+        The 14-bit pitch bend value.
+    &#34;&#34;&#34;
+    return [kPitchBend | chan, value &amp; 0x7F, (value &gt;&gt; 7) &amp; 0x7F]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.poly_mode_on"><code class="name flex">
+<span>def <span class="ident">poly_mode_on</span></span>(<span>chan)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a 'poly mode on' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def poly_mode_on(chan):
+    &#34;&#34;&#34;
+    Creates a &#39;poly mode on&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    &#34;&#34;&#34;
+    return control_change(chan, 127, 0)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.pressure"><code class="name flex">
+<span>def <span class="ident">pressure</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the pressure value of a channel pressure message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pressure(msg):
+    &#34;&#34;&#34;Returns the pressure value of a channel pressure message.&#34;&#34;&#34;
+    if status(msg) == kAftertouch:
+        assert False, &#34;shouldnt happen&#34;
+    return msg[1]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.program"><code class="name flex">
+<span>def <span class="ident">program</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the program value of a program change message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def program(msg):
+    &#34;&#34;&#34;Returns the program value of a program change message.&#34;&#34;&#34;
+    return msg[1]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.program_change"><code class="name flex">
+<span>def <span class="ident">program_change</span></span>(<span>chan, prog)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a program change message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>prog</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The program value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def program_change(chan, prog):
+    &#34;&#34;&#34;
+    Creates a program change message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    prog : byte
+        The program value.
+    &#34;&#34;&#34;
+    return [kProgChange | chan, prog]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.reset_all_controllers"><code class="name flex">
+<span>def <span class="ident">reset_all_controllers</span></span>(<span>chan, val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a 'reset all controllers' control message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The midi channel of the message.</dd>
+<dt><strong><code>val</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The controller value.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset_all_controllers(chan, val):
+    &#34;&#34;&#34;
+    Creates a &#39;reset all controllers&#39; control message.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The midi channel of the message.
+    val : byte
+        The controller value.
+    &#34;&#34;&#34;
+    return control_change(chan, 121, val)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.status"><code class="name flex">
+<span>def <span class="ident">status</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the status byte of the message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def status(msg):
+    &#34;&#34;&#34;Returns the status byte of the message.&#34;&#34;&#34;
+    return (msg[0] &amp; kStatusMask) if is_channel_message(msg) else msg[0]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.sysex"><code class="name flex">
+<span>def <span class="ident">sysex</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a system exclusive message ending with EOE.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of data bytes ending with EOE.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sysex(data):
+    &#34;&#34;&#34;
+    Creates a system exclusive message ending with EOE.
+
+    Parameters
+    ----------
+    data : list
+        A list of data bytes ending with EOE.
+    &#34;&#34;&#34;
+    if data[-1] != kEOE:
+        data.append(kEOE)  # make sure data includes EOE
+    return [kSysEx, len(data), bytes(data)]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.tempo"><code class="name flex">
+<span>def <span class="ident">tempo</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the usec tempo value from a tempo meta message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tempo(msg):
+    &#34;&#34;&#34;Returns the usec tempo value from a tempo meta message.&#34;&#34;&#34;
+    return (msg[3] &lt;&lt; 16) + (msg[4] &lt;&lt; 8) + msg[5]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.text"><code class="name flex">
+<span>def <span class="ident">text</span></span>(<span>meta)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the meta message's text as a string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def text(meta):
+    &#34;&#34;&#34;
+    Returns the meta message&#39;s text as a string.
+    &#34;&#34;&#34;
+    return meta[3].decode(&#39;ascii&#39;)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.text_meta_message"><code class="name flex">
+<span>def <span class="ident">text_meta_message</span></span>(<span>metatype, txt)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a meta text message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>metatype</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The meta type id of the message.</dd>
+<dt><strong><code>txt</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def text_meta_message(metatype, txt):
+    &#34;&#34;&#34;
+    Creates a meta text message.
+
+    Parameters
+    ----------
+    metatype : byte
+        The meta type id of the message.
+    txt : string
+        The text string for the message.
+    &#34;&#34;&#34;
+    data = txt.encode(&#39;ascii&#39;) if isinstance(txt, str) else txt
+    assert isinstance(data, bytes), &#34;meta text message data is not bytes().&#34;
+    return [kMetaMsg, metatype, len(data), data]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.touch"><code class="name flex">
+<span>def <span class="ident">touch</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the value of an aftertouch message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def touch(msg):
+    &#34;&#34;&#34;Returns the value of an aftertouch message.&#34;&#34;&#34;
+    return msg[2]</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midimsg.velocity"><code class="name flex">
+<span>def <span class="ident">velocity</span></span>(<span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the velocity value of a note on or off message.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def velocity(msg):
+    &#34;&#34;&#34;Returns the velocity value of a note on or off message.&#34;&#34;&#34;
+    return msg[2]</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx.midi" href="index.html">musx.midi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="musx.midi.midimsg.active_sensing" href="#musx.midi.midimsg.active_sensing">active_sensing</a></code></li>
+<li><code><a title="musx.midi.midimsg.aftertouch" href="#musx.midi.midimsg.aftertouch">aftertouch</a></code></li>
+<li><code><a title="musx.midi.midimsg.all_notes_off" href="#musx.midi.midimsg.all_notes_off">all_notes_off</a></code></li>
+<li><code><a title="musx.midi.midimsg.all_sounds_off" href="#musx.midi.midimsg.all_sounds_off">all_sounds_off</a></code></li>
+<li><code><a title="musx.midi.midimsg.bend" href="#musx.midi.midimsg.bend">bend</a></code></li>
+<li><code><a title="musx.midi.midimsg.channel" href="#musx.midi.midimsg.channel">channel</a></code></li>
+<li><code><a title="musx.midi.midimsg.channel_pressure" href="#musx.midi.midimsg.channel_pressure">channel_pressure</a></code></li>
+<li><code><a title="musx.midi.midimsg.control" href="#musx.midi.midimsg.control">control</a></code></li>
+<li><code><a title="musx.midi.midimsg.control_change" href="#musx.midi.midimsg.control_change">control_change</a></code></li>
+<li><code><a title="musx.midi.midimsg.controller" href="#musx.midi.midimsg.controller">controller</a></code></li>
+<li><code><a title="musx.midi.midimsg.has_status" href="#musx.midi.midimsg.has_status">has_status</a></code></li>
+<li><code><a title="musx.midi.midimsg.int_to_vlq" href="#musx.midi.midimsg.int_to_vlq">int_to_vlq</a></code></li>
+<li><code><a title="musx.midi.midimsg.is_channel_message" href="#musx.midi.midimsg.is_channel_message">is_channel_message</a></code></li>
+<li><code><a title="musx.midi.midimsg.is_meta_message" href="#musx.midi.midimsg.is_meta_message">is_meta_message</a></code></li>
+<li><code><a title="musx.midi.midimsg.is_meta_message_type" href="#musx.midi.midimsg.is_meta_message_type">is_meta_message_type</a></code></li>
+<li><code><a title="musx.midi.midimsg.is_system_common_message" href="#musx.midi.midimsg.is_system_common_message">is_system_common_message</a></code></li>
+<li><code><a title="musx.midi.midimsg.is_system_message" href="#musx.midi.midimsg.is_system_message">is_system_message</a></code></li>
+<li><code><a title="musx.midi.midimsg.is_system_realtime_message" href="#musx.midi.midimsg.is_system_realtime_message">is_system_realtime_message</a></code></li>
+<li><code><a title="musx.midi.midimsg.keynum" href="#musx.midi.midimsg.keynum">keynum</a></code></li>
+<li><code><a title="musx.midi.midimsg.local_control" href="#musx.midi.midimsg.local_control">local_control</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_chan_prefix" href="#musx.midi.midimsg.meta_chan_prefix">meta_chan_prefix</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_copyright" href="#musx.midi.midimsg.meta_copyright">meta_copyright</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_cue" href="#musx.midi.midimsg.meta_cue">meta_cue</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_device_name" href="#musx.midi.midimsg.meta_device_name">meta_device_name</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_eot" href="#musx.midi.midimsg.meta_eot">meta_eot</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_inst_name" href="#musx.midi.midimsg.meta_inst_name">meta_inst_name</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_key_sig" href="#musx.midi.midimsg.meta_key_sig">meta_key_sig</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_lyric" href="#musx.midi.midimsg.meta_lyric">meta_lyric</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_marker" href="#musx.midi.midimsg.meta_marker">meta_marker</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_port" href="#musx.midi.midimsg.meta_port">meta_port</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_program_name" href="#musx.midi.midimsg.meta_program_name">meta_program_name</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_seq_event" href="#musx.midi.midimsg.meta_seq_event">meta_seq_event</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_seq_number" href="#musx.midi.midimsg.meta_seq_number">meta_seq_number</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_tempo" href="#musx.midi.midimsg.meta_tempo">meta_tempo</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_text" href="#musx.midi.midimsg.meta_text">meta_text</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_time_sig" href="#musx.midi.midimsg.meta_time_sig">meta_time_sig</a></code></li>
+<li><code><a title="musx.midi.midimsg.meta_track_name" href="#musx.midi.midimsg.meta_track_name">meta_track_name</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_clock" href="#musx.midi.midimsg.midi_clock">midi_clock</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_continue" href="#musx.midi.midimsg.midi_continue">midi_continue</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_end_of_exclusive" href="#musx.midi.midimsg.midi_end_of_exclusive">midi_end_of_exclusive</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_reset" href="#musx.midi.midimsg.midi_reset">midi_reset</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_song_position" href="#musx.midi.midimsg.midi_song_position">midi_song_position</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_song_select" href="#musx.midi.midimsg.midi_song_select">midi_song_select</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_start" href="#musx.midi.midimsg.midi_start">midi_start</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_stop" href="#musx.midi.midimsg.midi_stop">midi_stop</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_time_code" href="#musx.midi.midimsg.midi_time_code">midi_time_code</a></code></li>
+<li><code><a title="musx.midi.midimsg.midi_tune_request" href="#musx.midi.midimsg.midi_tune_request">midi_tune_request</a></code></li>
+<li><code><a title="musx.midi.midimsg.mono_mode_off" href="#musx.midi.midimsg.mono_mode_off">mono_mode_off</a></code></li>
+<li><code><a title="musx.midi.midimsg.mono_mode_on" href="#musx.midi.midimsg.mono_mode_on">mono_mode_on</a></code></li>
+<li><code><a title="musx.midi.midimsg.note_off" href="#musx.midi.midimsg.note_off">note_off</a></code></li>
+<li><code><a title="musx.midi.midimsg.note_on" href="#musx.midi.midimsg.note_on">note_on</a></code></li>
+<li><code><a title="musx.midi.midimsg.omni_mode_off" href="#musx.midi.midimsg.omni_mode_off">omni_mode_off</a></code></li>
+<li><code><a title="musx.midi.midimsg.omni_mode_on" href="#musx.midi.midimsg.omni_mode_on">omni_mode_on</a></code></li>
+<li><code><a title="musx.midi.midimsg.pitch_bend" href="#musx.midi.midimsg.pitch_bend">pitch_bend</a></code></li>
+<li><code><a title="musx.midi.midimsg.poly_mode_on" href="#musx.midi.midimsg.poly_mode_on">poly_mode_on</a></code></li>
+<li><code><a title="musx.midi.midimsg.pressure" href="#musx.midi.midimsg.pressure">pressure</a></code></li>
+<li><code><a title="musx.midi.midimsg.program" href="#musx.midi.midimsg.program">program</a></code></li>
+<li><code><a title="musx.midi.midimsg.program_change" href="#musx.midi.midimsg.program_change">program_change</a></code></li>
+<li><code><a title="musx.midi.midimsg.reset_all_controllers" href="#musx.midi.midimsg.reset_all_controllers">reset_all_controllers</a></code></li>
+<li><code><a title="musx.midi.midimsg.status" href="#musx.midi.midimsg.status">status</a></code></li>
+<li><code><a title="musx.midi.midimsg.sysex" href="#musx.midi.midimsg.sysex">sysex</a></code></li>
+<li><code><a title="musx.midi.midimsg.tempo" href="#musx.midi.midimsg.tempo">tempo</a></code></li>
+<li><code><a title="musx.midi.midimsg.text" href="#musx.midi.midimsg.text">text</a></code></li>
+<li><code><a title="musx.midi.midimsg.text_meta_message" href="#musx.midi.midimsg.text_meta_message">text_meta_message</a></code></li>
+<li><code><a title="musx.midi.midimsg.touch" href="#musx.midi.midimsg.touch">touch</a></code></li>
+<li><code><a title="musx.midi.midimsg.velocity" href="#musx.midi.midimsg.velocity">velocity</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

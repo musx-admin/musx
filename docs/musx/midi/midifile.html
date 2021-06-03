@@ -1,0 +1,1698 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.midi.midifile API documentation</title>
+<meta name="description" content="The midifile module provide support for reading and writing midi files." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.midi.midifile</code></h1>
+</header>
+<section id="section-intro">
+<p>The midifile module provide support for reading and writing midi files.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">################################################################################
+&#34;&#34;&#34;
+The midifile module provide support for reading and writing midi files.
+&#34;&#34;&#34;
+
+
+import os.path
+from . import midimsg as mm
+from . import midievent as me
+from .gm import AcousticGrandPiano
+from ..seq import Seq
+from ..note import Note
+from ..tools import rescale
+
+
+class MidiFile:
+    &#34;&#34;&#34;
+    A class for reading and writing midi files.
+
+    A MidiFile is an iterable so its tracks can be iterated, sliced and 
+    mapped.
+
+    Parameters
+    ----------
+    path : string
+        The pathname to the midi file on disk.
+    tracks : list
+        A list of one or more tracks, each track is a Seq.
+    divs : int
+        The midi file&#39;s ticks-per-quarter setting, defaults to 480.
+    &#34;&#34;&#34;
+
+    level = 0
+    &#34;&#34;&#34;The MIDI level of the file, either 0, 1, or 2.&#34;&#34;&#34;
+
+    divisions = 0
+    &#34;&#34;&#34;The number of ticks per quarter note.&#34;&#34;&#34;
+
+    tracks = []
+    &#34;&#34;&#34;
+    The tracks of the MidiFile. Each track is a Seq. Your first track
+    (track 0 in the file) should start with a tempo message otherwise
+    the data will be performed using the musx default tempo mm=60.
+    &#34;&#34;&#34;
+
+    pathname = &#34;&#34;
+    &#34;&#34;&#34;The pathname of the MidiFile.&#34;&#34;&#34;
+
+    _running_status = 0
+
+    def __init__(self, path, tracks=[], divs=480):
+
+        if not isinstance(path, str) or len(path) == 0:
+            raise TypeError(f&#34;&#39;{path}&#39; is not a valid pathname string.&#34;)
+        if not isinstance(tracks, list):
+            tracks = [tracks]
+        else:
+            tracks = tracks.copy() # always copy user&#39;s list
+        if any(not isinstance(t, Seq) for t in tracks):
+            raise TypeError(f&#34;{tracks} is not a valid list of midi tracks.&#34;)
+        if not isinstance(divs, int) and divs &gt; 0:
+            raise ValueError(f&#34;{divs} is not a valid divisions-per-quarter.&#34;)
+        self.tracks = tracks
+        self.divisions = divs
+        self.pathname = path
+
+    def clear(self):
+        &#34;&#34;&#34;Removes all the data from the MidiFile.&#34;&#34;&#34;
+        self.level = 0
+        self.divisions = 0
+        self.tracks = []
+        self._running_status = 0
+        self.pathname = &#34;&#34;
+
+    @staticmethod
+    def fileversion(pathname):
+        &#34;&#34;&#34;
+        A static function that returns a version of pathname guaranteed to not
+        reference an existing file. Use this function to ensure that you will
+        not overwrite a previous version of the MidiFile already on disk.
+
+        Parameters
+        ----------
+        pathname : string
+            The pathname of the file to version.
+
+        Returns
+        -------
+        A pathname string guaranteed to not overwrite an existing file on disk.
+
+        Example
+        -------
+        In this example, the file &#34;foo.mid&#34; would go through the following 
+        versioning until a version was found that did not reference an existing file:
+        &#34;foo.mid&#34;, &#34;foo1.mid&#34;, &#34;foo2.mid&#34; ...
+        ```py
+        MidiFile(fileversion(&#34;/path/to/foo.mid&#34;))
+        ```
+        &#34;&#34;&#34;
+        def nextversion(p):
+            name, extn = os.path.splitext(p)
+            vers = 1
+            yield name + extn
+            while True:
+                yield f&#34;{name}{vers}{extn}&#34;
+                vers += 1
+        # check versions until not found.
+        for f in nextversion(pathname):
+            if not os.path.isfile(f):
+                return f
+
+    def read(self, secs=True):
+        &#34;&#34;&#34;
+        Reads the file in MidiFile.pathname and collects the track data
+        as a list of Seqs. Any existing tracks in the MidiFile will be
+        cleared before reading.
+        
+        Parameters
+        ----------
+        time : &#39;secs&#39; | &#39;ticks&#39; | &#39;raw&#39;
+            The format to import midi time values as. &#39;secs&#39; is seconds,
+            &#39;ticks&#39; is time expressed in midi ticks, and &#39;raw&#39; are the
+            raw delta values that precede each event in the file. The
+            default value is &#39;secs&#39;.
+
+        Returns
+        -------
+        The MidiFile.
+        &#34;&#34;&#34;
+        pathname = self.pathname
+        with open(pathname, &#34;rb&#34;) as stream:
+            self.clear()
+            self.pathname = pathname # restore the pathname after clearing!
+            length = self._read_chunk_length(stream, b&#39;MThd&#39;)
+            assert length == 6, &#34;MThd chunk length 6 not found.&#34;
+            self.level = self._bytes_to_int(stream.read(2))
+            tracks = self._bytes_to_int(stream.read(2))
+            # read divisions as a two byte signed quantity. if its positive
+            # then it represents ticks per quarter. if its negative then its
+            # smpte format where the upper byte contains -24, -25 or -30,
+            # and the lower byte is positive subframes. Example: millisecond
+            # smpte timing would be 0xE728 = -25 40 = 25*40 = 1000ms
+            # see http://midi.teragonaudio.com/tech/midifile/mthd.htm
+            self.divisions = self._bytes_to_int(stream.read(2), True)
+            if self.divisions &lt; 0:
+                raise NotImplementedError(&#34;Cowardly refusing to import SMPTE format midi file.&#34;)
+#            print(&#34;level=&#34;, level, &#34;tracks=&#34;, tracks, &#34;divisions=&#34;, divisions)
+            # process all the tracks in the file
+            for _ in range(tracks):
+                self._read_track(stream, secs)
+        return self
+
+    def write(self, secs=True):
+        &#34;&#34;&#34;
+        Writes the MidiFile&#39;s track data to the file in MidiFile.pathname.
+        
+        Parameters
+        ----------
+        secs : bool
+            If true the MidiEvents in the track data contain time in seconds
+            andthis is converted to midi ticks. Otherwise the tracks should 
+            contain tick data.
+
+        Returns
+        -------
+        The MidiFile.
+        &#34;&#34;&#34;
+        trnum = len(self.tracks)
+        if trnum == 0:
+            raise ValueError(&#34;no tracks to write.&#34;)
+        level = 0 if trnum == 1 else 1
+        divs = self.divisions
+        pathname = self.pathname # self.fileversion(pathname)
+        with open(pathname, &#34;wb&#34;) as stream:
+            self._write_chunk_length(stream, b&#39;MThd&#39;, 6)
+            stream.write(self._int_to_bytes(level, 2))
+            stream.write(self._int_to_bytes(trnum, 2))
+            stream.write(self._int_to_bytes(divs, 2))
+            force_tempo = False
+            # if the first event in the first track is not a
+            # tempo event then force tempo==60.
+            if not isinstance(self.tracks[0][0], me.MidiEvent) or not self.tracks[0][0].is_meta(mm.kTempo):
+                force_tempo = True
+            microdivs = 0
+            if hasattr(self.tracks[0], &#34;metatrack&#34;):
+                microdivs = self.tracks[0].microdivs 
+            # write the tracks
+            for t in self.tracks:
+                self._write_track(stream, t, divs, microdivs, force_tempo)
+                force_tempo = False
+
+            self.format = level
+            self.divisions = divs
+        return self
+
+    def addtrack(self, seq):
+        &#34;&#34;&#34;
+        Appends a Seq to the midi file&#39;s track list.
+        
+        Parameters
+        ----------
+        seq : Seq
+            The Seq to append to the current tracks in the MidiFile.
+        &#34;&#34;&#34;
+        self.tracks.append(seq)
+
+    def print(self, tracks=True, hints=True):
+        &#34;&#34;&#34;
+        Prints the track contents of the MidiFile.
+
+        Parameters
+        ----------
+        tracks : bool | int | list
+            Specifies which tracks to print. If tracks is True
+            then all tracks are printed, if tracks is an integer
+            then that track number is printed, otherwise tracks
+            is a list of integers and only those tracks
+            are printed. Track numbers are 0 based, and track
+            0 is often a &#34;meta track&#34; of a midi file.
+        hints : bool
+            If true then hints are printed in the printed listing,
+            otherwise they are not. 
+
+        Returns
+        -------
+        The MidiFile.
+        &#34;&#34;&#34;
+        for i, t in enumerate(self.tracks):
+            if tracks is True or t is i or i in tracks:
+                t.print()
+
+    @classmethod
+    def metatrack(cls, tempo=60, timesig=[4,4], keysig=[0,0], ins={}, microdivs=1):
+        &#34;&#34;&#34;
+        Returns a sequence containing a series of midi meta events that 
+        define the contents for a midi file&#39;s track 0, including its tempo,
+        time signature, key signature, instrument assignments (program changes)
+        and micro tuning setup using channel tuning. This meta data can then
+        be assigned as track 0 in a level 1 midifile, or the initial contents
+        of a level 0 midi file.
+
+        Parameters
+        ----------
+        tempo : int
+            The quarter-note metronome tempo of midi notes in the file.
+            Note that musx&#39;s tempo defaults to 60 bmp not 120 bpm.
+        timesig : [num, den]
+            A list of two integers indicating the numerator and denominator
+            of a midi time signature, with den being a power of 2.
+        keysig : [sharpflats, mode]
+            A list of two integers indicating a key signature and mode. 
+            sharpflats is an integer -7 to 7  where negative numbers are
+            flats keys, 0 is C and 1 to 7 are sharp keys. The mode 
+            value should be 0 for major and 1 for minor.
+        ins : {chan: instrument, ...}
+            A dictionary of upto 16 channel numbers 0 to 15 and their
+            general midi program asignment. See musx.midi.gm for the 
+            list of midi instument constants.
+        microdivs : int 1 to 16
+            Specifies microtonal divisions per semitone (semitone/microdivs).
+            The default value is 1, so semitone/1 = semitone and no microtonal
+            output will occur. If microdivs is 2 then semitone/2 = 50 cent
+            quantization, e.g. quartertone tuning. musx uses channel tuning
+            to procuce microtones. This means that when microdivs is 2 musx
+            will claim successive pairs of channels for quarter-tone tuning
+            so the channels available for different instuments is 0, 2, 4,
+            6, 8, 10, 12, and 14.
+            The maxmimum number of microdivs is 16, or 6.25 cents, which is very 
+            close to the frequency limen. This will claim all 16 channels in 
+            order to produce microtone so the only channel available for
+            instrument assignment is channel 0. For more information see the 
+            micro.py demo file.
+        &#34;&#34;&#34;
+        tempo = me.MidiEvent.meta_tempo(tempo)
+        if not len(timesig) == 2 and all(isinstance(n, int) for n in timesig):
+            raise TypeError(f&#34;invalid timesig: {timesig}.&#34;)
+        timesig = me.MidiEvent.meta_time_signature(timesig[0], timesig[1])
+        insts = {i: AcousticGrandPiano for i in range(16)}
+        for c,p in ins.items():
+            if not isinstance(c, int) and 0 &lt;= c &lt;= 15:
+                raise TypeError(&#34;invalid midi channel: {c}.&#34;)
+            if not isinstance(p, int) and 0 &lt;= p &lt;= 127:
+                raise TypeError(&#34;invalid gm instrument: {p}.&#34;)
+            insts[c] = p
+        if not len(keysig) == 2 and all(isinstance(n, int) for n in keysig):
+            raise ValueError(f&#34;invalid timesig: {keysig}.&#34;)
+        keysig = me.MidiEvent.meta_key_signature(keysig[0], keysig[1])
+        meta = [tempo, timesig, keysig]
+        meta += [me.MidiEvent.program_change(c,p) for c,p in insts.items()]
+        if not (1 &lt;= microdivs &lt;= 16):
+            raise ValueError(f&#34;invalid microtuning value: {microdivs}.&#34;)
+        if microdivs &gt; 1:
+            values = cls._channel_tuning(microdivs)
+            for c,v in enumerate(values):
+                # calculate the pitch bend value
+                b = round(rescale(v, -2,  2,  0, 16383))
+                meta.append(me.MidiEvent.pitch_bend(c, b))
+        metaseq = Seq()
+        metaseq.events = meta
+        # mark this seq as being a midi meta track and add the microdivs value
+        metaseq.metatrack = True
+        metaseq.microdivs = microdivs if microdivs &gt; 1 else 0
+        return metaseq
+
+    def __str__(self):
+        return f&#34;&lt;MidiFile: &#39;{self.pathname}&#39; {hex(id(self))}&gt;&#34;
+
+    __repr__ = __str__
+
+    def __iter__(self):
+        &#34;&#34;&#34;Impelements the iterator protocol.&#34;&#34;&#34;
+        return iter(self.tracks)
+
+    def __getitem__(self, index):
+        &#34;&#34;&#34;Impelements the iterator protocol.&#34;&#34;&#34;
+        return self.tracks[index]  # index can be slice
+
+    def __len__(self):
+        &#34;&#34;&#34;Impelements the iterator protocol.&#34;&#34;&#34;
+        return len(self.tracks)
+
+    @staticmethod
+    def _int_to_bytes(val, num):
+        &#34;&#34;&#34;Converts integer value into the specified number of bytes.&#34;&#34;&#34;
+        return val.to_bytes(num, &#39;big&#39;)
+
+    @staticmethod
+    def _bytes_to_int(bytez, sign=False):
+        &#34;&#34;&#34;Returns integer value of bytes.&#34;&#34;&#34;
+        return int.from_bytes(bytez, &#39;big&#39;, signed=sign)
+
+    def _read_chunk_length(self, stream, ident):
+        assert stream.read(4) == ident, f&#34;Chunk {ident} not found.&#34;
+        return self._bytes_to_int(stream.read(4))
+
+    def _write_chunk_length(self, stream, ident, length):
+        stream.write(ident)
+        stream.write(self._int_to_bytes(length, 4))
+
+    def _read_varlen_value(self, stream):
+        &#34;&#34;&#34;Reads a variable length quantity and returns its integer value.&#34;&#34;&#34;
+        value = self._bytes_to_int(stream.read(1))
+        if value &amp; 0x80:   # value&#39;s top bit is 1 so keep reading
+            value &amp;= 0x7F  # its actual value is the lower 7 bits
+            while True:
+                value &lt;&lt;= 7  # left shift to make room for next byte
+                other = self._bytes_to_int(stream.read(1))
+                value += other &amp; 0x7F
+                if not other &amp; 0x80:  # done if upper bit is not 1
+                    break
+        return value
+
+    @staticmethod
+    def _write_varlen_value(stream, val):
+        &#34;&#34;&#34;Writes integer value as variable length quantity.&#34;&#34;&#34;
+        vlq = []
+        for i in range(21, 0, -7):
+            if val &gt;= (1 &lt;&lt; i):
+                vlq.append(((val &gt;&gt; i) &amp; 0x7F) | 0x80)
+        vlq.append(val &amp; 0x7F)
+        #print(&#34;val=&#34;, val, &#34;vlq=&#34;, vlq)
+        #stream.write(bytes(vlq))
+        for b in vlq:
+            stream.write(MidiFile._int_to_bytes(b, 1))
+
+    def _read_meta_message(self, stream):
+        metatype = self._bytes_to_int(stream.read(1))
+        length = self._read_varlen_value(stream)
+        if mm.kText &lt;= metatype &lt;= mm.kDevName:
+            return [0xFF, metatype, length, stream.read(length)]
+        if metatype in [mm.kChanPrefix, mm.kMidiPort, mm.kTempo,
+                        mm.kSMPTEOff, mm.kTimeSig, mm.kKeySig,
+                        mm.kSeqNumber]:
+            msg = [0xFF, metatype, length]
+            for n in stream.read(length):
+                msg.append(n)
+            return msg
+        if metatype == mm.kEOT:
+            return [0xFF, metatype, length]
+        if metatype == mm.kSeqEvent:
+            return [0xFF, metatype, length, stream.read(length)]
+        raise NotImplementedError(f&#34;_read_meta_message: unhandled metatype {hex(metatype)}.&#34;)
+
+    def _read_channel_message(self, stream, status):
+        stat = status &amp; 0xF0
+        if mm.kNoteOff &lt;= stat &lt; mm.kProgChange or stat &gt; mm.kChanPress:
+            # two data bytes: note off, note on, aftertouch, controller, and pitchbend
+            val1 = self._bytes_to_int(stream.read(1))
+            val2 = self._bytes_to_int(stream.read(1))
+            return [status, val1, val2]
+        else:
+            # one data byte:  program change, channel pressure
+            val1 = self._bytes_to_int(stream.read(1))
+            return [status, val1]
+
+    def _read_sysex_message(self, stream, status):
+        # Note: the length includes the terminal EOE
+        length = self._read_varlen_value(stream)
+        return [status, length, stream.read(length)]
+
+    def _read_message(self, stream):
+        # [:1] because peek can return more than one byte
+        status = self._bytes_to_int(stream.peek(1)[:1])
+        if status &amp; 0x80:
+            # have a channel message
+            if status &lt; mm.kSysEx:
+                self._running_status = status
+            stream.read(1)
+        else:
+            status = self._running_status
+            assert status &amp; 0x80, &#34;status byte not found.&#34;
+
+        if status &lt; mm.kSysEx:  # a channel message
+            return self._read_channel_message(stream, status)
+        elif status == mm.kSysEx or status &lt;= mm.kEOE:  # a sysex message
+            self._running_status = 0
+            return self._read_sysex_message(stream, status)
+        elif status == mm.kMetaMsg:  # a meta message
+            self._running_status = 0
+            return self._read_meta_message(stream)
+        else:
+            raise NotImplementedError(f&#34;channel status {hex(status)} unsupported.&#34;)
+
+    @staticmethod
+    def _write_message(stream, message):
+        status = message[0]
+        if status &lt; mm.kSysEx:
+            #print(&#34;writing&#34;, message)
+            for b in message:
+                stream.write(MidiFile._int_to_bytes(b, 1))
+            #stream.write(bytes(message))
+        elif status == mm.kMetaMsg:
+            stream.write(MidiFile._int_to_bytes(status, 1))
+            meta = message[1]
+            stream.write(MidiFile._int_to_bytes(meta, 1))
+            if mm.kText &lt;= meta &lt;= mm.kDevName or meta == mm.kSeqEvent:
+                MidiFile._write_varlen_value(stream, message[2])
+                stream.write(message[3])  # a bytes struct
+            else:
+                for b in message[2:]:
+                    stream.write(MidiFile._int_to_bytes(b, 1))
+                # stream.write(bytes(message[2:]))
+        elif status == mm.kSysEx or status == mm.kEOE:
+            stream.write(status)
+            MidiFile._write_varlen_value(stream, message[1])
+            stream.write(message[2])  # a bytes struct
+        else:
+            raise NotImplementedError(f&#34;Unsupported message: {message}.&#34;)
+
+    def _read_track(self, stream, tosecs):
+        abs_delta = 0
+        # read the length of the track. since this is not dependable we
+        # ignore it and use the required EOT message to stop the track.
+        self._read_chunk_length(stream, b&#39;MTrk&#39;)
+        self._running_status = 0
+        trk = []
+        while True:
+            delta = self._read_varlen_value(stream)
+            abs_delta += delta
+            msg = self._read_message(stream)
+            # print(delta, msg)
+            # break on EOT, which is required by the midifile spec.
+            if mm.is_meta_message_type(msg, mm.kEOT):  # mm.is_meta_eot(msg):
+                break
+            time = abs_delta / self.divisions if tosecs else abs_delta
+            trk.append(me.MidiEvent(msg, time))
+        # add the track as a sequence in the midi file
+        self.tracks.append(Seq(trk))
+
+    def _write_track(self, stream, track, divs, microdivs, force_tempo=False):
+        ##print(&#34;write_track------------------------------&#34;)
+        #track.print()
+        self._write_chunk_length(stream, b&#39;MTrk&#39;, 0)
+        # save the begin position of this track.
+        track_beg = stream.tell()
+        # the previous time, used to calculate delta times between events.
+        prev_time = 0
+        # If force_tempo is True then this is the first track
+        # and the user did not provide a tempo marking. In
+        # this case write an initial tempo message for mm=60
+        if force_tempo:
+            MidiFile._write_varlen_value(stream, 0)
+            MidiFile._write_message(stream, mm.meta_tempo(1000000))
+        # pending queue of note offs, used if the track contains Note objects.
+        off_queue = []
+        # write out all the events in the track
+        ##foo = 0
+        for ev in track:
+            ##print(foo,&#34;\t&#34;, ev); foo += 1
+            # write out any pending offs &lt;= ev.time
+            prev_time = MidiFile._write_offs(stream, off_queue, ev.time, prev_time, divs)
+            # if we encounter a Note object, enqueue a note off and write a note on immediately.
+            if isinstance(ev, Note):
+                chan = ev.instrument
+                key = ev._pitchtokey()
+                vel = int(ev.amplitude * 127)
+                if isinstance(key, float):
+                    if not key.is_integer() and microdivs &gt; 1:
+                        chan, key = MidiFile._microtune(chan, key, microdivs)
+                    else:
+                        key = int(key)
+                noteon  = me.MidiEvent([mm.kNoteOn | chan, key, vel], ev.time)
+                noteoff = me.MidiEvent([mm.kNoteOff | chan, key, 127], ev.time+ev.duration)
+                MidiFile._enqueue_off(noteoff, off_queue)
+                ev = noteon
+            #print(&#34;ev.message&#34;, ev.message)
+            delta = int((ev.time - prev_time) * divs)
+            MidiFile._write_varlen_value(stream, delta)
+            MidiFile._write_message(stream, ev.message)
+            prev_time = ev.time
+        # flush any remaining note offs.
+        MidiFile._write_offs(stream, off_queue, prev_time, prev_time, divs, True)   
+        # add a 0 delta and EOT
+        MidiFile._write_varlen_value(stream, 0)
+        MidiFile._write_message(stream, mm.meta_eot())
+        # calculate the length of the track we just wrote
+        track_end = stream.tell()
+        track_len = track_end - track_beg
+        # go to track header&#39;s 4-byte length field and write the length
+        stream.seek(track_beg - 4)
+        stream.write(self._int_to_bytes(track_len, 4))
+        # reposition back here to write the next track
+        stream.seek(track_end)
+
+    @staticmethod
+    def _enqueue_off(off, queue):
+        &#34;&#34;&#34;Adds a note off to the note off queue at the latest possible position.&#34;&#34;&#34;
+        i = 0; l = len(queue)
+        while i &lt; l and queue[i].time &lt;= off.time:
+            i += 1
+        queue.insert(i, off)
+
+    @staticmethod
+    def _write_offs(stream, queue, time, prev, divs, all=False):
+        &#34;&#34;&#34;Writes offs &lt;= current time, returns updated previous time.&#34;&#34;&#34;
+        while (queue and (all or (queue[0].time &lt;= time))):
+            MidiFile._write_varlen_value(stream, int((queue[0].time - prev) * divs))
+            MidiFile._write_message(stream, queue[0].message)
+            prev = queue.pop(0).time
+        return prev 
+
+    @staticmethod
+    def _microtune(channel, floatkey, microdivs):
+        &#34;&#34;&#34;
+        Quantizes a floating point key number to div number of divisions
+        per semitone. 
+        &#34;&#34;&#34;
+        microincr = 1.0 / microdivs        # microtonal increment
+        keynumber = int(floatkey)          # int version
+        remainder = floatkey - keynumber   # float&#39;s fractional portion is microtones
+        microchan = 0                      # the microtonal channel to shift to
+        for i in range(0, microdivs +1 ):  # iterate number of divisions plus 1.
+            if microincr * i &lt;= remainder &lt; microincr * (i + 1): # found rem in this bucket!
+                microchan = i              # offset to microtuned channel in midi file.
+                break
+        channel += microchan               # shift note to microtuned channel
+        return channel, keynumber
+
+    @staticmethod
+    def _channel_tuning(microdivs):
+        &#34;&#34;&#34;
+        Internal function that converts the microdivs value 
+        (the number of divisions per semitone) into a 
+        sequence of cent values above the standard midi
+        key number and then repeatedly assigns the sequence
+        across all 16 midi channels.
+
+        Example: if microdivs is 2, then the semitone is divided
+        into two 50 cent steps [0, .5], this pattern is then
+        repeated eight times over the sixteen midi channels
+        [0, .5, 0, .5, ... 0, .5] yielding eight pairs of channels
+        at indexes 0, 2, 4, ... 14 tuned for quarter tones.
+
+        Parameters
+        ----------
+        microdivs : int 
+            The number of divisions per semitone, 1 is semitone,
+            2 is quarter tone, etc.
+
+        Returns
+        -------
+        A sequence of microdivs adjustments for all 16 channels.
+        &#34;&#34;&#34;
+        microdivs = max(1, min(16, microdivs))
+        cents = [0.0]
+        for i in range(1, microdivs):
+            cents.append(1.0 * i/microdivs)
+        # return a row of 16 repeating cent values
+        return [cents[i % len(cents)] for i in range(16)]
+    </code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="musx.midi.midifile.MidiFile"><code class="flex name class">
+<span>class <span class="ident">MidiFile</span></span>
+<span>(</span><span>path, tracks=[], divs=480)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A class for reading and writing midi files.</p>
+<p>A MidiFile is an iterable so its tracks can be iterated, sliced and
+mapped.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>string</code></dt>
+<dd>The pathname to the midi file on disk.</dd>
+<dt><strong><code>tracks</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of one or more tracks, each track is a Seq.</dd>
+<dt><strong><code>divs</code></strong> :&ensp;<code>int</code></dt>
+<dd>The midi file's ticks-per-quarter setting, defaults to 480.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MidiFile:
+    &#34;&#34;&#34;
+    A class for reading and writing midi files.
+
+    A MidiFile is an iterable so its tracks can be iterated, sliced and 
+    mapped.
+
+    Parameters
+    ----------
+    path : string
+        The pathname to the midi file on disk.
+    tracks : list
+        A list of one or more tracks, each track is a Seq.
+    divs : int
+        The midi file&#39;s ticks-per-quarter setting, defaults to 480.
+    &#34;&#34;&#34;
+
+    level = 0
+    &#34;&#34;&#34;The MIDI level of the file, either 0, 1, or 2.&#34;&#34;&#34;
+
+    divisions = 0
+    &#34;&#34;&#34;The number of ticks per quarter note.&#34;&#34;&#34;
+
+    tracks = []
+    &#34;&#34;&#34;
+    The tracks of the MidiFile. Each track is a Seq. Your first track
+    (track 0 in the file) should start with a tempo message otherwise
+    the data will be performed using the musx default tempo mm=60.
+    &#34;&#34;&#34;
+
+    pathname = &#34;&#34;
+    &#34;&#34;&#34;The pathname of the MidiFile.&#34;&#34;&#34;
+
+    _running_status = 0
+
+    def __init__(self, path, tracks=[], divs=480):
+
+        if not isinstance(path, str) or len(path) == 0:
+            raise TypeError(f&#34;&#39;{path}&#39; is not a valid pathname string.&#34;)
+        if not isinstance(tracks, list):
+            tracks = [tracks]
+        else:
+            tracks = tracks.copy() # always copy user&#39;s list
+        if any(not isinstance(t, Seq) for t in tracks):
+            raise TypeError(f&#34;{tracks} is not a valid list of midi tracks.&#34;)
+        if not isinstance(divs, int) and divs &gt; 0:
+            raise ValueError(f&#34;{divs} is not a valid divisions-per-quarter.&#34;)
+        self.tracks = tracks
+        self.divisions = divs
+        self.pathname = path
+
+    def clear(self):
+        &#34;&#34;&#34;Removes all the data from the MidiFile.&#34;&#34;&#34;
+        self.level = 0
+        self.divisions = 0
+        self.tracks = []
+        self._running_status = 0
+        self.pathname = &#34;&#34;
+
+    @staticmethod
+    def fileversion(pathname):
+        &#34;&#34;&#34;
+        A static function that returns a version of pathname guaranteed to not
+        reference an existing file. Use this function to ensure that you will
+        not overwrite a previous version of the MidiFile already on disk.
+
+        Parameters
+        ----------
+        pathname : string
+            The pathname of the file to version.
+
+        Returns
+        -------
+        A pathname string guaranteed to not overwrite an existing file on disk.
+
+        Example
+        -------
+        In this example, the file &#34;foo.mid&#34; would go through the following 
+        versioning until a version was found that did not reference an existing file:
+        &#34;foo.mid&#34;, &#34;foo1.mid&#34;, &#34;foo2.mid&#34; ...
+        ```py
+        MidiFile(fileversion(&#34;/path/to/foo.mid&#34;))
+        ```
+        &#34;&#34;&#34;
+        def nextversion(p):
+            name, extn = os.path.splitext(p)
+            vers = 1
+            yield name + extn
+            while True:
+                yield f&#34;{name}{vers}{extn}&#34;
+                vers += 1
+        # check versions until not found.
+        for f in nextversion(pathname):
+            if not os.path.isfile(f):
+                return f
+
+    def read(self, secs=True):
+        &#34;&#34;&#34;
+        Reads the file in MidiFile.pathname and collects the track data
+        as a list of Seqs. Any existing tracks in the MidiFile will be
+        cleared before reading.
+        
+        Parameters
+        ----------
+        time : &#39;secs&#39; | &#39;ticks&#39; | &#39;raw&#39;
+            The format to import midi time values as. &#39;secs&#39; is seconds,
+            &#39;ticks&#39; is time expressed in midi ticks, and &#39;raw&#39; are the
+            raw delta values that precede each event in the file. The
+            default value is &#39;secs&#39;.
+
+        Returns
+        -------
+        The MidiFile.
+        &#34;&#34;&#34;
+        pathname = self.pathname
+        with open(pathname, &#34;rb&#34;) as stream:
+            self.clear()
+            self.pathname = pathname # restore the pathname after clearing!
+            length = self._read_chunk_length(stream, b&#39;MThd&#39;)
+            assert length == 6, &#34;MThd chunk length 6 not found.&#34;
+            self.level = self._bytes_to_int(stream.read(2))
+            tracks = self._bytes_to_int(stream.read(2))
+            # read divisions as a two byte signed quantity. if its positive
+            # then it represents ticks per quarter. if its negative then its
+            # smpte format where the upper byte contains -24, -25 or -30,
+            # and the lower byte is positive subframes. Example: millisecond
+            # smpte timing would be 0xE728 = -25 40 = 25*40 = 1000ms
+            # see http://midi.teragonaudio.com/tech/midifile/mthd.htm
+            self.divisions = self._bytes_to_int(stream.read(2), True)
+            if self.divisions &lt; 0:
+                raise NotImplementedError(&#34;Cowardly refusing to import SMPTE format midi file.&#34;)
+#            print(&#34;level=&#34;, level, &#34;tracks=&#34;, tracks, &#34;divisions=&#34;, divisions)
+            # process all the tracks in the file
+            for _ in range(tracks):
+                self._read_track(stream, secs)
+        return self
+
+    def write(self, secs=True):
+        &#34;&#34;&#34;
+        Writes the MidiFile&#39;s track data to the file in MidiFile.pathname.
+        
+        Parameters
+        ----------
+        secs : bool
+            If true the MidiEvents in the track data contain time in seconds
+            andthis is converted to midi ticks. Otherwise the tracks should 
+            contain tick data.
+
+        Returns
+        -------
+        The MidiFile.
+        &#34;&#34;&#34;
+        trnum = len(self.tracks)
+        if trnum == 0:
+            raise ValueError(&#34;no tracks to write.&#34;)
+        level = 0 if trnum == 1 else 1
+        divs = self.divisions
+        pathname = self.pathname # self.fileversion(pathname)
+        with open(pathname, &#34;wb&#34;) as stream:
+            self._write_chunk_length(stream, b&#39;MThd&#39;, 6)
+            stream.write(self._int_to_bytes(level, 2))
+            stream.write(self._int_to_bytes(trnum, 2))
+            stream.write(self._int_to_bytes(divs, 2))
+            force_tempo = False
+            # if the first event in the first track is not a
+            # tempo event then force tempo==60.
+            if not isinstance(self.tracks[0][0], me.MidiEvent) or not self.tracks[0][0].is_meta(mm.kTempo):
+                force_tempo = True
+            microdivs = 0
+            if hasattr(self.tracks[0], &#34;metatrack&#34;):
+                microdivs = self.tracks[0].microdivs 
+            # write the tracks
+            for t in self.tracks:
+                self._write_track(stream, t, divs, microdivs, force_tempo)
+                force_tempo = False
+
+            self.format = level
+            self.divisions = divs
+        return self
+
+    def addtrack(self, seq):
+        &#34;&#34;&#34;
+        Appends a Seq to the midi file&#39;s track list.
+        
+        Parameters
+        ----------
+        seq : Seq
+            The Seq to append to the current tracks in the MidiFile.
+        &#34;&#34;&#34;
+        self.tracks.append(seq)
+
+    def print(self, tracks=True, hints=True):
+        &#34;&#34;&#34;
+        Prints the track contents of the MidiFile.
+
+        Parameters
+        ----------
+        tracks : bool | int | list
+            Specifies which tracks to print. If tracks is True
+            then all tracks are printed, if tracks is an integer
+            then that track number is printed, otherwise tracks
+            is a list of integers and only those tracks
+            are printed. Track numbers are 0 based, and track
+            0 is often a &#34;meta track&#34; of a midi file.
+        hints : bool
+            If true then hints are printed in the printed listing,
+            otherwise they are not. 
+
+        Returns
+        -------
+        The MidiFile.
+        &#34;&#34;&#34;
+        for i, t in enumerate(self.tracks):
+            if tracks is True or t is i or i in tracks:
+                t.print()
+
+    @classmethod
+    def metatrack(cls, tempo=60, timesig=[4,4], keysig=[0,0], ins={}, microdivs=1):
+        &#34;&#34;&#34;
+        Returns a sequence containing a series of midi meta events that 
+        define the contents for a midi file&#39;s track 0, including its tempo,
+        time signature, key signature, instrument assignments (program changes)
+        and micro tuning setup using channel tuning. This meta data can then
+        be assigned as track 0 in a level 1 midifile, or the initial contents
+        of a level 0 midi file.
+
+        Parameters
+        ----------
+        tempo : int
+            The quarter-note metronome tempo of midi notes in the file.
+            Note that musx&#39;s tempo defaults to 60 bmp not 120 bpm.
+        timesig : [num, den]
+            A list of two integers indicating the numerator and denominator
+            of a midi time signature, with den being a power of 2.
+        keysig : [sharpflats, mode]
+            A list of two integers indicating a key signature and mode. 
+            sharpflats is an integer -7 to 7  where negative numbers are
+            flats keys, 0 is C and 1 to 7 are sharp keys. The mode 
+            value should be 0 for major and 1 for minor.
+        ins : {chan: instrument, ...}
+            A dictionary of upto 16 channel numbers 0 to 15 and their
+            general midi program asignment. See musx.midi.gm for the 
+            list of midi instument constants.
+        microdivs : int 1 to 16
+            Specifies microtonal divisions per semitone (semitone/microdivs).
+            The default value is 1, so semitone/1 = semitone and no microtonal
+            output will occur. If microdivs is 2 then semitone/2 = 50 cent
+            quantization, e.g. quartertone tuning. musx uses channel tuning
+            to procuce microtones. This means that when microdivs is 2 musx
+            will claim successive pairs of channels for quarter-tone tuning
+            so the channels available for different instuments is 0, 2, 4,
+            6, 8, 10, 12, and 14.
+            The maxmimum number of microdivs is 16, or 6.25 cents, which is very 
+            close to the frequency limen. This will claim all 16 channels in 
+            order to produce microtone so the only channel available for
+            instrument assignment is channel 0. For more information see the 
+            micro.py demo file.
+        &#34;&#34;&#34;
+        tempo = me.MidiEvent.meta_tempo(tempo)
+        if not len(timesig) == 2 and all(isinstance(n, int) for n in timesig):
+            raise TypeError(f&#34;invalid timesig: {timesig}.&#34;)
+        timesig = me.MidiEvent.meta_time_signature(timesig[0], timesig[1])
+        insts = {i: AcousticGrandPiano for i in range(16)}
+        for c,p in ins.items():
+            if not isinstance(c, int) and 0 &lt;= c &lt;= 15:
+                raise TypeError(&#34;invalid midi channel: {c}.&#34;)
+            if not isinstance(p, int) and 0 &lt;= p &lt;= 127:
+                raise TypeError(&#34;invalid gm instrument: {p}.&#34;)
+            insts[c] = p
+        if not len(keysig) == 2 and all(isinstance(n, int) for n in keysig):
+            raise ValueError(f&#34;invalid timesig: {keysig}.&#34;)
+        keysig = me.MidiEvent.meta_key_signature(keysig[0], keysig[1])
+        meta = [tempo, timesig, keysig]
+        meta += [me.MidiEvent.program_change(c,p) for c,p in insts.items()]
+        if not (1 &lt;= microdivs &lt;= 16):
+            raise ValueError(f&#34;invalid microtuning value: {microdivs}.&#34;)
+        if microdivs &gt; 1:
+            values = cls._channel_tuning(microdivs)
+            for c,v in enumerate(values):
+                # calculate the pitch bend value
+                b = round(rescale(v, -2,  2,  0, 16383))
+                meta.append(me.MidiEvent.pitch_bend(c, b))
+        metaseq = Seq()
+        metaseq.events = meta
+        # mark this seq as being a midi meta track and add the microdivs value
+        metaseq.metatrack = True
+        metaseq.microdivs = microdivs if microdivs &gt; 1 else 0
+        return metaseq
+
+    def __str__(self):
+        return f&#34;&lt;MidiFile: &#39;{self.pathname}&#39; {hex(id(self))}&gt;&#34;
+
+    __repr__ = __str__
+
+    def __iter__(self):
+        &#34;&#34;&#34;Impelements the iterator protocol.&#34;&#34;&#34;
+        return iter(self.tracks)
+
+    def __getitem__(self, index):
+        &#34;&#34;&#34;Impelements the iterator protocol.&#34;&#34;&#34;
+        return self.tracks[index]  # index can be slice
+
+    def __len__(self):
+        &#34;&#34;&#34;Impelements the iterator protocol.&#34;&#34;&#34;
+        return len(self.tracks)
+
+    @staticmethod
+    def _int_to_bytes(val, num):
+        &#34;&#34;&#34;Converts integer value into the specified number of bytes.&#34;&#34;&#34;
+        return val.to_bytes(num, &#39;big&#39;)
+
+    @staticmethod
+    def _bytes_to_int(bytez, sign=False):
+        &#34;&#34;&#34;Returns integer value of bytes.&#34;&#34;&#34;
+        return int.from_bytes(bytez, &#39;big&#39;, signed=sign)
+
+    def _read_chunk_length(self, stream, ident):
+        assert stream.read(4) == ident, f&#34;Chunk {ident} not found.&#34;
+        return self._bytes_to_int(stream.read(4))
+
+    def _write_chunk_length(self, stream, ident, length):
+        stream.write(ident)
+        stream.write(self._int_to_bytes(length, 4))
+
+    def _read_varlen_value(self, stream):
+        &#34;&#34;&#34;Reads a variable length quantity and returns its integer value.&#34;&#34;&#34;
+        value = self._bytes_to_int(stream.read(1))
+        if value &amp; 0x80:   # value&#39;s top bit is 1 so keep reading
+            value &amp;= 0x7F  # its actual value is the lower 7 bits
+            while True:
+                value &lt;&lt;= 7  # left shift to make room for next byte
+                other = self._bytes_to_int(stream.read(1))
+                value += other &amp; 0x7F
+                if not other &amp; 0x80:  # done if upper bit is not 1
+                    break
+        return value
+
+    @staticmethod
+    def _write_varlen_value(stream, val):
+        &#34;&#34;&#34;Writes integer value as variable length quantity.&#34;&#34;&#34;
+        vlq = []
+        for i in range(21, 0, -7):
+            if val &gt;= (1 &lt;&lt; i):
+                vlq.append(((val &gt;&gt; i) &amp; 0x7F) | 0x80)
+        vlq.append(val &amp; 0x7F)
+        #print(&#34;val=&#34;, val, &#34;vlq=&#34;, vlq)
+        #stream.write(bytes(vlq))
+        for b in vlq:
+            stream.write(MidiFile._int_to_bytes(b, 1))
+
+    def _read_meta_message(self, stream):
+        metatype = self._bytes_to_int(stream.read(1))
+        length = self._read_varlen_value(stream)
+        if mm.kText &lt;= metatype &lt;= mm.kDevName:
+            return [0xFF, metatype, length, stream.read(length)]
+        if metatype in [mm.kChanPrefix, mm.kMidiPort, mm.kTempo,
+                        mm.kSMPTEOff, mm.kTimeSig, mm.kKeySig,
+                        mm.kSeqNumber]:
+            msg = [0xFF, metatype, length]
+            for n in stream.read(length):
+                msg.append(n)
+            return msg
+        if metatype == mm.kEOT:
+            return [0xFF, metatype, length]
+        if metatype == mm.kSeqEvent:
+            return [0xFF, metatype, length, stream.read(length)]
+        raise NotImplementedError(f&#34;_read_meta_message: unhandled metatype {hex(metatype)}.&#34;)
+
+    def _read_channel_message(self, stream, status):
+        stat = status &amp; 0xF0
+        if mm.kNoteOff &lt;= stat &lt; mm.kProgChange or stat &gt; mm.kChanPress:
+            # two data bytes: note off, note on, aftertouch, controller, and pitchbend
+            val1 = self._bytes_to_int(stream.read(1))
+            val2 = self._bytes_to_int(stream.read(1))
+            return [status, val1, val2]
+        else:
+            # one data byte:  program change, channel pressure
+            val1 = self._bytes_to_int(stream.read(1))
+            return [status, val1]
+
+    def _read_sysex_message(self, stream, status):
+        # Note: the length includes the terminal EOE
+        length = self._read_varlen_value(stream)
+        return [status, length, stream.read(length)]
+
+    def _read_message(self, stream):
+        # [:1] because peek can return more than one byte
+        status = self._bytes_to_int(stream.peek(1)[:1])
+        if status &amp; 0x80:
+            # have a channel message
+            if status &lt; mm.kSysEx:
+                self._running_status = status
+            stream.read(1)
+        else:
+            status = self._running_status
+            assert status &amp; 0x80, &#34;status byte not found.&#34;
+
+        if status &lt; mm.kSysEx:  # a channel message
+            return self._read_channel_message(stream, status)
+        elif status == mm.kSysEx or status &lt;= mm.kEOE:  # a sysex message
+            self._running_status = 0
+            return self._read_sysex_message(stream, status)
+        elif status == mm.kMetaMsg:  # a meta message
+            self._running_status = 0
+            return self._read_meta_message(stream)
+        else:
+            raise NotImplementedError(f&#34;channel status {hex(status)} unsupported.&#34;)
+
+    @staticmethod
+    def _write_message(stream, message):
+        status = message[0]
+        if status &lt; mm.kSysEx:
+            #print(&#34;writing&#34;, message)
+            for b in message:
+                stream.write(MidiFile._int_to_bytes(b, 1))
+            #stream.write(bytes(message))
+        elif status == mm.kMetaMsg:
+            stream.write(MidiFile._int_to_bytes(status, 1))
+            meta = message[1]
+            stream.write(MidiFile._int_to_bytes(meta, 1))
+            if mm.kText &lt;= meta &lt;= mm.kDevName or meta == mm.kSeqEvent:
+                MidiFile._write_varlen_value(stream, message[2])
+                stream.write(message[3])  # a bytes struct
+            else:
+                for b in message[2:]:
+                    stream.write(MidiFile._int_to_bytes(b, 1))
+                # stream.write(bytes(message[2:]))
+        elif status == mm.kSysEx or status == mm.kEOE:
+            stream.write(status)
+            MidiFile._write_varlen_value(stream, message[1])
+            stream.write(message[2])  # a bytes struct
+        else:
+            raise NotImplementedError(f&#34;Unsupported message: {message}.&#34;)
+
+    def _read_track(self, stream, tosecs):
+        abs_delta = 0
+        # read the length of the track. since this is not dependable we
+        # ignore it and use the required EOT message to stop the track.
+        self._read_chunk_length(stream, b&#39;MTrk&#39;)
+        self._running_status = 0
+        trk = []
+        while True:
+            delta = self._read_varlen_value(stream)
+            abs_delta += delta
+            msg = self._read_message(stream)
+            # print(delta, msg)
+            # break on EOT, which is required by the midifile spec.
+            if mm.is_meta_message_type(msg, mm.kEOT):  # mm.is_meta_eot(msg):
+                break
+            time = abs_delta / self.divisions if tosecs else abs_delta
+            trk.append(me.MidiEvent(msg, time))
+        # add the track as a sequence in the midi file
+        self.tracks.append(Seq(trk))
+
+    def _write_track(self, stream, track, divs, microdivs, force_tempo=False):
+        ##print(&#34;write_track------------------------------&#34;)
+        #track.print()
+        self._write_chunk_length(stream, b&#39;MTrk&#39;, 0)
+        # save the begin position of this track.
+        track_beg = stream.tell()
+        # the previous time, used to calculate delta times between events.
+        prev_time = 0
+        # If force_tempo is True then this is the first track
+        # and the user did not provide a tempo marking. In
+        # this case write an initial tempo message for mm=60
+        if force_tempo:
+            MidiFile._write_varlen_value(stream, 0)
+            MidiFile._write_message(stream, mm.meta_tempo(1000000))
+        # pending queue of note offs, used if the track contains Note objects.
+        off_queue = []
+        # write out all the events in the track
+        ##foo = 0
+        for ev in track:
+            ##print(foo,&#34;\t&#34;, ev); foo += 1
+            # write out any pending offs &lt;= ev.time
+            prev_time = MidiFile._write_offs(stream, off_queue, ev.time, prev_time, divs)
+            # if we encounter a Note object, enqueue a note off and write a note on immediately.
+            if isinstance(ev, Note):
+                chan = ev.instrument
+                key = ev._pitchtokey()
+                vel = int(ev.amplitude * 127)
+                if isinstance(key, float):
+                    if not key.is_integer() and microdivs &gt; 1:
+                        chan, key = MidiFile._microtune(chan, key, microdivs)
+                    else:
+                        key = int(key)
+                noteon  = me.MidiEvent([mm.kNoteOn | chan, key, vel], ev.time)
+                noteoff = me.MidiEvent([mm.kNoteOff | chan, key, 127], ev.time+ev.duration)
+                MidiFile._enqueue_off(noteoff, off_queue)
+                ev = noteon
+            #print(&#34;ev.message&#34;, ev.message)
+            delta = int((ev.time - prev_time) * divs)
+            MidiFile._write_varlen_value(stream, delta)
+            MidiFile._write_message(stream, ev.message)
+            prev_time = ev.time
+        # flush any remaining note offs.
+        MidiFile._write_offs(stream, off_queue, prev_time, prev_time, divs, True)   
+        # add a 0 delta and EOT
+        MidiFile._write_varlen_value(stream, 0)
+        MidiFile._write_message(stream, mm.meta_eot())
+        # calculate the length of the track we just wrote
+        track_end = stream.tell()
+        track_len = track_end - track_beg
+        # go to track header&#39;s 4-byte length field and write the length
+        stream.seek(track_beg - 4)
+        stream.write(self._int_to_bytes(track_len, 4))
+        # reposition back here to write the next track
+        stream.seek(track_end)
+
+    @staticmethod
+    def _enqueue_off(off, queue):
+        &#34;&#34;&#34;Adds a note off to the note off queue at the latest possible position.&#34;&#34;&#34;
+        i = 0; l = len(queue)
+        while i &lt; l and queue[i].time &lt;= off.time:
+            i += 1
+        queue.insert(i, off)
+
+    @staticmethod
+    def _write_offs(stream, queue, time, prev, divs, all=False):
+        &#34;&#34;&#34;Writes offs &lt;= current time, returns updated previous time.&#34;&#34;&#34;
+        while (queue and (all or (queue[0].time &lt;= time))):
+            MidiFile._write_varlen_value(stream, int((queue[0].time - prev) * divs))
+            MidiFile._write_message(stream, queue[0].message)
+            prev = queue.pop(0).time
+        return prev 
+
+    @staticmethod
+    def _microtune(channel, floatkey, microdivs):
+        &#34;&#34;&#34;
+        Quantizes a floating point key number to div number of divisions
+        per semitone. 
+        &#34;&#34;&#34;
+        microincr = 1.0 / microdivs        # microtonal increment
+        keynumber = int(floatkey)          # int version
+        remainder = floatkey - keynumber   # float&#39;s fractional portion is microtones
+        microchan = 0                      # the microtonal channel to shift to
+        for i in range(0, microdivs +1 ):  # iterate number of divisions plus 1.
+            if microincr * i &lt;= remainder &lt; microincr * (i + 1): # found rem in this bucket!
+                microchan = i              # offset to microtuned channel in midi file.
+                break
+        channel += microchan               # shift note to microtuned channel
+        return channel, keynumber
+
+    @staticmethod
+    def _channel_tuning(microdivs):
+        &#34;&#34;&#34;
+        Internal function that converts the microdivs value 
+        (the number of divisions per semitone) into a 
+        sequence of cent values above the standard midi
+        key number and then repeatedly assigns the sequence
+        across all 16 midi channels.
+
+        Example: if microdivs is 2, then the semitone is divided
+        into two 50 cent steps [0, .5], this pattern is then
+        repeated eight times over the sixteen midi channels
+        [0, .5, 0, .5, ... 0, .5] yielding eight pairs of channels
+        at indexes 0, 2, 4, ... 14 tuned for quarter tones.
+
+        Parameters
+        ----------
+        microdivs : int 
+            The number of divisions per semitone, 1 is semitone,
+            2 is quarter tone, etc.
+
+        Returns
+        -------
+        A sequence of microdivs adjustments for all 16 channels.
+        &#34;&#34;&#34;
+        microdivs = max(1, min(16, microdivs))
+        cents = [0.0]
+        for i in range(1, microdivs):
+            cents.append(1.0 * i/microdivs)
+        # return a row of 16 repeating cent values
+        return [cents[i % len(cents)] for i in range(16)]</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="musx.midi.midifile.MidiFile.divisions"><code class="name">var <span class="ident">divisions</span></code></dt>
+<dd>
+<div class="desc"><p>The number of ticks per quarter note.</p></div>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.level"><code class="name">var <span class="ident">level</span></code></dt>
+<dd>
+<div class="desc"><p>The MIDI level of the file, either 0, 1, or 2.</p></div>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.pathname"><code class="name">var <span class="ident">pathname</span></code></dt>
+<dd>
+<div class="desc"><p>The pathname of the MidiFile.</p></div>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.tracks"><code class="name">var <span class="ident">tracks</span></code></dt>
+<dd>
+<div class="desc"><p>The tracks of the MidiFile. Each track is a Seq. Your first track
+(track 0 in the file) should start with a tempo message otherwise
+the data will be performed using the musx default tempo mm=60.</p></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="musx.midi.midifile.MidiFile.fileversion"><code class="name flex">
+<span>def <span class="ident">fileversion</span></span>(<span>pathname)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A static function that returns a version of pathname guaranteed to not
+reference an existing file. Use this function to ensure that you will
+not overwrite a previous version of the MidiFile already on disk.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>pathname</code></strong> :&ensp;<code>string</code></dt>
+<dd>The pathname of the file to version.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A pathname string guaranteed to not overwrite an existing file on disk.</p>
+<h2 id="example">Example</h2>
+<p>In this example, the file "foo.mid" would go through the following
+versioning until a version was found that did not reference an existing file:
+"foo.mid", "foo1.mid", "foo2.mid" &hellip;</p>
+<pre><code class="py">MidiFile(fileversion(&quot;/path/to/foo.mid&quot;))
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def fileversion(pathname):
+    &#34;&#34;&#34;
+    A static function that returns a version of pathname guaranteed to not
+    reference an existing file. Use this function to ensure that you will
+    not overwrite a previous version of the MidiFile already on disk.
+
+    Parameters
+    ----------
+    pathname : string
+        The pathname of the file to version.
+
+    Returns
+    -------
+    A pathname string guaranteed to not overwrite an existing file on disk.
+
+    Example
+    -------
+    In this example, the file &#34;foo.mid&#34; would go through the following 
+    versioning until a version was found that did not reference an existing file:
+    &#34;foo.mid&#34;, &#34;foo1.mid&#34;, &#34;foo2.mid&#34; ...
+    ```py
+    MidiFile(fileversion(&#34;/path/to/foo.mid&#34;))
+    ```
+    &#34;&#34;&#34;
+    def nextversion(p):
+        name, extn = os.path.splitext(p)
+        vers = 1
+        yield name + extn
+        while True:
+            yield f&#34;{name}{vers}{extn}&#34;
+            vers += 1
+    # check versions until not found.
+    for f in nextversion(pathname):
+        if not os.path.isfile(f):
+            return f</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.metatrack"><code class="name flex">
+<span>def <span class="ident">metatrack</span></span>(<span>tempo=60, timesig=[4, 4], keysig=[0, 0], ins={}, microdivs=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a sequence containing a series of midi meta events that
+define the contents for a midi file's track 0, including its tempo,
+time signature, key signature, instrument assignments (program changes)
+and micro tuning setup using channel tuning. This meta data can then
+be assigned as track 0 in a level 1 midifile, or the initial contents
+of a level 0 midi file.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tempo</code></strong> :&ensp;<code>int</code></dt>
+<dd>The quarter-note metronome tempo of midi notes in the file.
+Note that musx's tempo defaults to 60 bmp not 120 bpm.</dd>
+<dt><strong><code>timesig</code></strong> :&ensp;<code>[num, den]</code></dt>
+<dd>A list of two integers indicating the numerator and denominator
+of a midi time signature, with den being a power of 2.</dd>
+<dt><strong><code>keysig</code></strong> :&ensp;<code>[sharpflats, mode]</code></dt>
+<dd>A list of two integers indicating a key signature and mode.
+sharpflats is an integer -7 to 7
+where negative numbers are
+flats keys, 0 is C and 1 to 7 are sharp keys. The mode
+value should be 0 for major and 1 for minor.</dd>
+<dt><strong><code>ins</code></strong> :&ensp;<code>{chan: instrument, ...}</code></dt>
+<dd>A dictionary of upto 16 channel numbers 0 to 15 and their
+general midi program asignment. See musx.midi.gm for the
+list of midi instument constants.</dd>
+<dt><strong><code>microdivs</code></strong> :&ensp;<code>int 1 to 16</code></dt>
+<dd>Specifies microtonal divisions per semitone (semitone/microdivs).
+The default value is 1, so semitone/1 = semitone and no microtonal
+output will occur. If microdivs is 2 then semitone/2 = 50 cent
+quantization, e.g. quartertone tuning. musx uses channel tuning
+to procuce microtones. This means that when microdivs is 2 musx
+will claim successive pairs of channels for quarter-tone tuning
+so the channels available for different instuments is 0, 2, 4,
+6, 8, 10, 12, and 14.
+The maxmimum number of microdivs is 16, or 6.25 cents, which is very
+close to the frequency limen. This will claim all 16 channels in
+order to produce microtone so the only channel available for
+instrument assignment is channel 0. For more information see the
+micro.py demo file.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def metatrack(cls, tempo=60, timesig=[4,4], keysig=[0,0], ins={}, microdivs=1):
+    &#34;&#34;&#34;
+    Returns a sequence containing a series of midi meta events that 
+    define the contents for a midi file&#39;s track 0, including its tempo,
+    time signature, key signature, instrument assignments (program changes)
+    and micro tuning setup using channel tuning. This meta data can then
+    be assigned as track 0 in a level 1 midifile, or the initial contents
+    of a level 0 midi file.
+
+    Parameters
+    ----------
+    tempo : int
+        The quarter-note metronome tempo of midi notes in the file.
+        Note that musx&#39;s tempo defaults to 60 bmp not 120 bpm.
+    timesig : [num, den]
+        A list of two integers indicating the numerator and denominator
+        of a midi time signature, with den being a power of 2.
+    keysig : [sharpflats, mode]
+        A list of two integers indicating a key signature and mode. 
+        sharpflats is an integer -7 to 7  where negative numbers are
+        flats keys, 0 is C and 1 to 7 are sharp keys. The mode 
+        value should be 0 for major and 1 for minor.
+    ins : {chan: instrument, ...}
+        A dictionary of upto 16 channel numbers 0 to 15 and their
+        general midi program asignment. See musx.midi.gm for the 
+        list of midi instument constants.
+    microdivs : int 1 to 16
+        Specifies microtonal divisions per semitone (semitone/microdivs).
+        The default value is 1, so semitone/1 = semitone and no microtonal
+        output will occur. If microdivs is 2 then semitone/2 = 50 cent
+        quantization, e.g. quartertone tuning. musx uses channel tuning
+        to procuce microtones. This means that when microdivs is 2 musx
+        will claim successive pairs of channels for quarter-tone tuning
+        so the channels available for different instuments is 0, 2, 4,
+        6, 8, 10, 12, and 14.
+        The maxmimum number of microdivs is 16, or 6.25 cents, which is very 
+        close to the frequency limen. This will claim all 16 channels in 
+        order to produce microtone so the only channel available for
+        instrument assignment is channel 0. For more information see the 
+        micro.py demo file.
+    &#34;&#34;&#34;
+    tempo = me.MidiEvent.meta_tempo(tempo)
+    if not len(timesig) == 2 and all(isinstance(n, int) for n in timesig):
+        raise TypeError(f&#34;invalid timesig: {timesig}.&#34;)
+    timesig = me.MidiEvent.meta_time_signature(timesig[0], timesig[1])
+    insts = {i: AcousticGrandPiano for i in range(16)}
+    for c,p in ins.items():
+        if not isinstance(c, int) and 0 &lt;= c &lt;= 15:
+            raise TypeError(&#34;invalid midi channel: {c}.&#34;)
+        if not isinstance(p, int) and 0 &lt;= p &lt;= 127:
+            raise TypeError(&#34;invalid gm instrument: {p}.&#34;)
+        insts[c] = p
+    if not len(keysig) == 2 and all(isinstance(n, int) for n in keysig):
+        raise ValueError(f&#34;invalid timesig: {keysig}.&#34;)
+    keysig = me.MidiEvent.meta_key_signature(keysig[0], keysig[1])
+    meta = [tempo, timesig, keysig]
+    meta += [me.MidiEvent.program_change(c,p) for c,p in insts.items()]
+    if not (1 &lt;= microdivs &lt;= 16):
+        raise ValueError(f&#34;invalid microtuning value: {microdivs}.&#34;)
+    if microdivs &gt; 1:
+        values = cls._channel_tuning(microdivs)
+        for c,v in enumerate(values):
+            # calculate the pitch bend value
+            b = round(rescale(v, -2,  2,  0, 16383))
+            meta.append(me.MidiEvent.pitch_bend(c, b))
+    metaseq = Seq()
+    metaseq.events = meta
+    # mark this seq as being a midi meta track and add the microdivs value
+    metaseq.metatrack = True
+    metaseq.microdivs = microdivs if microdivs &gt; 1 else 0
+    return metaseq</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.midi.midifile.MidiFile.addtrack"><code class="name flex">
+<span>def <span class="ident">addtrack</span></span>(<span>self, seq)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Appends a Seq to the midi file's track list.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>seq</code></strong> :&ensp;<code>Seq</code></dt>
+<dd>The Seq to append to the current tracks in the MidiFile.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addtrack(self, seq):
+    &#34;&#34;&#34;
+    Appends a Seq to the midi file&#39;s track list.
+    
+    Parameters
+    ----------
+    seq : Seq
+        The Seq to append to the current tracks in the MidiFile.
+    &#34;&#34;&#34;
+    self.tracks.append(seq)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.clear"><code class="name flex">
+<span>def <span class="ident">clear</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Removes all the data from the MidiFile.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clear(self):
+    &#34;&#34;&#34;Removes all the data from the MidiFile.&#34;&#34;&#34;
+    self.level = 0
+    self.divisions = 0
+    self.tracks = []
+    self._running_status = 0
+    self.pathname = &#34;&#34;</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.print"><code class="name flex">
+<span>def <span class="ident">print</span></span>(<span>self, tracks=True, hints=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prints the track contents of the MidiFile.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tracks</code></strong> :&ensp;<code>bool | int | list</code></dt>
+<dd>Specifies which tracks to print. If tracks is True
+then all tracks are printed, if tracks is an integer
+then that track number is printed, otherwise tracks
+is a list of integers and only those tracks
+are printed. Track numbers are 0 based, and track
+0 is often a "meta track" of a midi file.</dd>
+<dt><strong><code>hints</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true then hints are printed in the printed listing,
+otherwise they are not.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The MidiFile.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print(self, tracks=True, hints=True):
+    &#34;&#34;&#34;
+    Prints the track contents of the MidiFile.
+
+    Parameters
+    ----------
+    tracks : bool | int | list
+        Specifies which tracks to print. If tracks is True
+        then all tracks are printed, if tracks is an integer
+        then that track number is printed, otherwise tracks
+        is a list of integers and only those tracks
+        are printed. Track numbers are 0 based, and track
+        0 is often a &#34;meta track&#34; of a midi file.
+    hints : bool
+        If true then hints are printed in the printed listing,
+        otherwise they are not. 
+
+    Returns
+    -------
+    The MidiFile.
+    &#34;&#34;&#34;
+    for i, t in enumerate(self.tracks):
+        if tracks is True or t is i or i in tracks:
+            t.print()</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self, secs=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reads the file in MidiFile.pathname and collects the track data
+as a list of Seqs. Any existing tracks in the MidiFile will be
+cleared before reading.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>'secs' | 'ticks' | 'raw'</code></dt>
+<dd>The format to import midi time values as. 'secs' is seconds,
+'ticks' is time expressed in midi ticks, and 'raw' are the
+raw delta values that precede each event in the file. The
+default value is 'secs'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The MidiFile.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">    def read(self, secs=True):
+        &#34;&#34;&#34;
+        Reads the file in MidiFile.pathname and collects the track data
+        as a list of Seqs. Any existing tracks in the MidiFile will be
+        cleared before reading.
+        
+        Parameters
+        ----------
+        time : &#39;secs&#39; | &#39;ticks&#39; | &#39;raw&#39;
+            The format to import midi time values as. &#39;secs&#39; is seconds,
+            &#39;ticks&#39; is time expressed in midi ticks, and &#39;raw&#39; are the
+            raw delta values that precede each event in the file. The
+            default value is &#39;secs&#39;.
+
+        Returns
+        -------
+        The MidiFile.
+        &#34;&#34;&#34;
+        pathname = self.pathname
+        with open(pathname, &#34;rb&#34;) as stream:
+            self.clear()
+            self.pathname = pathname # restore the pathname after clearing!
+            length = self._read_chunk_length(stream, b&#39;MThd&#39;)
+            assert length == 6, &#34;MThd chunk length 6 not found.&#34;
+            self.level = self._bytes_to_int(stream.read(2))
+            tracks = self._bytes_to_int(stream.read(2))
+            # read divisions as a two byte signed quantity. if its positive
+            # then it represents ticks per quarter. if its negative then its
+            # smpte format where the upper byte contains -24, -25 or -30,
+            # and the lower byte is positive subframes. Example: millisecond
+            # smpte timing would be 0xE728 = -25 40 = 25*40 = 1000ms
+            # see http://midi.teragonaudio.com/tech/midifile/mthd.htm
+            self.divisions = self._bytes_to_int(stream.read(2), True)
+            if self.divisions &lt; 0:
+                raise NotImplementedError(&#34;Cowardly refusing to import SMPTE format midi file.&#34;)
+#            print(&#34;level=&#34;, level, &#34;tracks=&#34;, tracks, &#34;divisions=&#34;, divisions)
+            # process all the tracks in the file
+            for _ in range(tracks):
+                self._read_track(stream, secs)
+        return self</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midifile.MidiFile.write"><code class="name flex">
+<span>def <span class="ident">write</span></span>(<span>self, secs=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Writes the MidiFile's track data to the file in MidiFile.pathname.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>secs</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true the MidiEvents in the track data contain time in seconds
+andthis is converted to midi ticks. Otherwise the tracks should
+contain tick data.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The MidiFile.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write(self, secs=True):
+    &#34;&#34;&#34;
+    Writes the MidiFile&#39;s track data to the file in MidiFile.pathname.
+    
+    Parameters
+    ----------
+    secs : bool
+        If true the MidiEvents in the track data contain time in seconds
+        andthis is converted to midi ticks. Otherwise the tracks should 
+        contain tick data.
+
+    Returns
+    -------
+    The MidiFile.
+    &#34;&#34;&#34;
+    trnum = len(self.tracks)
+    if trnum == 0:
+        raise ValueError(&#34;no tracks to write.&#34;)
+    level = 0 if trnum == 1 else 1
+    divs = self.divisions
+    pathname = self.pathname # self.fileversion(pathname)
+    with open(pathname, &#34;wb&#34;) as stream:
+        self._write_chunk_length(stream, b&#39;MThd&#39;, 6)
+        stream.write(self._int_to_bytes(level, 2))
+        stream.write(self._int_to_bytes(trnum, 2))
+        stream.write(self._int_to_bytes(divs, 2))
+        force_tempo = False
+        # if the first event in the first track is not a
+        # tempo event then force tempo==60.
+        if not isinstance(self.tracks[0][0], me.MidiEvent) or not self.tracks[0][0].is_meta(mm.kTempo):
+            force_tempo = True
+        microdivs = 0
+        if hasattr(self.tracks[0], &#34;metatrack&#34;):
+            microdivs = self.tracks[0].microdivs 
+        # write the tracks
+        for t in self.tracks:
+            self._write_track(stream, t, divs, microdivs, force_tempo)
+            force_tempo = False
+
+        self.format = level
+        self.divisions = divs
+    return self</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx.midi" href="index.html">musx.midi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="musx.midi.midifile.MidiFile" href="#musx.midi.midifile.MidiFile">MidiFile</a></code></h4>
+<ul class="two-column">
+<li><code><a title="musx.midi.midifile.MidiFile.addtrack" href="#musx.midi.midifile.MidiFile.addtrack">addtrack</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.clear" href="#musx.midi.midifile.MidiFile.clear">clear</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.divisions" href="#musx.midi.midifile.MidiFile.divisions">divisions</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.fileversion" href="#musx.midi.midifile.MidiFile.fileversion">fileversion</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.level" href="#musx.midi.midifile.MidiFile.level">level</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.metatrack" href="#musx.midi.midifile.MidiFile.metatrack">metatrack</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.pathname" href="#musx.midi.midifile.MidiFile.pathname">pathname</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.print" href="#musx.midi.midifile.MidiFile.print">print</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.read" href="#musx.midi.midifile.MidiFile.read">read</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.tracks" href="#musx.midi.midifile.MidiFile.tracks">tracks</a></code></li>
+<li><code><a title="musx.midi.midifile.MidiFile.write" href="#musx.midi.midifile.MidiFile.write">write</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

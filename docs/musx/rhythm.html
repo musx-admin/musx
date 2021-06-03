@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.rhythm API documentation</title>
+<meta name="description" content="rhythm.py provides a mapping between alternate representations of rhythmic
+values: fractions, rhythmic symbols, lists of the same or strings of the …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.rhythm</code></h1>
+</header>
+<section id="section-intro">
+<p>rhythm.py provides a mapping between alternate representations of rhythmic
+values: fractions, rhythmic symbols, lists of the same or strings of the same.</p>
+<p>A fraction
+is a ratio (or Fraction) of a whole note, e.g.
+1/4=quarter note, 1/8=eighth note, 3/2= dotted whole note (three half-notes),
+7/25=seven 25ths notes, and so on. </p>
+<p>A rhythmic symbol consists of a metric letter: 'w'=whole,'h'=half, 'q'=quarter,
+'e'=eighth, 's'=sixteenth, 't'=thirty-second, 'x'=sixty-fourth, optionally
+preceded by a tuple number (e.g. '3e') and followed by zero or more dots
+e.g. (3q&hellip;).
+Dotted values larger than the 64th are support.
+Examples: 'q'=quarter, '3q'=triplet quarter, 'e.'=dotted-eighth,
+'3s.'=triplet dotted sixteenth, 'h&hellip;'=triple dotted half.</p>
+<p>Simple expressions involving rhythmic symbols can be formed using +, -, and
+* to join rhythmic tokens. Examples: 'w*4'=duration of four whole notes,
+'s+3q'=sixteenth plus triplet quarter, 'w-s.'=whole less a dotted sixteenth.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">################################################################################
+&#34;&#34;&#34;
+rhythm.py provides a mapping between alternate representations of rhythmic 
+values: fractions, rhythmic symbols, lists of the same or strings of the same.
+
+A fraction  is a ratio (or Fraction) of a whole note, e.g. 
+1/4=quarter note, 1/8=eighth note, 3/2= dotted whole note (three half-notes),
+7/25=seven 25ths notes, and so on. 
+    
+A rhythmic symbol consists of a metric letter: &#39;w&#39;=whole,&#39;h&#39;=half, &#39;q&#39;=quarter,
+&#39;e&#39;=eighth, &#39;s&#39;=sixteenth, &#39;t&#39;=thirty-second, &#39;x&#39;=sixty-fourth, optionally 
+preceded by a tuple number (e.g. &#39;3e&#39;) and followed by zero or more dots
+e.g. (3q...).  Dotted values larger than the 64th are support.
+Examples: &#39;q&#39;=quarter, &#39;3q&#39;=triplet quarter, &#39;e.&#39;=dotted-eighth,
+&#39;3s.&#39;=triplet dotted sixteenth, &#39;h...&#39;=triple dotted half.
+    
+Simple expressions involving rhythmic symbols can be formed using +, -, and
+* to join rhythmic tokens. Examples: &#39;w*4&#39;=duration of four whole notes,
+&#39;s+3q&#39;=sixteenth plus triplet quarter, &#39;w-s.&#39;=whole less a dotted sixteenth.
+&#34;&#34;&#34;
+
+from fractions import Fraction
+from .tools import parse_string_sequence
+
+def rhythm(ref, tempo=60, beat=1/4):
+    &#34;&#34;&#34;
+    Returns the value of ref converted to beat units (typically seconds) at a
+    specified tempo. Ref can be a fraction of a whole note, a rhythmic symbol,
+    a list of the same or a string of the same separated by commas and/or spaces.
+
+    Parameters
+    ----------
+    ref : string | int | float | Fraction
+        A fraction of a whole note, a rhythmic symbol, list of the same
+        or string containing separeted by spaces and/or commas.
+    tempo : int | float
+        The metronome marking (beats per minute).
+    beat : int | float
+        The beat of the tempo. Defaults to 1/4, or quarter note.
+    &#34;&#34;&#34;
+    if type(ref) is str:
+        ref = ref.strip() # remove whitespace from start and end
+        try:     
+            return (_rhythms[ref] / beat) * (60/tempo)
+        except:  
+            pass
+        # split string if it contains commas or spaces.
+        #ref = ref.replace(&#39;,&#39;, &#39; &#39;).split()
+        ref = parse_string_sequence(ref)
+        # if it didnt split then its a single expression,
+        # otherwise its a series (list) of expressions.
+        if len(ref) == 1: 
+            expr = _rexpr(ref[0])
+        else:
+            expr = [_rexpr(e) for e in ref]
+        #print(&#34;expr -&gt; &#34;, expr)
+        return _reval(expr, beat, tempo)
+    elif type(ref) is list:
+        return [rhythm(r, tempo, beat) for r in ref]
+    elif type(ref) is Fraction:
+        return (ref / Fraction(beat)) * Fraction(60, tempo)
+    else:
+        return (ref / beat) * (60/tempo)
+
+
+def _rexpr(expr, lev=0):
+    &#34;&#34;&#34;Convert rhythmic expression into prefix notation for evaluation.&#34;&#34;&#34;
+    ops = [&#39;+&#39;, &#39;-&#39;, &#39;*&#39;]
+    if lev &lt; len(ops):
+        expr = expr.split(ops[lev])
+        for i, e in enumerate(expr):
+            expr[i] = _rexpr(e, lev+1)
+        if len(expr)&gt;1:
+            # convert to prefix notation: &#39;q+q+q&#39; =&gt; [&#39;+&#39;, &#39;q&#39;, &#39;q&#39;, &#39;q&#39;]
+            expr = [ops[lev]] + expr
+        else:
+            expr = expr[0]
+    return expr
+
+
+def _reval(expr, beat, tempo):
+    &#34;&#34;&#34;Evaluate an already parsed rhythmic expression.&#34;&#34;&#34;
+    if type(expr) is str:
+        return (_rhythms[expr] / beat) * (60/tempo)
+    # expr is [&#39;q&#39;,&#39;q&#39;] or prefixed eval list [&#39;+&#39; ....]
+    if expr[0] == &#39;+&#39;:
+        x = 0.0
+        for e in expr[1:]: x += _reval(e, beat,tempo)
+        return x
+    elif expr[0] == &#39;*&#39;:
+        if len(expr) == 3 and expr[2].isdigit():
+            return _reval(expr[1], beat,tempo)
+    elif expr[0] == &#39;-&#39;:
+        x = _reval(expr[1], beat, tempo)
+        for e in expr[2:]: x -= _reval(e, beat, tempo)
+        return x
+    else:
+        return [_reval(e, beat, tempo) for e in expr]
+    expr = expr[0].join(expr[1:])
+    raise ValueError(f&#34;not a rhythmic expression: {expr}.&#34;)
+        
+
+def intempo(time, tempo):
+    &#34;&#34;&#34;
+    Returns a time value scaled to tempo.
+
+    Parameters
+    ----------
+    time : int | float
+        The value to scale to tempo.
+    tempo : int | float
+        The metronome marking (beats per minute).
+
+    Returns
+    -------
+    The time value scaled to the tempo.
+    &#34;&#34;&#34;
+    return time * (60.0 / tempo)
+
+
+def _createrhythms():
+    &#34;&#34;&#34;Create a hash table of all rhythmic values.&#34;&#34;&#34;
+    #toks = [(s, Fraction(1, 2**n)) for n,s in enumerate(&#39;whqestx&#39;)]
+    tab = {}
+    # Iterate the rhythmic letters (w=whole, h=half ... x=sixty-fourth)
+    for i,t in enumerate(&#39;whqestx&#39;):
+        sym = t
+        # the rhythmic value of each type w=1/1, h=1/2 ...
+        rat = Fraction(1, 2**i)
+        # create the dotted, but dont go smaller than 1/64.
+        # NB: when d is 0 there is no dot.
+        for d in range(0,7-i):
+            #print(sym+(&#39;.&#39;*d), rat * (2 - Fraction(1, 2**d)))
+            #_rhythms[sym+(&#39;.&#39;*d)] = rat * (2 - Fraction(1, 2**d))
+            tab[sym+(&#39;.&#39;*d)] = rat * (2 - Fraction(1, 2**d))
+            for pre in [3]:
+                amt = Fraction(pre-1,pre)
+                tab[str(pre)+sym+(&#39;.&#39;*d)] = (amt * rat * (2 - Fraction(1, 2**d)))
+    return tab
+
+
+_rhythms = _createrhythms()
+
+
+if __name__ == &#39;__main__&#39;:
+    pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="musx.rhythm.intempo"><code class="name flex">
+<span>def <span class="ident">intempo</span></span>(<span>time, tempo)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a time value scaled to tempo.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The value to scale to tempo.</dd>
+<dt><strong><code>tempo</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The metronome marking (beats per minute).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The time value scaled to the tempo.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def intempo(time, tempo):
+    &#34;&#34;&#34;
+    Returns a time value scaled to tempo.
+
+    Parameters
+    ----------
+    time : int | float
+        The value to scale to tempo.
+    tempo : int | float
+        The metronome marking (beats per minute).
+
+    Returns
+    -------
+    The time value scaled to the tempo.
+    &#34;&#34;&#34;
+    return time * (60.0 / tempo)</code></pre>
+</details>
+</dd>
+<dt id="musx.rhythm.rhythm"><code class="name flex">
+<span>def <span class="ident">rhythm</span></span>(<span>ref, tempo=60, beat=0.25)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the value of ref converted to beat units (typically seconds) at a
+specified tempo. Ref can be a fraction of a whole note, a rhythmic symbol,
+a list of the same or a string of the same separated by commas and/or spaces.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>ref</code></strong> :&ensp;<code>string | int | float | Fraction</code></dt>
+<dd>A fraction of a whole note, a rhythmic symbol, list of the same
+or string containing separeted by spaces and/or commas.</dd>
+<dt><strong><code>tempo</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The metronome marking (beats per minute).</dd>
+<dt><strong><code>beat</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The beat of the tempo. Defaults to 1/4, or quarter note.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rhythm(ref, tempo=60, beat=1/4):
+    &#34;&#34;&#34;
+    Returns the value of ref converted to beat units (typically seconds) at a
+    specified tempo. Ref can be a fraction of a whole note, a rhythmic symbol,
+    a list of the same or a string of the same separated by commas and/or spaces.
+
+    Parameters
+    ----------
+    ref : string | int | float | Fraction
+        A fraction of a whole note, a rhythmic symbol, list of the same
+        or string containing separeted by spaces and/or commas.
+    tempo : int | float
+        The metronome marking (beats per minute).
+    beat : int | float
+        The beat of the tempo. Defaults to 1/4, or quarter note.
+    &#34;&#34;&#34;
+    if type(ref) is str:
+        ref = ref.strip() # remove whitespace from start and end
+        try:     
+            return (_rhythms[ref] / beat) * (60/tempo)
+        except:  
+            pass
+        # split string if it contains commas or spaces.
+        #ref = ref.replace(&#39;,&#39;, &#39; &#39;).split()
+        ref = parse_string_sequence(ref)
+        # if it didnt split then its a single expression,
+        # otherwise its a series (list) of expressions.
+        if len(ref) == 1: 
+            expr = _rexpr(ref[0])
+        else:
+            expr = [_rexpr(e) for e in ref]
+        #print(&#34;expr -&gt; &#34;, expr)
+        return _reval(expr, beat, tempo)
+    elif type(ref) is list:
+        return [rhythm(r, tempo, beat) for r in ref]
+    elif type(ref) is Fraction:
+        return (ref / Fraction(beat)) * Fraction(60, tempo)
+    else:
+        return (ref / beat) * (60/tempo)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="musx.rhythm.intempo" href="#musx.rhythm.intempo">intempo</a></code></li>
+<li><code><a title="musx.rhythm.rhythm" href="#musx.rhythm.rhythm">rhythm</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

@@ -2,6 +2,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/vim,linux,macos,emacs,python,pycharm,visualstudiocode,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,linux,macos,emacs,python,pycharm,visualstudiocode,jupyternotebooks
 
+ignore/
+
 ### Emacs ###
 # -*- mode: gitignore; -*-
 *~

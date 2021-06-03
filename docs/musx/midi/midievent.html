@@ -1,0 +1,4810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.midi.midievent API documentation</title>
+<meta name="description" content="The midievent module provides object oriented support for working with midi
+messages. To represent basic midi on and off data you should use a `Note`
+…" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.midi.midievent</code></h1>
+</header>
+<section id="section-intro">
+<p>The midievent module provides object oriented support for working with midi
+messages. To represent basic midi on and off data you should use a <code>Note</code>
+object because it provides a more flexible represention that will automatically
+convert to on and off messages when written to files and ports.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">###############################################################################
+&#34;&#34;&#34;
+The midievent module provides object oriented support for working with midi
+messages. To represent basic midi on and off data you should use a `Note` 
+object because it provides a more flexible represention that will automatically
+convert to on and off messages when written to files and ports.
+&#34;&#34;&#34;
+
+
+from . import midimsg as mm
+from . import gm
+from ..note import Event
+
+
+class MidiEvent (Event):
+    &#34;&#34;&#34;
+    A class that wraps lists of midi message bytes so they can be treated 
+    as time stamped objects. Unless you know what you are doing you should
+    probably not call this constructor directly and use the class message
+    constructors to create defined below.
+
+    Parameters
+    ----------
+    message : list
+        The list of message byte values. The constructor does not check these values!
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+
+    def __init__(self, message, time=0.0):
+
+        super().__init__(time)
+        self.message = message
+        # self.time = time
+
+    def __str__(self):
+        &#34;&#34;&#34;The print() string shows the raw data.&#34;&#34;&#34;
+        return self.tostring()
+
+    def __repr__(self):
+        &#34;&#34;&#34;The string the console prints shows the external form.&#34;&#34;&#34;
+        return self.toextern()
+
+    @staticmethod
+    def _check_range(val, a, b=None):
+        &#34;&#34;&#34;
+        Raises a TypeError if val not in range(a,b), or range(0,a) if 
+        b is not provided.
+        &#34;&#34;&#34;
+        if b is None:
+            b, a = a, 0
+        if not a &lt;= val &lt; b:
+            raise ValueError(f&#34;midi value {val} not in range({a},{b}).&#34;)
+        return val
+
+    @staticmethod
+    def _check_int_range(val, a, b=None):
+        &#34;&#34;&#34;Raises an assertion if val is not an int or not in range(a,b).&#34;&#34;&#34;
+        if not isinstance(val, int):
+            raise TypeError(f&#34;value {val} is not an int.&#34;)
+        return MidiEvent._check_range(val, a, b)
+
+    @staticmethod
+    def _rescale(value, oldmin, oldmax, newmin, newmax):
+        &#34;&#34;&#34;Rescales value to new linear range.&#34;&#34;&#34;
+        return (((newmax - newmin) / (oldmax - oldmin)) * (value - oldmin)) + newmin
+
+    def status(self):
+        &#34;&#34;&#34;Returns the status byte of a MidiEvent.&#34;&#34;&#34;
+        return mm.status(self.message)
+
+    def channel(self):
+        &#34;&#34;&#34;
+        Returns the channel of a midi channel event or -1
+        if the message is not a channel event.
+        &#34;&#34;&#34;
+        if mm.is_channel_message(self.message):
+            return mm.channel(self.message)
+        return -1
+
+    @classmethod
+    def note_off(cls, channel, keynum, velocity, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi note off event.
+
+        Parameters
+        ----------
+        channel : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        velocity : byte
+            A velocity value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        channel = cls._check_int_range(channel, 16)
+        keynum = cls._check_int_range(keynum, 128)
+        velocity = cls._check_int_range(velocity, 128)
+        return cls(mm.note_off(channel, keynum, velocity), time)
+
+
+    def is_note_off(self):
+        &#34;&#34;&#34;Returns true if the event is a note off.&#34;&#34;&#34;
+        return self.status() == mm.kNoteOff
+
+    @classmethod
+    def note_on(cls, channel, keynum, velocity, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi note on event.
+
+        Parameters
+        ----------
+        channel : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        velocity : byte
+            A velocity value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        channel = cls._check_int_range(channel, 16)
+        keynum = cls._check_int_range(keynum, 128)
+        velocity = cls._check_int_range(velocity, 128)
+        return cls(mm.note_on(channel, keynum, velocity), time)
+
+    def is_note_on(self):
+        &#34;&#34;&#34;Returns true if the message is a note on.&#34;&#34;&#34;
+        return self.status() == mm.kNoteOn
+
+    def is_note_on_or_off(self):
+        &#34;&#34;&#34;Returns true if the message is a note on or off.&#34;&#34;&#34;
+        return mm.kNoteOff &lt;= self.status() &lt;= mm.kNoteOn
+
+    def keynum(self):
+        &#34;&#34;&#34;
+        Returns a key number value 0 to 127, or -1 if the
+        event is not a note on, off, or aftertouch.
+        &#34;&#34;&#34;
+        if self.status() in [mm.kNoteOff, mm.kNoteOn, mm.kAftertouch]:
+            return mm.keynum(self.message)
+        return -1
+
+    def velocity(self):
+        &#34;&#34;&#34;
+        Returns a velocity value 0 to 127, or -1 if the message is not
+        a note on or off.
+        &#34;&#34;&#34;
+        if self.is_note_on_or_off():
+            return mm.velocity(self.message)
+        return -1
+
+    @classmethod
+    def aftertouch(cls, chan, keynum, press, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi aftertouch event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        press : byte
+            A pressure value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        keynum = cls._check_int_range(keynum, 128)
+        press = cls._check_int_range(press, 128)
+        return cls(mm.aftertouch(chan, keynum, press), time)
+
+    def is_aftertouch(self):
+        &#34;&#34;&#34;Returns true if the midi event is an an aftertouch.&#34;&#34;&#34;
+        return self.status() == mm.kAftertouch
+
+    def touch(self):
+        &#34;&#34;&#34;
+        Return a pressure value 0 127, or -1 if the event is not an aftertouch.
+        &#34;&#34;&#34;
+        if self.is_aftertouch():
+            return mm.touch(self.message)
+        return -1
+
+    @classmethod
+    def control_change(cls, chan, ctrl, val, time=0.0):
+        &#34;&#34;&#34;
+        Creates a control change event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        ctrl : byte
+            A controller number 0 to 127.
+        val : byte
+            A controller value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        ctrl = cls._check_int_range(ctrl, 128)
+        val = cls._check_int_range(val, 128)
+        return cls(mm.control_change(chan, ctrl, val), time)
+
+    def is_control_change(self):
+        &#34;&#34;&#34;Returns true if the message is a control change event.&#34;&#34;&#34;
+        return self.status() == mm.kCtrlChange
+
+    def controller(self):
+        &#34;&#34;&#34;
+        Returns a controller value 0 to 127, or -1 if the event
+        is not a control change.
+        &#34;&#34;&#34;
+        if self.is_control_change():
+            return mm.controller(self.message)
+        return -1
+
+    def is_controller_of_type(self, contype):
+        &#34;&#34;&#34;
+        Returns true if the event is a control change message and
+        its controller is the specified type.
+        &#34;&#34;&#34;
+        return self.is_control_change() and self.controller() == contype
+
+    def control(self):
+        &#34;&#34;&#34;
+        Returns a control value 0 127, or -1 if the event is
+        not a control change.
+        &#34;&#34;&#34;
+        if self.is_control_change():
+            return mm.control(self.message)
+        return -1
+
+    @classmethod
+    def program_change(cls, chan, prog, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi program change event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        prog : byte
+            A midi program number 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        prog = cls._check_int_range(prog, 128)
+        return cls(mm.program_change(chan, prog), time)
+
+    def is_program_change(self):
+        &#34;&#34;&#34;Returns true if the event is a program change.&#34;&#34;&#34;
+        return self.status() == mm.kProgChange
+
+    def program(self):
+        &#34;&#34;&#34;
+        Returns a progam change value 0 127, or -1 if the event is
+        not a program change.
+        &#34;&#34;&#34;
+        if self.status() == mm.kProgChange:
+            return mm.program(self.message)
+        return -1
+
+    @classmethod
+    def channel_pressure(cls, chan, press, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi channel pressure event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        press : byte
+            A midi pressure number 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        press = cls._check_int_range(press, 128)
+        return cls(mm.channel_pressure(chan, press), time)
+
+    def is_channel_pressure(self):
+        &#34;&#34;&#34;Returns true if the event is a channel pressure.&#34;&#34;&#34;
+        return self.status() == mm.kChanPress
+
+    def pressure(self):
+        &#34;&#34;&#34;
+        Returns a pressure value 0 127, or -1 if the event is not
+        a channel pressure.
+        &#34;&#34;&#34;
+        if self.is_channel_pressure():
+            return mm.pressure(self.message)
+        return -1
+
+    @classmethod
+    def pitch_bend(cls, chan, bend, time=0.0):
+        &#34;&#34;&#34;
+        Creates a pitch bend event.
+
+        Parameters
+        ----------
+        chan : int
+            The channel number, 0 to 15.
+        bend : int
+            A pitch bend value, 0 to 16383. See: bendvalue().
+        time  : int | float
+            A score time to give the midi message. The units for this are
+            application-specific.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        bend = cls._check_int_range(bend, 16384)  # 14 bit value 0-16383
+        return cls(mm.pitch_bend(chan, bend), time)
+
+    def is_pitch_bend(self):
+        &#34;&#34;&#34;Returns true if the event is a pitch bend.&#34;&#34;&#34;
+        return self.status() == mm.kPitchBend
+
+    def bend(self):
+        &#34;&#34;&#34;
+        Returns a bend value 0 to 16383 or -1 if the event is not a pitch bend.
+        &#34;&#34;&#34;
+        if self.status() == mm.kPitchBend:
+            return mm.bend(self.message)
+        return -1
+
+    @staticmethod
+    def bend_value(semibend, semirange):
+        &#34;&#34;&#34;
+        Converts a pitchbend value in semitones into a midi pitch bend value.
+
+        Parameters
+        --------
+        semibend : number
+            The bend value expressed in floating point semitones.
+        semirange : float 
+            A device dependant maximum pitch bend range expressed in floating point semitones.        
+        &#34;&#34;&#34;
+        return int(MidiEvent._rescale(semibend, -semirange, semirange, 0, 16383))
+
+    @classmethod
+    def all_notes_off(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi all notes off event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.control_change(chan, 123, 0), time)
+
+    @classmethod
+    def all_sound_off(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi all sound off event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.control_change(chan, 120, 0), time)
+
+    ## Creates a midi all controllers off message.
+    #  @param chan  a channel number, 0 to 15.
+    #  @param time  a time to give the midi message. The units
+    #  for this are application-specific.
+    @classmethod
+    def all_controllers_off(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi note off event.
+
+        Parameters
+        ----------
+        channel : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        velocity : byte
+            A velocity value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.control_change(chan, 121, 0), time)
+
+
+    # Midi Meta Messages. These are only valid in midi files.
+
+
+    def is_meta(self, typ=None):
+        &#34;&#34;&#34;
+        Returns true if the event is a meta event.
+
+        If typ is not specifed the function returns true if the event is any
+        type of meta message, otherwise the event must be the specied type between
+        kDevName and kSeqEvent.
+
+        Parameters
+        ----------
+        typ : metatype | None
+            The midi meta message type or None.
+        &#34;&#34;&#34;
+        meta = self.status() == mm.kMetaMsg and len(self.message) &gt;= 3
+        if not meta or typ is None:
+            return meta
+        return self.message[1] == typ
+
+    @classmethod
+    def meta_seq_number(cls, num, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi sequence number meta event.
+
+        Parameters
+        ----------
+        num : int
+            A sequence number max 2 bytes.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        if isinstance(num, int) and num &gt;= 0:
+            return cls(mm.meta_seq_number(num), time)
+        raise ValueError(f&#34;invalid sequence number: &#39;{num}&#39;.&#34;)
+
+    @classmethod
+    def _textmeta(cls, mtype, text, time=0.0):
+        if isinstance(mtype, int) and mm.kText &lt;= mtype &lt;= mm.kDevName:
+            if isinstance(text, str) and len(text) &gt; 0:
+                return cls(mm.text_meta_message(mtype, text), time)
+            else:
+                raise TypeError(f&#34;text value &#39;{text}&#39; is not a string.&#34;)
+        else:
+            raise TypeError(f&#34;value &#39;{text}&#39; is not valid midi meta type.&#34;)
+
+    @classmethod
+    def meta_text(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi text meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kText, text, time)
+
+    @classmethod
+    def meta_copyright(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi copyright meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kCopyRight, text, time)
+
+    @classmethod
+    def meta_track_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi track name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kTrackName, text, time)
+
+    @classmethod
+    def meta_instrument_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi instrument name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kInstName, text, time)
+
+    @classmethod
+    def meta_lyric(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi lyric meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kLyric, text, time)
+
+    @classmethod
+    def meta_marker(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi marker meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kMarker, text, time)
+
+    @classmethod
+    def meta_cue_point(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi cue point meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kCuePoint, text, time)
+
+    @classmethod
+    def meta_program_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi program name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kProgName, text, time)
+
+    @classmethod
+    def meta_device_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi device name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kDevName, text, time)
+
+
+    def text(self):
+        &#34;&#34;&#34;
+        Returns the text string from a meta text event or
+        an empty string if the event is not a text event.
+        &#34;&#34;&#34;
+        if self.is_meta():
+            if mm.kText &lt;= self.message[1] &lt;= mm.kDevName:
+                return mm.text(self.message)
+        return &#39;&#39;
+
+    @classmethod
+    def meta_channel_prefix(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi channel prefix meta event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            A midi channel number 0 to 15.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.meta_chan_prefix(chan), time)
+
+    @classmethod
+    def meta_midi_port(cls, port, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi port meta event.
+
+        Note: **This meta event is depreciated in the midi spec.**
+
+        Parameters
+        ----------
+        port : byte
+            A midi port number 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        port = cls._check_int_range(port, 127)
+        return cls(mm.meta_port(port), time)
+
+    @classmethod
+    def meta_eot(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi end-of-track meta event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        return cls(mm.meta_eot(), time)
+
+    @classmethod
+    def meta_tempo(cls, quarter, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi tempo meta event.
+
+        Parameters
+        ----------
+        tempo : int
+            The rate of a quarter note expressed as either a 
+            metronome value (208 or less) or microseconds 
+            (e.g. tempo 120 is 500000).
+        time : float | int
+            A time to give the midi message. The units for this are 
+            application-specific.
+        &#34;&#34;&#34;
+        if isinstance(quarter, int) and quarter &gt; 0:
+            if quarter &lt;= 208:
+                quarter = int((60 / quarter) * 1000000)
+            return cls(mm.meta_tempo(quarter), time)
+        raise ValueError(f&#34;invalid tempo value: &#39;{quarter}&#39;.&#34;)
+
+    def tempo(self, units=&#39;usec&#39;):
+        &#34;&#34;&#34;
+        Returns the tempo from a meta tempo event or 0 if the event is not a 
+        tempo event.
+
+        Parameters
+        ----------
+        units : &#39;usec&#39; | &#39;bpm&#39;
+            A string indicating if the tempo should returned as microseconds or beats per minute.
+        &#34;&#34;&#34;
+        if self.is_meta(mm.kTempo):
+            if units == &#39;usec&#39;:
+                return mm.tempo(self.message)
+            elif units == &#39;bpm&#39;:
+                return int(60 * (1000000 / mm.tempo(self.message)))
+        return 0
+
+    # HKT FIXME: 4 4 yields  
+    # 1 0.0 [255, 88, 4, 2, 24, 8]      # time signature: 2/16777216
+    # should be
+    # 1 0.0 [255, 88, 4, 4, 2, 1, 96]   # time signature: 4/4
+    @classmethod
+    def meta_time_signature(cls, top, bot, clocks=24, tsecs=8, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi time signature meta event.
+
+        Parameters
+        ----------
+        top : byte
+            The top number of the time signature.
+        bot : byte
+            The power of 2 of the bottom number: 0 is top/1, 2 is top/4, etc.
+        clocks : byte
+            The number of MIDI clocks between metronome clicks.
+        tsecs : byte
+            the number of 32nds in a quarter note (usually 8).
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        for x in [top, bot, clocks, tsecs]:
+            if not isinstance(x, int):
+                raise ValueError(f&#34;parameter value {x} not an integer. &#34;)
+        pow2 = [1, 2, 4, 8, 16, 32, 64, 128]
+        if bot not in pow2:
+            raise ValueError(f&#34;denominator value {x} not a power of 2. &#34;)
+        # timesig stores bot as exponent of 2, which is the same as the
+        # index of bot in list :) examp: bot of 8 is 2^3 so 3 is stored.
+        bot = pow2.index(bot)
+        return cls(mm.meta_time_sig(top, bot, clocks, tsecs), time)
+
+    @classmethod
+    def meta_key_signature(cls, sf, mode, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi key signature meta event.
+
+        Parameters
+        ----------
+        sf :  -7 to 7 
+            The number of flats (negative) or sharps.
+        mode : 0 or 1
+            Specify 0 for a major key and 1 for minor.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        sf = cls._check_int_range(sf, -7, 8)
+        num = cls._check_int_range(sf, 0, 2)
+        return cls(mm.meta_key_sig(sf, num), time)
+
+    @classmethod
+    def meta_seq_event(cls, data, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi sequence meta event.
+
+        Parameters
+        ----------
+        data : list
+            A list of data bytes to send to the sequencer.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        for b in data:
+            if b &lt; 0 or b &gt; 0xFF:
+                raise ValueError(f&#34;Invalid data byte: {b} is &gt; 0xFF&#34;)
+        return cls(mm.meta_seq_event(data), time)
+
+
+    # System Common Messages. These are not valid in midi files.
+
+
+    @classmethod
+    def sysex(cls, data, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi sysex event from the specified list of data
+        adding a terminal EOE byte if necessary.
+
+        Parameters
+        ----------
+        data : list
+            A list of data bytes to send to the sequencer.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        for d in data:
+            cls._check_int_range(d, 127)
+        return cls(mm.sysex(data), time)
+
+    def is_sysex(self):
+        &#34;&#34;&#34;Returns true if the message is a sysex event.&#34;&#34;&#34;
+        return self.status() == mm.kSysEx
+
+    def sysex_data(self):
+        &#34;&#34;&#34;
+        Returns the data list of the sysex event (without the EOE byte) or
+        an empty list if it is not a sysex event.
+        &#34;&#34;&#34;
+        if self.status() == mm.kSysEx:
+            return self.message[1::-1]
+        return []
+
+    @classmethod
+    def time_code(cls, typ, val, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi time code event.
+
+        Parameters
+        ----------
+        typ : 0-15
+            The time code type.
+        val : byte
+            The type code value.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        typ = cls._check_int_range(typ, 8)
+        val = cls._check_int_range(val, 16)
+        return cls(mm.midi_time_code(typ, val), time)
+
+    @classmethod
+    def song_position(cls, pos, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi song position event.
+
+        Parameters
+        ----------
+        pos : int
+            A 14 bit song pointer position.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        pos = cls._check_int_range(pos, 1 &lt;&lt; 14)
+        return cls(mm.midi_song_position(pos), time)
+
+    @classmethod
+    def song_select(cls, song, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi song select event.
+
+        Parameters
+        ----------
+        song : byte
+            The song number to set.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        song = cls._check_int_range(song, 128)
+        return cls(mm.midi_song_select(song), time)
+
+    @classmethod
+    def tune_request(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi tune request event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        return cls(mm.midi_tune_request(), time)
+
+
+    # System Realtime Messages. These are not valid in midi files.
+
+
+    @classmethod
+    def midi_clock(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi clock message.
+        
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_clock(), time)
+
+    def is_midi_clock(self):
+        &#34;&#34;&#34;Returns true if the event is a midi clock event.&#34;&#34;&#34;
+        return self.status() == mm.kTimingClock
+
+    @classmethod
+    def midi_start(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi start message.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_start(), time)
+
+    def is_midi_start(self):
+        &#34;&#34;&#34;Returns true if the event is a midi start event.&#34;&#34;&#34;
+        return self.status() == mm.kStart
+
+    @classmethod
+    def midi_continue(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi continue event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_continue(), time)
+
+    def is_midi_continue(self):
+        &#34;&#34;&#34;Returns true if the event is a midi continue event.&#34;&#34;&#34;
+        return self.status() == mm.kContinue
+
+    @classmethod
+    def midi_stop(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi stop event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_stop(), time)
+
+    def is_midi_stop(self):
+        &#34;&#34;&#34;Returns true if the event is a midi stop event.&#34;&#34;&#34;
+        return self.status() == mm.kStop
+
+    @classmethod
+    def active_sensing(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi active sensing event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.active_sensing(), time)
+
+    def is_active_sensing(self):
+        &#34;&#34;&#34;Returns true if the event is a midi active sensing event.&#34;&#34;&#34;
+        return self.status() == mm.kActiveSens
+
+    @classmethod
+    def midi_reset(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi reset event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_reset(), time)
+
+    def is_midi_reset(self):
+        &#34;&#34;&#34;Returns true if the event is a midi reset event.&#34;&#34;&#34;
+        return self.status() == mm.kReset
+
+    # Support code.
+
+    def tostring(self, hint=False):
+        text = f&#34;{self.message}&#34;
+        if hint:
+            text += &#34; # &#34; + self.hint()
+        return text
+
+    def hint(self):
+        stat = self.status()
+        if stat &lt; mm.kSysEx:  # channel message
+            text = self._print_table[stat][0][1] + &#34;: &#34;
+            if stat == mm.kCtrlChange:
+                text += (gm.controller_names[self.message[1]] + &#34; &#34;)
+            elif stat == mm.kProgChange:
+                text += (gm.instrument_names[self.message[1]] + &#34; &#34;)
+            text += &#34;chan &#34; + str(self.channel())
+        elif stat == mm.kMetaMsg:  # meta or reset
+            if len(self.message) &gt; 1:  # is a meta message
+                stat = self.message[1]  # status now meta type
+                text = MidiEvent._print_table[stat][0][1] + &#34;: &#34;
+                if mm.kText &lt;= stat &lt;= mm.kDevName:
+                    msg = self.text()
+                    if len(msg) &gt; 16:
+                        msg = msg[:16] + &#34;...&#34;
+                    text += msg
+                elif stat == mm.kTempo:
+                    text += str(self.tempo(&#39;bpm&#39;)) + &#39; bpm&#39;
+                elif stat == mm.kTimeSig:
+                    text += str(self.message[3]) + &#34;/&#34; + str(2**self.message[4])
+                elif stat == mm.kKeySig:
+                    # the key is stored as a twos-complement value -7...7
+                    # key = int.from_bytes(bytes([self.message[3]]), &#39;big&#39;, signed=True)
+                    k = self.message[3]
+                    key = k if k &lt; 128 else (256 - k) * (-1)
+                    text += MidiEvent._key_table[key+7] + [&#34;-major&#34;, &#34;-minor&#34;][self.message[4]]
+            else:
+                text = MidiEvent._print_table[stat][0][1]
+        else:  # system common or realtime
+            text = MidiEvent._print_table[stat][0][1]
+        return text
+
+    def toextern(self):
+        stat = self.status()
+        if stat == mm.kReset:  # NB: midi makes kReset status same as kMetaMsg
+            if self.is_meta():
+                stat = self.message[1]
+        e = MidiEvent._print_table[stat]
+        s = e[0][0] + &#34;(&#34;
+        for i in range(1, len(e)):
+            if i &gt; 1: s += &#34;, &#34;
+            x = e[i][1](self)
+            s += &#34;\&#39;&#34; + x + &#34;\&#39;&#34; if isinstance(x, str) else str(x)
+        s += &#34;)&#34;
+        return s
+
+    _key_table = [&#39;Cb&#39;, &#39;Gb&#39;, &#39;Db&#39;, &#39;Ab&#39;, &#39;Eb&#39;, &#39;Bb&#39;, &#39;F&#39;, &#39;C&#39;, &#39;G&#39;, &#39;D&#39;, &#39;A&#39;, &#39;E&#39;, &#39;B&#39;, &#39;F#&#39;, &#39;C#&#39;]
+    _print_table = {
+        # Channel Events
+        mm.kNoteOff: [[&#34;note_off&#34;, &#34;note off&#34;], [&#34;chan&#34;, channel], [&#34;key&#34;, keynum], [&#34;vel&#34;, velocity]],
+        mm.kNoteOn: [[&#34;note_on&#34;, &#34;note on&#34;], [&#34;chan&#34;, channel], [&#34;key&#34;, keynum], [&#34;vel&#34;, velocity]],
+        mm.kAftertouch: [[&#34;aftertouch&#34;, &#34;after touch&#34;], [&#34;chan&#34;, channel], [&#34;touch&#34;, touch]],
+        mm.kCtrlChange: [[&#34;control_change&#34;, &#34;controller&#34;], [&#34;chan&#34;, channel], [&#34;controller&#34;, controller], [&#34;control&#34;, control]],
+        mm.kProgChange: [[&#34;program_change&#34;, &#34;program&#34;], [&#34;chan&#34;, channel], [&#34;program&#34;, program]],
+        mm.kChanPress: [[&#34;channel_pressure&#34;, &#34;channel pressure&#34;], [&#34;chan&#34;, channel], [&#34;pressure&#34;, pressure]],
+        mm.kPitchBend: [[&#34;pitch_bend&#34;, &#34;pitch bend&#34;], [&#34;chan&#34;, channel], [&#34;bend&#34;, bend]],
+        # Meta Events
+        mm.kSeqNumber: [[&#34;meta_seq_number&#34;, &#34;sequence number&#34;], [&#34;num&#34;, lambda e: mm.meta_seq_number(e.message)]],
+        mm.kText: [[&#34;meta_text&#34;, &#34;text&#34;], [&#34;text&#34;, text]],
+        mm.kCopyRight: [[&#34;meta_copyright&#34;, &#34;copyright&#34;], [&#34;text&#34;, text]],
+        mm.kTrackName: [[&#34;meta_track_name&#34;, &#34;track name&#34;], [&#34;text&#34;, text]],
+        mm.kInstName: [[&#34;meta_instrument_name&#34;, &#34;instrument name&#34;], [&#34;text&#34;, text]],
+        mm.kLyric: [[&#34;meta_lyric&#34;, &#34;lyric&#34;], [&#34;text&#34;, text]],
+        mm.kMarker: [[&#34;meta_marker&#34;, &#34;marker&#34;], [&#34;text&#34;, text]],
+        mm.kCuePoint: [[&#34;meta_cue_point&#34;, &#34;cue point&#34;], [&#34;text&#34;, text]],
+        mm.kProgName: [[&#34;meta_program_name&#34;, &#34;program name&#34;], [&#34;text&#34;, text]],
+        mm.kDevName: [[&#34;meta_device_name&#34;, &#34;device name&#34;], [&#34;text&#34;, text]],
+        mm.kChanPrefix: [[&#34;meta_channel_prefix&#34;, &#34;channel prefix&#34;], [&#34;chan&#34;, lambda ev: ev.message[3]]],
+        mm.kMidiPort: [[&#34;meta_midi_port&#34;, &#34;midi port&#34;], [&#34;port&#34;, lambda ev: ev.message[3]]],
+        mm.kEOT: [[&#34;meta_eot&#34;, &#34;end of track&#34;]],
+        mm.kTempo: [[&#34;meta_tempo&#34;, &#34;tempo&#34;], [&#34;usecs&#34;, tempo]],
+        mm.kSMPTEOff: [[&#34;smptemeta&#34;, &#34;SMPTE&#34;]],
+        mm.kTimeSig: [[&#34;meta_time_signature&#34;, &#34;time signature&#34;]],
+        mm.kKeySig: [[&#34;meta_key_signature&#34;, &#34;key signature&#34;]],
+        mm.kSeqEvent: [[&#34;meta_seq_event&#34;, &#34;sequencer data&#34;]],
+        # System Common Messages
+        mm.kSysEx: [[&#34;sysex&#34;, &#34;system exclusive&#34;]],
+        mm.kTimeCode: [[&#34;time_code&#34;, &#34;time code&#34;]],
+        mm.kSongPos: [[&#34;song_position&#34;, &#34;song position&#34;]],
+        mm.kSongSel: [[&#34;song_select&#34;, &#34;song select&#34;]],
+        mm.kTuneReq: [[&#34;tune_request&#34;, &#34;tune request&#34;]],
+        # System Real Time
+        mm.kTimingClock: [[&#34;midi_clock&#34;, &#34;midi clock&#34;]],
+        mm.kStart: [[&#34;midi_start&#34;, &#34;midi start&#34;]],
+        mm.kContinue: [[&#34;midi_continue&#34;, &#34;midi continue&#34;]],
+        mm.kStop: [[&#34;midi_stop&#34;, &#34;midi stop&#34;]],
+        mm.kActiveSens: [[&#34;active_sensing&#34;, &#34;active sensing&#34;]],
+        mm.kReset: [[&#34;midi_reset&#34;, &#34;midi reset&#34;]],
+    }
+
+
+
+
+
+&#34;&#34;&#34;
+from midi import MidiEvent, MidiSeq, MidiFile
+MidiEvent.chanprefixmeta(12)
+MidiEvent.textmeta(midi.mm.kText, &#34;hello rick!&#34;)
+MidiEvent.chanprefixmeta(12)
+&#34;&#34;&#34;
+
+&#34;&#34;&#34;
+from midi import MidiEvent, MidiSeq
+m = MidiEvent.noteon(11,60,100)
+m.tostring()
+MidiEvent.chanprefixmeta(12)
+MidiEvent.noteon(0,60, 90)
+
+from ..seq import Seq
+from midi import MidiEvent, MidiFile
+m = MidiFile()
+m.read_file(&#34;/Users/taube/Classes/205/Resources/reich.mid&#34;)
+m.track(0)
+
+for e in m.track(0): print(e, True)
+&#34;&#34;&#34;
+
+if __name__ == &#39;__main__&#39;:
+    def test():
+        args = [6, 60, 127, 1.0]
+        ev = MidiEvent.note_off(*args)
+        assert ev.is_note_off(), &#34;isnoteoff() failed.&#34;
+        vals = [ev.channel(), ev.keynum(), ev.velocity(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        ev.is_note_on_or_off(), f&#34;isnoteonoroff() failed.&#34;
+        print(&#34;notoff ok.&#34;)
+
+        args = [6, 60, 127, 1.0]
+        ev = MidiEvent.note_on(*args)
+        assert ev.is_note_on(), &#34;isnoteon() failed.&#34;
+        vals = [ev.channel(), ev.keynum(), ev.velocity(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        ev.is_note_on_or_off(), f&#34;isnoteonoroff() failed&#34;
+        print(&#34;noteon ok.&#34;)
+
+        args = [6, 60, 100, 100.0]
+        ev = MidiEvent.aftertouch(*args)
+        assert ev.is_aftertouch(), &#34;isnoteon() failed.&#34;
+        vals = [ev.channel(), ev.keynum(), ev.touch(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        print(&#34;aftertouch ok.&#34;)
+
+        args = [6, 60, 100, 100.0]
+        ev = MidiEvent.control_change(*args)
+        assert ev.is_control_change(), &#34;iscontrolchange() failed.&#34;
+        vals = [ev.channel(), ev.controller(), ev.control(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        assert ev.is_controller_of_type(args[1]), f&#34;controller not of type {args[1]}.&#34;
+        print(&#34;controlchange ok.&#34;)
+
+        args = [11, 44, 1.0]
+        ev = MidiEvent.program_change(*args)
+        ev.is_program_change()
+        vals = [ev.channel(), ev. program(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        print(&#34;programchange ok.&#34;)
+
+        args = [15, 55, 0.0]
+        ev = MidiEvent.channel_pressure(*args)
+        ev.is_channel_pressure()
+        vals = [ev.channel(), ev.pressure(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        print(&#34;channelpressure ok.&#34;)
+
+        args = [15, 55, 0.0]
+        ev = MidiEvent.pitch_bend(*args)
+        ev.is_pitch_bend()
+        vals = [ev.channel(), ev.bend(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        print(&#34;pitchbend ok.&#34;)
+
+        args = [11, 300.0]
+        ev = MidiEvent.all_notes_off(*args)
+        assert ev.is_controller_of_type(123), f&#34;controller not of type {123}.&#34;
+        vals = [ev.channel(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        print(&#34;allnotesoff ok.&#34;)
+
+        args = [11, 300.0]
+        ev = MidiEvent.all_sound_off(*args)
+        assert ev.is_controller_of_type(120), f&#34;controller not type {120}.&#34;
+        vals = [ev.channel(),  ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        print(&#34;allsoundoff ok.&#34;)
+
+        args = [11, 300.0]
+        ev = MidiEvent.all_controllers_off(*args)
+        assert ev.is_controller_of_type(121), f&#34;controller not type {121}.&#34;
+        vals = [ev.channel(), ev.time]
+        assert args == vals, f&#34;args {args} not same as vals {vals}.&#34;
+        print(&#34;allcontrollersoff ok.&#34;)
+
+        args = [mm.kCopyRight, &#34;Illiacsoftware, Inc&#34;]
+        ev = MidiEvent.meta_copyright(args[1])
+        assert ev.is_meta(args[0]), f&#34;meta message not of type {args[0]}.&#34;
+        assert ev.text() == args[1], f&#34;text {ev.text()} is not {args[1]}.&#34;
+        print(&#34;meta Copyright ok.&#34;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="musx.midi.midievent.MidiEvent"><code class="flex name class">
+<span>class <span class="ident">MidiEvent</span></span>
+<span>(</span><span>message, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A class that wraps lists of midi message bytes so they can be treated
+as time stamped objects. Unless you know what you are doing you should
+probably not call this constructor directly and use the class message
+constructors to create defined below.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>message</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of message byte values. The constructor does not check these values!</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MidiEvent (Event):
+    &#34;&#34;&#34;
+    A class that wraps lists of midi message bytes so they can be treated 
+    as time stamped objects. Unless you know what you are doing you should
+    probably not call this constructor directly and use the class message
+    constructors to create defined below.
+
+    Parameters
+    ----------
+    message : list
+        The list of message byte values. The constructor does not check these values!
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+
+    def __init__(self, message, time=0.0):
+
+        super().__init__(time)
+        self.message = message
+        # self.time = time
+
+    def __str__(self):
+        &#34;&#34;&#34;The print() string shows the raw data.&#34;&#34;&#34;
+        return self.tostring()
+
+    def __repr__(self):
+        &#34;&#34;&#34;The string the console prints shows the external form.&#34;&#34;&#34;
+        return self.toextern()
+
+    @staticmethod
+    def _check_range(val, a, b=None):
+        &#34;&#34;&#34;
+        Raises a TypeError if val not in range(a,b), or range(0,a) if 
+        b is not provided.
+        &#34;&#34;&#34;
+        if b is None:
+            b, a = a, 0
+        if not a &lt;= val &lt; b:
+            raise ValueError(f&#34;midi value {val} not in range({a},{b}).&#34;)
+        return val
+
+    @staticmethod
+    def _check_int_range(val, a, b=None):
+        &#34;&#34;&#34;Raises an assertion if val is not an int or not in range(a,b).&#34;&#34;&#34;
+        if not isinstance(val, int):
+            raise TypeError(f&#34;value {val} is not an int.&#34;)
+        return MidiEvent._check_range(val, a, b)
+
+    @staticmethod
+    def _rescale(value, oldmin, oldmax, newmin, newmax):
+        &#34;&#34;&#34;Rescales value to new linear range.&#34;&#34;&#34;
+        return (((newmax - newmin) / (oldmax - oldmin)) * (value - oldmin)) + newmin
+
+    def status(self):
+        &#34;&#34;&#34;Returns the status byte of a MidiEvent.&#34;&#34;&#34;
+        return mm.status(self.message)
+
+    def channel(self):
+        &#34;&#34;&#34;
+        Returns the channel of a midi channel event or -1
+        if the message is not a channel event.
+        &#34;&#34;&#34;
+        if mm.is_channel_message(self.message):
+            return mm.channel(self.message)
+        return -1
+
+    @classmethod
+    def note_off(cls, channel, keynum, velocity, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi note off event.
+
+        Parameters
+        ----------
+        channel : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        velocity : byte
+            A velocity value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        channel = cls._check_int_range(channel, 16)
+        keynum = cls._check_int_range(keynum, 128)
+        velocity = cls._check_int_range(velocity, 128)
+        return cls(mm.note_off(channel, keynum, velocity), time)
+
+
+    def is_note_off(self):
+        &#34;&#34;&#34;Returns true if the event is a note off.&#34;&#34;&#34;
+        return self.status() == mm.kNoteOff
+
+    @classmethod
+    def note_on(cls, channel, keynum, velocity, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi note on event.
+
+        Parameters
+        ----------
+        channel : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        velocity : byte
+            A velocity value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        channel = cls._check_int_range(channel, 16)
+        keynum = cls._check_int_range(keynum, 128)
+        velocity = cls._check_int_range(velocity, 128)
+        return cls(mm.note_on(channel, keynum, velocity), time)
+
+    def is_note_on(self):
+        &#34;&#34;&#34;Returns true if the message is a note on.&#34;&#34;&#34;
+        return self.status() == mm.kNoteOn
+
+    def is_note_on_or_off(self):
+        &#34;&#34;&#34;Returns true if the message is a note on or off.&#34;&#34;&#34;
+        return mm.kNoteOff &lt;= self.status() &lt;= mm.kNoteOn
+
+    def keynum(self):
+        &#34;&#34;&#34;
+        Returns a key number value 0 to 127, or -1 if the
+        event is not a note on, off, or aftertouch.
+        &#34;&#34;&#34;
+        if self.status() in [mm.kNoteOff, mm.kNoteOn, mm.kAftertouch]:
+            return mm.keynum(self.message)
+        return -1
+
+    def velocity(self):
+        &#34;&#34;&#34;
+        Returns a velocity value 0 to 127, or -1 if the message is not
+        a note on or off.
+        &#34;&#34;&#34;
+        if self.is_note_on_or_off():
+            return mm.velocity(self.message)
+        return -1
+
+    @classmethod
+    def aftertouch(cls, chan, keynum, press, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi aftertouch event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        press : byte
+            A pressure value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        keynum = cls._check_int_range(keynum, 128)
+        press = cls._check_int_range(press, 128)
+        return cls(mm.aftertouch(chan, keynum, press), time)
+
+    def is_aftertouch(self):
+        &#34;&#34;&#34;Returns true if the midi event is an an aftertouch.&#34;&#34;&#34;
+        return self.status() == mm.kAftertouch
+
+    def touch(self):
+        &#34;&#34;&#34;
+        Return a pressure value 0 127, or -1 if the event is not an aftertouch.
+        &#34;&#34;&#34;
+        if self.is_aftertouch():
+            return mm.touch(self.message)
+        return -1
+
+    @classmethod
+    def control_change(cls, chan, ctrl, val, time=0.0):
+        &#34;&#34;&#34;
+        Creates a control change event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        ctrl : byte
+            A controller number 0 to 127.
+        val : byte
+            A controller value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        ctrl = cls._check_int_range(ctrl, 128)
+        val = cls._check_int_range(val, 128)
+        return cls(mm.control_change(chan, ctrl, val), time)
+
+    def is_control_change(self):
+        &#34;&#34;&#34;Returns true if the message is a control change event.&#34;&#34;&#34;
+        return self.status() == mm.kCtrlChange
+
+    def controller(self):
+        &#34;&#34;&#34;
+        Returns a controller value 0 to 127, or -1 if the event
+        is not a control change.
+        &#34;&#34;&#34;
+        if self.is_control_change():
+            return mm.controller(self.message)
+        return -1
+
+    def is_controller_of_type(self, contype):
+        &#34;&#34;&#34;
+        Returns true if the event is a control change message and
+        its controller is the specified type.
+        &#34;&#34;&#34;
+        return self.is_control_change() and self.controller() == contype
+
+    def control(self):
+        &#34;&#34;&#34;
+        Returns a control value 0 127, or -1 if the event is
+        not a control change.
+        &#34;&#34;&#34;
+        if self.is_control_change():
+            return mm.control(self.message)
+        return -1
+
+    @classmethod
+    def program_change(cls, chan, prog, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi program change event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        prog : byte
+            A midi program number 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        prog = cls._check_int_range(prog, 128)
+        return cls(mm.program_change(chan, prog), time)
+
+    def is_program_change(self):
+        &#34;&#34;&#34;Returns true if the event is a program change.&#34;&#34;&#34;
+        return self.status() == mm.kProgChange
+
+    def program(self):
+        &#34;&#34;&#34;
+        Returns a progam change value 0 127, or -1 if the event is
+        not a program change.
+        &#34;&#34;&#34;
+        if self.status() == mm.kProgChange:
+            return mm.program(self.message)
+        return -1
+
+    @classmethod
+    def channel_pressure(cls, chan, press, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi channel pressure event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        press : byte
+            A midi pressure number 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        press = cls._check_int_range(press, 128)
+        return cls(mm.channel_pressure(chan, press), time)
+
+    def is_channel_pressure(self):
+        &#34;&#34;&#34;Returns true if the event is a channel pressure.&#34;&#34;&#34;
+        return self.status() == mm.kChanPress
+
+    def pressure(self):
+        &#34;&#34;&#34;
+        Returns a pressure value 0 127, or -1 if the event is not
+        a channel pressure.
+        &#34;&#34;&#34;
+        if self.is_channel_pressure():
+            return mm.pressure(self.message)
+        return -1
+
+    @classmethod
+    def pitch_bend(cls, chan, bend, time=0.0):
+        &#34;&#34;&#34;
+        Creates a pitch bend event.
+
+        Parameters
+        ----------
+        chan : int
+            The channel number, 0 to 15.
+        bend : int
+            A pitch bend value, 0 to 16383. See: bendvalue().
+        time  : int | float
+            A score time to give the midi message. The units for this are
+            application-specific.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        bend = cls._check_int_range(bend, 16384)  # 14 bit value 0-16383
+        return cls(mm.pitch_bend(chan, bend), time)
+
+    def is_pitch_bend(self):
+        &#34;&#34;&#34;Returns true if the event is a pitch bend.&#34;&#34;&#34;
+        return self.status() == mm.kPitchBend
+
+    def bend(self):
+        &#34;&#34;&#34;
+        Returns a bend value 0 to 16383 or -1 if the event is not a pitch bend.
+        &#34;&#34;&#34;
+        if self.status() == mm.kPitchBend:
+            return mm.bend(self.message)
+        return -1
+
+    @staticmethod
+    def bend_value(semibend, semirange):
+        &#34;&#34;&#34;
+        Converts a pitchbend value in semitones into a midi pitch bend value.
+
+        Parameters
+        --------
+        semibend : number
+            The bend value expressed in floating point semitones.
+        semirange : float 
+            A device dependant maximum pitch bend range expressed in floating point semitones.        
+        &#34;&#34;&#34;
+        return int(MidiEvent._rescale(semibend, -semirange, semirange, 0, 16383))
+
+    @classmethod
+    def all_notes_off(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi all notes off event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.control_change(chan, 123, 0), time)
+
+    @classmethod
+    def all_sound_off(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi all sound off event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            The channel number of the midi event.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.control_change(chan, 120, 0), time)
+
+    ## Creates a midi all controllers off message.
+    #  @param chan  a channel number, 0 to 15.
+    #  @param time  a time to give the midi message. The units
+    #  for this are application-specific.
+    @classmethod
+    def all_controllers_off(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi note off event.
+
+        Parameters
+        ----------
+        channel : 0-15
+            The channel number of the midi event.
+        keynum : byte
+            A midi key number 0 to 127.
+        velocity : byte
+            A velocity value 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.control_change(chan, 121, 0), time)
+
+
+    # Midi Meta Messages. These are only valid in midi files.
+
+
+    def is_meta(self, typ=None):
+        &#34;&#34;&#34;
+        Returns true if the event is a meta event.
+
+        If typ is not specifed the function returns true if the event is any
+        type of meta message, otherwise the event must be the specied type between
+        kDevName and kSeqEvent.
+
+        Parameters
+        ----------
+        typ : metatype | None
+            The midi meta message type or None.
+        &#34;&#34;&#34;
+        meta = self.status() == mm.kMetaMsg and len(self.message) &gt;= 3
+        if not meta or typ is None:
+            return meta
+        return self.message[1] == typ
+
+    @classmethod
+    def meta_seq_number(cls, num, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi sequence number meta event.
+
+        Parameters
+        ----------
+        num : int
+            A sequence number max 2 bytes.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        if isinstance(num, int) and num &gt;= 0:
+            return cls(mm.meta_seq_number(num), time)
+        raise ValueError(f&#34;invalid sequence number: &#39;{num}&#39;.&#34;)
+
+    @classmethod
+    def _textmeta(cls, mtype, text, time=0.0):
+        if isinstance(mtype, int) and mm.kText &lt;= mtype &lt;= mm.kDevName:
+            if isinstance(text, str) and len(text) &gt; 0:
+                return cls(mm.text_meta_message(mtype, text), time)
+            else:
+                raise TypeError(f&#34;text value &#39;{text}&#39; is not a string.&#34;)
+        else:
+            raise TypeError(f&#34;value &#39;{text}&#39; is not valid midi meta type.&#34;)
+
+    @classmethod
+    def meta_text(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi text meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kText, text, time)
+
+    @classmethod
+    def meta_copyright(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi copyright meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kCopyRight, text, time)
+
+    @classmethod
+    def meta_track_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi track name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kTrackName, text, time)
+
+    @classmethod
+    def meta_instrument_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi instrument name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kInstName, text, time)
+
+    @classmethod
+    def meta_lyric(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi lyric meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kLyric, text, time)
+
+    @classmethod
+    def meta_marker(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi marker meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kMarker, text, time)
+
+    @classmethod
+    def meta_cue_point(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi cue point meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kCuePoint, text, time)
+
+    @classmethod
+    def meta_program_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi program name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kProgName, text, time)
+
+    @classmethod
+    def meta_device_name(cls, text, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi device name meta event.
+
+        Parameters
+        ----------
+        text : string
+            The text string for the message.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if the value is not a string.
+        &#34;&#34;&#34;
+        return cls._textmeta(mm.kDevName, text, time)
+
+
+    def text(self):
+        &#34;&#34;&#34;
+        Returns the text string from a meta text event or
+        an empty string if the event is not a text event.
+        &#34;&#34;&#34;
+        if self.is_meta():
+            if mm.kText &lt;= self.message[1] &lt;= mm.kDevName:
+                return mm.text(self.message)
+        return &#39;&#39;
+
+    @classmethod
+    def meta_channel_prefix(cls, chan, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi channel prefix meta event.
+
+        Parameters
+        ----------
+        chan : 0-15
+            A midi channel number 0 to 15.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        chan = cls._check_int_range(chan, 16)
+        return cls(mm.meta_chan_prefix(chan), time)
+
+    @classmethod
+    def meta_midi_port(cls, port, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi port meta event.
+
+        Note: **This meta event is depreciated in the midi spec.**
+
+        Parameters
+        ----------
+        port : byte
+            A midi port number 0 to 127.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        port = cls._check_int_range(port, 127)
+        return cls(mm.meta_port(port), time)
+
+    @classmethod
+    def meta_eot(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi end-of-track meta event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        return cls(mm.meta_eot(), time)
+
+    @classmethod
+    def meta_tempo(cls, quarter, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi tempo meta event.
+
+        Parameters
+        ----------
+        tempo : int
+            The rate of a quarter note expressed as either a 
+            metronome value (208 or less) or microseconds 
+            (e.g. tempo 120 is 500000).
+        time : float | int
+            A time to give the midi message. The units for this are 
+            application-specific.
+        &#34;&#34;&#34;
+        if isinstance(quarter, int) and quarter &gt; 0:
+            if quarter &lt;= 208:
+                quarter = int((60 / quarter) * 1000000)
+            return cls(mm.meta_tempo(quarter), time)
+        raise ValueError(f&#34;invalid tempo value: &#39;{quarter}&#39;.&#34;)
+
+    def tempo(self, units=&#39;usec&#39;):
+        &#34;&#34;&#34;
+        Returns the tempo from a meta tempo event or 0 if the event is not a 
+        tempo event.
+
+        Parameters
+        ----------
+        units : &#39;usec&#39; | &#39;bpm&#39;
+            A string indicating if the tempo should returned as microseconds or beats per minute.
+        &#34;&#34;&#34;
+        if self.is_meta(mm.kTempo):
+            if units == &#39;usec&#39;:
+                return mm.tempo(self.message)
+            elif units == &#39;bpm&#39;:
+                return int(60 * (1000000 / mm.tempo(self.message)))
+        return 0
+
+    # HKT FIXME: 4 4 yields  
+    # 1 0.0 [255, 88, 4, 2, 24, 8]      # time signature: 2/16777216
+    # should be
+    # 1 0.0 [255, 88, 4, 4, 2, 1, 96]   # time signature: 4/4
+    @classmethod
+    def meta_time_signature(cls, top, bot, clocks=24, tsecs=8, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi time signature meta event.
+
+        Parameters
+        ----------
+        top : byte
+            The top number of the time signature.
+        bot : byte
+            The power of 2 of the bottom number: 0 is top/1, 2 is top/4, etc.
+        clocks : byte
+            The number of MIDI clocks between metronome clicks.
+        tsecs : byte
+            the number of 32nds in a quarter note (usually 8).
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        for x in [top, bot, clocks, tsecs]:
+            if not isinstance(x, int):
+                raise ValueError(f&#34;parameter value {x} not an integer. &#34;)
+        pow2 = [1, 2, 4, 8, 16, 32, 64, 128]
+        if bot not in pow2:
+            raise ValueError(f&#34;denominator value {x} not a power of 2. &#34;)
+        # timesig stores bot as exponent of 2, which is the same as the
+        # index of bot in list :) examp: bot of 8 is 2^3 so 3 is stored.
+        bot = pow2.index(bot)
+        return cls(mm.meta_time_sig(top, bot, clocks, tsecs), time)
+
+    @classmethod
+    def meta_key_signature(cls, sf, mode, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi key signature meta event.
+
+        Parameters
+        ----------
+        sf :  -7 to 7 
+            The number of flats (negative) or sharps.
+        mode : 0 or 1
+            Specify 0 for a major key and 1 for minor.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        sf = cls._check_int_range(sf, -7, 8)
+        num = cls._check_int_range(sf, 0, 2)
+        return cls(mm.meta_key_sig(sf, num), time)
+
+    @classmethod
+    def meta_seq_event(cls, data, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi sequence meta event.
+
+        Parameters
+        ----------
+        data : list
+            A list of data bytes to send to the sequencer.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        for b in data:
+            if b &lt; 0 or b &gt; 0xFF:
+                raise ValueError(f&#34;Invalid data byte: {b} is &gt; 0xFF&#34;)
+        return cls(mm.meta_seq_event(data), time)
+
+
+    # System Common Messages. These are not valid in midi files.
+
+
+    @classmethod
+    def sysex(cls, data, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi sysex event from the specified list of data
+        adding a terminal EOE byte if necessary.
+
+        Parameters
+        ----------
+        data : list
+            A list of data bytes to send to the sequencer.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        for d in data:
+            cls._check_int_range(d, 127)
+        return cls(mm.sysex(data), time)
+
+    def is_sysex(self):
+        &#34;&#34;&#34;Returns true if the message is a sysex event.&#34;&#34;&#34;
+        return self.status() == mm.kSysEx
+
+    def sysex_data(self):
+        &#34;&#34;&#34;
+        Returns the data list of the sysex event (without the EOE byte) or
+        an empty list if it is not a sysex event.
+        &#34;&#34;&#34;
+        if self.status() == mm.kSysEx:
+            return self.message[1::-1]
+        return []
+
+    @classmethod
+    def time_code(cls, typ, val, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi time code event.
+
+        Parameters
+        ----------
+        typ : 0-15
+            The time code type.
+        val : byte
+            The type code value.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        typ = cls._check_int_range(typ, 8)
+        val = cls._check_int_range(val, 16)
+        return cls(mm.midi_time_code(typ, val), time)
+
+    @classmethod
+    def song_position(cls, pos, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi song position event.
+
+        Parameters
+        ----------
+        pos : int
+            A 14 bit song pointer position.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        pos = cls._check_int_range(pos, 1 &lt;&lt; 14)
+        return cls(mm.midi_song_position(pos), time)
+
+    @classmethod
+    def song_select(cls, song, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi song select event.
+
+        Parameters
+        ----------
+        song : byte
+            The song number to set.
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        song = cls._check_int_range(song, 128)
+        return cls(mm.midi_song_select(song), time)
+
+    @classmethod
+    def tune_request(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi tune request event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+
+        Raises
+        ------
+        * A TypeError if a value is not an integer.
+        * A ValueError if the value is out of range.
+        &#34;&#34;&#34;
+        return cls(mm.midi_tune_request(), time)
+
+
+    # System Realtime Messages. These are not valid in midi files.
+
+
+    @classmethod
+    def midi_clock(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi clock message.
+        
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_clock(), time)
+
+    def is_midi_clock(self):
+        &#34;&#34;&#34;Returns true if the event is a midi clock event.&#34;&#34;&#34;
+        return self.status() == mm.kTimingClock
+
+    @classmethod
+    def midi_start(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi start message.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_start(), time)
+
+    def is_midi_start(self):
+        &#34;&#34;&#34;Returns true if the event is a midi start event.&#34;&#34;&#34;
+        return self.status() == mm.kStart
+
+    @classmethod
+    def midi_continue(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi continue event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_continue(), time)
+
+    def is_midi_continue(self):
+        &#34;&#34;&#34;Returns true if the event is a midi continue event.&#34;&#34;&#34;
+        return self.status() == mm.kContinue
+
+    @classmethod
+    def midi_stop(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi stop event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_stop(), time)
+
+    def is_midi_stop(self):
+        &#34;&#34;&#34;Returns true if the event is a midi stop event.&#34;&#34;&#34;
+        return self.status() == mm.kStop
+
+    @classmethod
+    def active_sensing(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi active sensing event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.active_sensing(), time)
+
+    def is_active_sensing(self):
+        &#34;&#34;&#34;Returns true if the event is a midi active sensing event.&#34;&#34;&#34;
+        return self.status() == mm.kActiveSens
+
+    @classmethod
+    def midi_reset(cls, time=0.0):
+        &#34;&#34;&#34;
+        Creates a midi reset event.
+
+        Parameters
+        ----------
+        time : number
+            The time to give the midi message. The units for this are application-specific.
+        &#34;&#34;&#34;
+        return cls(mm.midi_reset(), time)
+
+    def is_midi_reset(self):
+        &#34;&#34;&#34;Returns true if the event is a midi reset event.&#34;&#34;&#34;
+        return self.status() == mm.kReset
+
+    # Support code.
+
+    def tostring(self, hint=False):
+        text = f&#34;{self.message}&#34;
+        if hint:
+            text += &#34; # &#34; + self.hint()
+        return text
+
+    def hint(self):
+        stat = self.status()
+        if stat &lt; mm.kSysEx:  # channel message
+            text = self._print_table[stat][0][1] + &#34;: &#34;
+            if stat == mm.kCtrlChange:
+                text += (gm.controller_names[self.message[1]] + &#34; &#34;)
+            elif stat == mm.kProgChange:
+                text += (gm.instrument_names[self.message[1]] + &#34; &#34;)
+            text += &#34;chan &#34; + str(self.channel())
+        elif stat == mm.kMetaMsg:  # meta or reset
+            if len(self.message) &gt; 1:  # is a meta message
+                stat = self.message[1]  # status now meta type
+                text = MidiEvent._print_table[stat][0][1] + &#34;: &#34;
+                if mm.kText &lt;= stat &lt;= mm.kDevName:
+                    msg = self.text()
+                    if len(msg) &gt; 16:
+                        msg = msg[:16] + &#34;...&#34;
+                    text += msg
+                elif stat == mm.kTempo:
+                    text += str(self.tempo(&#39;bpm&#39;)) + &#39; bpm&#39;
+                elif stat == mm.kTimeSig:
+                    text += str(self.message[3]) + &#34;/&#34; + str(2**self.message[4])
+                elif stat == mm.kKeySig:
+                    # the key is stored as a twos-complement value -7...7
+                    # key = int.from_bytes(bytes([self.message[3]]), &#39;big&#39;, signed=True)
+                    k = self.message[3]
+                    key = k if k &lt; 128 else (256 - k) * (-1)
+                    text += MidiEvent._key_table[key+7] + [&#34;-major&#34;, &#34;-minor&#34;][self.message[4]]
+            else:
+                text = MidiEvent._print_table[stat][0][1]
+        else:  # system common or realtime
+            text = MidiEvent._print_table[stat][0][1]
+        return text
+
+    def toextern(self):
+        stat = self.status()
+        if stat == mm.kReset:  # NB: midi makes kReset status same as kMetaMsg
+            if self.is_meta():
+                stat = self.message[1]
+        e = MidiEvent._print_table[stat]
+        s = e[0][0] + &#34;(&#34;
+        for i in range(1, len(e)):
+            if i &gt; 1: s += &#34;, &#34;
+            x = e[i][1](self)
+            s += &#34;\&#39;&#34; + x + &#34;\&#39;&#34; if isinstance(x, str) else str(x)
+        s += &#34;)&#34;
+        return s
+
+    _key_table = [&#39;Cb&#39;, &#39;Gb&#39;, &#39;Db&#39;, &#39;Ab&#39;, &#39;Eb&#39;, &#39;Bb&#39;, &#39;F&#39;, &#39;C&#39;, &#39;G&#39;, &#39;D&#39;, &#39;A&#39;, &#39;E&#39;, &#39;B&#39;, &#39;F#&#39;, &#39;C#&#39;]
+    _print_table = {
+        # Channel Events
+        mm.kNoteOff: [[&#34;note_off&#34;, &#34;note off&#34;], [&#34;chan&#34;, channel], [&#34;key&#34;, keynum], [&#34;vel&#34;, velocity]],
+        mm.kNoteOn: [[&#34;note_on&#34;, &#34;note on&#34;], [&#34;chan&#34;, channel], [&#34;key&#34;, keynum], [&#34;vel&#34;, velocity]],
+        mm.kAftertouch: [[&#34;aftertouch&#34;, &#34;after touch&#34;], [&#34;chan&#34;, channel], [&#34;touch&#34;, touch]],
+        mm.kCtrlChange: [[&#34;control_change&#34;, &#34;controller&#34;], [&#34;chan&#34;, channel], [&#34;controller&#34;, controller], [&#34;control&#34;, control]],
+        mm.kProgChange: [[&#34;program_change&#34;, &#34;program&#34;], [&#34;chan&#34;, channel], [&#34;program&#34;, program]],
+        mm.kChanPress: [[&#34;channel_pressure&#34;, &#34;channel pressure&#34;], [&#34;chan&#34;, channel], [&#34;pressure&#34;, pressure]],
+        mm.kPitchBend: [[&#34;pitch_bend&#34;, &#34;pitch bend&#34;], [&#34;chan&#34;, channel], [&#34;bend&#34;, bend]],
+        # Meta Events
+        mm.kSeqNumber: [[&#34;meta_seq_number&#34;, &#34;sequence number&#34;], [&#34;num&#34;, lambda e: mm.meta_seq_number(e.message)]],
+        mm.kText: [[&#34;meta_text&#34;, &#34;text&#34;], [&#34;text&#34;, text]],
+        mm.kCopyRight: [[&#34;meta_copyright&#34;, &#34;copyright&#34;], [&#34;text&#34;, text]],
+        mm.kTrackName: [[&#34;meta_track_name&#34;, &#34;track name&#34;], [&#34;text&#34;, text]],
+        mm.kInstName: [[&#34;meta_instrument_name&#34;, &#34;instrument name&#34;], [&#34;text&#34;, text]],
+        mm.kLyric: [[&#34;meta_lyric&#34;, &#34;lyric&#34;], [&#34;text&#34;, text]],
+        mm.kMarker: [[&#34;meta_marker&#34;, &#34;marker&#34;], [&#34;text&#34;, text]],
+        mm.kCuePoint: [[&#34;meta_cue_point&#34;, &#34;cue point&#34;], [&#34;text&#34;, text]],
+        mm.kProgName: [[&#34;meta_program_name&#34;, &#34;program name&#34;], [&#34;text&#34;, text]],
+        mm.kDevName: [[&#34;meta_device_name&#34;, &#34;device name&#34;], [&#34;text&#34;, text]],
+        mm.kChanPrefix: [[&#34;meta_channel_prefix&#34;, &#34;channel prefix&#34;], [&#34;chan&#34;, lambda ev: ev.message[3]]],
+        mm.kMidiPort: [[&#34;meta_midi_port&#34;, &#34;midi port&#34;], [&#34;port&#34;, lambda ev: ev.message[3]]],
+        mm.kEOT: [[&#34;meta_eot&#34;, &#34;end of track&#34;]],
+        mm.kTempo: [[&#34;meta_tempo&#34;, &#34;tempo&#34;], [&#34;usecs&#34;, tempo]],
+        mm.kSMPTEOff: [[&#34;smptemeta&#34;, &#34;SMPTE&#34;]],
+        mm.kTimeSig: [[&#34;meta_time_signature&#34;, &#34;time signature&#34;]],
+        mm.kKeySig: [[&#34;meta_key_signature&#34;, &#34;key signature&#34;]],
+        mm.kSeqEvent: [[&#34;meta_seq_event&#34;, &#34;sequencer data&#34;]],
+        # System Common Messages
+        mm.kSysEx: [[&#34;sysex&#34;, &#34;system exclusive&#34;]],
+        mm.kTimeCode: [[&#34;time_code&#34;, &#34;time code&#34;]],
+        mm.kSongPos: [[&#34;song_position&#34;, &#34;song position&#34;]],
+        mm.kSongSel: [[&#34;song_select&#34;, &#34;song select&#34;]],
+        mm.kTuneReq: [[&#34;tune_request&#34;, &#34;tune request&#34;]],
+        # System Real Time
+        mm.kTimingClock: [[&#34;midi_clock&#34;, &#34;midi clock&#34;]],
+        mm.kStart: [[&#34;midi_start&#34;, &#34;midi start&#34;]],
+        mm.kContinue: [[&#34;midi_continue&#34;, &#34;midi continue&#34;]],
+        mm.kStop: [[&#34;midi_stop&#34;, &#34;midi stop&#34;]],
+        mm.kActiveSens: [[&#34;active_sensing&#34;, &#34;active sensing&#34;]],
+        mm.kReset: [[&#34;midi_reset&#34;, &#34;midi reset&#34;]],
+    }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.note.Event" href="../note.html#musx.note.Event">Event</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="musx.midi.midievent.MidiEvent.active_sensing"><code class="name flex">
+<span>def <span class="ident">active_sensing</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi active sensing event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def active_sensing(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi active sensing event.
+
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+    return cls(mm.active_sensing(), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.aftertouch"><code class="name flex">
+<span>def <span class="ident">aftertouch</span></span>(<span>chan, keynum, press, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi aftertouch event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>keynum</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A midi key number 0 to 127.</dd>
+<dt><strong><code>press</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A pressure value 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def aftertouch(cls, chan, keynum, press, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi aftertouch event.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The channel number of the midi event.
+    keynum : byte
+        A midi key number 0 to 127.
+    press : byte
+        A pressure value 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    keynum = cls._check_int_range(keynum, 128)
+    press = cls._check_int_range(press, 128)
+    return cls(mm.aftertouch(chan, keynum, press), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.all_controllers_off"><code class="name flex">
+<span>def <span class="ident">all_controllers_off</span></span>(<span>chan, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi note off event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>channel</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>keynum</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A midi key number 0 to 127.</dd>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A velocity value 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def all_controllers_off(cls, chan, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi note off event.
+
+    Parameters
+    ----------
+    channel : 0-15
+        The channel number of the midi event.
+    keynum : byte
+        A midi key number 0 to 127.
+    velocity : byte
+        A velocity value 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    return cls(mm.control_change(chan, 121, 0), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.all_notes_off"><code class="name flex">
+<span>def <span class="ident">all_notes_off</span></span>(<span>chan, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi all notes off event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def all_notes_off(cls, chan, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi all notes off event.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The channel number of the midi event.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    return cls(mm.control_change(chan, 123, 0), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.all_sound_off"><code class="name flex">
+<span>def <span class="ident">all_sound_off</span></span>(<span>chan, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi all sound off event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def all_sound_off(cls, chan, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi all sound off event.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The channel number of the midi event.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    return cls(mm.control_change(chan, 120, 0), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.bend_value"><code class="name flex">
+<span>def <span class="ident">bend_value</span></span>(<span>semibend, semirange)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts a pitchbend value in semitones into a midi pitch bend value.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>semibend</code></strong> :&ensp;<code>number</code></dt>
+<dd>The bend value expressed in floating point semitones.</dd>
+<dt><strong><code>semirange</code></strong> :&ensp;<code>float </code></dt>
+<dd>A device dependant maximum pitch bend range expressed in floating point semitones.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def bend_value(semibend, semirange):
+    &#34;&#34;&#34;
+    Converts a pitchbend value in semitones into a midi pitch bend value.
+
+    Parameters
+    --------
+    semibend : number
+        The bend value expressed in floating point semitones.
+    semirange : float 
+        A device dependant maximum pitch bend range expressed in floating point semitones.        
+    &#34;&#34;&#34;
+    return int(MidiEvent._rescale(semibend, -semirange, semirange, 0, 16383))</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.channel_pressure"><code class="name flex">
+<span>def <span class="ident">channel_pressure</span></span>(<span>chan, press, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi channel pressure event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>press</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A midi pressure number 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def channel_pressure(cls, chan, press, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi channel pressure event.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The channel number of the midi event.
+    press : byte
+        A midi pressure number 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    press = cls._check_int_range(press, 128)
+    return cls(mm.channel_pressure(chan, press), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.control_change"><code class="name flex">
+<span>def <span class="ident">control_change</span></span>(<span>chan, ctrl, val, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a control change event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>ctrl</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A controller number 0 to 127.</dd>
+<dt><strong><code>val</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A controller value 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def control_change(cls, chan, ctrl, val, time=0.0):
+    &#34;&#34;&#34;
+    Creates a control change event.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The channel number of the midi event.
+    ctrl : byte
+        A controller number 0 to 127.
+    val : byte
+        A controller value 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    ctrl = cls._check_int_range(ctrl, 128)
+    val = cls._check_int_range(val, 128)
+    return cls(mm.control_change(chan, ctrl, val), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_channel_prefix"><code class="name flex">
+<span>def <span class="ident">meta_channel_prefix</span></span>(<span>chan, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi channel prefix meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>A midi channel number 0 to 15.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_channel_prefix(cls, chan, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi channel prefix meta event.
+
+    Parameters
+    ----------
+    chan : 0-15
+        A midi channel number 0 to 15.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    return cls(mm.meta_chan_prefix(chan), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_copyright"><code class="name flex">
+<span>def <span class="ident">meta_copyright</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi copyright meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_copyright(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi copyright meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kCopyRight, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_cue_point"><code class="name flex">
+<span>def <span class="ident">meta_cue_point</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi cue point meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_cue_point(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi cue point meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kCuePoint, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_device_name"><code class="name flex">
+<span>def <span class="ident">meta_device_name</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi device name meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_device_name(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi device name meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kDevName, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_eot"><code class="name flex">
+<span>def <span class="ident">meta_eot</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi end-of-track meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_eot(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi end-of-track meta event.
+
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    return cls(mm.meta_eot(), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_instrument_name"><code class="name flex">
+<span>def <span class="ident">meta_instrument_name</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi instrument name meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_instrument_name(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi instrument name meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kInstName, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_key_signature"><code class="name flex">
+<span>def <span class="ident">meta_key_signature</span></span>(<span>sf, mode, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi key signature meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>sf</code></strong> :&ensp;<code>-7 to 7</code></dt>
+<dd>The number of flats (negative) or sharps.</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>0</code> or <code>1</code></dt>
+<dd>Specify 0 for a major key and 1 for minor.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_key_signature(cls, sf, mode, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi key signature meta event.
+
+    Parameters
+    ----------
+    sf :  -7 to 7 
+        The number of flats (negative) or sharps.
+    mode : 0 or 1
+        Specify 0 for a major key and 1 for minor.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    sf = cls._check_int_range(sf, -7, 8)
+    num = cls._check_int_range(sf, 0, 2)
+    return cls(mm.meta_key_sig(sf, num), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_lyric"><code class="name flex">
+<span>def <span class="ident">meta_lyric</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi lyric meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_lyric(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi lyric meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kLyric, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_marker"><code class="name flex">
+<span>def <span class="ident">meta_marker</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi marker meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_marker(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi marker meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kMarker, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_midi_port"><code class="name flex">
+<span>def <span class="ident">meta_midi_port</span></span>(<span>port, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi port meta event.</p>
+<p>Note: <strong>This meta event is depreciated in the midi spec.</strong></p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>port</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A midi port number 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_midi_port(cls, port, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi port meta event.
+
+    Note: **This meta event is depreciated in the midi spec.**
+
+    Parameters
+    ----------
+    port : byte
+        A midi port number 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    port = cls._check_int_range(port, 127)
+    return cls(mm.meta_port(port), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_program_name"><code class="name flex">
+<span>def <span class="ident">meta_program_name</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi program name meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_program_name(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi program name meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kProgName, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_seq_event"><code class="name flex">
+<span>def <span class="ident">meta_seq_event</span></span>(<span>data, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi sequence meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of data bytes to send to the sequencer.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_seq_event(cls, data, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi sequence meta event.
+
+    Parameters
+    ----------
+    data : list
+        A list of data bytes to send to the sequencer.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    for b in data:
+        if b &lt; 0 or b &gt; 0xFF:
+            raise ValueError(f&#34;Invalid data byte: {b} is &gt; 0xFF&#34;)
+    return cls(mm.meta_seq_event(data), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_seq_number"><code class="name flex">
+<span>def <span class="ident">meta_seq_number</span></span>(<span>num, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi sequence number meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>num</code></strong> :&ensp;<code>int</code></dt>
+<dd>A sequence number max 2 bytes.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_seq_number(cls, num, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi sequence number meta event.
+
+    Parameters
+    ----------
+    num : int
+        A sequence number max 2 bytes.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    if isinstance(num, int) and num &gt;= 0:
+        return cls(mm.meta_seq_number(num), time)
+    raise ValueError(f&#34;invalid sequence number: &#39;{num}&#39;.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_tempo"><code class="name flex">
+<span>def <span class="ident">meta_tempo</span></span>(<span>quarter, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi tempo meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tempo</code></strong> :&ensp;<code>int</code></dt>
+<dd>The rate of a quarter note expressed as either a
+metronome value (208 or less) or microseconds
+(e.g. tempo 120 is 500000).</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>float | int</code></dt>
+<dd>A time to give the midi message. The units for this are
+application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_tempo(cls, quarter, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi tempo meta event.
+
+    Parameters
+    ----------
+    tempo : int
+        The rate of a quarter note expressed as either a 
+        metronome value (208 or less) or microseconds 
+        (e.g. tempo 120 is 500000).
+    time : float | int
+        A time to give the midi message. The units for this are 
+        application-specific.
+    &#34;&#34;&#34;
+    if isinstance(quarter, int) and quarter &gt; 0:
+        if quarter &lt;= 208:
+            quarter = int((60 / quarter) * 1000000)
+        return cls(mm.meta_tempo(quarter), time)
+    raise ValueError(f&#34;invalid tempo value: &#39;{quarter}&#39;.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_text"><code class="name flex">
+<span>def <span class="ident">meta_text</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi text meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_text(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi text meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kText, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_time_signature"><code class="name flex">
+<span>def <span class="ident">meta_time_signature</span></span>(<span>top, bot, clocks=24, tsecs=8, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi time signature meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>top</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The top number of the time signature.</dd>
+<dt><strong><code>bot</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The power of 2 of the bottom number: 0 is top/1, 2 is top/4, etc.</dd>
+<dt><strong><code>clocks</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The number of MIDI clocks between metronome clicks.</dd>
+<dt><strong><code>tsecs</code></strong> :&ensp;<code>byte</code></dt>
+<dd>the number of 32nds in a quarter note (usually 8).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_time_signature(cls, top, bot, clocks=24, tsecs=8, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi time signature meta event.
+
+    Parameters
+    ----------
+    top : byte
+        The top number of the time signature.
+    bot : byte
+        The power of 2 of the bottom number: 0 is top/1, 2 is top/4, etc.
+    clocks : byte
+        The number of MIDI clocks between metronome clicks.
+    tsecs : byte
+        the number of 32nds in a quarter note (usually 8).
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    for x in [top, bot, clocks, tsecs]:
+        if not isinstance(x, int):
+            raise ValueError(f&#34;parameter value {x} not an integer. &#34;)
+    pow2 = [1, 2, 4, 8, 16, 32, 64, 128]
+    if bot not in pow2:
+        raise ValueError(f&#34;denominator value {x} not a power of 2. &#34;)
+    # timesig stores bot as exponent of 2, which is the same as the
+    # index of bot in list :) examp: bot of 8 is 2^3 so 3 is stored.
+    bot = pow2.index(bot)
+    return cls(mm.meta_time_sig(top, bot, clocks, tsecs), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.meta_track_name"><code class="name flex">
+<span>def <span class="ident">meta_track_name</span></span>(<span>text, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi track name meta event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>text</code></strong> :&ensp;<code>string</code></dt>
+<dd>The text string for the message.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if the value is not a string.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def meta_track_name(cls, text, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi track name meta event.
+
+    Parameters
+    ----------
+    text : string
+        The text string for the message.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if the value is not a string.
+    &#34;&#34;&#34;
+    return cls._textmeta(mm.kTrackName, text, time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.midi_clock"><code class="name flex">
+<span>def <span class="ident">midi_clock</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi clock message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def midi_clock(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi clock message.
+    
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+    return cls(mm.midi_clock(), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.midi_continue"><code class="name flex">
+<span>def <span class="ident">midi_continue</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi continue event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def midi_continue(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi continue event.
+
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+    return cls(mm.midi_continue(), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.midi_reset"><code class="name flex">
+<span>def <span class="ident">midi_reset</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi reset event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def midi_reset(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi reset event.
+
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+    return cls(mm.midi_reset(), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.midi_start"><code class="name flex">
+<span>def <span class="ident">midi_start</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi start message.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def midi_start(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi start message.
+
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+    return cls(mm.midi_start(), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.midi_stop"><code class="name flex">
+<span>def <span class="ident">midi_stop</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi stop event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def midi_stop(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi stop event.
+
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+    &#34;&#34;&#34;
+    return cls(mm.midi_stop(), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.note_off"><code class="name flex">
+<span>def <span class="ident">note_off</span></span>(<span>channel, keynum, velocity, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi note off event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>channel</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>keynum</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A midi key number 0 to 127.</dd>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A velocity value 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def note_off(cls, channel, keynum, velocity, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi note off event.
+
+    Parameters
+    ----------
+    channel : 0-15
+        The channel number of the midi event.
+    keynum : byte
+        A midi key number 0 to 127.
+    velocity : byte
+        A velocity value 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    channel = cls._check_int_range(channel, 16)
+    keynum = cls._check_int_range(keynum, 128)
+    velocity = cls._check_int_range(velocity, 128)
+    return cls(mm.note_off(channel, keynum, velocity), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.note_on"><code class="name flex">
+<span>def <span class="ident">note_on</span></span>(<span>channel, keynum, velocity, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi note on event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>channel</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>keynum</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A midi key number 0 to 127.</dd>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A velocity value 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def note_on(cls, channel, keynum, velocity, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi note on event.
+
+    Parameters
+    ----------
+    channel : 0-15
+        The channel number of the midi event.
+    keynum : byte
+        A midi key number 0 to 127.
+    velocity : byte
+        A velocity value 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    channel = cls._check_int_range(channel, 16)
+    keynum = cls._check_int_range(keynum, 128)
+    velocity = cls._check_int_range(velocity, 128)
+    return cls(mm.note_on(channel, keynum, velocity), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.pitch_bend"><code class="name flex">
+<span>def <span class="ident">pitch_bend</span></span>(<span>chan, bend, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a pitch bend event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>int</code></dt>
+<dd>The channel number, 0 to 15.</dd>
+<dt><strong><code>bend</code></strong> :&ensp;<code>int</code></dt>
+<dd>A pitch bend value, 0 to 16383. See: bendvalue().</dd>
+</dl>
+<p>time
+: int | float
+A score time to give the midi message. The units for this are
+application-specific.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def pitch_bend(cls, chan, bend, time=0.0):
+    &#34;&#34;&#34;
+    Creates a pitch bend event.
+
+    Parameters
+    ----------
+    chan : int
+        The channel number, 0 to 15.
+    bend : int
+        A pitch bend value, 0 to 16383. See: bendvalue().
+    time  : int | float
+        A score time to give the midi message. The units for this are
+        application-specific.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    bend = cls._check_int_range(bend, 16384)  # 14 bit value 0-16383
+    return cls(mm.pitch_bend(chan, bend), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.program_change"><code class="name flex">
+<span>def <span class="ident">program_change</span></span>(<span>chan, prog, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi program change event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>chan</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The channel number of the midi event.</dd>
+<dt><strong><code>prog</code></strong> :&ensp;<code>byte</code></dt>
+<dd>A midi program number 0 to 127.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def program_change(cls, chan, prog, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi program change event.
+
+    Parameters
+    ----------
+    chan : 0-15
+        The channel number of the midi event.
+    prog : byte
+        A midi program number 0 to 127.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    chan = cls._check_int_range(chan, 16)
+    prog = cls._check_int_range(prog, 128)
+    return cls(mm.program_change(chan, prog), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.song_position"><code class="name flex">
+<span>def <span class="ident">song_position</span></span>(<span>pos, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi song position event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>pos</code></strong> :&ensp;<code>int</code></dt>
+<dd>A 14 bit song pointer position.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def song_position(cls, pos, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi song position event.
+
+    Parameters
+    ----------
+    pos : int
+        A 14 bit song pointer position.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    pos = cls._check_int_range(pos, 1 &lt;&lt; 14)
+    return cls(mm.midi_song_position(pos), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.song_select"><code class="name flex">
+<span>def <span class="ident">song_select</span></span>(<span>song, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi song select event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>song</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The song number to set.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def song_select(cls, song, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi song select event.
+
+    Parameters
+    ----------
+    song : byte
+        The song number to set.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    song = cls._check_int_range(song, 128)
+    return cls(mm.midi_song_select(song), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.sysex"><code class="name flex">
+<span>def <span class="ident">sysex</span></span>(<span>data, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi sysex event from the specified list of data
+adding a terminal EOE byte if necessary.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of data bytes to send to the sequencer.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def sysex(cls, data, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi sysex event from the specified list of data
+    adding a terminal EOE byte if necessary.
+
+    Parameters
+    ----------
+    data : list
+        A list of data bytes to send to the sequencer.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    for d in data:
+        cls._check_int_range(d, 127)
+    return cls(mm.sysex(data), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.time_code"><code class="name flex">
+<span>def <span class="ident">time_code</span></span>(<span>typ, val, time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi time code event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>typ</code></strong> :&ensp;<code>0-15</code></dt>
+<dd>The time code type.</dd>
+<dt><strong><code>val</code></strong> :&ensp;<code>byte</code></dt>
+<dd>The type code value.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def time_code(cls, typ, val, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi time code event.
+
+    Parameters
+    ----------
+    typ : 0-15
+        The time code type.
+    val : byte
+        The type code value.
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    typ = cls._check_int_range(typ, 8)
+    val = cls._check_int_range(val, 16)
+    return cls(mm.midi_time_code(typ, val), time)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.tune_request"><code class="name flex">
+<span>def <span class="ident">tune_request</span></span>(<span>time=0.0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a midi tune request event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>number</code></dt>
+<dd>The time to give the midi message. The units for this are application-specific.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if a value is not an integer.</li>
+<li>A ValueError if the value is out of range.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def tune_request(cls, time=0.0):
+    &#34;&#34;&#34;
+    Creates a midi tune request event.
+
+    Parameters
+    ----------
+    time : number
+        The time to give the midi message. The units for this are application-specific.
+
+    Raises
+    ------
+    * A TypeError if a value is not an integer.
+    * A ValueError if the value is out of range.
+    &#34;&#34;&#34;
+    return cls(mm.midi_tune_request(), time)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.midi.midievent.MidiEvent.bend"><code class="name flex">
+<span>def <span class="ident">bend</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a bend value 0 to 16383 or -1 if the event is not a pitch bend.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bend(self):
+    &#34;&#34;&#34;
+    Returns a bend value 0 to 16383 or -1 if the event is not a pitch bend.
+    &#34;&#34;&#34;
+    if self.status() == mm.kPitchBend:
+        return mm.bend(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.channel"><code class="name flex">
+<span>def <span class="ident">channel</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the channel of a midi channel event or -1
+if the message is not a channel event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def channel(self):
+    &#34;&#34;&#34;
+    Returns the channel of a midi channel event or -1
+    if the message is not a channel event.
+    &#34;&#34;&#34;
+    if mm.is_channel_message(self.message):
+        return mm.channel(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.control"><code class="name flex">
+<span>def <span class="ident">control</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a control value 0 127, or -1 if the event is
+not a control change.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def control(self):
+    &#34;&#34;&#34;
+    Returns a control value 0 127, or -1 if the event is
+    not a control change.
+    &#34;&#34;&#34;
+    if self.is_control_change():
+        return mm.control(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.controller"><code class="name flex">
+<span>def <span class="ident">controller</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a controller value 0 to 127, or -1 if the event
+is not a control change.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def controller(self):
+    &#34;&#34;&#34;
+    Returns a controller value 0 to 127, or -1 if the event
+    is not a control change.
+    &#34;&#34;&#34;
+    if self.is_control_change():
+        return mm.controller(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.hint"><code class="name flex">
+<span>def <span class="ident">hint</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hint(self):
+    stat = self.status()
+    if stat &lt; mm.kSysEx:  # channel message
+        text = self._print_table[stat][0][1] + &#34;: &#34;
+        if stat == mm.kCtrlChange:
+            text += (gm.controller_names[self.message[1]] + &#34; &#34;)
+        elif stat == mm.kProgChange:
+            text += (gm.instrument_names[self.message[1]] + &#34; &#34;)
+        text += &#34;chan &#34; + str(self.channel())
+    elif stat == mm.kMetaMsg:  # meta or reset
+        if len(self.message) &gt; 1:  # is a meta message
+            stat = self.message[1]  # status now meta type
+            text = MidiEvent._print_table[stat][0][1] + &#34;: &#34;
+            if mm.kText &lt;= stat &lt;= mm.kDevName:
+                msg = self.text()
+                if len(msg) &gt; 16:
+                    msg = msg[:16] + &#34;...&#34;
+                text += msg
+            elif stat == mm.kTempo:
+                text += str(self.tempo(&#39;bpm&#39;)) + &#39; bpm&#39;
+            elif stat == mm.kTimeSig:
+                text += str(self.message[3]) + &#34;/&#34; + str(2**self.message[4])
+            elif stat == mm.kKeySig:
+                # the key is stored as a twos-complement value -7...7
+                # key = int.from_bytes(bytes([self.message[3]]), &#39;big&#39;, signed=True)
+                k = self.message[3]
+                key = k if k &lt; 128 else (256 - k) * (-1)
+                text += MidiEvent._key_table[key+7] + [&#34;-major&#34;, &#34;-minor&#34;][self.message[4]]
+        else:
+            text = MidiEvent._print_table[stat][0][1]
+    else:  # system common or realtime
+        text = MidiEvent._print_table[stat][0][1]
+    return text</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_active_sensing"><code class="name flex">
+<span>def <span class="ident">is_active_sensing</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a midi active sensing event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_active_sensing(self):
+    &#34;&#34;&#34;Returns true if the event is a midi active sensing event.&#34;&#34;&#34;
+    return self.status() == mm.kActiveSens</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_aftertouch"><code class="name flex">
+<span>def <span class="ident">is_aftertouch</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the midi event is an an aftertouch.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_aftertouch(self):
+    &#34;&#34;&#34;Returns true if the midi event is an an aftertouch.&#34;&#34;&#34;
+    return self.status() == mm.kAftertouch</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_channel_pressure"><code class="name flex">
+<span>def <span class="ident">is_channel_pressure</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a channel pressure.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_channel_pressure(self):
+    &#34;&#34;&#34;Returns true if the event is a channel pressure.&#34;&#34;&#34;
+    return self.status() == mm.kChanPress</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_control_change"><code class="name flex">
+<span>def <span class="ident">is_control_change</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a control change event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_control_change(self):
+    &#34;&#34;&#34;Returns true if the message is a control change event.&#34;&#34;&#34;
+    return self.status() == mm.kCtrlChange</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_controller_of_type"><code class="name flex">
+<span>def <span class="ident">is_controller_of_type</span></span>(<span>self, contype)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a control change message and
+its controller is the specified type.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_controller_of_type(self, contype):
+    &#34;&#34;&#34;
+    Returns true if the event is a control change message and
+    its controller is the specified type.
+    &#34;&#34;&#34;
+    return self.is_control_change() and self.controller() == contype</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_meta"><code class="name flex">
+<span>def <span class="ident">is_meta</span></span>(<span>self, typ=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a meta event.</p>
+<p>If typ is not specifed the function returns true if the event is any
+type of meta message, otherwise the event must be the specied type between
+kDevName and kSeqEvent.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>typ</code></strong> :&ensp;<code>metatype | None</code></dt>
+<dd>The midi meta message type or None.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_meta(self, typ=None):
+    &#34;&#34;&#34;
+    Returns true if the event is a meta event.
+
+    If typ is not specifed the function returns true if the event is any
+    type of meta message, otherwise the event must be the specied type between
+    kDevName and kSeqEvent.
+
+    Parameters
+    ----------
+    typ : metatype | None
+        The midi meta message type or None.
+    &#34;&#34;&#34;
+    meta = self.status() == mm.kMetaMsg and len(self.message) &gt;= 3
+    if not meta or typ is None:
+        return meta
+    return self.message[1] == typ</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_midi_clock"><code class="name flex">
+<span>def <span class="ident">is_midi_clock</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a midi clock event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_midi_clock(self):
+    &#34;&#34;&#34;Returns true if the event is a midi clock event.&#34;&#34;&#34;
+    return self.status() == mm.kTimingClock</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_midi_continue"><code class="name flex">
+<span>def <span class="ident">is_midi_continue</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a midi continue event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_midi_continue(self):
+    &#34;&#34;&#34;Returns true if the event is a midi continue event.&#34;&#34;&#34;
+    return self.status() == mm.kContinue</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_midi_reset"><code class="name flex">
+<span>def <span class="ident">is_midi_reset</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a midi reset event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_midi_reset(self):
+    &#34;&#34;&#34;Returns true if the event is a midi reset event.&#34;&#34;&#34;
+    return self.status() == mm.kReset</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_midi_start"><code class="name flex">
+<span>def <span class="ident">is_midi_start</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a midi start event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_midi_start(self):
+    &#34;&#34;&#34;Returns true if the event is a midi start event.&#34;&#34;&#34;
+    return self.status() == mm.kStart</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_midi_stop"><code class="name flex">
+<span>def <span class="ident">is_midi_stop</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a midi stop event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_midi_stop(self):
+    &#34;&#34;&#34;Returns true if the event is a midi stop event.&#34;&#34;&#34;
+    return self.status() == mm.kStop</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_note_off"><code class="name flex">
+<span>def <span class="ident">is_note_off</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a note off.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_note_off(self):
+    &#34;&#34;&#34;Returns true if the event is a note off.&#34;&#34;&#34;
+    return self.status() == mm.kNoteOff</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_note_on"><code class="name flex">
+<span>def <span class="ident">is_note_on</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a note on.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_note_on(self):
+    &#34;&#34;&#34;Returns true if the message is a note on.&#34;&#34;&#34;
+    return self.status() == mm.kNoteOn</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_note_on_or_off"><code class="name flex">
+<span>def <span class="ident">is_note_on_or_off</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a note on or off.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_note_on_or_off(self):
+    &#34;&#34;&#34;Returns true if the message is a note on or off.&#34;&#34;&#34;
+    return mm.kNoteOff &lt;= self.status() &lt;= mm.kNoteOn</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_pitch_bend"><code class="name flex">
+<span>def <span class="ident">is_pitch_bend</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a pitch bend.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_pitch_bend(self):
+    &#34;&#34;&#34;Returns true if the event is a pitch bend.&#34;&#34;&#34;
+    return self.status() == mm.kPitchBend</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_program_change"><code class="name flex">
+<span>def <span class="ident">is_program_change</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the event is a program change.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_program_change(self):
+    &#34;&#34;&#34;Returns true if the event is a program change.&#34;&#34;&#34;
+    return self.status() == mm.kProgChange</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.is_sysex"><code class="name flex">
+<span>def <span class="ident">is_sysex</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the message is a sysex event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_sysex(self):
+    &#34;&#34;&#34;Returns true if the message is a sysex event.&#34;&#34;&#34;
+    return self.status() == mm.kSysEx</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.keynum"><code class="name flex">
+<span>def <span class="ident">keynum</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a key number value 0 to 127, or -1 if the
+event is not a note on, off, or aftertouch.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def keynum(self):
+    &#34;&#34;&#34;
+    Returns a key number value 0 to 127, or -1 if the
+    event is not a note on, off, or aftertouch.
+    &#34;&#34;&#34;
+    if self.status() in [mm.kNoteOff, mm.kNoteOn, mm.kAftertouch]:
+        return mm.keynum(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.pressure"><code class="name flex">
+<span>def <span class="ident">pressure</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a pressure value 0 127, or -1 if the event is not
+a channel pressure.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pressure(self):
+    &#34;&#34;&#34;
+    Returns a pressure value 0 127, or -1 if the event is not
+    a channel pressure.
+    &#34;&#34;&#34;
+    if self.is_channel_pressure():
+        return mm.pressure(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.program"><code class="name flex">
+<span>def <span class="ident">program</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a progam change value 0 127, or -1 if the event is
+not a program change.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def program(self):
+    &#34;&#34;&#34;
+    Returns a progam change value 0 127, or -1 if the event is
+    not a program change.
+    &#34;&#34;&#34;
+    if self.status() == mm.kProgChange:
+        return mm.program(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.status"><code class="name flex">
+<span>def <span class="ident">status</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the status byte of a MidiEvent.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def status(self):
+    &#34;&#34;&#34;Returns the status byte of a MidiEvent.&#34;&#34;&#34;
+    return mm.status(self.message)</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.sysex_data"><code class="name flex">
+<span>def <span class="ident">sysex_data</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the data list of the sysex event (without the EOE byte) or
+an empty list if it is not a sysex event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sysex_data(self):
+    &#34;&#34;&#34;
+    Returns the data list of the sysex event (without the EOE byte) or
+    an empty list if it is not a sysex event.
+    &#34;&#34;&#34;
+    if self.status() == mm.kSysEx:
+        return self.message[1::-1]
+    return []</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.tempo"><code class="name flex">
+<span>def <span class="ident">tempo</span></span>(<span>self, units='usec')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the tempo from a meta tempo event or 0 if the event is not a
+tempo event.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>units</code></strong> :&ensp;<code>'usec' | 'bpm'</code></dt>
+<dd>A string indicating if the tempo should returned as microseconds or beats per minute.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tempo(self, units=&#39;usec&#39;):
+    &#34;&#34;&#34;
+    Returns the tempo from a meta tempo event or 0 if the event is not a 
+    tempo event.
+
+    Parameters
+    ----------
+    units : &#39;usec&#39; | &#39;bpm&#39;
+        A string indicating if the tempo should returned as microseconds or beats per minute.
+    &#34;&#34;&#34;
+    if self.is_meta(mm.kTempo):
+        if units == &#39;usec&#39;:
+            return mm.tempo(self.message)
+        elif units == &#39;bpm&#39;:
+            return int(60 * (1000000 / mm.tempo(self.message)))
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.text"><code class="name flex">
+<span>def <span class="ident">text</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the text string from a meta text event or
+an empty string if the event is not a text event.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def text(self):
+    &#34;&#34;&#34;
+    Returns the text string from a meta text event or
+    an empty string if the event is not a text event.
+    &#34;&#34;&#34;
+    if self.is_meta():
+        if mm.kText &lt;= self.message[1] &lt;= mm.kDevName:
+            return mm.text(self.message)
+    return &#39;&#39;</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.toextern"><code class="name flex">
+<span>def <span class="ident">toextern</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def toextern(self):
+    stat = self.status()
+    if stat == mm.kReset:  # NB: midi makes kReset status same as kMetaMsg
+        if self.is_meta():
+            stat = self.message[1]
+    e = MidiEvent._print_table[stat]
+    s = e[0][0] + &#34;(&#34;
+    for i in range(1, len(e)):
+        if i &gt; 1: s += &#34;, &#34;
+        x = e[i][1](self)
+        s += &#34;\&#39;&#34; + x + &#34;\&#39;&#34; if isinstance(x, str) else str(x)
+    s += &#34;)&#34;
+    return s</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.tostring"><code class="name flex">
+<span>def <span class="ident">tostring</span></span>(<span>self, hint=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tostring(self, hint=False):
+    text = f&#34;{self.message}&#34;
+    if hint:
+        text += &#34; # &#34; + self.hint()
+    return text</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.touch"><code class="name flex">
+<span>def <span class="ident">touch</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a pressure value 0 127, or -1 if the event is not an aftertouch.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def touch(self):
+    &#34;&#34;&#34;
+    Return a pressure value 0 127, or -1 if the event is not an aftertouch.
+    &#34;&#34;&#34;
+    if self.is_aftertouch():
+        return mm.touch(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="musx.midi.midievent.MidiEvent.velocity"><code class="name flex">
+<span>def <span class="ident">velocity</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a velocity value 0 to 127, or -1 if the message is not
+a note on or off.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def velocity(self):
+    &#34;&#34;&#34;
+    Returns a velocity value 0 to 127, or -1 if the message is not
+    a note on or off.
+    &#34;&#34;&#34;
+    if self.is_note_on_or_off():
+        return mm.velocity(self.message)
+    return -1</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.note.Event" href="../note.html#musx.note.Event">Event</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.note.Event.time" href="../note.html#musx.note.Event.time">time</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx.midi" href="index.html">musx.midi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="musx.midi.midievent.MidiEvent" href="#musx.midi.midievent.MidiEvent">MidiEvent</a></code></h4>
+<ul class="">
+<li><code><a title="musx.midi.midievent.MidiEvent.active_sensing" href="#musx.midi.midievent.MidiEvent.active_sensing">active_sensing</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.aftertouch" href="#musx.midi.midievent.MidiEvent.aftertouch">aftertouch</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.all_controllers_off" href="#musx.midi.midievent.MidiEvent.all_controllers_off">all_controllers_off</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.all_notes_off" href="#musx.midi.midievent.MidiEvent.all_notes_off">all_notes_off</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.all_sound_off" href="#musx.midi.midievent.MidiEvent.all_sound_off">all_sound_off</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.bend" href="#musx.midi.midievent.MidiEvent.bend">bend</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.bend_value" href="#musx.midi.midievent.MidiEvent.bend_value">bend_value</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.channel" href="#musx.midi.midievent.MidiEvent.channel">channel</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.channel_pressure" href="#musx.midi.midievent.MidiEvent.channel_pressure">channel_pressure</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.control" href="#musx.midi.midievent.MidiEvent.control">control</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.control_change" href="#musx.midi.midievent.MidiEvent.control_change">control_change</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.controller" href="#musx.midi.midievent.MidiEvent.controller">controller</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.hint" href="#musx.midi.midievent.MidiEvent.hint">hint</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_active_sensing" href="#musx.midi.midievent.MidiEvent.is_active_sensing">is_active_sensing</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_aftertouch" href="#musx.midi.midievent.MidiEvent.is_aftertouch">is_aftertouch</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_channel_pressure" href="#musx.midi.midievent.MidiEvent.is_channel_pressure">is_channel_pressure</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_control_change" href="#musx.midi.midievent.MidiEvent.is_control_change">is_control_change</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_controller_of_type" href="#musx.midi.midievent.MidiEvent.is_controller_of_type">is_controller_of_type</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_meta" href="#musx.midi.midievent.MidiEvent.is_meta">is_meta</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_midi_clock" href="#musx.midi.midievent.MidiEvent.is_midi_clock">is_midi_clock</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_midi_continue" href="#musx.midi.midievent.MidiEvent.is_midi_continue">is_midi_continue</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_midi_reset" href="#musx.midi.midievent.MidiEvent.is_midi_reset">is_midi_reset</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_midi_start" href="#musx.midi.midievent.MidiEvent.is_midi_start">is_midi_start</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_midi_stop" href="#musx.midi.midievent.MidiEvent.is_midi_stop">is_midi_stop</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_note_off" href="#musx.midi.midievent.MidiEvent.is_note_off">is_note_off</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_note_on" href="#musx.midi.midievent.MidiEvent.is_note_on">is_note_on</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_note_on_or_off" href="#musx.midi.midievent.MidiEvent.is_note_on_or_off">is_note_on_or_off</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_pitch_bend" href="#musx.midi.midievent.MidiEvent.is_pitch_bend">is_pitch_bend</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_program_change" href="#musx.midi.midievent.MidiEvent.is_program_change">is_program_change</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.is_sysex" href="#musx.midi.midievent.MidiEvent.is_sysex">is_sysex</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.keynum" href="#musx.midi.midievent.MidiEvent.keynum">keynum</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_channel_prefix" href="#musx.midi.midievent.MidiEvent.meta_channel_prefix">meta_channel_prefix</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_copyright" href="#musx.midi.midievent.MidiEvent.meta_copyright">meta_copyright</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_cue_point" href="#musx.midi.midievent.MidiEvent.meta_cue_point">meta_cue_point</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_device_name" href="#musx.midi.midievent.MidiEvent.meta_device_name">meta_device_name</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_eot" href="#musx.midi.midievent.MidiEvent.meta_eot">meta_eot</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_instrument_name" href="#musx.midi.midievent.MidiEvent.meta_instrument_name">meta_instrument_name</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_key_signature" href="#musx.midi.midievent.MidiEvent.meta_key_signature">meta_key_signature</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_lyric" href="#musx.midi.midievent.MidiEvent.meta_lyric">meta_lyric</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_marker" href="#musx.midi.midievent.MidiEvent.meta_marker">meta_marker</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_midi_port" href="#musx.midi.midievent.MidiEvent.meta_midi_port">meta_midi_port</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_program_name" href="#musx.midi.midievent.MidiEvent.meta_program_name">meta_program_name</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_seq_event" href="#musx.midi.midievent.MidiEvent.meta_seq_event">meta_seq_event</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_seq_number" href="#musx.midi.midievent.MidiEvent.meta_seq_number">meta_seq_number</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_tempo" href="#musx.midi.midievent.MidiEvent.meta_tempo">meta_tempo</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_text" href="#musx.midi.midievent.MidiEvent.meta_text">meta_text</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_time_signature" href="#musx.midi.midievent.MidiEvent.meta_time_signature">meta_time_signature</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.meta_track_name" href="#musx.midi.midievent.MidiEvent.meta_track_name">meta_track_name</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.midi_clock" href="#musx.midi.midievent.MidiEvent.midi_clock">midi_clock</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.midi_continue" href="#musx.midi.midievent.MidiEvent.midi_continue">midi_continue</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.midi_reset" href="#musx.midi.midievent.MidiEvent.midi_reset">midi_reset</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.midi_start" href="#musx.midi.midievent.MidiEvent.midi_start">midi_start</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.midi_stop" href="#musx.midi.midievent.MidiEvent.midi_stop">midi_stop</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.note_off" href="#musx.midi.midievent.MidiEvent.note_off">note_off</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.note_on" href="#musx.midi.midievent.MidiEvent.note_on">note_on</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.pitch_bend" href="#musx.midi.midievent.MidiEvent.pitch_bend">pitch_bend</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.pressure" href="#musx.midi.midievent.MidiEvent.pressure">pressure</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.program" href="#musx.midi.midievent.MidiEvent.program">program</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.program_change" href="#musx.midi.midievent.MidiEvent.program_change">program_change</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.song_position" href="#musx.midi.midievent.MidiEvent.song_position">song_position</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.song_select" href="#musx.midi.midievent.MidiEvent.song_select">song_select</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.status" href="#musx.midi.midievent.MidiEvent.status">status</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.sysex" href="#musx.midi.midievent.MidiEvent.sysex">sysex</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.sysex_data" href="#musx.midi.midievent.MidiEvent.sysex_data">sysex_data</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.tempo" href="#musx.midi.midievent.MidiEvent.tempo">tempo</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.text" href="#musx.midi.midievent.MidiEvent.text">text</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.time_code" href="#musx.midi.midievent.MidiEvent.time_code">time_code</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.toextern" href="#musx.midi.midievent.MidiEvent.toextern">toextern</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.tostring" href="#musx.midi.midievent.MidiEvent.tostring">tostring</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.touch" href="#musx.midi.midievent.MidiEvent.touch">touch</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.tune_request" href="#musx.midi.midievent.MidiEvent.tune_request">tune_request</a></code></li>
+<li><code><a title="musx.midi.midievent.MidiEvent.velocity" href="#musx.midi.midievent.MidiEvent.velocity">velocity</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,3869 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.interval API documentation</title>
+<meta name="description" content="A class that implements musical intervals …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.interval</code></h1>
+</header>
+<section id="section-intro">
+<p>A class that implements musical intervals.</p>
+<p>The Interval class supports the standard interval names and classification
+system, including the notion of descending or ascending intervals and simple
+or compound intervals.
+Intervals can be numerically compared for their size
+(span+quality) and can be used to transpose Pitches while preserving correct
+accidental spelling."</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">###############################################################################
+&#34;&#34;&#34;
+A class that implements musical intervals.
+
+The Interval class supports the standard interval names and classification
+system, including the notion of descending or ascending intervals and simple
+or compound intervals.  Intervals can be numerically compared for their size
+(span+quality) and can be used to transpose Pitches while preserving correct
+accidental spelling.&#34;
+&#34;&#34;&#34;
+
+from .pitch import Pitch
+
+class Interval:
+
+    ## Private class constants representing spans. There are eight interval
+    #  spans ranging 0-7: _Uni=Unison, _2nd=Second, _3rd=Third, ... _8va=Octave
+    _Uni, _2nd, _3rd, _4th, _5th, _6th, _7th, _8va = (i for i in range(8))
+
+    ## Private class constants representing qualities. There are thirteen
+    #  qualities ranging 0-13: from quintuply-diminished intervals to
+    #  quintuply-augmented intervals.
+    _5dim, _4dim, _3dim, _2dim, _dim, _min, _perf, _maj, _aug, _2aug, _3aug, _4aug, _5aug \
+        = (i for i in range(13))
+
+    ## Private map of all possible interval quality names to their constants.
+    #  Note that diminished can use either &#34;o&#34; or &#34;d&#34;, and augmented
+    #  can use &#34;+&#34; or &#34;A&#34;.
+    _qual_map = {&#34;ooooo&#34;: _5dim, &#34;oooo&#34;: _4dim, &#34;ooo&#34;: _3dim, &#34;oo&#34;: _2dim, &#34;o&#34;: _dim,
+                 &#34;ddddd&#34;: _5dim, &#34;dddd&#34;: _4dim, &#34;ddd&#34;: _3dim, &#34;dd&#34;: _2dim, &#34;d&#34;: _dim,
+                 &#34;m&#34;: _min, &#34;P&#34;: _perf, &#34;M&#34;: _maj,
+                 &#34;+&#34;: _aug, &#34;++&#34;: _2aug, &#34;+++&#34;: _3aug, &#34;++++&#34;: _4aug, &#34;+++++&#34;: _5aug,
+                 &#34;A&#34;: _aug, &#34;AA&#34;: _2aug, &#34;AAA&#34;: _3aug, &#34;AAAA&#34;: _4aug, &#34;AAAAA&#34;: _5aug}
+
+    ## Reverse map from quality constants 0-12 onto their canonical names.
+    _qual_names = [&#34;ooooo&#34;, &#34;oooo&#34;, &#34;ooo&#34;, &#34;oo&#34;, &#34;o&#34;,
+                   &#34;m&#34;, &#34;P&#34;, &#34;M&#34;,
+                   &#34;+&#34;, &#34;++&#34;, &#34;+++&#34;, &#34;++++&#34;, &#34;+++++&#34;]
+
+    ## Reverse map from span constants to span full names
+    _span_full_names = [&#39;unison&#39;, &#39;second&#39;, &#39;third&#39;, &#39;fourth&#39;, &#39;fifth&#39;, &#39;sixth&#39;,
+                        &#39;seventh&#39;, &#39;octave&#39;]
+
+    ## Reverse map from quality constants to quality full names
+    _qual_full_names = [&#39;quintuply-diminished&#39;, &#39;quadruply-diminished&#39;,
+                        &#39;triply-diminished&#39;, &#39;doubly-diminished&#39;, &#39;diminished&#39;,
+                        &#39;minor&#39;, &#39;perfect&#39;, &#39;major&#39;, &#39;augmented&#39;,
+                        &#39;doubly-augmented&#39;, &#39;triply-augmented&#39;,
+                        &#39;quadruply-augmented&#39;, &#39;quintuply-augmented&#39;]
+
+    ## Ordered list of all possible perfect interval span values.
+    _perf_spans = [_Uni, _4th, _5th, _8va]
+
+    ## Ordered list of all possible imperfect interval span values.
+    _impf_spans = [_2nd, _3rd, _6th, _7th]
+
+    ## Ordered list of all possible imperfect interval qualities.
+    _impf_quals = [_5dim, _4dim, _3dim, _2dim, _dim, _min, _maj, _aug, _2aug, _3aug, _4aug, _5aug]
+
+    ## Ordered list of all possible perfect interval qualities.
+    _perf_quals = [_5dim, _4dim, _3dim, _2dim, _dim, _perf, _aug, _2aug, _3aug, _4aug, _5aug]
+
+    ## Reverse map from (diatonic) span values to their semitone content.
+    _diatonic_semitones = [0, 2, 4, 5, 7, 9, 11, 12]
+
+    ## A 2D map that returns the semitones for a given quality and span value.
+    _semitones_map = {
+        _min:  {_2nd: 1,  _3rd:  3,  _6th:  8, _7th: 10},
+        _maj:  {_2nd: 2,  _3rd:  4,  _6th:  9, _7th: 11},
+        _perf: {_Uni: 0,  _4th:  5,  _5th:  7, _8va: 12},
+        _dim:  {_Uni: -1, _2nd:  0,  _3rd:  2, _4th:  4, _5th:  6, _6th: 7,  _7th: 9,  _8va: 11},
+        _2dim: {_Uni: -2, _2nd: -1,  _3rd:  1, _4th:  3, _5th:  5, _6th: 6,  _7th: 8,  _8va: 10},
+        _3dim: {_Uni: -3, _2nd: -2,  _3rd:  0, _4th:  2, _5th:  4, _6th: 5,  _7th: 7,  _8va:  9},
+        _4dim: {_Uni: -4, _2nd: -3,  _3rd: -1, _4th:  1, _5th:  3, _6th: 4,  _7th: 6,  _8va:  8},
+        _5dim: {_Uni: -5, _2nd: -4,  _3rd: -2, _4th:  0, _5th:  2, _6th: 3,  _7th: 5,  _8va:  7},
+        _aug:  {_Uni:  1, _2nd:  3,  _3rd:  5, _4th:  6, _5th:  8, _6th: 10, _7th: 12, _8va: 13},
+        _2aug: {_Uni:  2, _2nd:  4,  _3rd:  6, _4th:  7, _5th:  9, _6th: 11, _7th: 13, _8va: 14},
+        _3aug: {_Uni:  3, _2nd:  5,  _3rd:  7, _4th:  8, _5th: 10, _6th: 12, _7th: 14, _8va: 15},
+        _4aug: {_Uni:  4, _2nd:  6,  _3rd:  8, _4th:  9, _5th: 11, _6th: 13, _7th: 15, _8va: 16},
+        _5aug: {_Uni:  5, _2nd:  7,  _3rd:  9, _4th: 10, _5th: 12, _6th: 14, _7th: 16, _8va: 17},
+    }
+
+    ## A 2D map that returns the interval quality for a given span and semitonal value.
+    _span_semi_qual_map = {
+        _Uni: {-5: _5dim, -4: _4dim, -3: _3dim, -2: _2dim, -1: _dim, 0: _perf,
+               1: _aug, 2: _2aug, 3: _3aug, 4: _4aug, 5: _5aug},
+        _2nd: {-4: _5dim, -3: _4dim, -2: _3dim, -1: _2dim, 0: _dim, 1: _min,
+               2: _maj, 3: _aug, 4: _2aug, 5: _3aug, 6: _4aug, 7: _5aug},
+        _3rd: {-2: _5dim, -1: _4dim, 0: _3dim, 1: _2dim, 2: _dim, 3: _min,
+               4: _maj, 5: _aug, 6: _2aug, 7: _3aug, 8: _4aug, 9: _5aug},
+        _4th: {0: _5dim, 1: _4dim, 2: _3dim, 3: _2dim, 4: _dim, 5: _perf,
+               6: _aug, 7: _2aug, 8: _3aug, 9: _4aug, 10: _5aug},
+        _5th: {2: _5dim, 3: _4dim, 4: _3dim, 5: _2dim, 6: _dim, 7: _perf,
+               8: _aug, 9: _2aug, 10: _3aug, 11: _4aug, 12: _5aug},
+        _6th: {3: _5dim, 4: _4dim, 5: _3dim, 6: _2dim, 7: _dim, 8: _min,
+               # 9: _maj, 10: _aug, 11: _2aug, 12: _3aug, 13: _4aug, 14: _5aug},
+               9: _maj, 10: _aug, 11: _2aug, 12: _3aug, 1: _4aug, 2: _5aug},
+        _7th: {5: _5dim, 6: _4dim, 7: _3dim, 8: _2dim, 9: _dim, 10: _min,
+               # 11: _maj, 12: _aug, 13: _2aug, 14: _3aug, 15: _4aug, 16: _5aug,
+               11: _maj, 12: _aug, 1: _2aug, 2: _3aug, 3: _4aug, 4: _5aug},
+        _8va: {7:  _5dim, 8: _4dim, 9: _3dim, 10: _2dim, 11: _dim, 12: _perf,
+               # 13: _aug, 14: _2aug, 15: _3aug, 16: _4aug, 17: _5aug,
+               1:  _aug,  2: _2aug,  3: _3aug,  4: _4aug,  5: _5aug}
+     }
+
+
+    def __init__(self, arg, other=None):
+        &#34;&#34;&#34;
+        Creates an Interval from a string, list, or two Pitches.
+
+        Calling signatures:
+
+        * Interval(string) - creates an Interval from a pitch string.
+        * Interval([s, q, x, s]) - creates a Pitch from a list of four
+        integers: a span, quality, extra octaves and sign. (see below).
+        * Interval(pitch1, pitch2) - creates an Interval from two Pitches.
+
+        The format of a Interval string is:
+
+        ```py
+        interval  = [&#34;-&#34;] , &lt;quality&gt; , &lt;span&gt;
+        &lt;quality&gt; = &lt;diminished&gt; | &lt;minor&gt; | &lt;perfect&gt; | &lt;major&gt; | &lt;augmented&gt;
+        &lt;diminished&gt; = &lt;5d&gt; , &lt;4d&gt; , &lt;3d&gt; , &lt;2d&gt; , &lt;1d&gt; ;
+        &lt;5d&gt; = &#34;ooooo&#34; | &#34;ddddd&#34;
+        &lt;4d&gt; = &#34;oooo&#34; | &#34;dddd&#34;
+        &lt;3d&gt; = &#34;ooo&#34; | &#34;ddd&#34;
+        &lt;2d&gt; = &#34;oo&#34; | &#34;dd&#34;
+        &lt;1d&gt; = &#34;o&#34; | &#34;d&#34;
+        &lt;minor&gt; = &#34;m&#34;
+        &lt;perfect&gt; = &#34;P&#34;
+        &lt;major&gt; = &#34;M&#34;
+        &lt;augmented&gt; = &lt;5a&gt;, &lt;4a&gt;, &lt;3a&gt;, &lt;2a&gt;, &lt;1a&gt;
+        &lt;5d&gt; = &#34;+++++&#34; | &#34;aaaaa&#34;
+        &lt;4d&gt; = &#34;++++&#34; | &#34;aaaa&#34;
+        &lt;3d&gt; = &#34;+++&#34; | &#34;aaa&#34;
+        &lt;2d&gt; = &#34;++&#34; | &#34;aa&#34;
+        &lt;1d&gt; = &#34;+&#34; | &#34;a&#34;
+        &lt;span&gt; = &#34;1&#34; | &#34;2&#34; | &#34;3&#34; | &#34;4&#34; | &#34;5&#34; | &#34;6&#34; | &#34;7&#34; | &#34;8&#34; | &#34;9&#34; ...
+        ```
+       
+        The __init__ function should check to make sure the arguments are either a string, a
+        list of four integers, or two pitches.  If the input is a string then __init__ should
+        pass the string to the the private _init_from_string() method (see below).  If the
+        input is a list of four ints, __init__ will pass them to the private _init_from_list()
+        method (see below). If the input is two pitches they will be passed to the private
+        _init_from_pitches() method (see below).  
+
+        Parameters
+        ----------
+        arg : string | list
+            If only arg is specified it should be either an
+            interval string or a list of four interval indexes.  If both
+            arg and other are provided, both should be a Pitch.
+        other : Pitch
+            A Pitch if arg is a Pitch, otherwise None.
+
+        Raises
+        ------
+        TypeError if the input is not a string, list of four integers, or two pitches.
+        &#34;&#34;&#34;
+
+        if other is None:
+            if isinstance(arg, str):
+                self._init_from_string(arg)
+            elif isinstance(arg, list):
+                if len(arg) == 4 and all(isinstance(a, int) for a in arg):
+                    self._init_from_list(*arg)
+                else:
+                    raise TypeError(f&#39;{arg} is an invalid interval list.&#39;)
+            else:
+                raise TypeError(f&#39;{arg} is an invalid interval reference.&#39;)
+        elif isinstance(arg, Pitch) and isinstance(other, Pitch):
+            self._init_from_pitches(arg, other)
+        else:
+            raise TypeError(f&#34;Invalid interval specification: {arg} and {other}.&#34;)
+
+
+    def _init_from_list(self, span, qual, xoct, sign):
+        &#34;&#34;&#34;
+        A private method that checks four integer values (span, qual, xoct, sign) to make sure
+        they are valid index values for the span, qual, xoct and sign attributes. Legal values
+        are: span 0-7, qual 0-12, xoct 0-10, sign -1 or 1. If any value is out of range the
+        method will raise a ValueError for that value. If all values are legal the method will
+        make the following &#39;edge case&#39; tests:
+
+        * span and quality values cannot produce negative semitones, i.e. an interval
+          whose &#39;top&#39; would be lower that its &#39;bottom&#39;. Here are the smallest VALID
+          interval for each span that could cause this: perfect unison, diminished-second,
+          triply-diminished third.
+        * Only the span of a fifth can be quintuply diminished.
+        * Only the span of a fourth can be quintuply augmented.
+        * No interval can surpass 127 semitones, LOL. The last legal intervals are: &#39;P75&#39;
+         (a 10 octave perfect 5th), and a &#39;o76&#39; (a 10 octave diminished 6th).
+        * If a user specifies an octave as a unison span with 1 extra octave, e.g. [0,*,1,*],
+        it should be converted to an octave span with 0 extra octaves, e.g. [7,*,0,*]
+        
+        Only if all the edge case checks pass then _init_from_list() should assign
+        the four values to the attributes, e.g. self.span=span, self.qual=qual, and
+        so on. Otherwise if any edge case fails the method should raise a ValueError.
+        
+        NOTE: The _init_from_list() method should be the only method in your implementation
+        that assign values to self.letter, self.accidental and self.octave.
+        &#34;&#34;&#34;
+        
+        if 0 &lt;= span &lt;= 7:
+            if 0 &lt;= qual &lt;= 12:
+                if 0 &lt;= xoct:
+                    if sign in (1, -1):
+                        if span in self._perf_spans:
+                            if qual in [self._min, self._maj]:
+                                qn = self._qual_full_names[qual]
+                                sn = self._span_full_names[span]
+                                raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
+                        else:
+                            if qual is self._perf:
+                                qn = self._qual_full_names[qual]
+                                sn = self._span_full_names[span]
+                                raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
+                        # only 4ths and fifths can be quintuply diminished/augmented
+                        if qual == self._5dim and span != self._5th:
+                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply diminished.&#39;)
+                        if qual == self._5aug and span != self._4th:
+                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply augmented.&#39;)
+                        # check semitones to make sure the interval will not be negative or greater than 127
+                        semi = self._semitones_map[qual][span] + (xoct*12)
+                        # print(&#39;init from list: span=&#39;, span, &#39;qual=&#39;, qual, &#39;semi=&#39;, semi, &#39;xoct=&#39;, xoct)
+                        if semi &lt; 0:
+                            qn = self._qual_full_names[qual]
+                            sn = self._span_full_names[span]
+                            raise ValueError(f&#34;A &#39;{qn}-{sn}&#39; would be negative&#34;
+                                             &#34;, perhaps you want a descending interval?&#34;)
+                        if semi &gt; 127:
+                            raise ValueError(&#34;Intervals cannot span more than 127 semitones.&#34;)
+                        # respell unisons with 1 extra octave as octaves.
+                        if span == 0 and xoct &gt; 0:
+                            span, xoct = self._8va, xoct - 1
+                        self.span, self.qual, self.xoct, self.sign = span, qual, xoct, sign
+                    else:
+                        raise(ValueError(f&#34;&#39;{sign}&#39; is not an interval sign value 1 or -1.&#34;))
+                else:
+                    raise(ValueError(f&#34;&#39;{xoct}&#39; is not a compound octave value 0-10.&#34;))
+            else:
+                raise(ValueError(f&#34;&#39;{qual}&#39; is not an interval quality 0-12.&#34;))
+        else:
+            raise(ValueError(f&#34;&#39;{span}&#39; is not an interval span 0-7.&#34;))
+
+
+    def _init_from_string(self, name):
+        &#34;&#34;&#34;
+        A private method that accepts an interval string and parses it into four
+        integer values: span, qual, xoct, sign. If all four values can be parsed
+        from the string they should be passed to the _init_from_list() method to
+        check the values and assign them to the instance&#39;s attributes. A ValueError
+        should be raised for any value that cannot be parsed from the string. See:
+        _init_from_list().
+        &#34;&#34;&#34;
+        
+        if len(name) &lt; 2:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
+        start = 0
+        if name[0] == &#39;-&#39;:
+            sign = -1  # -1 is descending interval
+            start = 1
+        else:
+            sign = 1  # 1 is ascending interval
+        strlen = len(name)
+        index = start
+        # Find extent of quality chars.
+        while index &lt; strlen and name[index] in &#34;odmMP+A&#34;:
+            index += 1
+        # Split string into quality and size substrings.
+        qual = name[start:index]
+        digi = name[index::]
+        # digi string must be digits!
+        if not digi.isdigit():
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
+        # Set the interval&#39;s &#34;span&#34; value, i.e. the number
+        # of lines and spaces it spans (0=Unison...7=Octave).
+        span = int(digi) - 1
+        if span &lt; 0:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name name.&#34;)
+        # All intervals are simplified to lie within one octave and the
+        # octave itself is a simple interval. Compound intervals
+        # (intervals larger than an octave) are stored simply but have
+        # their xoct (extra octaves) attribute set to a positive number.
+        # So a M2 would be span=1 xoct=0 and a M9 would be span=1 xoct=1.
+        xoct = 0
+        while span &gt; 7:
+            span -= 7  # simplify span to 0-7
+            xoct += 1  # sum number of extra octaves
+        # Look up the quality value of the name.
+        qual = self._qual_map.get(qual, None)
+        if qual is None:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
+        self._init_from_list(span, qual, xoct, sign)
+
+
+    def _init_from_pitches(self, pitch1, pitch2):
+        &#34;&#34;&#34;
+        A private method that determines appropriate span, qual, xoct, sign
+        values from two pitches. If pitch1 is lower than or equal to pitch2
+        then an ascending interval is formed (sign=1) otherwise a descending
+        interval is formed (sign=-1). Once values for sign, span, qual and
+        xoct have been determined they should be passed to _init_from_list()
+        to initialize the interval&#39;s attributes.
+        &#34;&#34;&#34;
+        
+        # (1) Determine the sign attribute value. If the left pitch is
+        # less than or equal to pitch2 then the interval is ascending
+        # and sign is 1. Otherwise its descending and sign is -1.
+        sign = 1 if pitch1 &lt;= pitch2 else -1
+        # (2) Determine the span attribute value. Span measures the
+        # distance between the two pitch letters (L1 and L2).  In an
+        # ascending interval if L1&lt;=L2 then the span will be L2-L1
+        # otherwise it will be the complement of the positive distance:
+        # 8va - (L1-L2). In a descending interval if L1&gt;L2 then the
+        # interval&#39;s span is the positive distance L1-L2 otherwise
+        # its the complement: 8va - (L2-L1).  This can be calculated
+        # by one expression. In ascending intervals L2-L1 will be
+        # positive for ascending letters and negative for descending
+        # letters so mod 7 will produce the complement of the negative
+        # span.
+        span = ((pitch2.letter - pitch1.letter) * sign) % 7
+        # (3) If letters are the same (unison or octave) then use semitones to
+        # distinguish between unison and octave. The smallest possible octave is 8 semitones so less
+        # than that must be a unison.
+
+        # multiplying semitone difference by sign will ensure
+        # positive semitones. you cant use abs()
+        # because that won&#39;t work for
+        semi = (pitch2.keynum() - pitch1.keynum()) * sign
+        if pitch1.letter == pitch2.letter:
+            span = self._Uni if semi &lt; 8 else self._8va
+        # determine the number of extra octaves by subtracting
+        # out octaves from semitones while semitones is greater
+        # than an octave.
+        xoct = 0
+        while semi &gt; 12:
+            xoct += 1
+            semi -= 12
+        ## determining quality. the remainder of semitones
+        qual = self._span_semi_qual_map[span].get(semi, None)
+        if qual is None:
+            raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
+                             f&#34;, semitones {semi} and xoct {xoct}.&#34;)
+        # xoct cleanup for spans whose semitonal content was clipped
+        # because it is larger than 12 but should not increase xoct.
+        # For example: +[+++]8va, +[+]7th, ++++6th.
+        if span == self._8va:
+            if qual &gt; self._perf:
+                xoct -= 1
+                semi += 12
+        elif span == self._7th:
+            if qual &gt; self._aug:
+                xoct -= 1
+                semi += 12
+        elif span == self._6th:
+            if qual &gt; self._3aug:
+                xoct -= 1
+                semi += 12
+        # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
+        self._init_from_list(span, qual, xoct, sign)
+
+    # REFERENCE IMPLEMENTATION
+    # ## A private method that determines appropriate span, qual, xoct, sign
+    # # from two pitches. If pitch2 is lower than pitch1 then a descending
+    # # interval should be formed. The values should be passed to the
+    # # _init_from_list() method to initialize the interval&#39;s attributes.
+    # def _init_from_pitches(self, pitch1, pitch2):
+    #     # if the left pitch (self) is higher than the right (other)
+    #     # then its a descending interval.
+    #     if pitch1 &lt;= pitch2:  # EQUAL OR ASCENDING INTERVAL
+    #         sign = 1
+    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
+    #         if pitch1.letter &lt; pitch2.letter:
+    #             # letter1 is less than letter2 so the span will be
+    #             # the difference between them
+    #             span = (pitch2.letter - pitch1.letter)
+    #         elif pitch1.letter == pitch2.letter:
+    #             # letter1 and letter2 are some kind of unison or octave.
+    #             # the smallest possible octave is 8 semitones (e.g. C##4
+    #             # to Cbb5) so if semi is less than that it has to be a unison.
+    #             span = self._Uni if semi &lt; 8 else self._8va
+    #         else:
+    #             # letter1 is higher than letter2 so the span will be
+    #             # the complement of the distance between them
+    #             span = 7 - (pitch1.letter - pitch2.letter)
+    #     else:  # DESCENDING INTERVAL
+    #         sign = -1
+    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
+    #         if pitch1.letter &lt; pitch2.letter:
+    #             span = 7 - (pitch2.letter - pitch1.letter)
+    #         elif pitch1.letter == pitch2.letter:
+    #             # letter1 and letter2 are some kind of unison or octave.
+    #             # the smallest possible octave is 8 semitones (e.g. C##4
+    #             # to Cbb5) so if semi is less than that it has to be a unison.
+    #             span = self._Uni if semi &lt; 8 else self._8va
+    #         else:
+    #             span = pitch1.letter - pitch2.letter
+    #     xoct = 0
+    #     while semi &gt; 12:
+    #         xoct += 1
+    #         semi -= 12
+    #     qual = self._span_semi_qual_map[span].get(semi, None)
+    #     if qual is None:
+    #         raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
+    #                          f&#34;, semitones {semi} and xoct {xoct}.&#34;)
+    #     # xoct cleanup for spans whose semitonal content was clipped
+    #     # because it is larger than 12 but should not increase xoct.
+    #     # For example: +[+++]8va, +[+]7th, ++++6th.
+    #     if span == self._8va:
+    #         if qual &gt; self._perf:
+    #             xoct -= 1
+    #             semi += 12
+    #     elif span == self._7th:
+    #         if qual &gt; self._aug:
+    #             xoct -= 1
+    #             semi += 12
+    #     elif span == self._6th:
+    #         if qual &gt; self._3aug:
+    #             xoct -= 1
+    #             semi += 12
+    #     # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
+    #     self._init_from_list(span, qual, xoct, sign)
+
+    def __str__(self):
+        &#34;&#34;&#34;
+        Returns the print representation of the key. Information includes
+        the the class name, the interval text, the span, qual, xoct and sign
+        values, and the id of the object. See: string().
+        
+        Example
+        -------
+        `&lt;Interval: oooo8 [7, 1, 0, 1] 0x1075bf6d0&gt;`
+        &#34;&#34;&#34;
+        
+        return f&#39;&lt;Interval: {self.string()} &#39; \
+               f&#39;[{self.span}, {self.qual}, {self.xoct}, {self.sign}] {hex(id(self))}&gt;&#39;
+
+
+    def __repr__(self):
+        &#34;&#34;&#34;
+        The string the console prints shows the external form.
+    
+        Example
+        -------
+        `Interval(&#34;oooo8&#34;)`
+        &#34;&#34;&#34;
+        
+        return f&#39;Interval(&#34;{self.string()}&#34;)&#39;
+
+
+    def __lt__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &lt; Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+    
+        Returns
+        -------
+        True if this interval is less than other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() &lt; other.pos()
+
+
+    def __le__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &lt;= Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is less than or equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() &lt;= other.pos()
+
+
+    def __eq__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval == Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() == other.pos()
+
+
+    def __ne__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval != Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+        
+        Returns
+        -------
+        True if this interval is not equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() != other.pos()
+
+
+    def __ge__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &gt;= Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is greater than or equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() &gt;= other.pos()
+
+
+    def __gt__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &gt; Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is greater than the other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        if not isinstance(other, Interval):
+            raise TypeError(f&#39;{other} is not an Interval.&#39;)
+        return self.pos() &gt; other.pos()
+
+  
+    def pos(self):
+        &#34;&#34;&#34;
+        Returns a numerical value for comparing the size of this interval to
+        another. The comparison depends on the span, extra octaves, and quality
+        of the intervals but not their signs. For two intervals, if the span of
+        the first (including extra octaves) is larger than the second then the
+        first interval is larger than the second regardless of the quality of
+        either interval. If the interval spans are the same then the first is
+        larger than the second if its quality is larger. This value can be
+        encoded as a 16 bit integer: (((span + (xoct * 7)) + 1) &lt;&lt; 8) + qual
+        &#34;&#34;&#34;
+        
+        return (((self.span + (self.xoct * 7)) + 1) &lt;&lt; 8) + self.qual
+
+
+    def string(self):
+        &#34;&#34;&#34;
+        Returns a string containing the interval name.
+        For example, Interval(&#39;-P5&#39;).string() would return &#39;-P5&#39;.
+        &#34;&#34;&#34;
+        
+        s = &#34;-&#34; if self.sign &lt; 0 else &#34;&#34;
+        s += self._qual_names[self.qual]
+        s += str((self.span + (self.xoct * 7)) + 1)
+        return s
+
+
+    def full_name(self, *, sign=True):
+        &#34;&#34;&#34;
+        Returns the full interval name, e.g. &#39;doubly-augmented third&#39;
+        or &#39;descending augmented sixth&#39;
+
+        Parameters
+        ----------
+        sign : bool
+            If true then &#34;descending&#34; will appear in the name if it is a descending interval.
+        &#34;&#34;&#34;
+        
+        s = &#39;descending &#39; if sign and self.sign &lt; 0 else &#34;&#34;
+        s += self._qual_full_names[self.qual]
+        s += &#39; &#39;
+        s += self._span_full_names[self.span]
+        return s
+
+
+    def span_name(self):
+        &#34;&#34;&#34;
+        Returns the full name of the interval&#39;s span, e.g. a
+        unison would return &#34;unison&#34; and so on.
+        &#34;&#34;&#34;
+        
+        return self._span_full_names[self.span]
+
+
+    def quality_name(self):
+        &#34;&#34;&#34;
+        Returns the full name of the interval&#39;s quality, e.g. a
+        perfect unison would return &#34;perfect&#34; and so on.
+        &#34;&#34;&#34;
+        
+        return self._qual_full_names[self.qual]
+
+
+    def matches(self, other):
+        &#34;&#34;&#34;
+        Returns true if this interval and the other interval have the
+        same span, quality and sign. The extra octaves are ignored.
+        Parameters
+        ----------
+        &#34;&#34;&#34;
+        
+        return self.span == other.span and self.qual == other.qual \
+               and self.sign == other.sign
+
+
+    def lines_and_spaces(self):
+        &#34;&#34;&#34;
+        Returns the interval&#39;s number of lines and spaces, e.g.
+        a unison will return 1.
+        &#34;&#34;&#34;
+        
+        return self.span + 1
+
+
+    def _to_iq(self, name):
+        &#34;&#34;&#34;
+        Returns a zero based interval quality from its external
+        string name. Raises an assertion if the name is invalid.
+        See:is_unison() and similar.
+        &#34;&#34;&#34;
+
+        iq = self._qual_map.get(name)
+        if iq is None:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval quality.&#34;)
+        return iq
+
+
+    def to_list(self):
+        &#34;&#34;&#34;
+        Returns the interval values as a list: [span, qual, xoct, sign]
+        &#34;&#34;&#34;
+
+        return [self.span, self.qual, self.xoct, self.sign]
+
+
+    def is_unison(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a unison otherwise false.
+
+        Parameters
+        ----------
+        qual : string 
+            If specified the predicate tests for that specific quality of unison, which can be
+            any valid quality symbol, e.g. &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._Uni:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_second(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a second otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of second, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._2nd:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_third(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a third otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of third, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._3rd:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_fourth(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a fourth otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of fourth, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._4th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_fifth(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a fifth otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of fifth, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._5th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_sixth(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a sixth otherwise false.
+ 
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of sixth, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._6th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_seventh(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a seventh otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of seventh, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._7th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+    
+    def is_octave(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is an octave otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of octave, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._8va:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_diminished(self):
+        &#34;&#34;&#34;
+        Returns a &#39;diminution count&#39; 1-5 if the interval is diminished else False.
+        For example, if the interval is doubly-diminished then 2 is returned.
+        If the interval not diminished at all (e.g. is perfect, augmented, minor or
+        major) then False is returned.
+        &#34;&#34;&#34;
+
+        return self._dim - self.qual + 1 if self.qual &lt;= self._dim else False
+
+    def is_minor(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is minor, otherwise false.
+        &#34;&#34;&#34;
+
+        return self.qual == self._min
+
+    def is_perfect(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is perfect, otherwise false.
+        &#34;&#34;&#34;
+
+        return self.qual == self._perf
+
+    def is_major(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is major, otherwise false.
+        &#34;&#34;&#34;
+
+        return self.qual == self._maj
+
+    def is_augmented(self):
+        &#34;&#34;&#34;
+        Returns a &#39;augmentation count&#39; 1-5 if the interval is augmented else False.
+        For example, if the interval is doubly-augmented then 2 is returned.
+        If the interval not augmented at all (e.g. is perfect, diminished, minor or
+        major) then False is returned.
+        &#34;&#34;&#34;
+
+        return 5 + (self.qual - self._5aug) if self.qual &gt;= self._aug else False
+
+    def is_perfect_type(self):
+        &#34;&#34;&#34;
+        Returns true if the interval belongs to the &#39;perfect interval&#39;
+        family, i.e. it is a Unison, 4th, 5th, or Octave.
+        &#34;&#34;&#34;
+
+        return self.span in [self._Uni, self._4th, self._5th, self._8va]
+
+    
+    def is_imperfect_type(self):
+        &#34;&#34;&#34;
+        Returns true if this interval belongs to the &#39;imperfect interval&#39;
+        family, i.e. it is a 2nd, 3rd, 6th, or 7th.
+        &#34;&#34;&#34;
+
+        return not self.is_perfect_type()  # 2nd, 3rd, 6th, 7th
+
+        
+    def is_simple(self):
+        &#34;&#34;&#34;
+        Returns true if this is a simple interval, i.e. its span is
+        less-than-or-equal to an octave.
+        &#34;&#34;&#34;
+
+        return self.xoct == 0  # simple means no extra octaves
+
+        
+    def is_compound(self):
+        &#34;&#34;&#34;
+        Returns true if this is a compound interval, i.e. its span is
+        more than an octave (an octave is a simple interval).
+        &#34;&#34;&#34;
+
+        return not self.is_simple()
+
+    
+    def is_ascending(self):
+        &#34;&#34;&#34;
+        Returns true if this interval&#39;s sign is 1.
+        &#34;&#34;&#34;
+
+        return self.sign == 1
+
+    
+    def is_descending(self):
+        &#34;&#34;&#34;
+        Returns true if this interval&#39;s sign is -1.
+        &#34;&#34;&#34;
+
+        return self.sign == -1
+
+    
+    def is_consonant(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is a consonant interval otherwise False.
+        The perfect fourth should be considered consonant.
+        &#34;&#34;&#34;
+
+        if self.is_perfect_type():
+            return self.qual == self._perf
+        else:
+            return self.span in [self._3rd, self._6th] \
+                   and self.qual in [self._min, self._maj]
+
+                   
+    def is_dissonant(self):
+        &#34;&#34;&#34;
+        Returns True if the interval is not a consonant interval otherwise False.
+        &#34;&#34;&#34;
+
+        return not self.is_consonant()
+
+    
+    def complemented(self):
+        &#34;&#34;&#34;
+        Returns a complemented copy of the interval. 
+        
+        To complement an interval you invert its span and quality. To invert
+        the span, subtract it from the maximum span index (the octave index).
+        To invert the quality subtract it from the maximum quality index 
+        (quintuply augmented).
+        &#34;&#34;&#34;
+
+        # new = copy.copy(self)
+        # new.complement()
+        # return new
+        return Interval([self._8va-self.span, self._5aug-self.qual, self.xoct, self.sign])
+
+    
+    def semitones(self):
+        &#34;&#34;&#34;
+        Returns the number of semitones in the interval. 
+
+        It is possible to determine the number of semitones by looking at the span and
+        quality indexes. For example, if the span is a perfect fifth
+        (span index 4) and the quality is perfect (quality index 6)
+        then the semitones will be 5 and augmented or diminished fifths
+        will add or subtract semitones accordingly.
+        
+        The semitones will be negative for descending intervals otherwise positive.
+        &#34;&#34;&#34;
+        semi = self._semitones_map[self.qual][self.span]
+        return (semi + (self.xoct * 12)) * self.sign
+
+    
+    def add(self, other):
+        &#34;&#34;&#34;
+        Adds a specified interval to this interval.
+
+        Parameters
+        ----------
+        other : Interval
+            The interval to add to this one.
+
+        Returns
+        -------
+        A new interval expressing the total span of both intervals.
+
+        Raises
+        ------
+        * A TypeError if other is not an interval. 
+        * A NotImplementedError if either intervals are descending.
+        &#34;&#34;&#34;
+
+        if self.sign &lt; 1 or other.sign &lt; 1:
+            raise ValueError(&#34;Only ascending intervals may be added.&#34;)
+        newspan = self.span + other.span
+        newsemi = self.semitones() + other.semitones()
+        newxoct = 0
+        while newsemi &gt; 12:
+            newspan -= 7
+            newsemi -= 12
+            newxoct += 1
+        # get newspan&#39;s number of semitones in the diatonic octave
+        assert 0 &lt;= newspan &lt; len(self._diatonic_semitones),  f&#34;invalid added span value: {newspan}.&#34;
+        diasemi = self._diatonic_semitones[newspan]
+        # Qualities of the diatonic spans -- Unison to Octave
+        diaqual = [self._perf, self._maj, self._maj, self._perf, self._perf,
+                   self._maj, self._maj, self._perf][newspan]
+        # calculate the difference in semitones between the new interval and its diatonic version
+        semidif = newsemi - diasemi
+        # print(&#39;diasemi=&#39;, diasemi, &#39;diaqual=&#39;, diaqual, &#34;semidif=&#34;, semidif)
+        # add that difference to the diatonic quality to calculate the new quality
+        if newspan in self._perf_spans:
+            newqual = self._perf_quals[self._perf_quals.index(diaqual) + semidif]
+        else:
+            newqual = self._impf_quals[self._impf_quals.index(diaqual) + semidif]
+        return Interval([newspan, newqual, newxoct, self.sign*other.sign])
+
+    
+    def transpose(self, p):
+        &#34;&#34;&#34;
+        Transposes a Pitch or Pnum by the interval. Pnum transposition
+        has no octave or direction so if the interval is negative its
+        complement should be used and octaves should reduce to unisons
+        without complementing.
+
+        Parameters
+        ----------
+        p : Pitch | Pnum
+            The Pitch or Pnum to transpose, otherwise the string name of a pitch or pnum (eg. &#39;Cb5&#39; or &#39;Dff&#39;)
+
+        Returns
+        ----------
+        The transposed Pitch or Pnum.
+
+        Raises
+        ------
+        A TypeError if p is not a Pitch or Pnum.
+        &#34;&#34;&#34;
+
+        if isinstance(p, str) and len(str) &gt; 0:
+            p = Pitch(p) if p[-1].isdigit() else Pitch.pnums[p]
+        if isinstance(p, Pitch):
+            return self._transpose_pitch(p)
+        if isinstance(p, Pitch.pnums):
+            return self._transpose_pnum(p)
+        raise TypeError(f&#34;&#39;{p}&#39; is not a Pitch or Pnum.&#34;)
+
+    
+    def _transpose_pnum(self, pnum):
+        &#34;&#34;&#34;
+        from mus.interval import Interval, _test_intervals
+        from mus.pitch import Pitch
+        Interval(&#39;m7&#39;).transpose(Pitch.pnums.E)
+        Interval(&#39;-M2&#39;).transpose(Pitch.pnums.E)
+        &#34;&#34;&#34;
+
+        def let_to_name(let): return f&#34;{[&#39;C&#39;, &#39;D&#39;, &#39;E&#39;, &#39;F&#39;, &#39;G&#39;, &#39;A&#39;, &#39;B&#39;][let]}&#34;
+        def acc_to_name(acc): return f&#34;{[&#39;bb&#39;, &#39;b&#39;, &#39;n&#39;, &#39;#&#39;, &#39;##&#39;, ][acc]}&#34;
+        def acc_to_size(acc): return acc - 2  # size of accidental (bb=-2)
+        def size_to_acc(acc): return acc + 2
+        def let_to_size(let): return self._diatonic_semitones[let]
+
+        span = self.span
+        qual = self.qual
+        # semi will be negative for descending intervals
+        semi = self.semitones()
+        desc = self.is_descending()
+        # pnum space has no octaves so collapse octaves to unisons
+        if span == self._8va:
+            # collapse octaves but preserve quality, so an augmented octave
+            # becomes an augmented unison and NOT a diminished unison.
+            span, qual = self._Uni, qual
+            semi = self._semitones_map[qual][span]
+        # complement descending interval including its negative semitones
+        if desc:
+            # print(&#34;descending! old semi=&#34;, semi, &#34;new semi=&#34;, semi % 12)
+            span, qual, semi = self._8va - span, self._5aug - qual, semi % 12
+        old_let = (pnum.value &amp; 0xF0) &gt;&gt; 4
+        old_acc = (pnum.value &amp; 0xF)
+        # letter of new pitch
+        new_let = (old_let + span) % self._8va
+        # semitonal size between the natural (diatonic) letters
+        nat_size = (let_to_size(new_let) - let_to_size(old_let)) % 12
+        # semitonal size of the interval
+        int_size = semi
+
+        ### print(f&#39;interval {self.string()}: span&#39;, span, &#39;qual&#39;, qual, &#39;sign&#39;, self.sign, &#39;semi&#39;, int_size)
+
+        # semitonal shift of the old accidental (where b= -1, ##= 2 etc.)
+        old_acc_siz = acc_to_size(old_acc)
+        # adjust the semitonal size of the natural interval by the size of the old accident
+        adj_nat_siz = nat_size - old_acc_siz
+        # subtract the adjusted natural size from the interval size to determine the size
+        # of the new accidental
+        new_acc_size = int_size - adj_nat_siz
+
+        ### print(f&#39;old pitch {pnum.name}: old_let&#39;, old_let, f&#39;({let_to_name(old_let)})&#39;, &#39;old_acc&#39;, old_acc,
+        ###       f&#39;({acc_to_name(old_acc)}))&#39;, &#39;old_acc_size&#39;, old_acc_siz, &#39;nat_size&#39;, nat_size,
+        ###       &#39;int_size&#39;, int_size, &#39;adj_nat_size&#39;, adj_nat_siz, &#39;new_acc_size&#39;, new_acc_size)
+
+        # invalid size means an impossible transposition, e.g. shifting F## by +2
+        if not (-2 &lt;= new_acc_size &lt;= 2):
+            raise ValueError(f&#34;Transposition of &#39;{pnum.name}&#39; by &#39;{self.string()}&#39;: &#34;
+                             &#34;no pitch spelling possible.&#34;)
+        # adjust the size of the next accidental
+        new_acc = size_to_acc(new_acc_size)
+        new_pnum = Pitch.pnums(new_let &lt;&lt; 4 | new_acc)
+
+        ### print(&#39;new_acc&#39;, new_acc, f&#39;({acc_to_name(new_acc)}))&#39;,&#39;new pitch&#39;, new_pnum, &#39;\n&#39;)
+
+        return new_pnum
+
+    
+    def _transpose_pitch(self, pitch):
+        &#34;&#34;&#34;
+        &#34;&#34;&#34;
+
+        pitch_let = pitch.letter
+        pitch_acc = pitch.accidental
+        pitch_oct = pitch.octave
+        # print(&#39;pitch_let&#39;, pitch_let, &#39;pitch_acc&#39;, pitch_acc, &#39;pitch_oct&#39;, pitch_oct)
+        # get and transpose the pnum
+        pnum = self._transpose_pnum(pitch.pnums(pitch_let &lt;&lt; 4 | pitch_acc))
+        trans_let = (pnum.value &amp; 0xF0) &gt;&gt; 4
+        trans_acc = (pnum.value &amp; 0xF)
+        # transposed keynum is original pitch + interval semitones
+        trans_key = pitch.keynum() + self.semitones()
+        trans_oct = trans_key // 12
+        # decrement octave if note is B# or B##, increment if Cbb or Cb
+        if trans_let == pitch._let_B and trans_acc in [pitch._acc_s, pitch._acc_2s]:
+            trans_oct -= 1
+        elif trans_let == pitch._let_C and trans_acc in [pitch._acc_f, pitch._acc_2f]:
+            trans_oct += 1
+        return Pitch([trans_let, trans_acc, trans_oct])
+
+
+# from mus.interval import Interval, _test_intervals
+def _test_intervals():
+    print(&#39;Testing interval.py ... &#39;, end=&#39;&#39;)
+
+    assert (Interval(&#39;M3&#39;) &lt; Interval(&#39;o4&#39;))
+    assert (Interval(&#39;M3&#39;) &lt;= Interval(&#39;A3&#39;))
+    assert (Interval(&#39;M3&#39;) &lt;= Interval(&#39;M3&#39;))
+    assert not (Interval(&#39;M3&#39;) &gt; Interval(&#39;M3&#39;))
+    assert (Interval(&#39;oo4&#39;) &gt; Interval(&#39;M3&#39;))
+    assert not (Interval(&#39;m3&#39;) != Interval(&#39;m3&#39;))
+
+    assert 0 == Interval(&#39;P1&#39;).semitones()
+    assert 1 == Interval(&#39;+1&#39;).semitones()
+    assert 2 == Interval(&#39;++1&#39;).semitones()
+    assert 3 == Interval(&#39;+++1&#39;).semitones()
+    assert 4 == Interval(&#39;++++1&#39;).semitones()
+
+    assert 4 == Interval(&#39;M3&#39;).semitones()
+    assert 3 == Interval(&#39;m3&#39;).semitones()
+    assert 2 == Interval(&#39;o3&#39;).semitones()
+    assert 1 == Interval(&#39;oo3&#39;).semitones()
+    assert 0 == Interval(&#39;ooo3&#39;).semitones()
+
+    assert 0 == Interval(&#39;o2&#39;).semitones()
+    assert 1 == Interval(&#39;m2&#39;).semitones()
+    assert 2 == Interval(&#39;M2&#39;).semitones()
+    assert 3 == Interval(&#39;+2&#39;).semitones()
+    assert 4 == Interval(&#39;++2&#39;).semitones()
+    assert 5 == Interval(&#39;+++2&#39;).semitones()
+    assert 6 == Interval(&#39;++++2&#39;).semitones()
+
+    assert 12 == Interval(&#39;P8&#39;).semitones()
+    assert 11 == Interval(&#39;o8&#39;).semitones()
+    assert 10 == Interval(&#39;oo8&#39;).semitones()
+    assert 9 == Interval(&#39;ooo8&#39;).semitones()
+    assert 8 == Interval(&#39;oooo8&#39;).semitones()
+
+    assert 13 == Interval(&#39;+8&#39;).semitones()
+    assert 14 == Interval(&#39;++8&#39;).semitones()
+    assert 15 == Interval(&#39;+++8&#39;).semitones()
+    assert 16 == Interval(&#39;++++8&#39;).semitones()
+
+    assert 9  == Interval(&#39;oooo9&#39;).semitones()
+    assert 10 == Interval(&#39;ooo9&#39;).semitones()
+    assert 11 == Interval(&#39;oo9&#39;).semitones()
+    assert 12 == Interval(&#39;o9&#39;).semitones()
+    assert 13 == Interval(&#39;m9&#39;).semitones()
+    assert 14 == Interval(&#39;M9&#39;).semitones()
+    assert 15 == Interval(&#39;+9&#39;).semitones()
+    assert 16 == Interval(&#39;++9&#39;).semitones()
+    assert 17 == Interval(&#39;+++9&#39;).semitones()
+    assert 18 == Interval(&#39;++++9&#39;).semitones()
+
+    assert Interval(&#39;P8&#39;).is_simple()
+    assert Interval(&#39;+8&#39;).is_simple()
+    assert Interval(&#39;++8&#39;).is_simple()
+    assert Interval(&#39;+++8&#39;).is_simple()
+    assert Interval(&#39;++++8&#39;).is_simple()
+
+    assert Interval(&#39;m9&#39;).is_compound()
+    assert Interval(&#39;o9&#39;).is_compound()
+    assert Interval(&#39;oo9&#39;).is_compound()
+    assert Interval(&#39;ooo9&#39;).is_compound()
+    assert Interval(&#39;oooo9&#39;).is_compound()
+
+    assert Interval(&#34;P1&#34;).is_perfect()
+    assert not Interval(&#34;A1&#34;).is_perfect()
+    assert Interval(&#34;+1&#34;).is_perfect_type()
+    assert not Interval(&#34;P1&#34;).is_imperfect_type()
+
+    assert Interval(&#34;P4&#34;).is_perfect()
+    assert not Interval(&#34;A4&#34;).is_perfect()
+    assert Interval(&#34;+++++4&#34;).is_perfect_type()
+    assert not Interval(&#34;P4&#34;).is_imperfect_type()
+
+    assert Interval(&#34;P5&#34;).is_perfect()
+    assert not Interval(&#34;A5&#34;).is_perfect()
+    assert Interval(&#34;ddddd5&#34;).is_perfect_type()
+    assert not Interval(&#34;P5&#34;).is_imperfect_type()
+
+    assert Interval(&#34;P8&#34;).is_perfect()
+    assert not Interval(&#34;o8&#34;).is_perfect()
+    assert Interval(&#34;oooo8&#34;).is_perfect_type()
+    assert not Interval(&#34;P8&#34;).is_imperfect_type()
+
+    assert 1 == Interval(&#34;+8&#34;).is_augmented()
+    assert 3 == Interval(&#34;+++3&#34;).is_augmented()
+    assert 1 == Interval(&#34;o8&#34;).is_diminished()
+    assert 3 == Interval(&#34;ooo3&#34;).is_diminished()
+    assert 5 == Interval(&#34;ddddd5&#34;).is_diminished()
+    assert 4 == Interval(&#34;AAAA5&#34;).is_augmented()
+
+    assert not Interval(&#34;P5&#34;).is_diminished()
+    assert not Interval(&#34;AAAA5&#34;).is_diminished()
+    assert not Interval(&#34;P5&#34;).is_augmented()
+    assert not Interval(&#34;oooo5&#34;).is_augmented()
+
+    assert Interval(&#39;P1&#39;).is_consonant()
+    assert Interval(&#39;P4&#39;).is_consonant()
+    assert Interval(&#39;P5&#39;).is_consonant()
+    assert Interval(&#39;P8&#39;).is_consonant()
+    assert Interval(&#39;m3&#39;).is_consonant()
+    assert Interval(&#39;M6&#39;).is_consonant()
+
+    assert not Interval(&#39;+1&#39;).is_consonant()
+    assert not Interval(&#39;+++++4&#39;).is_consonant()
+    assert not Interval(&#39;ooooo5&#39;).is_consonant()
+    assert not Interval(&#39;o8&#39;).is_consonant()
+    assert not Interval(&#39;oo3&#39;).is_consonant()
+    assert not Interval(&#39;+6&#39;).is_consonant()
+
+    assert not Interval(&#39;P1&#39;).is_dissonant()
+    assert not Interval(&#39;P4&#39;).is_dissonant()
+    assert not Interval(&#39;P5&#39;).is_dissonant()
+    assert not Interval(&#39;P8&#39;).is_dissonant()
+    assert not Interval(&#39;m3&#39;).is_dissonant()
+    assert not Interval(&#39;M6&#39;).is_dissonant()
+
+    assert Interval(&#39;+1&#39;).is_dissonant()
+    assert Interval(&#39;+++++4&#39;).is_dissonant()
+    assert Interval(&#39;ooooo5&#39;).is_dissonant()
+    assert Interval(&#39;o8&#39;).is_dissonant()
+    assert Interval(&#39;oo3&#39;).is_dissonant()
+    assert Interval(&#39;+6&#39;).is_dissonant()
+
+    assert Interval(&#39;P1&#39;).is_unison()
+    assert Interval(&#39;+1&#39;).is_unison()
+    assert Interval(&#39;+1&#39;).is_unison(&#39;A&#39;)
+    assert Interval(&#39;+1&#39;).is_unison(&#39;+&#39;)
+    assert not Interval(&#39;+1&#39;).is_unison(&#39;o&#39;)
+    assert not Interval(&#39;P8&#39;).is_unison()
+    assert not Interval(&#39;m2&#39;).is_unison()
+
+    assert Interval(&#39;+8&#39;).is_octave()
+    assert Interval(&#39;+8&#39;).is_octave(&#39;A&#39;)
+    assert Interval(&#39;+8&#39;).is_octave(&#39;+&#39;)
+    assert not Interval(&#39;+8&#39;).is_octave(&#39;P&#39;)
+    assert not Interval(&#39;P1&#39;).is_octave()
+    assert not Interval(&#39;m2&#39;).is_octave()
+
+    assert Interval(&#39;+2&#39;).is_second(&#39;A&#39;)
+    assert Interval(&#39;+2&#39;).is_second(&#39;+&#39;)
+    assert not Interval(&#39;+2&#39;).is_second(&#39;m&#39;)
+    assert Interval(&#39;m2&#39;).is_second()
+    assert Interval(&#39;M2&#39;).is_second()
+    assert Interval(&#39;ddd9&#39;).is_second()
+    assert not Interval(&#39;m3&#39;).is_second()
+
+    assert Interval(&#39;+3&#39;).is_third(&#39;A&#39;)
+    assert Interval(&#39;+3&#39;).is_third(&#39;+&#39;)
+    assert not Interval(&#39;+3&#39;).is_third(&#39;++&#39;)
+    assert Interval(&#39;m3&#39;).is_third()
+    assert Interval(&#39;M3&#39;).is_third()
+    assert Interval(&#39;++10&#39;).is_third()
+    assert not Interval(&#39;m2&#39;).is_third()
+
+    assert Interval(&#39;+4&#39;).is_fourth(&#39;A&#39;)
+    assert Interval(&#39;+4&#39;).is_fourth(&#39;+&#39;)
+    assert not Interval(&#39;+4&#39;).is_fourth(&#39;oo&#39;)
+    assert Interval(&#39;P4&#39;).is_fourth()
+    assert Interval(&#39;d11&#39;).is_fourth()
+    assert not Interval(&#39;m2&#39;).is_fourth()
+
+    assert Interval(&#39;+5&#39;).is_fifth(&#39;A&#39;)
+    assert Interval(&#39;+5&#39;).is_fifth(&#39;+&#39;)
+    assert not Interval(&#39;+5&#39;).is_fifth(&#39;oo&#39;)
+    assert Interval(&#39;P5&#39;).is_fifth()
+    assert Interval(&#39;A12&#39;).is_fifth()
+    assert not Interval(&#39;m3&#39;).is_fifth()
+
+    assert Interval(&#39;M6&#39;).is_sixth(&#39;M&#39;)
+    assert Interval(&#39;+6&#39;).is_sixth(&#39;+&#39;)
+    assert not Interval(&#39;+6&#39;).is_sixth(&#39;oo&#39;)
+    assert Interval(&#39;+6&#39;).is_sixth()
+    assert Interval(&#39;m13&#39;).is_sixth()
+    assert not Interval(&#39;+5&#39;).is_sixth()
+
+    assert Interval(&#39;m7&#39;).is_seventh(&#39;m&#39;)
+    assert Interval(&#39;+7&#39;).is_seventh(&#39;+&#39;)
+    assert not Interval(&#39;+7&#39;).is_seventh(&#39;oo&#39;)
+    assert Interval(&#39;+7&#39;).is_seventh()
+    assert Interval(&#39;+++14&#39;).is_seventh()
+    assert not Interval(&#39;+3&#39;).is_seventh()
+
+    # SHOULD BE OK
+    assert &#39;Interval(&#34;-M2&#34;)&#39; == Interval(Pitch(&#34;Cs4&#34;), Pitch(&#34;B3&#34;)).__repr__()
+    assert &#39;Interval(&#34;m7&#34;)&#39; == Interval(Pitch(&#34;Cs4&#34;), Pitch(&#34;B4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-M2&#34;)&#39; == Interval(Pitch(&#39;E4&#39;), Pitch(&#39;D4&#39;)).__repr__()
+    assert &#39;Interval(&#34;-m2&#34;)&#39; == Interval(Pitch(&#39;E4&#39;), Pitch(&#39;D#4&#39;)).__repr__()
+    assert &#39;Interval(&#34;-M2&#34;)&#39; == Interval(Pitch(&#34;Cs4&#34;), Pitch(&#34;B3&#34;)).__repr__()
+    assert &#39;Interval(&#34;m7&#34;)&#39; == Interval(Pitch(&#34;Cs4&#34;), Pitch(&#34;B4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-M9&#34;)&#39; == Interval(Pitch(&#34;Cs4&#34;), Pitch(&#34;B2&#34;)).__repr__()
+    assert &#39;Interval(&#34;m14&#34;)&#39; == Interval(Pitch(&#34;Cs4&#34;), Pitch(&#34;B5&#34;)).__repr__()
+    assert &#39;Interval(&#34;-o14&#34;)&#39; == Interval(Pitch(&#34;Bb5&#34;), Pitch(&#34;Cs4&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;P1&#34;)&#39; == Interval(Pitch(&#34;B3&#34;), Pitch(&#34;B3&#34;)).__repr__()
+    assert &#39;Interval(&#34;P8&#34;)&#39; == Interval(Pitch(&#34;B3&#34;), Pitch(&#34;B4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-P8&#34;)&#39; == Interval(Pitch(&#34;B3&#34;), Pitch(&#34;B2&#34;)).__repr__()
+    assert &#39;Interval(&#34;+1&#34;)&#39; == Interval(Pitch(&#34;B3&#34;), Pitch(&#34;Bs3&#34;)).__repr__()
+    assert &#39;Interval(&#34;-+1&#34;)&#39; == Interval(Pitch(&#34;B3&#34;), Pitch(&#34;Bb3&#34;)).__repr__()
+    assert &#39;Interval(&#34;-o2&#34;)&#39; == Interval(Pitch(&#39;Eb4&#39;), Pitch(&#39;D#4&#39;)).__repr__()
+
+    assert &#39;Interval(&#34;ooo3&#34;)&#39; == Interval(Pitch(&#34;B##3&#34;), Pitch(&#34;Db4&#34;)).__repr__()
+    assert &#39;Interval(&#34;o2&#34;)&#39; == Interval(Pitch(&#34;B#3&#34;), Pitch(&#34;C4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-+1&#34;)&#39; == Interval(Pitch(&#34;B3&#34;), Pitch(&#34;Bb3&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;-o2&#34;)&#39; == Interval(Pitch(&#39;Eb4&#39;), Pitch(&#39;D#4&#39;)).__repr__()
+    assert &#39;Interval(&#34;+7&#34;)&#39; == Interval(Pitch(&#39;Eb4&#39;), Pitch(&#39;D#5&#39;)).__repr__()
+    assert &#39;Interval(&#34;++7&#34;)&#39; == Interval(Pitch(&#39;Ef3&#39;), Pitch(&#39;D##4&#39;)).__repr__()
+
+    assert &#39;Interval(&#34;+8&#34;)&#39; == Interval(Pitch(&#34;C4&#34;), Pitch(&#34;C#5&#34;)).__repr__()
+    assert &#39;Interval(&#34;++8&#34;)&#39; == Interval(Pitch(&#34;C4&#34;), Pitch(&#34;C##5&#34;)).__repr__()
+    assert &#39;Interval(&#34;+++8&#34;)&#39; == Interval(Pitch(&#34;Cb4&#34;), Pitch(&#34;C##5&#34;)).__repr__()
+    assert &#39;Interval(&#34;++++8&#34;)&#39; == Interval(Pitch(&#34;Cbb4&#34;), Pitch(&#34;C##5&#34;)).__repr__()
+    assert &#39;Interval(&#34;++++15&#34;)&#39; == Interval(Pitch(&#34;Cbb4&#34;), Pitch(&#34;C##6&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;-+8&#34;)&#39; == Interval(Pitch(&#34;C#5&#34;), Pitch(&#34;C4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-++8&#34;)&#39; == Interval(Pitch(&#34;C##5&#34;), Pitch(&#34;C4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-+++8&#34;)&#39; == Interval(Pitch(&#34;C##5&#34;), Pitch(&#34;Cb4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-++++8&#34;)&#39; == Interval(Pitch(&#34;C##5&#34;), Pitch(&#34;Cbb4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-++++15&#34;)&#39; == Interval(Pitch(&#34;C##5&#34;), Pitch(&#34;Cbb3&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;m7&#34;)&#39; == Interval(Pitch(&#34;E4&#34;), Pitch(&#34;D5&#34;)).__repr__()
+    assert &#39;Interval(&#34;M7&#34;)&#39; == Interval(Pitch(&#34;E4&#34;), Pitch(&#34;D#5&#34;)).__repr__()
+    assert &#39;Interval(&#34;+7&#34;)&#39; == Interval(Pitch(&#34;E4&#34;), Pitch(&#34;D##5&#34;)).__repr__()
+    assert &#39;Interval(&#34;++7&#34;)&#39; == Interval(Pitch(&#34;Eb4&#34;), Pitch(&#34;D##5&#34;)).__repr__()
+    assert &#39;Interval(&#34;+++7&#34;)&#39; == Interval(Pitch(&#34;Ebb4&#34;), Pitch(&#34;D##5&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;M6&#34;)&#39; == Interval(Pitch(&#34;F4&#34;), Pitch(&#34;D5&#34;)).__repr__()
+    assert &#39;Interval(&#34;+6&#34;)&#39; == Interval(Pitch(&#34;F4&#34;), Pitch(&#34;D#5&#34;)).__repr__()
+    assert &#39;Interval(&#34;++6&#34;)&#39; == Interval(Pitch(&#34;F4&#34;), Pitch(&#34;D##5&#34;)).__repr__()
+    assert &#39;Interval(&#34;+++6&#34;)&#39; == Interval(Pitch(&#34;Fb4&#34;), Pitch(&#34;D##5&#34;)).__repr__()
+    assert &#39;Interval(&#34;++++6&#34;)&#39; == Interval(Pitch(&#34;Fbb4&#34;), Pitch(&#34;D##5&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;+4&#34;)&#39; == Interval(Pitch(&#34;F4&#34;), Pitch(&#34;B4&#34;)).__repr__()
+    assert &#39;Interval(&#34;++4&#34;)&#39; == Interval(Pitch(&#34;F4&#34;), Pitch(&#34;B#4&#34;)).__repr__()
+    assert &#39;Interval(&#34;+++4&#34;)&#39; == Interval(Pitch(&#34;F4&#34;), Pitch(&#34;B##4&#34;)).__repr__()
+    assert &#39;Interval(&#34;++++4&#34;)&#39; == Interval(Pitch(&#34;Fb4&#34;), Pitch(&#34;B##4&#34;)).__repr__()
+    assert &#39;Interval(&#34;+++++4&#34;)&#39; == Interval(Pitch(&#34;Fbb4&#34;), Pitch(&#34;B##4&#34;)).__repr__()
+    assert &#39;Interval(&#34;-++++4&#34;)&#39; == Interval(Pitch(&#34;B#4&#34;), Pitch(&#34;Fbb4&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;o5&#34;)&#39; == Interval(Pitch(&#34;B4&#34;), Pitch(&#34;F5&#34;)).__repr__()
+    assert &#39;Interval(&#34;ooo5&#34;)&#39; == Interval(Pitch(&#34;B4&#34;), Pitch(&#34;Fbb5&#34;)).__repr__()
+    assert &#39;Interval(&#34;oooo5&#34;)&#39; == Interval(Pitch(&#34;B#4&#34;), Pitch(&#34;Fbb5&#34;)).__repr__()
+    assert &#39;Interval(&#34;ooooo5&#34;)&#39; == Interval(Pitch(&#34;B##4&#34;), Pitch(&#34;Fbb5&#34;)).__repr__()
+    assert &#39;Interval(&#34;-ooooo5&#34;)&#39; == Interval(Pitch(&#34;Fbb5&#34;), Pitch(&#34;B##4&#34;)).__repr__()
+
+    assert &#39;Interval(&#34;P75&#34;)&#39; == Interval(Pitch(&#34;C00&#34;), Pitch(&#34;G9&#34;)).__repr__()
+    assert &#39;Interval(&#34;++74&#34;)&#39; == Interval(Pitch(&#34;C00&#34;), Pitch(&#34;F##9&#34;)).__repr__()
+    assert &#39;Interval(&#34;o76&#34;)&#39; == Interval(Pitch(&#34;C00&#34;), Pitch(&#34;Abb9&#34;)).__repr__()
+
+    assert [7, 6, 0, 1] == Interval([0, 6, 1, 1]).to_list()  # oct written as unison + 1 xoct.
+    assert [7, 6, 1, 1] == Interval([0, 6, 2, 1]).to_list()  # oct written as unison + 1 xoct.
+
+    assert Pitch.pnums.Bss == Interval(&#34;M7&#34;).transpose(Pitch.pnums.Css)
+    assert Pitch.pnums.Cff == Interval(&#34;m2&#34;).transpose(Pitch.pnums.Bff)
+    assert Pitch.pnums.Css == Interval(&#34;+1&#34;).transpose(Pitch.pnums.Cs)
+    assert Pitch.pnums.Gf == Interval(&#34;m3&#34;).transpose(Pitch.pnums.Ef)
+    assert Pitch.pnums.As == Interval(&#34;+6&#34;).transpose(Pitch.pnums.C)
+    assert Pitch.pnums.Bff == Interval(&#34;M7&#34;).transpose(Pitch.pnums.Cff)
+
+    # WORKING
+    assert &#39;Fff&#39; == Interval(&#39;P1&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;Ff&#39; == Interval(&#39;+1&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;F&#39; == Interval(&#39;++1&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;Fs&#39; == Interval(&#39;+++1&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;Fss&#39; == Interval(&#39;++++1&#39;).transpose(Pitch.pnums.Fff).name
+    # EXPLICITLY DISALLOWED
+    # Interval(&#39;P1&#39;).transpose(Pitch.pnums.Fss)
+    # Interval(&#39;o1&#39;).transpose(Pitch.pnums.Fss)
+    # Interval(&#39;oo1&#39;).transpose(Pitch.pnums.Fss)
+    # Interval(&#39;ooo1&#39;).transpose(Pitch.pnums.Fss)
+    # Interval(&#39;oooo1&#39;).transpose(Pitch.pnums.Fss)
+    assert &#39;Fff&#39; == Interval(&#39;P8&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;Ff&#39; == Interval(&#39;+8&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;F&#39; == Interval(&#39;++8&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;Fs&#39; == Interval(&#39;+++8&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;Fss&#39; == Interval(&#39;++++8&#39;).transpose(Pitch.pnums.Fff).name
+    assert &#39;Fss&#39; == Interval(&#39;P8&#39;).transpose(Pitch.pnums.Fss).name
+    assert &#39;Fs&#39; == Interval(&#39;o8&#39;).transpose(Pitch.pnums.Fss).name
+    assert &#39;F&#39; == Interval(&#39;oo8&#39;).transpose(Pitch.pnums.Fss).name
+    assert &#39;Ff&#39; == Interval(&#39;ooo8&#39;).transpose(Pitch.pnums.Fss).name
+    assert &#39;Fff&#39; == Interval(&#39;oooo8&#39;).transpose(Pitch.pnums.Fss).name
+    assert &#39;Fs&#39; == Interval(&#39;A8&#39;).transpose(Pitch.pnums.F).name
+    assert &#39;Fs&#39; == Interval(&#39;-A8&#39;).transpose(Pitch.pnums.F).name
+
+    assert &#39;Pitch(&#34;G4&#34;)&#39; == Interval(&#34;M2&#34;).transpose(Pitch(&#39;F4&#39;)).__repr__()
+    assert &#39;Pitch(&#34;F4&#34;)&#39; == Interval(&#34;P1&#34;).transpose(Pitch(&#39;F4&#39;)).__repr__()
+    assert &#39;Pitch(&#34;F5&#34;)&#39; == Interval(&#34;P8&#34;).transpose(Pitch(&#39;F4&#39;)).__repr__()
+    assert &#39;Pitch(&#34;F3&#34;)&#39; == Interval(&#34;-P8&#34;).transpose(Pitch(&#39;F4&#39;)).__repr__()
+    assert &#39;Pitch(&#34;F#5&#34;)&#39; == Interval(&#34;A8&#34;).transpose(Pitch(&#39;F4&#39;)).__repr__()
+    assert &#39;Pitch(&#34;Fb5&#34;)&#39; == Interval(&#34;d8&#34;).transpose(Pitch(&#39;F4&#39;)).__repr__()
+
+    # BUG!!! THIS DOES NOT WORK. MAYBE THE
+    # Interval(&#39;-A1&#39;).transpose(Pitch.pnums.F)
+    # ERRORS
+    msg1, msg2 = &#34;Received wrong type of exception.&#34;, \
+                 &#34;Expected exception did not happen.&#34;
+
+    # TYPE ERRORS
+    err = TypeError
+
+    try: Interval([])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 6])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 6, 0])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(123.0)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval((3, 6, 0, 1))
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(Pitch(&#34;c4&#34;), 1.0)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(1.0, Pitch(&#34;c4&#34;))
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    # VALUE ERRORS
+    err = ValueError
+
+    try: Interval(&#39;M0&#39;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#39;1&#39;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#39;X1&#39;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;+++&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;+-+5&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;M1&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;M4&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;M5&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;M8&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;m1&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;m4&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;m5&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;m8&#34;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#39;o1&#39;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#39;oo2&#39;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#39;oooo3&#39;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#39;oooo3&#39;)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(Pitch(&#34;C00&#34;), Pitch(&#34;G#9&#34;))
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(Pitch(&#34;B#3&#34;), Pitch(&#34;Cb4&#34;))
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(Pitch(&#34;B##3&#34;), Pitch(&#34;Cbb4&#34;))
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(Pitch(&#34;B##3&#34;), Pitch(&#34;Cbb4&#34;))
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(Pitch(&#34;B##3&#34;), Pitch(&#34;Dbb4&#34;))
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 6, 0, 0])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([8, 0, 0, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 13, 0, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 6, -1, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 6, 11, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 1, 0, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 2, 0, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([0, 4, 0, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([5, 6, 10, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval([4, 6, 11, 1])
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    try: Interval(&#34;m7&#34;).transpose(Pitch.pnums.Cff)
+    except err: pass
+    except: assert False, msg1
+    else: assert False, msg2
+
+    # try: XXX
+    # except err: pass
+    # except: assert False, msg1
+    # else: assert False, msg2
+
+    print(&#39;Done!&#39;)
+
+
+if __name__ == &#39;__main__&#39;:
+    _test_intervals()
+
+&#39;&#39;&#39;
+from random import randint, choice
+from mus import Pitch, Interval
+def rand():
+    s = randint(0, 7)
+    q = choice([4, 6, 8]) if s in [0, 3, 4, 7] else choice([4, 5, 7, 8])
+    return [s, q, 0, 1]
+y=rand()
+
+for s in [1,4,5,8]:
+    for q in [&#34;ooooo&#34;, &#34;oooo&#34;, &#34;ooo&#34;, &#34;oo&#34;, &#34;o&#34;, &#34;P&#34;, &#34;+&#34;, &#34;++&#34;, &#34;+++&#34;, &#34;++++&#34;, &#34;+++++&#34;]:
+        x = Interval(q+str(s))
+        y = x.semitones()
+        z = x.semitones2()
+        print(y,z)
+        assert y == z , &#34;OOPS&#34;
+
+for s in [2,3,6,7]:
+    for q in [&#34;ooooo&#34;, &#34;oooo&#34;, &#34;ooo&#34;, &#34;oo&#34;, &#34;o&#34;, &#34;m&#34;, &#34;M&#34;, &#34;+&#34;, &#34;++&#34;, &#34;+++&#34;, &#34;++++&#34;, &#34;+++++&#34;]:
+       x = Interval(q+str(s))
+       y = x.semitones()
+       z = x.semitones2()
+       print(y,z)
+       assert y == z , &#34;OOPS&#34;
+
+for s in [2,3,6,7]:
+    for q in [&#34;ooooo&#34;, &#34;oooo&#34;, &#34;ooo&#34;, &#34;oo&#34;, &#34;o&#34;, &#34;m&#34;, &#34;M&#34;, &#34;+&#34;, &#34;++&#34;, &#34;+++&#34;, &#34;++++&#34;, &#34;+++++&#34;]:
+        print(Interval(q+str(s)))    
+
+
+&#39;&#39;&#39;</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="musx.interval.Interval"><code class="flex name class">
+<span>class <span class="ident">Interval</span></span>
+<span>(</span><span>arg, other=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an Interval from a string, list, or two Pitches.</p>
+<p>Calling signatures:</p>
+<ul>
+<li>Interval(string) - creates an Interval from a pitch string.</li>
+<li>Interval([s, q, x, s]) - creates a Pitch from a list of four
+integers: a span, quality, extra octaves and sign. (see below).</li>
+<li>Interval(pitch1, pitch2) - creates an Interval from two Pitches.</li>
+</ul>
+<p>The format of a Interval string is:</p>
+<pre><code class="py">interval  = [&quot;-&quot;] , &lt;quality&gt; , &lt;span&gt;
+&lt;quality&gt; = &lt;diminished&gt; | &lt;minor&gt; | &lt;perfect&gt; | &lt;major&gt; | &lt;augmented&gt;
+&lt;diminished&gt; = &lt;5d&gt; , &lt;4d&gt; , &lt;3d&gt; , &lt;2d&gt; , &lt;1d&gt; ;
+&lt;5d&gt; = &quot;ooooo&quot; | &quot;ddddd&quot;
+&lt;4d&gt; = &quot;oooo&quot; | &quot;dddd&quot;
+&lt;3d&gt; = &quot;ooo&quot; | &quot;ddd&quot;
+&lt;2d&gt; = &quot;oo&quot; | &quot;dd&quot;
+&lt;1d&gt; = &quot;o&quot; | &quot;d&quot;
+&lt;minor&gt; = &quot;m&quot;
+&lt;perfect&gt; = &quot;P&quot;
+&lt;major&gt; = &quot;M&quot;
+&lt;augmented&gt; = &lt;5a&gt;, &lt;4a&gt;, &lt;3a&gt;, &lt;2a&gt;, &lt;1a&gt;
+&lt;5d&gt; = &quot;+++++&quot; | &quot;aaaaa&quot;
+&lt;4d&gt; = &quot;++++&quot; | &quot;aaaa&quot;
+&lt;3d&gt; = &quot;+++&quot; | &quot;aaa&quot;
+&lt;2d&gt; = &quot;++&quot; | &quot;aa&quot;
+&lt;1d&gt; = &quot;+&quot; | &quot;a&quot;
+&lt;span&gt; = &quot;1&quot; | &quot;2&quot; | &quot;3&quot; | &quot;4&quot; | &quot;5&quot; | &quot;6&quot; | &quot;7&quot; | &quot;8&quot; | &quot;9&quot; ...
+</code></pre>
+<p>The <strong>init</strong> function should check to make sure the arguments are either a string, a
+list of four integers, or two pitches.
+If the input is a string then <strong>init</strong> should
+pass the string to the the private _init_from_string() method (see below).
+If the
+input is a list of four ints, <strong>init</strong> will pass them to the private _init_from_list()
+method (see below). If the input is two pitches they will be passed to the private
+_init_from_pitches() method (see below).
+</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>arg</code></strong> :&ensp;<code>string | list</code></dt>
+<dd>If only arg is specified it should be either an
+interval string or a list of four interval indexes.
+If both
+arg and other are provided, both should be a Pitch.</dd>
+<dt><strong><code>other</code></strong> :&ensp;<code>Pitch</code></dt>
+<dd>A Pitch if arg is a Pitch, otherwise None.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<p>TypeError if the input is not a string, list of four integers, or two pitches.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Interval:
+
+    ## Private class constants representing spans. There are eight interval
+    #  spans ranging 0-7: _Uni=Unison, _2nd=Second, _3rd=Third, ... _8va=Octave
+    _Uni, _2nd, _3rd, _4th, _5th, _6th, _7th, _8va = (i for i in range(8))
+
+    ## Private class constants representing qualities. There are thirteen
+    #  qualities ranging 0-13: from quintuply-diminished intervals to
+    #  quintuply-augmented intervals.
+    _5dim, _4dim, _3dim, _2dim, _dim, _min, _perf, _maj, _aug, _2aug, _3aug, _4aug, _5aug \
+        = (i for i in range(13))
+
+    ## Private map of all possible interval quality names to their constants.
+    #  Note that diminished can use either &#34;o&#34; or &#34;d&#34;, and augmented
+    #  can use &#34;+&#34; or &#34;A&#34;.
+    _qual_map = {&#34;ooooo&#34;: _5dim, &#34;oooo&#34;: _4dim, &#34;ooo&#34;: _3dim, &#34;oo&#34;: _2dim, &#34;o&#34;: _dim,
+                 &#34;ddddd&#34;: _5dim, &#34;dddd&#34;: _4dim, &#34;ddd&#34;: _3dim, &#34;dd&#34;: _2dim, &#34;d&#34;: _dim,
+                 &#34;m&#34;: _min, &#34;P&#34;: _perf, &#34;M&#34;: _maj,
+                 &#34;+&#34;: _aug, &#34;++&#34;: _2aug, &#34;+++&#34;: _3aug, &#34;++++&#34;: _4aug, &#34;+++++&#34;: _5aug,
+                 &#34;A&#34;: _aug, &#34;AA&#34;: _2aug, &#34;AAA&#34;: _3aug, &#34;AAAA&#34;: _4aug, &#34;AAAAA&#34;: _5aug}
+
+    ## Reverse map from quality constants 0-12 onto their canonical names.
+    _qual_names = [&#34;ooooo&#34;, &#34;oooo&#34;, &#34;ooo&#34;, &#34;oo&#34;, &#34;o&#34;,
+                   &#34;m&#34;, &#34;P&#34;, &#34;M&#34;,
+                   &#34;+&#34;, &#34;++&#34;, &#34;+++&#34;, &#34;++++&#34;, &#34;+++++&#34;]
+
+    ## Reverse map from span constants to span full names
+    _span_full_names = [&#39;unison&#39;, &#39;second&#39;, &#39;third&#39;, &#39;fourth&#39;, &#39;fifth&#39;, &#39;sixth&#39;,
+                        &#39;seventh&#39;, &#39;octave&#39;]
+
+    ## Reverse map from quality constants to quality full names
+    _qual_full_names = [&#39;quintuply-diminished&#39;, &#39;quadruply-diminished&#39;,
+                        &#39;triply-diminished&#39;, &#39;doubly-diminished&#39;, &#39;diminished&#39;,
+                        &#39;minor&#39;, &#39;perfect&#39;, &#39;major&#39;, &#39;augmented&#39;,
+                        &#39;doubly-augmented&#39;, &#39;triply-augmented&#39;,
+                        &#39;quadruply-augmented&#39;, &#39;quintuply-augmented&#39;]
+
+    ## Ordered list of all possible perfect interval span values.
+    _perf_spans = [_Uni, _4th, _5th, _8va]
+
+    ## Ordered list of all possible imperfect interval span values.
+    _impf_spans = [_2nd, _3rd, _6th, _7th]
+
+    ## Ordered list of all possible imperfect interval qualities.
+    _impf_quals = [_5dim, _4dim, _3dim, _2dim, _dim, _min, _maj, _aug, _2aug, _3aug, _4aug, _5aug]
+
+    ## Ordered list of all possible perfect interval qualities.
+    _perf_quals = [_5dim, _4dim, _3dim, _2dim, _dim, _perf, _aug, _2aug, _3aug, _4aug, _5aug]
+
+    ## Reverse map from (diatonic) span values to their semitone content.
+    _diatonic_semitones = [0, 2, 4, 5, 7, 9, 11, 12]
+
+    ## A 2D map that returns the semitones for a given quality and span value.
+    _semitones_map = {
+        _min:  {_2nd: 1,  _3rd:  3,  _6th:  8, _7th: 10},
+        _maj:  {_2nd: 2,  _3rd:  4,  _6th:  9, _7th: 11},
+        _perf: {_Uni: 0,  _4th:  5,  _5th:  7, _8va: 12},
+        _dim:  {_Uni: -1, _2nd:  0,  _3rd:  2, _4th:  4, _5th:  6, _6th: 7,  _7th: 9,  _8va: 11},
+        _2dim: {_Uni: -2, _2nd: -1,  _3rd:  1, _4th:  3, _5th:  5, _6th: 6,  _7th: 8,  _8va: 10},
+        _3dim: {_Uni: -3, _2nd: -2,  _3rd:  0, _4th:  2, _5th:  4, _6th: 5,  _7th: 7,  _8va:  9},
+        _4dim: {_Uni: -4, _2nd: -3,  _3rd: -1, _4th:  1, _5th:  3, _6th: 4,  _7th: 6,  _8va:  8},
+        _5dim: {_Uni: -5, _2nd: -4,  _3rd: -2, _4th:  0, _5th:  2, _6th: 3,  _7th: 5,  _8va:  7},
+        _aug:  {_Uni:  1, _2nd:  3,  _3rd:  5, _4th:  6, _5th:  8, _6th: 10, _7th: 12, _8va: 13},
+        _2aug: {_Uni:  2, _2nd:  4,  _3rd:  6, _4th:  7, _5th:  9, _6th: 11, _7th: 13, _8va: 14},
+        _3aug: {_Uni:  3, _2nd:  5,  _3rd:  7, _4th:  8, _5th: 10, _6th: 12, _7th: 14, _8va: 15},
+        _4aug: {_Uni:  4, _2nd:  6,  _3rd:  8, _4th:  9, _5th: 11, _6th: 13, _7th: 15, _8va: 16},
+        _5aug: {_Uni:  5, _2nd:  7,  _3rd:  9, _4th: 10, _5th: 12, _6th: 14, _7th: 16, _8va: 17},
+    }
+
+    ## A 2D map that returns the interval quality for a given span and semitonal value.
+    _span_semi_qual_map = {
+        _Uni: {-5: _5dim, -4: _4dim, -3: _3dim, -2: _2dim, -1: _dim, 0: _perf,
+               1: _aug, 2: _2aug, 3: _3aug, 4: _4aug, 5: _5aug},
+        _2nd: {-4: _5dim, -3: _4dim, -2: _3dim, -1: _2dim, 0: _dim, 1: _min,
+               2: _maj, 3: _aug, 4: _2aug, 5: _3aug, 6: _4aug, 7: _5aug},
+        _3rd: {-2: _5dim, -1: _4dim, 0: _3dim, 1: _2dim, 2: _dim, 3: _min,
+               4: _maj, 5: _aug, 6: _2aug, 7: _3aug, 8: _4aug, 9: _5aug},
+        _4th: {0: _5dim, 1: _4dim, 2: _3dim, 3: _2dim, 4: _dim, 5: _perf,
+               6: _aug, 7: _2aug, 8: _3aug, 9: _4aug, 10: _5aug},
+        _5th: {2: _5dim, 3: _4dim, 4: _3dim, 5: _2dim, 6: _dim, 7: _perf,
+               8: _aug, 9: _2aug, 10: _3aug, 11: _4aug, 12: _5aug},
+        _6th: {3: _5dim, 4: _4dim, 5: _3dim, 6: _2dim, 7: _dim, 8: _min,
+               # 9: _maj, 10: _aug, 11: _2aug, 12: _3aug, 13: _4aug, 14: _5aug},
+               9: _maj, 10: _aug, 11: _2aug, 12: _3aug, 1: _4aug, 2: _5aug},
+        _7th: {5: _5dim, 6: _4dim, 7: _3dim, 8: _2dim, 9: _dim, 10: _min,
+               # 11: _maj, 12: _aug, 13: _2aug, 14: _3aug, 15: _4aug, 16: _5aug,
+               11: _maj, 12: _aug, 1: _2aug, 2: _3aug, 3: _4aug, 4: _5aug},
+        _8va: {7:  _5dim, 8: _4dim, 9: _3dim, 10: _2dim, 11: _dim, 12: _perf,
+               # 13: _aug, 14: _2aug, 15: _3aug, 16: _4aug, 17: _5aug,
+               1:  _aug,  2: _2aug,  3: _3aug,  4: _4aug,  5: _5aug}
+     }
+
+
+    def __init__(self, arg, other=None):
+        &#34;&#34;&#34;
+        Creates an Interval from a string, list, or two Pitches.
+
+        Calling signatures:
+
+        * Interval(string) - creates an Interval from a pitch string.
+        * Interval([s, q, x, s]) - creates a Pitch from a list of four
+        integers: a span, quality, extra octaves and sign. (see below).
+        * Interval(pitch1, pitch2) - creates an Interval from two Pitches.
+
+        The format of a Interval string is:
+
+        ```py
+        interval  = [&#34;-&#34;] , &lt;quality&gt; , &lt;span&gt;
+        &lt;quality&gt; = &lt;diminished&gt; | &lt;minor&gt; | &lt;perfect&gt; | &lt;major&gt; | &lt;augmented&gt;
+        &lt;diminished&gt; = &lt;5d&gt; , &lt;4d&gt; , &lt;3d&gt; , &lt;2d&gt; , &lt;1d&gt; ;
+        &lt;5d&gt; = &#34;ooooo&#34; | &#34;ddddd&#34;
+        &lt;4d&gt; = &#34;oooo&#34; | &#34;dddd&#34;
+        &lt;3d&gt; = &#34;ooo&#34; | &#34;ddd&#34;
+        &lt;2d&gt; = &#34;oo&#34; | &#34;dd&#34;
+        &lt;1d&gt; = &#34;o&#34; | &#34;d&#34;
+        &lt;minor&gt; = &#34;m&#34;
+        &lt;perfect&gt; = &#34;P&#34;
+        &lt;major&gt; = &#34;M&#34;
+        &lt;augmented&gt; = &lt;5a&gt;, &lt;4a&gt;, &lt;3a&gt;, &lt;2a&gt;, &lt;1a&gt;
+        &lt;5d&gt; = &#34;+++++&#34; | &#34;aaaaa&#34;
+        &lt;4d&gt; = &#34;++++&#34; | &#34;aaaa&#34;
+        &lt;3d&gt; = &#34;+++&#34; | &#34;aaa&#34;
+        &lt;2d&gt; = &#34;++&#34; | &#34;aa&#34;
+        &lt;1d&gt; = &#34;+&#34; | &#34;a&#34;
+        &lt;span&gt; = &#34;1&#34; | &#34;2&#34; | &#34;3&#34; | &#34;4&#34; | &#34;5&#34; | &#34;6&#34; | &#34;7&#34; | &#34;8&#34; | &#34;9&#34; ...
+        ```
+       
+        The __init__ function should check to make sure the arguments are either a string, a
+        list of four integers, or two pitches.  If the input is a string then __init__ should
+        pass the string to the the private _init_from_string() method (see below).  If the
+        input is a list of four ints, __init__ will pass them to the private _init_from_list()
+        method (see below). If the input is two pitches they will be passed to the private
+        _init_from_pitches() method (see below).  
+
+        Parameters
+        ----------
+        arg : string | list
+            If only arg is specified it should be either an
+            interval string or a list of four interval indexes.  If both
+            arg and other are provided, both should be a Pitch.
+        other : Pitch
+            A Pitch if arg is a Pitch, otherwise None.
+
+        Raises
+        ------
+        TypeError if the input is not a string, list of four integers, or two pitches.
+        &#34;&#34;&#34;
+
+        if other is None:
+            if isinstance(arg, str):
+                self._init_from_string(arg)
+            elif isinstance(arg, list):
+                if len(arg) == 4 and all(isinstance(a, int) for a in arg):
+                    self._init_from_list(*arg)
+                else:
+                    raise TypeError(f&#39;{arg} is an invalid interval list.&#39;)
+            else:
+                raise TypeError(f&#39;{arg} is an invalid interval reference.&#39;)
+        elif isinstance(arg, Pitch) and isinstance(other, Pitch):
+            self._init_from_pitches(arg, other)
+        else:
+            raise TypeError(f&#34;Invalid interval specification: {arg} and {other}.&#34;)
+
+
+    def _init_from_list(self, span, qual, xoct, sign):
+        &#34;&#34;&#34;
+        A private method that checks four integer values (span, qual, xoct, sign) to make sure
+        they are valid index values for the span, qual, xoct and sign attributes. Legal values
+        are: span 0-7, qual 0-12, xoct 0-10, sign -1 or 1. If any value is out of range the
+        method will raise a ValueError for that value. If all values are legal the method will
+        make the following &#39;edge case&#39; tests:
+
+        * span and quality values cannot produce negative semitones, i.e. an interval
+          whose &#39;top&#39; would be lower that its &#39;bottom&#39;. Here are the smallest VALID
+          interval for each span that could cause this: perfect unison, diminished-second,
+          triply-diminished third.
+        * Only the span of a fifth can be quintuply diminished.
+        * Only the span of a fourth can be quintuply augmented.
+        * No interval can surpass 127 semitones, LOL. The last legal intervals are: &#39;P75&#39;
+         (a 10 octave perfect 5th), and a &#39;o76&#39; (a 10 octave diminished 6th).
+        * If a user specifies an octave as a unison span with 1 extra octave, e.g. [0,*,1,*],
+        it should be converted to an octave span with 0 extra octaves, e.g. [7,*,0,*]
+        
+        Only if all the edge case checks pass then _init_from_list() should assign
+        the four values to the attributes, e.g. self.span=span, self.qual=qual, and
+        so on. Otherwise if any edge case fails the method should raise a ValueError.
+        
+        NOTE: The _init_from_list() method should be the only method in your implementation
+        that assign values to self.letter, self.accidental and self.octave.
+        &#34;&#34;&#34;
+        
+        if 0 &lt;= span &lt;= 7:
+            if 0 &lt;= qual &lt;= 12:
+                if 0 &lt;= xoct:
+                    if sign in (1, -1):
+                        if span in self._perf_spans:
+                            if qual in [self._min, self._maj]:
+                                qn = self._qual_full_names[qual]
+                                sn = self._span_full_names[span]
+                                raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
+                        else:
+                            if qual is self._perf:
+                                qn = self._qual_full_names[qual]
+                                sn = self._span_full_names[span]
+                                raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
+                        # only 4ths and fifths can be quintuply diminished/augmented
+                        if qual == self._5dim and span != self._5th:
+                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply diminished.&#39;)
+                        if qual == self._5aug and span != self._4th:
+                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply augmented.&#39;)
+                        # check semitones to make sure the interval will not be negative or greater than 127
+                        semi = self._semitones_map[qual][span] + (xoct*12)
+                        # print(&#39;init from list: span=&#39;, span, &#39;qual=&#39;, qual, &#39;semi=&#39;, semi, &#39;xoct=&#39;, xoct)
+                        if semi &lt; 0:
+                            qn = self._qual_full_names[qual]
+                            sn = self._span_full_names[span]
+                            raise ValueError(f&#34;A &#39;{qn}-{sn}&#39; would be negative&#34;
+                                             &#34;, perhaps you want a descending interval?&#34;)
+                        if semi &gt; 127:
+                            raise ValueError(&#34;Intervals cannot span more than 127 semitones.&#34;)
+                        # respell unisons with 1 extra octave as octaves.
+                        if span == 0 and xoct &gt; 0:
+                            span, xoct = self._8va, xoct - 1
+                        self.span, self.qual, self.xoct, self.sign = span, qual, xoct, sign
+                    else:
+                        raise(ValueError(f&#34;&#39;{sign}&#39; is not an interval sign value 1 or -1.&#34;))
+                else:
+                    raise(ValueError(f&#34;&#39;{xoct}&#39; is not a compound octave value 0-10.&#34;))
+            else:
+                raise(ValueError(f&#34;&#39;{qual}&#39; is not an interval quality 0-12.&#34;))
+        else:
+            raise(ValueError(f&#34;&#39;{span}&#39; is not an interval span 0-7.&#34;))
+
+
+    def _init_from_string(self, name):
+        &#34;&#34;&#34;
+        A private method that accepts an interval string and parses it into four
+        integer values: span, qual, xoct, sign. If all four values can be parsed
+        from the string they should be passed to the _init_from_list() method to
+        check the values and assign them to the instance&#39;s attributes. A ValueError
+        should be raised for any value that cannot be parsed from the string. See:
+        _init_from_list().
+        &#34;&#34;&#34;
+        
+        if len(name) &lt; 2:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
+        start = 0
+        if name[0] == &#39;-&#39;:
+            sign = -1  # -1 is descending interval
+            start = 1
+        else:
+            sign = 1  # 1 is ascending interval
+        strlen = len(name)
+        index = start
+        # Find extent of quality chars.
+        while index &lt; strlen and name[index] in &#34;odmMP+A&#34;:
+            index += 1
+        # Split string into quality and size substrings.
+        qual = name[start:index]
+        digi = name[index::]
+        # digi string must be digits!
+        if not digi.isdigit():
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
+        # Set the interval&#39;s &#34;span&#34; value, i.e. the number
+        # of lines and spaces it spans (0=Unison...7=Octave).
+        span = int(digi) - 1
+        if span &lt; 0:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name name.&#34;)
+        # All intervals are simplified to lie within one octave and the
+        # octave itself is a simple interval. Compound intervals
+        # (intervals larger than an octave) are stored simply but have
+        # their xoct (extra octaves) attribute set to a positive number.
+        # So a M2 would be span=1 xoct=0 and a M9 would be span=1 xoct=1.
+        xoct = 0
+        while span &gt; 7:
+            span -= 7  # simplify span to 0-7
+            xoct += 1  # sum number of extra octaves
+        # Look up the quality value of the name.
+        qual = self._qual_map.get(qual, None)
+        if qual is None:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
+        self._init_from_list(span, qual, xoct, sign)
+
+
+    def _init_from_pitches(self, pitch1, pitch2):
+        &#34;&#34;&#34;
+        A private method that determines appropriate span, qual, xoct, sign
+        values from two pitches. If pitch1 is lower than or equal to pitch2
+        then an ascending interval is formed (sign=1) otherwise a descending
+        interval is formed (sign=-1). Once values for sign, span, qual and
+        xoct have been determined they should be passed to _init_from_list()
+        to initialize the interval&#39;s attributes.
+        &#34;&#34;&#34;
+        
+        # (1) Determine the sign attribute value. If the left pitch is
+        # less than or equal to pitch2 then the interval is ascending
+        # and sign is 1. Otherwise its descending and sign is -1.
+        sign = 1 if pitch1 &lt;= pitch2 else -1
+        # (2) Determine the span attribute value. Span measures the
+        # distance between the two pitch letters (L1 and L2).  In an
+        # ascending interval if L1&lt;=L2 then the span will be L2-L1
+        # otherwise it will be the complement of the positive distance:
+        # 8va - (L1-L2). In a descending interval if L1&gt;L2 then the
+        # interval&#39;s span is the positive distance L1-L2 otherwise
+        # its the complement: 8va - (L2-L1).  This can be calculated
+        # by one expression. In ascending intervals L2-L1 will be
+        # positive for ascending letters and negative for descending
+        # letters so mod 7 will produce the complement of the negative
+        # span.
+        span = ((pitch2.letter - pitch1.letter) * sign) % 7
+        # (3) If letters are the same (unison or octave) then use semitones to
+        # distinguish between unison and octave. The smallest possible octave is 8 semitones so less
+        # than that must be a unison.
+
+        # multiplying semitone difference by sign will ensure
+        # positive semitones. you cant use abs()
+        # because that won&#39;t work for
+        semi = (pitch2.keynum() - pitch1.keynum()) * sign
+        if pitch1.letter == pitch2.letter:
+            span = self._Uni if semi &lt; 8 else self._8va
+        # determine the number of extra octaves by subtracting
+        # out octaves from semitones while semitones is greater
+        # than an octave.
+        xoct = 0
+        while semi &gt; 12:
+            xoct += 1
+            semi -= 12
+        ## determining quality. the remainder of semitones
+        qual = self._span_semi_qual_map[span].get(semi, None)
+        if qual is None:
+            raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
+                             f&#34;, semitones {semi} and xoct {xoct}.&#34;)
+        # xoct cleanup for spans whose semitonal content was clipped
+        # because it is larger than 12 but should not increase xoct.
+        # For example: +[+++]8va, +[+]7th, ++++6th.
+        if span == self._8va:
+            if qual &gt; self._perf:
+                xoct -= 1
+                semi += 12
+        elif span == self._7th:
+            if qual &gt; self._aug:
+                xoct -= 1
+                semi += 12
+        elif span == self._6th:
+            if qual &gt; self._3aug:
+                xoct -= 1
+                semi += 12
+        # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
+        self._init_from_list(span, qual, xoct, sign)
+
+    # REFERENCE IMPLEMENTATION
+    # ## A private method that determines appropriate span, qual, xoct, sign
+    # # from two pitches. If pitch2 is lower than pitch1 then a descending
+    # # interval should be formed. The values should be passed to the
+    # # _init_from_list() method to initialize the interval&#39;s attributes.
+    # def _init_from_pitches(self, pitch1, pitch2):
+    #     # if the left pitch (self) is higher than the right (other)
+    #     # then its a descending interval.
+    #     if pitch1 &lt;= pitch2:  # EQUAL OR ASCENDING INTERVAL
+    #         sign = 1
+    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
+    #         if pitch1.letter &lt; pitch2.letter:
+    #             # letter1 is less than letter2 so the span will be
+    #             # the difference between them
+    #             span = (pitch2.letter - pitch1.letter)
+    #         elif pitch1.letter == pitch2.letter:
+    #             # letter1 and letter2 are some kind of unison or octave.
+    #             # the smallest possible octave is 8 semitones (e.g. C##4
+    #             # to Cbb5) so if semi is less than that it has to be a unison.
+    #             span = self._Uni if semi &lt; 8 else self._8va
+    #         else:
+    #             # letter1 is higher than letter2 so the span will be
+    #             # the complement of the distance between them
+    #             span = 7 - (pitch1.letter - pitch2.letter)
+    #     else:  # DESCENDING INTERVAL
+    #         sign = -1
+    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
+    #         if pitch1.letter &lt; pitch2.letter:
+    #             span = 7 - (pitch2.letter - pitch1.letter)
+    #         elif pitch1.letter == pitch2.letter:
+    #             # letter1 and letter2 are some kind of unison or octave.
+    #             # the smallest possible octave is 8 semitones (e.g. C##4
+    #             # to Cbb5) so if semi is less than that it has to be a unison.
+    #             span = self._Uni if semi &lt; 8 else self._8va
+    #         else:
+    #             span = pitch1.letter - pitch2.letter
+    #     xoct = 0
+    #     while semi &gt; 12:
+    #         xoct += 1
+    #         semi -= 12
+    #     qual = self._span_semi_qual_map[span].get(semi, None)
+    #     if qual is None:
+    #         raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
+    #                          f&#34;, semitones {semi} and xoct {xoct}.&#34;)
+    #     # xoct cleanup for spans whose semitonal content was clipped
+    #     # because it is larger than 12 but should not increase xoct.
+    #     # For example: +[+++]8va, +[+]7th, ++++6th.
+    #     if span == self._8va:
+    #         if qual &gt; self._perf:
+    #             xoct -= 1
+    #             semi += 12
+    #     elif span == self._7th:
+    #         if qual &gt; self._aug:
+    #             xoct -= 1
+    #             semi += 12
+    #     elif span == self._6th:
+    #         if qual &gt; self._3aug:
+    #             xoct -= 1
+    #             semi += 12
+    #     # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
+    #     self._init_from_list(span, qual, xoct, sign)
+
+    def __str__(self):
+        &#34;&#34;&#34;
+        Returns the print representation of the key. Information includes
+        the the class name, the interval text, the span, qual, xoct and sign
+        values, and the id of the object. See: string().
+        
+        Example
+        -------
+        `&lt;Interval: oooo8 [7, 1, 0, 1] 0x1075bf6d0&gt;`
+        &#34;&#34;&#34;
+        
+        return f&#39;&lt;Interval: {self.string()} &#39; \
+               f&#39;[{self.span}, {self.qual}, {self.xoct}, {self.sign}] {hex(id(self))}&gt;&#39;
+
+
+    def __repr__(self):
+        &#34;&#34;&#34;
+        The string the console prints shows the external form.
+    
+        Example
+        -------
+        `Interval(&#34;oooo8&#34;)`
+        &#34;&#34;&#34;
+        
+        return f&#39;Interval(&#34;{self.string()}&#34;)&#39;
+
+
+    def __lt__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &lt; Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+    
+        Returns
+        -------
+        True if this interval is less than other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() &lt; other.pos()
+
+
+    def __le__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &lt;= Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is less than or equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() &lt;= other.pos()
+
+
+    def __eq__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval == Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() == other.pos()
+
+
+    def __ne__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval != Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+        
+        Returns
+        -------
+        True if this interval is not equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() != other.pos()
+
+
+    def __ge__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &gt;= Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is greater than or equal to other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        return self.pos() &gt;= other.pos()
+
+
+    def __gt__(self, other):
+        &#34;&#34;&#34;
+        Implements Interval &gt; Interval.
+
+        This method should call self.pos() and other.pos() to get the
+        values to compare. See: pos().
+
+        Parameters
+        ----------
+        other : Ratio
+            The interval to compare with this interval.
+
+        Returns
+        -------
+        True if this interval is greater than the other.
+
+        Raises
+        ------
+        A TypeError if other is not an Interval.
+        &#34;&#34;&#34;
+        
+        if not isinstance(other, Interval):
+            raise TypeError(f&#39;{other} is not an Interval.&#39;)
+        return self.pos() &gt; other.pos()
+
+  
+    def pos(self):
+        &#34;&#34;&#34;
+        Returns a numerical value for comparing the size of this interval to
+        another. The comparison depends on the span, extra octaves, and quality
+        of the intervals but not their signs. For two intervals, if the span of
+        the first (including extra octaves) is larger than the second then the
+        first interval is larger than the second regardless of the quality of
+        either interval. If the interval spans are the same then the first is
+        larger than the second if its quality is larger. This value can be
+        encoded as a 16 bit integer: (((span + (xoct * 7)) + 1) &lt;&lt; 8) + qual
+        &#34;&#34;&#34;
+        
+        return (((self.span + (self.xoct * 7)) + 1) &lt;&lt; 8) + self.qual
+
+
+    def string(self):
+        &#34;&#34;&#34;
+        Returns a string containing the interval name.
+        For example, Interval(&#39;-P5&#39;).string() would return &#39;-P5&#39;.
+        &#34;&#34;&#34;
+        
+        s = &#34;-&#34; if self.sign &lt; 0 else &#34;&#34;
+        s += self._qual_names[self.qual]
+        s += str((self.span + (self.xoct * 7)) + 1)
+        return s
+
+
+    def full_name(self, *, sign=True):
+        &#34;&#34;&#34;
+        Returns the full interval name, e.g. &#39;doubly-augmented third&#39;
+        or &#39;descending augmented sixth&#39;
+
+        Parameters
+        ----------
+        sign : bool
+            If true then &#34;descending&#34; will appear in the name if it is a descending interval.
+        &#34;&#34;&#34;
+        
+        s = &#39;descending &#39; if sign and self.sign &lt; 0 else &#34;&#34;
+        s += self._qual_full_names[self.qual]
+        s += &#39; &#39;
+        s += self._span_full_names[self.span]
+        return s
+
+
+    def span_name(self):
+        &#34;&#34;&#34;
+        Returns the full name of the interval&#39;s span, e.g. a
+        unison would return &#34;unison&#34; and so on.
+        &#34;&#34;&#34;
+        
+        return self._span_full_names[self.span]
+
+
+    def quality_name(self):
+        &#34;&#34;&#34;
+        Returns the full name of the interval&#39;s quality, e.g. a
+        perfect unison would return &#34;perfect&#34; and so on.
+        &#34;&#34;&#34;
+        
+        return self._qual_full_names[self.qual]
+
+
+    def matches(self, other):
+        &#34;&#34;&#34;
+        Returns true if this interval and the other interval have the
+        same span, quality and sign. The extra octaves are ignored.
+        Parameters
+        ----------
+        &#34;&#34;&#34;
+        
+        return self.span == other.span and self.qual == other.qual \
+               and self.sign == other.sign
+
+
+    def lines_and_spaces(self):
+        &#34;&#34;&#34;
+        Returns the interval&#39;s number of lines and spaces, e.g.
+        a unison will return 1.
+        &#34;&#34;&#34;
+        
+        return self.span + 1
+
+
+    def _to_iq(self, name):
+        &#34;&#34;&#34;
+        Returns a zero based interval quality from its external
+        string name. Raises an assertion if the name is invalid.
+        See:is_unison() and similar.
+        &#34;&#34;&#34;
+
+        iq = self._qual_map.get(name)
+        if iq is None:
+            raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval quality.&#34;)
+        return iq
+
+
+    def to_list(self):
+        &#34;&#34;&#34;
+        Returns the interval values as a list: [span, qual, xoct, sign]
+        &#34;&#34;&#34;
+
+        return [self.span, self.qual, self.xoct, self.sign]
+
+
+    def is_unison(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a unison otherwise false.
+
+        Parameters
+        ----------
+        qual : string 
+            If specified the predicate tests for that specific quality of unison, which can be
+            any valid quality symbol, e.g. &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._Uni:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_second(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a second otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of second, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._2nd:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_third(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a third otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of third, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._3rd:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_fourth(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a fourth otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of fourth, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._4th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_fifth(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a fifth otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of fifth, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._5th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_sixth(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a sixth otherwise false.
+ 
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of sixth, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._6th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_seventh(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is a seventh otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of seventh, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._7th:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+    
+    def is_octave(self, qual=None):
+        &#34;&#34;&#34;
+        Returns true if the interval is an octave otherwise false.
+
+        Parameters
+        ----------
+        qual : string
+            If specified the predicate tests for that specific
+            quality of octave, which can be any quality symbol, e.g.
+            &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+        &#34;&#34;&#34;
+
+        if self.span == self._8va:
+            return True if qual is None else self.qual == self._to_iq(qual)
+        return False
+
+
+    def is_diminished(self):
+        &#34;&#34;&#34;
+        Returns a &#39;diminution count&#39; 1-5 if the interval is diminished else False.
+        For example, if the interval is doubly-diminished then 2 is returned.
+        If the interval not diminished at all (e.g. is perfect, augmented, minor or
+        major) then False is returned.
+        &#34;&#34;&#34;
+
+        return self._dim - self.qual + 1 if self.qual &lt;= self._dim else False
+
+    def is_minor(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is minor, otherwise false.
+        &#34;&#34;&#34;
+
+        return self.qual == self._min
+
+    def is_perfect(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is perfect, otherwise false.
+        &#34;&#34;&#34;
+
+        return self.qual == self._perf
+
+    def is_major(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is major, otherwise false.
+        &#34;&#34;&#34;
+
+        return self.qual == self._maj
+
+    def is_augmented(self):
+        &#34;&#34;&#34;
+        Returns a &#39;augmentation count&#39; 1-5 if the interval is augmented else False.
+        For example, if the interval is doubly-augmented then 2 is returned.
+        If the interval not augmented at all (e.g. is perfect, diminished, minor or
+        major) then False is returned.
+        &#34;&#34;&#34;
+
+        return 5 + (self.qual - self._5aug) if self.qual &gt;= self._aug else False
+
+    def is_perfect_type(self):
+        &#34;&#34;&#34;
+        Returns true if the interval belongs to the &#39;perfect interval&#39;
+        family, i.e. it is a Unison, 4th, 5th, or Octave.
+        &#34;&#34;&#34;
+
+        return self.span in [self._Uni, self._4th, self._5th, self._8va]
+
+    
+    def is_imperfect_type(self):
+        &#34;&#34;&#34;
+        Returns true if this interval belongs to the &#39;imperfect interval&#39;
+        family, i.e. it is a 2nd, 3rd, 6th, or 7th.
+        &#34;&#34;&#34;
+
+        return not self.is_perfect_type()  # 2nd, 3rd, 6th, 7th
+
+        
+    def is_simple(self):
+        &#34;&#34;&#34;
+        Returns true if this is a simple interval, i.e. its span is
+        less-than-or-equal to an octave.
+        &#34;&#34;&#34;
+
+        return self.xoct == 0  # simple means no extra octaves
+
+        
+    def is_compound(self):
+        &#34;&#34;&#34;
+        Returns true if this is a compound interval, i.e. its span is
+        more than an octave (an octave is a simple interval).
+        &#34;&#34;&#34;
+
+        return not self.is_simple()
+
+    
+    def is_ascending(self):
+        &#34;&#34;&#34;
+        Returns true if this interval&#39;s sign is 1.
+        &#34;&#34;&#34;
+
+        return self.sign == 1
+
+    
+    def is_descending(self):
+        &#34;&#34;&#34;
+        Returns true if this interval&#39;s sign is -1.
+        &#34;&#34;&#34;
+
+        return self.sign == -1
+
+    
+    def is_consonant(self):
+        &#34;&#34;&#34;
+        Returns true if the interval is a consonant interval otherwise False.
+        The perfect fourth should be considered consonant.
+        &#34;&#34;&#34;
+
+        if self.is_perfect_type():
+            return self.qual == self._perf
+        else:
+            return self.span in [self._3rd, self._6th] \
+                   and self.qual in [self._min, self._maj]
+
+                   
+    def is_dissonant(self):
+        &#34;&#34;&#34;
+        Returns True if the interval is not a consonant interval otherwise False.
+        &#34;&#34;&#34;
+
+        return not self.is_consonant()
+
+    
+    def complemented(self):
+        &#34;&#34;&#34;
+        Returns a complemented copy of the interval. 
+        
+        To complement an interval you invert its span and quality. To invert
+        the span, subtract it from the maximum span index (the octave index).
+        To invert the quality subtract it from the maximum quality index 
+        (quintuply augmented).
+        &#34;&#34;&#34;
+
+        # new = copy.copy(self)
+        # new.complement()
+        # return new
+        return Interval([self._8va-self.span, self._5aug-self.qual, self.xoct, self.sign])
+
+    
+    def semitones(self):
+        &#34;&#34;&#34;
+        Returns the number of semitones in the interval. 
+
+        It is possible to determine the number of semitones by looking at the span and
+        quality indexes. For example, if the span is a perfect fifth
+        (span index 4) and the quality is perfect (quality index 6)
+        then the semitones will be 5 and augmented or diminished fifths
+        will add or subtract semitones accordingly.
+        
+        The semitones will be negative for descending intervals otherwise positive.
+        &#34;&#34;&#34;
+        semi = self._semitones_map[self.qual][self.span]
+        return (semi + (self.xoct * 12)) * self.sign
+
+    
+    def add(self, other):
+        &#34;&#34;&#34;
+        Adds a specified interval to this interval.
+
+        Parameters
+        ----------
+        other : Interval
+            The interval to add to this one.
+
+        Returns
+        -------
+        A new interval expressing the total span of both intervals.
+
+        Raises
+        ------
+        * A TypeError if other is not an interval. 
+        * A NotImplementedError if either intervals are descending.
+        &#34;&#34;&#34;
+
+        if self.sign &lt; 1 or other.sign &lt; 1:
+            raise ValueError(&#34;Only ascending intervals may be added.&#34;)
+        newspan = self.span + other.span
+        newsemi = self.semitones() + other.semitones()
+        newxoct = 0
+        while newsemi &gt; 12:
+            newspan -= 7
+            newsemi -= 12
+            newxoct += 1
+        # get newspan&#39;s number of semitones in the diatonic octave
+        assert 0 &lt;= newspan &lt; len(self._diatonic_semitones),  f&#34;invalid added span value: {newspan}.&#34;
+        diasemi = self._diatonic_semitones[newspan]
+        # Qualities of the diatonic spans -- Unison to Octave
+        diaqual = [self._perf, self._maj, self._maj, self._perf, self._perf,
+                   self._maj, self._maj, self._perf][newspan]
+        # calculate the difference in semitones between the new interval and its diatonic version
+        semidif = newsemi - diasemi
+        # print(&#39;diasemi=&#39;, diasemi, &#39;diaqual=&#39;, diaqual, &#34;semidif=&#34;, semidif)
+        # add that difference to the diatonic quality to calculate the new quality
+        if newspan in self._perf_spans:
+            newqual = self._perf_quals[self._perf_quals.index(diaqual) + semidif]
+        else:
+            newqual = self._impf_quals[self._impf_quals.index(diaqual) + semidif]
+        return Interval([newspan, newqual, newxoct, self.sign*other.sign])
+
+    
+    def transpose(self, p):
+        &#34;&#34;&#34;
+        Transposes a Pitch or Pnum by the interval. Pnum transposition
+        has no octave or direction so if the interval is negative its
+        complement should be used and octaves should reduce to unisons
+        without complementing.
+
+        Parameters
+        ----------
+        p : Pitch | Pnum
+            The Pitch or Pnum to transpose, otherwise the string name of a pitch or pnum (eg. &#39;Cb5&#39; or &#39;Dff&#39;)
+
+        Returns
+        ----------
+        The transposed Pitch or Pnum.
+
+        Raises
+        ------
+        A TypeError if p is not a Pitch or Pnum.
+        &#34;&#34;&#34;
+
+        if isinstance(p, str) and len(str) &gt; 0:
+            p = Pitch(p) if p[-1].isdigit() else Pitch.pnums[p]
+        if isinstance(p, Pitch):
+            return self._transpose_pitch(p)
+        if isinstance(p, Pitch.pnums):
+            return self._transpose_pnum(p)
+        raise TypeError(f&#34;&#39;{p}&#39; is not a Pitch or Pnum.&#34;)
+
+    
+    def _transpose_pnum(self, pnum):
+        &#34;&#34;&#34;
+        from mus.interval import Interval, _test_intervals
+        from mus.pitch import Pitch
+        Interval(&#39;m7&#39;).transpose(Pitch.pnums.E)
+        Interval(&#39;-M2&#39;).transpose(Pitch.pnums.E)
+        &#34;&#34;&#34;
+
+        def let_to_name(let): return f&#34;{[&#39;C&#39;, &#39;D&#39;, &#39;E&#39;, &#39;F&#39;, &#39;G&#39;, &#39;A&#39;, &#39;B&#39;][let]}&#34;
+        def acc_to_name(acc): return f&#34;{[&#39;bb&#39;, &#39;b&#39;, &#39;n&#39;, &#39;#&#39;, &#39;##&#39;, ][acc]}&#34;
+        def acc_to_size(acc): return acc - 2  # size of accidental (bb=-2)
+        def size_to_acc(acc): return acc + 2
+        def let_to_size(let): return self._diatonic_semitones[let]
+
+        span = self.span
+        qual = self.qual
+        # semi will be negative for descending intervals
+        semi = self.semitones()
+        desc = self.is_descending()
+        # pnum space has no octaves so collapse octaves to unisons
+        if span == self._8va:
+            # collapse octaves but preserve quality, so an augmented octave
+            # becomes an augmented unison and NOT a diminished unison.
+            span, qual = self._Uni, qual
+            semi = self._semitones_map[qual][span]
+        # complement descending interval including its negative semitones
+        if desc:
+            # print(&#34;descending! old semi=&#34;, semi, &#34;new semi=&#34;, semi % 12)
+            span, qual, semi = self._8va - span, self._5aug - qual, semi % 12
+        old_let = (pnum.value &amp; 0xF0) &gt;&gt; 4
+        old_acc = (pnum.value &amp; 0xF)
+        # letter of new pitch
+        new_let = (old_let + span) % self._8va
+        # semitonal size between the natural (diatonic) letters
+        nat_size = (let_to_size(new_let) - let_to_size(old_let)) % 12
+        # semitonal size of the interval
+        int_size = semi
+
+        ### print(f&#39;interval {self.string()}: span&#39;, span, &#39;qual&#39;, qual, &#39;sign&#39;, self.sign, &#39;semi&#39;, int_size)
+
+        # semitonal shift of the old accidental (where b= -1, ##= 2 etc.)
+        old_acc_siz = acc_to_size(old_acc)
+        # adjust the semitonal size of the natural interval by the size of the old accident
+        adj_nat_siz = nat_size - old_acc_siz
+        # subtract the adjusted natural size from the interval size to determine the size
+        # of the new accidental
+        new_acc_size = int_size - adj_nat_siz
+
+        ### print(f&#39;old pitch {pnum.name}: old_let&#39;, old_let, f&#39;({let_to_name(old_let)})&#39;, &#39;old_acc&#39;, old_acc,
+        ###       f&#39;({acc_to_name(old_acc)}))&#39;, &#39;old_acc_size&#39;, old_acc_siz, &#39;nat_size&#39;, nat_size,
+        ###       &#39;int_size&#39;, int_size, &#39;adj_nat_size&#39;, adj_nat_siz, &#39;new_acc_size&#39;, new_acc_size)
+
+        # invalid size means an impossible transposition, e.g. shifting F## by +2
+        if not (-2 &lt;= new_acc_size &lt;= 2):
+            raise ValueError(f&#34;Transposition of &#39;{pnum.name}&#39; by &#39;{self.string()}&#39;: &#34;
+                             &#34;no pitch spelling possible.&#34;)
+        # adjust the size of the next accidental
+        new_acc = size_to_acc(new_acc_size)
+        new_pnum = Pitch.pnums(new_let &lt;&lt; 4 | new_acc)
+
+        ### print(&#39;new_acc&#39;, new_acc, f&#39;({acc_to_name(new_acc)}))&#39;,&#39;new pitch&#39;, new_pnum, &#39;\n&#39;)
+
+        return new_pnum
+
+    
+    def _transpose_pitch(self, pitch):
+        &#34;&#34;&#34;
+        &#34;&#34;&#34;
+
+        pitch_let = pitch.letter
+        pitch_acc = pitch.accidental
+        pitch_oct = pitch.octave
+        # print(&#39;pitch_let&#39;, pitch_let, &#39;pitch_acc&#39;, pitch_acc, &#39;pitch_oct&#39;, pitch_oct)
+        # get and transpose the pnum
+        pnum = self._transpose_pnum(pitch.pnums(pitch_let &lt;&lt; 4 | pitch_acc))
+        trans_let = (pnum.value &amp; 0xF0) &gt;&gt; 4
+        trans_acc = (pnum.value &amp; 0xF)
+        # transposed keynum is original pitch + interval semitones
+        trans_key = pitch.keynum() + self.semitones()
+        trans_oct = trans_key // 12
+        # decrement octave if note is B# or B##, increment if Cbb or Cb
+        if trans_let == pitch._let_B and trans_acc in [pitch._acc_s, pitch._acc_2s]:
+            trans_oct -= 1
+        elif trans_let == pitch._let_C and trans_acc in [pitch._acc_f, pitch._acc_2f]:
+            trans_oct += 1
+        return Pitch([trans_let, trans_acc, trans_oct])</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.interval.Interval.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, other)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a specified interval to this interval.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>other</code></strong> :&ensp;<code><a title="musx.interval.Interval" href="#musx.interval.Interval">Interval</a></code></dt>
+<dd>The interval to add to this one.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A new interval expressing the total span of both intervals.</p>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>A TypeError if other is not an interval. </li>
+<li>A NotImplementedError if either intervals are descending.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, other):
+    &#34;&#34;&#34;
+    Adds a specified interval to this interval.
+
+    Parameters
+    ----------
+    other : Interval
+        The interval to add to this one.
+
+    Returns
+    -------
+    A new interval expressing the total span of both intervals.
+
+    Raises
+    ------
+    * A TypeError if other is not an interval. 
+    * A NotImplementedError if either intervals are descending.
+    &#34;&#34;&#34;
+
+    if self.sign &lt; 1 or other.sign &lt; 1:
+        raise ValueError(&#34;Only ascending intervals may be added.&#34;)
+    newspan = self.span + other.span
+    newsemi = self.semitones() + other.semitones()
+    newxoct = 0
+    while newsemi &gt; 12:
+        newspan -= 7
+        newsemi -= 12
+        newxoct += 1
+    # get newspan&#39;s number of semitones in the diatonic octave
+    assert 0 &lt;= newspan &lt; len(self._diatonic_semitones),  f&#34;invalid added span value: {newspan}.&#34;
+    diasemi = self._diatonic_semitones[newspan]
+    # Qualities of the diatonic spans -- Unison to Octave
+    diaqual = [self._perf, self._maj, self._maj, self._perf, self._perf,
+               self._maj, self._maj, self._perf][newspan]
+    # calculate the difference in semitones between the new interval and its diatonic version
+    semidif = newsemi - diasemi
+    # print(&#39;diasemi=&#39;, diasemi, &#39;diaqual=&#39;, diaqual, &#34;semidif=&#34;, semidif)
+    # add that difference to the diatonic quality to calculate the new quality
+    if newspan in self._perf_spans:
+        newqual = self._perf_quals[self._perf_quals.index(diaqual) + semidif]
+    else:
+        newqual = self._impf_quals[self._impf_quals.index(diaqual) + semidif]
+    return Interval([newspan, newqual, newxoct, self.sign*other.sign])</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.complemented"><code class="name flex">
+<span>def <span class="ident">complemented</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a complemented copy of the interval. </p>
+<p>To complement an interval you invert its span and quality. To invert
+the span, subtract it from the maximum span index (the octave index).
+To invert the quality subtract it from the maximum quality index
+(quintuply augmented).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def complemented(self):
+    &#34;&#34;&#34;
+    Returns a complemented copy of the interval. 
+    
+    To complement an interval you invert its span and quality. To invert
+    the span, subtract it from the maximum span index (the octave index).
+    To invert the quality subtract it from the maximum quality index 
+    (quintuply augmented).
+    &#34;&#34;&#34;
+
+    # new = copy.copy(self)
+    # new.complement()
+    # return new
+    return Interval([self._8va-self.span, self._5aug-self.qual, self.xoct, self.sign])</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.full_name"><code class="name flex">
+<span>def <span class="ident">full_name</span></span>(<span>self, *, sign=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the full interval name, e.g. 'doubly-augmented third'
+or 'descending augmented sixth'</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>sign</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true then "descending" will appear in the name if it is a descending interval.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def full_name(self, *, sign=True):
+    &#34;&#34;&#34;
+    Returns the full interval name, e.g. &#39;doubly-augmented third&#39;
+    or &#39;descending augmented sixth&#39;
+
+    Parameters
+    ----------
+    sign : bool
+        If true then &#34;descending&#34; will appear in the name if it is a descending interval.
+    &#34;&#34;&#34;
+    
+    s = &#39;descending &#39; if sign and self.sign &lt; 0 else &#34;&#34;
+    s += self._qual_full_names[self.qual]
+    s += &#39; &#39;
+    s += self._span_full_names[self.span]
+    return s</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_ascending"><code class="name flex">
+<span>def <span class="ident">is_ascending</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if this interval's sign is 1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_ascending(self):
+    &#34;&#34;&#34;
+    Returns true if this interval&#39;s sign is 1.
+    &#34;&#34;&#34;
+
+    return self.sign == 1</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_augmented"><code class="name flex">
+<span>def <span class="ident">is_augmented</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a 'augmentation count' 1-5 if the interval is augmented else False.
+For example, if the interval is doubly-augmented then 2 is returned.
+If the interval not augmented at all (e.g. is perfect, diminished, minor or
+major) then False is returned.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_augmented(self):
+    &#34;&#34;&#34;
+    Returns a &#39;augmentation count&#39; 1-5 if the interval is augmented else False.
+    For example, if the interval is doubly-augmented then 2 is returned.
+    If the interval not augmented at all (e.g. is perfect, diminished, minor or
+    major) then False is returned.
+    &#34;&#34;&#34;
+
+    return 5 + (self.qual - self._5aug) if self.qual &gt;= self._aug else False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_compound"><code class="name flex">
+<span>def <span class="ident">is_compound</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if this is a compound interval, i.e. its span is
+more than an octave (an octave is a simple interval).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_compound(self):
+    &#34;&#34;&#34;
+    Returns true if this is a compound interval, i.e. its span is
+    more than an octave (an octave is a simple interval).
+    &#34;&#34;&#34;
+
+    return not self.is_simple()</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_consonant"><code class="name flex">
+<span>def <span class="ident">is_consonant</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a consonant interval otherwise False.
+The perfect fourth should be considered consonant.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_consonant(self):
+    &#34;&#34;&#34;
+    Returns true if the interval is a consonant interval otherwise False.
+    The perfect fourth should be considered consonant.
+    &#34;&#34;&#34;
+
+    if self.is_perfect_type():
+        return self.qual == self._perf
+    else:
+        return self.span in [self._3rd, self._6th] \
+               and self.qual in [self._min, self._maj]</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_descending"><code class="name flex">
+<span>def <span class="ident">is_descending</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if this interval's sign is -1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_descending(self):
+    &#34;&#34;&#34;
+    Returns true if this interval&#39;s sign is -1.
+    &#34;&#34;&#34;
+
+    return self.sign == -1</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_diminished"><code class="name flex">
+<span>def <span class="ident">is_diminished</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a 'diminution count' 1-5 if the interval is diminished else False.
+For example, if the interval is doubly-diminished then 2 is returned.
+If the interval not diminished at all (e.g. is perfect, augmented, minor or
+major) then False is returned.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_diminished(self):
+    &#34;&#34;&#34;
+    Returns a &#39;diminution count&#39; 1-5 if the interval is diminished else False.
+    For example, if the interval is doubly-diminished then 2 is returned.
+    If the interval not diminished at all (e.g. is perfect, augmented, minor or
+    major) then False is returned.
+    &#34;&#34;&#34;
+
+    return self._dim - self.qual + 1 if self.qual &lt;= self._dim else False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_dissonant"><code class="name flex">
+<span>def <span class="ident">is_dissonant</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns True if the interval is not a consonant interval otherwise False.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_dissonant(self):
+    &#34;&#34;&#34;
+    Returns True if the interval is not a consonant interval otherwise False.
+    &#34;&#34;&#34;
+
+    return not self.is_consonant()</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_fifth"><code class="name flex">
+<span>def <span class="ident">is_fifth</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a fifth otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string</code></dt>
+<dd>If specified the predicate tests for that specific
+quality of fifth, which can be any quality symbol, e.g.
+'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_fifth(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is a fifth otherwise false.
+
+    Parameters
+    ----------
+    qual : string
+        If specified the predicate tests for that specific
+        quality of fifth, which can be any quality symbol, e.g.
+        &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._5th:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_fourth"><code class="name flex">
+<span>def <span class="ident">is_fourth</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a fourth otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string</code></dt>
+<dd>If specified the predicate tests for that specific
+quality of fourth, which can be any quality symbol, e.g.
+'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_fourth(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is a fourth otherwise false.
+
+    Parameters
+    ----------
+    qual : string
+        If specified the predicate tests for that specific
+        quality of fourth, which can be any quality symbol, e.g.
+        &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._4th:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_imperfect_type"><code class="name flex">
+<span>def <span class="ident">is_imperfect_type</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if this interval belongs to the 'imperfect interval'
+family, i.e. it is a 2nd, 3rd, 6th, or 7th.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_imperfect_type(self):
+    &#34;&#34;&#34;
+    Returns true if this interval belongs to the &#39;imperfect interval&#39;
+    family, i.e. it is a 2nd, 3rd, 6th, or 7th.
+    &#34;&#34;&#34;
+
+    return not self.is_perfect_type()  # 2nd, 3rd, 6th, 7th</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_major"><code class="name flex">
+<span>def <span class="ident">is_major</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is major, otherwise false.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_major(self):
+    &#34;&#34;&#34;
+    Returns true if the interval is major, otherwise false.
+    &#34;&#34;&#34;
+
+    return self.qual == self._maj</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_minor"><code class="name flex">
+<span>def <span class="ident">is_minor</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is minor, otherwise false.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_minor(self):
+    &#34;&#34;&#34;
+    Returns true if the interval is minor, otherwise false.
+    &#34;&#34;&#34;
+
+    return self.qual == self._min</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_octave"><code class="name flex">
+<span>def <span class="ident">is_octave</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is an octave otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string</code></dt>
+<dd>If specified the predicate tests for that specific
+quality of octave, which can be any quality symbol, e.g.
+'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_octave(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is an octave otherwise false.
+
+    Parameters
+    ----------
+    qual : string
+        If specified the predicate tests for that specific
+        quality of octave, which can be any quality symbol, e.g.
+        &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._8va:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_perfect"><code class="name flex">
+<span>def <span class="ident">is_perfect</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is perfect, otherwise false.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_perfect(self):
+    &#34;&#34;&#34;
+    Returns true if the interval is perfect, otherwise false.
+    &#34;&#34;&#34;
+
+    return self.qual == self._perf</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_perfect_type"><code class="name flex">
+<span>def <span class="ident">is_perfect_type</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval belongs to the 'perfect interval'
+family, i.e. it is a Unison, 4th, 5th, or Octave.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_perfect_type(self):
+    &#34;&#34;&#34;
+    Returns true if the interval belongs to the &#39;perfect interval&#39;
+    family, i.e. it is a Unison, 4th, 5th, or Octave.
+    &#34;&#34;&#34;
+
+    return self.span in [self._Uni, self._4th, self._5th, self._8va]</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_second"><code class="name flex">
+<span>def <span class="ident">is_second</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a second otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string</code></dt>
+<dd>If specified the predicate tests for that specific
+quality of second, which can be any quality symbol, e.g.
+'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_second(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is a second otherwise false.
+
+    Parameters
+    ----------
+    qual : string
+        If specified the predicate tests for that specific
+        quality of second, which can be any quality symbol, e.g.
+        &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._2nd:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_seventh"><code class="name flex">
+<span>def <span class="ident">is_seventh</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a seventh otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string</code></dt>
+<dd>If specified the predicate tests for that specific
+quality of seventh, which can be any quality symbol, e.g.
+'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_seventh(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is a seventh otherwise false.
+
+    Parameters
+    ----------
+    qual : string
+        If specified the predicate tests for that specific
+        quality of seventh, which can be any quality symbol, e.g.
+        &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._7th:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_simple"><code class="name flex">
+<span>def <span class="ident">is_simple</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if this is a simple interval, i.e. its span is
+less-than-or-equal to an octave.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_simple(self):
+    &#34;&#34;&#34;
+    Returns true if this is a simple interval, i.e. its span is
+    less-than-or-equal to an octave.
+    &#34;&#34;&#34;
+
+    return self.xoct == 0  # simple means no extra octaves</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_sixth"><code class="name flex">
+<span>def <span class="ident">is_sixth</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a sixth otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string</code></dt>
+<dd>If specified the predicate tests for that specific
+quality of sixth, which can be any quality symbol, e.g.
+'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_sixth(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is a sixth otherwise false.
+
+    Parameters
+    ----------
+    qual : string
+        If specified the predicate tests for that specific
+        quality of sixth, which can be any quality symbol, e.g.
+        &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._6th:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_third"><code class="name flex">
+<span>def <span class="ident">is_third</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a third otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string</code></dt>
+<dd>If specified the predicate tests for that specific
+quality of third, which can be any quality symbol, e.g.
+'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_third(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is a third otherwise false.
+
+    Parameters
+    ----------
+    qual : string
+        If specified the predicate tests for that specific
+        quality of third, which can be any quality symbol, e.g.
+        &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._3rd:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.is_unison"><code class="name flex">
+<span>def <span class="ident">is_unison</span></span>(<span>self, qual=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the interval is a unison otherwise false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>qual</code></strong> :&ensp;<code>string </code></dt>
+<dd>If specified the predicate tests for that specific quality of unison, which can be
+any valid quality symbol, e.g. 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_unison(self, qual=None):
+    &#34;&#34;&#34;
+    Returns true if the interval is a unison otherwise false.
+
+    Parameters
+    ----------
+    qual : string 
+        If specified the predicate tests for that specific quality of unison, which can be
+        any valid quality symbol, e.g. &#39;P&#39;, &#39;M&#39; &#39;m&#39; &#39;d&#39; &#39;A&#39; &#39;o&#39; &#39;+&#39; and so on. See: _to_iq().
+    &#34;&#34;&#34;
+
+    if self.span == self._Uni:
+        return True if qual is None else self.qual == self._to_iq(qual)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.lines_and_spaces"><code class="name flex">
+<span>def <span class="ident">lines_and_spaces</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the interval's number of lines and spaces, e.g.
+a unison will return 1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lines_and_spaces(self):
+    &#34;&#34;&#34;
+    Returns the interval&#39;s number of lines and spaces, e.g.
+    a unison will return 1.
+    &#34;&#34;&#34;
+    
+    return self.span + 1</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.matches"><code class="name flex">
+<span>def <span class="ident">matches</span></span>(<span>self, other)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if this interval and the other interval have the
+same span, quality and sign. The extra octaves are ignored.
+Parameters</p>
+<hr></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def matches(self, other):
+    &#34;&#34;&#34;
+    Returns true if this interval and the other interval have the
+    same span, quality and sign. The extra octaves are ignored.
+    Parameters
+    ----------
+    &#34;&#34;&#34;
+    
+    return self.span == other.span and self.qual == other.qual \
+           and self.sign == other.sign</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.pos"><code class="name flex">
+<span>def <span class="ident">pos</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a numerical value for comparing the size of this interval to
+another. The comparison depends on the span, extra octaves, and quality
+of the intervals but not their signs. For two intervals, if the span of
+the first (including extra octaves) is larger than the second then the
+first interval is larger than the second regardless of the quality of
+either interval. If the interval spans are the same then the first is
+larger than the second if its quality is larger. This value can be
+encoded as a 16 bit integer: (((span + (xoct * 7)) + 1) &lt;&lt; 8) + qual</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pos(self):
+    &#34;&#34;&#34;
+    Returns a numerical value for comparing the size of this interval to
+    another. The comparison depends on the span, extra octaves, and quality
+    of the intervals but not their signs. For two intervals, if the span of
+    the first (including extra octaves) is larger than the second then the
+    first interval is larger than the second regardless of the quality of
+    either interval. If the interval spans are the same then the first is
+    larger than the second if its quality is larger. This value can be
+    encoded as a 16 bit integer: (((span + (xoct * 7)) + 1) &lt;&lt; 8) + qual
+    &#34;&#34;&#34;
+    
+    return (((self.span + (self.xoct * 7)) + 1) &lt;&lt; 8) + self.qual</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.quality_name"><code class="name flex">
+<span>def <span class="ident">quality_name</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the full name of the interval's quality, e.g. a
+perfect unison would return "perfect" and so on.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def quality_name(self):
+    &#34;&#34;&#34;
+    Returns the full name of the interval&#39;s quality, e.g. a
+    perfect unison would return &#34;perfect&#34; and so on.
+    &#34;&#34;&#34;
+    
+    return self._qual_full_names[self.qual]</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.semitones"><code class="name flex">
+<span>def <span class="ident">semitones</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the number of semitones in the interval. </p>
+<p>It is possible to determine the number of semitones by looking at the span and
+quality indexes. For example, if the span is a perfect fifth
+(span index 4) and the quality is perfect (quality index 6)
+then the semitones will be 5 and augmented or diminished fifths
+will add or subtract semitones accordingly.</p>
+<p>The semitones will be negative for descending intervals otherwise positive.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def semitones(self):
+    &#34;&#34;&#34;
+    Returns the number of semitones in the interval. 
+
+    It is possible to determine the number of semitones by looking at the span and
+    quality indexes. For example, if the span is a perfect fifth
+    (span index 4) and the quality is perfect (quality index 6)
+    then the semitones will be 5 and augmented or diminished fifths
+    will add or subtract semitones accordingly.
+    
+    The semitones will be negative for descending intervals otherwise positive.
+    &#34;&#34;&#34;
+    semi = self._semitones_map[self.qual][self.span]
+    return (semi + (self.xoct * 12)) * self.sign</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.span_name"><code class="name flex">
+<span>def <span class="ident">span_name</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the full name of the interval's span, e.g. a
+unison would return "unison" and so on.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def span_name(self):
+    &#34;&#34;&#34;
+    Returns the full name of the interval&#39;s span, e.g. a
+    unison would return &#34;unison&#34; and so on.
+    &#34;&#34;&#34;
+    
+    return self._span_full_names[self.span]</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.string"><code class="name flex">
+<span>def <span class="ident">string</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a string containing the interval name.
+For example, Interval('-P5').string() would return '-P5'.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def string(self):
+    &#34;&#34;&#34;
+    Returns a string containing the interval name.
+    For example, Interval(&#39;-P5&#39;).string() would return &#39;-P5&#39;.
+    &#34;&#34;&#34;
+    
+    s = &#34;-&#34; if self.sign &lt; 0 else &#34;&#34;
+    s += self._qual_names[self.qual]
+    s += str((self.span + (self.xoct * 7)) + 1)
+    return s</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.to_list"><code class="name flex">
+<span>def <span class="ident">to_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the interval values as a list: [span, qual, xoct, sign]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_list(self):
+    &#34;&#34;&#34;
+    Returns the interval values as a list: [span, qual, xoct, sign]
+    &#34;&#34;&#34;
+
+    return [self.span, self.qual, self.xoct, self.sign]</code></pre>
+</details>
+</dd>
+<dt id="musx.interval.Interval.transpose"><code class="name flex">
+<span>def <span class="ident">transpose</span></span>(<span>self, p)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transposes a Pitch or Pnum by the interval. Pnum transposition
+has no octave or direction so if the interval is negative its
+complement should be used and octaves should reduce to unisons
+without complementing.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>p</code></strong> :&ensp;<code>Pitch | Pnum</code></dt>
+<dd>The Pitch or Pnum to transpose, otherwise the string name of a pitch or pnum (eg. 'Cb5' or 'Dff')</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The transposed Pitch or Pnum.</p>
+<h2 id="raises">Raises</h2>
+<p>A TypeError if p is not a Pitch or Pnum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transpose(self, p):
+    &#34;&#34;&#34;
+    Transposes a Pitch or Pnum by the interval. Pnum transposition
+    has no octave or direction so if the interval is negative its
+    complement should be used and octaves should reduce to unisons
+    without complementing.
+
+    Parameters
+    ----------
+    p : Pitch | Pnum
+        The Pitch or Pnum to transpose, otherwise the string name of a pitch or pnum (eg. &#39;Cb5&#39; or &#39;Dff&#39;)
+
+    Returns
+    ----------
+    The transposed Pitch or Pnum.
+
+    Raises
+    ------
+    A TypeError if p is not a Pitch or Pnum.
+    &#34;&#34;&#34;
+
+    if isinstance(p, str) and len(str) &gt; 0:
+        p = Pitch(p) if p[-1].isdigit() else Pitch.pnums[p]
+    if isinstance(p, Pitch):
+        return self._transpose_pitch(p)
+    if isinstance(p, Pitch.pnums):
+        return self._transpose_pnum(p)
+    raise TypeError(f&#34;&#39;{p}&#39; is not a Pitch or Pnum.&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="musx.interval.Interval" href="#musx.interval.Interval">Interval</a></code></h4>
+<ul class="two-column">
+<li><code><a title="musx.interval.Interval.add" href="#musx.interval.Interval.add">add</a></code></li>
+<li><code><a title="musx.interval.Interval.complemented" href="#musx.interval.Interval.complemented">complemented</a></code></li>
+<li><code><a title="musx.interval.Interval.full_name" href="#musx.interval.Interval.full_name">full_name</a></code></li>
+<li><code><a title="musx.interval.Interval.is_ascending" href="#musx.interval.Interval.is_ascending">is_ascending</a></code></li>
+<li><code><a title="musx.interval.Interval.is_augmented" href="#musx.interval.Interval.is_augmented">is_augmented</a></code></li>
+<li><code><a title="musx.interval.Interval.is_compound" href="#musx.interval.Interval.is_compound">is_compound</a></code></li>
+<li><code><a title="musx.interval.Interval.is_consonant" href="#musx.interval.Interval.is_consonant">is_consonant</a></code></li>
+<li><code><a title="musx.interval.Interval.is_descending" href="#musx.interval.Interval.is_descending">is_descending</a></code></li>
+<li><code><a title="musx.interval.Interval.is_diminished" href="#musx.interval.Interval.is_diminished">is_diminished</a></code></li>
+<li><code><a title="musx.interval.Interval.is_dissonant" href="#musx.interval.Interval.is_dissonant">is_dissonant</a></code></li>
+<li><code><a title="musx.interval.Interval.is_fifth" href="#musx.interval.Interval.is_fifth">is_fifth</a></code></li>
+<li><code><a title="musx.interval.Interval.is_fourth" href="#musx.interval.Interval.is_fourth">is_fourth</a></code></li>
+<li><code><a title="musx.interval.Interval.is_imperfect_type" href="#musx.interval.Interval.is_imperfect_type">is_imperfect_type</a></code></li>
+<li><code><a title="musx.interval.Interval.is_major" href="#musx.interval.Interval.is_major">is_major</a></code></li>
+<li><code><a title="musx.interval.Interval.is_minor" href="#musx.interval.Interval.is_minor">is_minor</a></code></li>
+<li><code><a title="musx.interval.Interval.is_octave" href="#musx.interval.Interval.is_octave">is_octave</a></code></li>
+<li><code><a title="musx.interval.Interval.is_perfect" href="#musx.interval.Interval.is_perfect">is_perfect</a></code></li>
+<li><code><a title="musx.interval.Interval.is_perfect_type" href="#musx.interval.Interval.is_perfect_type">is_perfect_type</a></code></li>
+<li><code><a title="musx.interval.Interval.is_second" href="#musx.interval.Interval.is_second">is_second</a></code></li>
+<li><code><a title="musx.interval.Interval.is_seventh" href="#musx.interval.Interval.is_seventh">is_seventh</a></code></li>
+<li><code><a title="musx.interval.Interval.is_simple" href="#musx.interval.Interval.is_simple">is_simple</a></code></li>
+<li><code><a title="musx.interval.Interval.is_sixth" href="#musx.interval.Interval.is_sixth">is_sixth</a></code></li>
+<li><code><a title="musx.interval.Interval.is_third" href="#musx.interval.Interval.is_third">is_third</a></code></li>
+<li><code><a title="musx.interval.Interval.is_unison" href="#musx.interval.Interval.is_unison">is_unison</a></code></li>
+<li><code><a title="musx.interval.Interval.lines_and_spaces" href="#musx.interval.Interval.lines_and_spaces">lines_and_spaces</a></code></li>
+<li><code><a title="musx.interval.Interval.matches" href="#musx.interval.Interval.matches">matches</a></code></li>
+<li><code><a title="musx.interval.Interval.pos" href="#musx.interval.Interval.pos">pos</a></code></li>
+<li><code><a title="musx.interval.Interval.quality_name" href="#musx.interval.Interval.quality_name">quality_name</a></code></li>
+<li><code><a title="musx.interval.Interval.semitones" href="#musx.interval.Interval.semitones">semitones</a></code></li>
+<li><code><a title="musx.interval.Interval.span_name" href="#musx.interval.Interval.span_name">span_name</a></code></li>
+<li><code><a title="musx.interval.Interval.string" href="#musx.interval.Interval.string">string</a></code></li>
+<li><code><a title="musx.interval.Interval.to_list" href="#musx.interval.Interval.to_list">to_list</a></code></li>
+<li><code><a title="musx.interval.Interval.transpose" href="#musx.interval.Interval.transpose">transpose</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

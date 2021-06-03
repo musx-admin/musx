@@ -1,7 +1,8 @@
 """
-A generic event class that represents time, duration, pitch, and amplitude and is
-automatically converted to whatever format is requred by a specific back end, e.g.
-midi or csound.
+Defines a base Event class for musical events and a generic Note class to
+represent time, duration, pitch, and amplitude. Notes are automatically
+converted to whatever format is requred by a specific back end, e.g. midi
+or csound.
 """
 
 from .midi import midievent as me
@@ -46,11 +47,10 @@ class Event:
 
 class Note (Event):
     """
-    Creates a Note instance from its arguments. A Note is a genric
-    representation of a sound event that can be used in different contexts.
-    For example, if a Note is passed to methods in the midi or csound
-    modules the note data will be automatically converted to whatever
-    format is supported by the module.
+    Creates a Note instance from its arguments. A Note is a sound event
+    that can be used in different contexts. For example, if a Note is
+    passed to methods in the midi or csound modules the note data will
+    be automatically converted to the format supported by the module.
 
     Parameters
     ----------
@@ -61,9 +61,9 @@ class Note (Event):
         The duration in seconds, defaults to 1.0. For ways to specify
         duration and time metrically, see `rhythm()` and `intempo()`.
     pitch : int | float | Pitch
-        An int or float key number 0 to 127, or a Pitch object. 
-        Defaults to 60 (C4). If pitch is a float kkk.cc then
-        kkk is the midi key number and cc is cents above that midi
+        An int or float key number 0 to 127, or a `Pitch` object. 
+        Defaults to 60 (C4). If pitch is a float *kkk.cc* then
+        *kkk* is the midi key number and *cc* is cents above that midi
         key's equal tempered frequency. See `MidiFile.metatrack()`
         for more information.
     amplitude : int | float
@@ -122,9 +122,8 @@ class Note (Event):
     @property
     def pitch(self):
         """
-        A Pitch object or an int or float key number, defaults to 60. If you output
+        A `Pitch` object or an int or float key number, defaults to 60. If you output
         a note to midi, pitch will be automatically scaled to an int or float keynum.
-        For
  
         Raises
         ------

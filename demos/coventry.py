@@ -12,7 +12,7 @@ python3 -m demos.coventry
 """
 
 
-from musx import Note, keynum, allrotations
+from musx import Note, keynum, all_rotations
 
 
 coventry_bells = {
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     # Plain Hunt change ringing for 10 bells.
     items = ['a','b','c','d','e','f','g','h','i','j']
     rules = [[0, 2, 1], [1, 2, 1]]
-    items = allrotations(items, rules, False, True)
+    items = all_rotations(items, rules, False, True)
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.
     track0 = MidiFile.metatrack(ins={0: TubularBells, 1: TubularBells, 

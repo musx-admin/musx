@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.seq API documentation</title>
+<meta name="description" content="The seq module provide support for reading and writing sequences of events that
+are sorted by time." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.seq</code></h1>
+</header>
+<section id="section-intro">
+<p>The seq module provide support for reading and writing sequences of events that
+are sorted by time.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">################################################################################
+&#34;&#34;&#34;
+The seq module provide support for reading and writing sequences of events that
+are sorted by time.
+&#34;&#34;&#34;
+
+
+import sys
+import time
+import threading
+from .note import Note
+from .midi import midievent as me
+from .midi import gm
+from .tools import rescale
+
+
+class Seq:
+    
+    def __init__(self, events=[]):
+        &#34;&#34;&#34;
+        A time ordered sequence of Event objects, e.g. instances of
+        Note, MidiEvent, or some other user defined subclass.
+
+        A Seq is an iterable so its events can be iterated, sliced and 
+        mapped.
+
+        Parameters
+        ----------
+        events : list
+            The initial list of events for the sequence, defaults to an
+            empty list. An initial list will not be sorted so its events
+            should already be in proper time order.
+        &#34;&#34;&#34;
+        # copy user&#39;s event list because addevent alters it!
+        if isinstance(events, list):
+            self.events = events.copy()
+        else:
+            raise ValueError(f&#34;events is not a list ({events})&#34;)
+
+    def __str__(self):
+        return f&#34;&lt;Seq: len={len(self)}, endtime={self.endtime()} {hex(id(self))}&gt;&#34;
+
+    __repr__ = __str__
+
+    def __iter__(self):
+        return iter(self.events)
+
+    def __getitem__(self, index):
+        return self.events[index]  # index can be slice
+
+    def __len__(self):
+        return len(self.events)
+
+    def endtime(self):
+        &#34;&#34;&#34;Returns the time of the last event or 0 if there are none.&#34;&#34;&#34;
+        return self.events[-1].time if len(self.events) &gt; 0 else 0
+
+    def clear(self):
+        &#34;&#34;&#34;Removes the current contents of the sequence.&#34;&#34;&#34;
+        self.events = []
+
+    def map(self, func):
+        &#34;&#34;&#34;
+        Maps a function of one argument over all the events in the sequence
+        and returns a list of the collected results.
+
+        Parameters
+        ----------
+        func : Function | lambda
+            A function or lambda of one argument, which will receive the
+            current event being mapped. The results of calling the function
+            will be returned as a list of values.
+        &#34;&#34;&#34;
+        return [func(x) for x in self]
+
+    def print(self, start=0, end=None, hints=True):
+        &#34;&#34;&#34;
+        Prints the contents of the sequence to the standard output.
+        
+        Parameters
+        ----------
+        start : int
+            The index of the first event to print.
+        end : int
+            The index (exclusive) at which to stop printing.
+        hints : bool
+            If true events are printed with message names.
+        &#34;&#34;&#34;
+        if end is None:
+            end = len(self.events)
+        for i in range(start, end):
+            e = self.events[i]
+            print(i, e.time, e, sep=&#39;\t&#39;)
+        # col1 = len(str(end))
+        # col2 = len(str(round(self.events[end-1].time, 3)))
+        # fmat = &#34;{:&#34; + str(col1) + &#34;} {:&#34; + str(col2) + &#34;} {}&#34;
+        # if hints:
+        #     fmat += &#34;\t# {}&#34;
+        #     for i in range(start, end):
+        #         e = self.events[i]
+        #         print(fmat.format(i, round(e.time, 3), e.message, e.hint()))
+        # else:
+        #     for i in range(start, end):
+        #         e = self.events[i]
+        #         print(fmat.format(i, round(e.time, 3), e.message))
+
+    def append(self, ev):
+        &#34;&#34;&#34;Adds an event to the end of the sequence without checking time.&#34;&#34;&#34;
+        self.events.append(ev)
+
+    def add(self, ev):
+        &#34;&#34;&#34;
+        Adds an event to the sequence in time sorted order, with the event
+        postioned after any other events with the same time stamp.
+        &#34;&#34;&#34;
+        if self.endtime() &lt;= ev.time:
+            self.events.append(ev)
+        else:
+            i = 0; l = len(self.events)
+            while i &lt; l and self.events[i].time &lt;= ev.time:
+                i += 1
+            self.events.insert(i, ev) 
+    
+#     def play(self, port, block=True):
+#         &#34;&#34;&#34;
+#         Plays the midi messages in the sequence out an open rtmidi output port.
+#         The midi data should only contain valid midi channel messages, i.e. no 
+#         meta or sysex messages.
+
+#         Parameters
+#         ----------
+#         port : rtmidi.MidiOut
+#             An open rtimidi MidiOut object.
+#         block : bool
+#             If true then play() will block for the duration of the playback.
+#         &#34;&#34;&#34;
+#         if not self.events:
+#             raise ValueError(f&#34;no midi events to play&#34;)
+#         if not &#39;rtmidi&#39; in sys.modules:
+#             raise RuntimeError(f&#34;module rtmidi is not loaded&#34;)
+#         if not isinstance(port, sys.modules[&#39;rtmidi&#39;].MidiOut):
+#             raise TypeError(f&#34;port is not an instance of rtmidi.MidiOut&#34;)
+#         player = threading.Thread(target=_rtplayer, args=(self.events, port))#, daemon=True
+#         player.start()
+#         # block until playback  is done.
+#         if block:
+#             player.join()
+
+
+# def _rtplayer(midi, port):
+#     length = len(midi)
+#     thistime = midi[0].time
+#     nexttime = thistime
+#     i = 0
+#     while i &lt; length:
+#         if midi[i].time == thistime:
+#             #print(f&#39;playing {seq[i]}&#39;)
+#             port.send_message(midi[i].message)
+#             i += 1
+#             continue
+#         # if here then midi[i] is later than thistime so sleep
+#         nexttime = midi[i].time
+#         #print(f&#39;waiting {nexttime-thistime}&#39;)
+#         time.sleep(nexttime - thistime) 
+#         thistime = nexttime</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="musx.seq.Seq"><code class="flex name class">
+<span>class <span class="ident">Seq</span></span>
+<span>(</span><span>events=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A time ordered sequence of Event objects, e.g. instances of
+Note, MidiEvent, or some other user defined subclass.</p>
+<p>A Seq is an iterable so its events can be iterated, sliced and
+mapped.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>events</code></strong> :&ensp;<code>list</code></dt>
+<dd>The initial list of events for the sequence, defaults to an
+empty list. An initial list will not be sorted so its events
+should already be in proper time order.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Seq:
+    
+    def __init__(self, events=[]):
+        &#34;&#34;&#34;
+        A time ordered sequence of Event objects, e.g. instances of
+        Note, MidiEvent, or some other user defined subclass.
+
+        A Seq is an iterable so its events can be iterated, sliced and 
+        mapped.
+
+        Parameters
+        ----------
+        events : list
+            The initial list of events for the sequence, defaults to an
+            empty list. An initial list will not be sorted so its events
+            should already be in proper time order.
+        &#34;&#34;&#34;
+        # copy user&#39;s event list because addevent alters it!
+        if isinstance(events, list):
+            self.events = events.copy()
+        else:
+            raise ValueError(f&#34;events is not a list ({events})&#34;)
+
+    def __str__(self):
+        return f&#34;&lt;Seq: len={len(self)}, endtime={self.endtime()} {hex(id(self))}&gt;&#34;
+
+    __repr__ = __str__
+
+    def __iter__(self):
+        return iter(self.events)
+
+    def __getitem__(self, index):
+        return self.events[index]  # index can be slice
+
+    def __len__(self):
+        return len(self.events)
+
+    def endtime(self):
+        &#34;&#34;&#34;Returns the time of the last event or 0 if there are none.&#34;&#34;&#34;
+        return self.events[-1].time if len(self.events) &gt; 0 else 0
+
+    def clear(self):
+        &#34;&#34;&#34;Removes the current contents of the sequence.&#34;&#34;&#34;
+        self.events = []
+
+    def map(self, func):
+        &#34;&#34;&#34;
+        Maps a function of one argument over all the events in the sequence
+        and returns a list of the collected results.
+
+        Parameters
+        ----------
+        func : Function | lambda
+            A function or lambda of one argument, which will receive the
+            current event being mapped. The results of calling the function
+            will be returned as a list of values.
+        &#34;&#34;&#34;
+        return [func(x) for x in self]
+
+    def print(self, start=0, end=None, hints=True):
+        &#34;&#34;&#34;
+        Prints the contents of the sequence to the standard output.
+        
+        Parameters
+        ----------
+        start : int
+            The index of the first event to print.
+        end : int
+            The index (exclusive) at which to stop printing.
+        hints : bool
+            If true events are printed with message names.
+        &#34;&#34;&#34;
+        if end is None:
+            end = len(self.events)
+        for i in range(start, end):
+            e = self.events[i]
+            print(i, e.time, e, sep=&#39;\t&#39;)
+        # col1 = len(str(end))
+        # col2 = len(str(round(self.events[end-1].time, 3)))
+        # fmat = &#34;{:&#34; + str(col1) + &#34;} {:&#34; + str(col2) + &#34;} {}&#34;
+        # if hints:
+        #     fmat += &#34;\t# {}&#34;
+        #     for i in range(start, end):
+        #         e = self.events[i]
+        #         print(fmat.format(i, round(e.time, 3), e.message, e.hint()))
+        # else:
+        #     for i in range(start, end):
+        #         e = self.events[i]
+        #         print(fmat.format(i, round(e.time, 3), e.message))
+
+    def append(self, ev):
+        &#34;&#34;&#34;Adds an event to the end of the sequence without checking time.&#34;&#34;&#34;
+        self.events.append(ev)
+
+    def add(self, ev):
+        &#34;&#34;&#34;
+        Adds an event to the sequence in time sorted order, with the event
+        postioned after any other events with the same time stamp.
+        &#34;&#34;&#34;
+        if self.endtime() &lt;= ev.time:
+            self.events.append(ev)
+        else:
+            i = 0; l = len(self.events)
+            while i &lt; l and self.events[i].time &lt;= ev.time:
+                i += 1
+            self.events.insert(i, ev) </code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.seq.Seq.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, ev)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds an event to the sequence in time sorted order, with the event
+postioned after any other events with the same time stamp.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, ev):
+    &#34;&#34;&#34;
+    Adds an event to the sequence in time sorted order, with the event
+    postioned after any other events with the same time stamp.
+    &#34;&#34;&#34;
+    if self.endtime() &lt;= ev.time:
+        self.events.append(ev)
+    else:
+        i = 0; l = len(self.events)
+        while i &lt; l and self.events[i].time &lt;= ev.time:
+            i += 1
+        self.events.insert(i, ev) </code></pre>
+</details>
+</dd>
+<dt id="musx.seq.Seq.append"><code class="name flex">
+<span>def <span class="ident">append</span></span>(<span>self, ev)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds an event to the end of the sequence without checking time.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def append(self, ev):
+    &#34;&#34;&#34;Adds an event to the end of the sequence without checking time.&#34;&#34;&#34;
+    self.events.append(ev)</code></pre>
+</details>
+</dd>
+<dt id="musx.seq.Seq.clear"><code class="name flex">
+<span>def <span class="ident">clear</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Removes the current contents of the sequence.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clear(self):
+    &#34;&#34;&#34;Removes the current contents of the sequence.&#34;&#34;&#34;
+    self.events = []</code></pre>
+</details>
+</dd>
+<dt id="musx.seq.Seq.endtime"><code class="name flex">
+<span>def <span class="ident">endtime</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the time of the last event or 0 if there are none.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def endtime(self):
+    &#34;&#34;&#34;Returns the time of the last event or 0 if there are none.&#34;&#34;&#34;
+    return self.events[-1].time if len(self.events) &gt; 0 else 0</code></pre>
+</details>
+</dd>
+<dt id="musx.seq.Seq.map"><code class="name flex">
+<span>def <span class="ident">map</span></span>(<span>self, func)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Maps a function of one argument over all the events in the sequence
+and returns a list of the collected results.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>func</code></strong> :&ensp;<code>Function | lambda</code></dt>
+<dd>A function or lambda of one argument, which will receive the
+current event being mapped. The results of calling the function
+will be returned as a list of values.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def map(self, func):
+    &#34;&#34;&#34;
+    Maps a function of one argument over all the events in the sequence
+    and returns a list of the collected results.
+
+    Parameters
+    ----------
+    func : Function | lambda
+        A function or lambda of one argument, which will receive the
+        current event being mapped. The results of calling the function
+        will be returned as a list of values.
+    &#34;&#34;&#34;
+    return [func(x) for x in self]</code></pre>
+</details>
+</dd>
+<dt id="musx.seq.Seq.print"><code class="name flex">
+<span>def <span class="ident">print</span></span>(<span>self, start=0, end=None, hints=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prints the contents of the sequence to the standard output.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>start</code></strong> :&ensp;<code>int</code></dt>
+<dd>The index of the first event to print.</dd>
+<dt><strong><code>end</code></strong> :&ensp;<code>int</code></dt>
+<dd>The index (exclusive) at which to stop printing.</dd>
+<dt><strong><code>hints</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true events are printed with message names.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print(self, start=0, end=None, hints=True):
+    &#34;&#34;&#34;
+    Prints the contents of the sequence to the standard output.
+    
+    Parameters
+    ----------
+    start : int
+        The index of the first event to print.
+    end : int
+        The index (exclusive) at which to stop printing.
+    hints : bool
+        If true events are printed with message names.
+    &#34;&#34;&#34;
+    if end is None:
+        end = len(self.events)
+    for i in range(start, end):
+        e = self.events[i]
+        print(i, e.time, e, sep=&#39;\t&#39;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="musx.seq.Seq" href="#musx.seq.Seq">Seq</a></code></h4>
+<ul class="two-column">
+<li><code><a title="musx.seq.Seq.add" href="#musx.seq.Seq.add">add</a></code></li>
+<li><code><a title="musx.seq.Seq.append" href="#musx.seq.Seq.append">append</a></code></li>
+<li><code><a title="musx.seq.Seq.clear" href="#musx.seq.Seq.clear">clear</a></code></li>
+<li><code><a title="musx.seq.Seq.endtime" href="#musx.seq.Seq.endtime">endtime</a></code></li>
+<li><code><a title="musx.seq.Seq.map" href="#musx.seq.Seq.map">map</a></code></li>
+<li><code><a title="musx.seq.Seq.print" href="#musx.seq.Seq.print">print</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

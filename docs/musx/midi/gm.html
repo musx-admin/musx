@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.midi.gm API documentation</title>
+<meta name="description" content="Defines constants for GM instruments, controllers and drum map values,
+and dictionaries for reverse mapping to names. Names are sanitized for
+Python …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.midi.gm</code></h1>
+</header>
+<section id="section-intro">
+<p>Defines constants for GM instruments, controllers and drum map values,
+and dictionaries for reverse mapping to names. Names are sanitized for
+Python syntax but are close to the names listed in
+at <a href="https://www.midi.org/specifications-old/item/general-midi-2">https://www.midi.org/specifications-old/item/general-midi-2</a></p>
+<h2 id="instrument-bank-constants-0-127">Instrument Bank Constants (0-127)</h2>
+<ul>
+<li>AcousticGrandPiano, BrightAcousticPiano, ElectricGrandPiano, HonkytonkPiano, ElectricPiano1, ElectricPiano2, Harpsichord, Clavi</li>
+<li>Celesta, Glockenspiel, MusicBox, Vibraphone, Marimba, Xylophone, TubularBells, Dulcimer</li>
+<li>DrawbarOrgan, PercussiveOrgan, RockOrgan, ChurchOrgan, ReedOrgan, Accordion, Harmonica, TangoAccordion</li>
+<li>AcousticGuitar_nylon, AcousticGuitar_steel, ElectricGuitar_jazz, ElectricGuitar_clean, ElectricGuitar_muted, OverdrivenGuitar, DistortionGuitar, Guitarharmonics</li>
+<li>AcousticBass, ElectricBass_finger, ElectricBass_pick, FretlessBass, SlapBass1, SlapBass2, SynthBass1, SynthBass2</li>
+<li>Violin, Viola, Cello, Contrabass, TremoloStrings, PizzicatoStrings, OrchestralHarp, Timpani</li>
+<li>StringEnsemble1, StringEnsemble2, SynthStrings1, SynthStrings2, ChoirAahs, VoiceOohs, SynthVoice, OrchestraHit</li>
+<li>Trumpet, Trombone, Tuba, MutedTrumpet, FrenchHorn, BrassSection, SynthBrass1, SynthBrass2</li>
+<li>SopranoSax, AltoSax, TenorSax, BaritoneSax, Oboe, EnglishHorn, Bassoon, Clarinet</li>
+<li>Piccolo, Flute, Recorder, PanFlute, BlownBottle, Shakuhachi, Whistle, Ocarina</li>
+<li>Lead1_square, Lead2_sawtooth, Lead3_calliope, Lead4_chiff, Lead5_charang, Lead6_voice, Lead7_fifths, Lead8_basslead</li>
+<li>Pad1_newage, Pad2_warm, Pad3_polysynth, Pad4_choir, Pad5_bowed, Pad6_metallic, Pad7_halo, Pad8_sweep</li>
+<li>FX1_rain, FX2_soundtrack, FX3_crystal, FX4_atmosphere, FX5_brightness, FX6_goblins, FX7_echoes, FX8_scifi</li>
+<li>Sitar, Banjo, Shamisen, Koto, Kalimba, Bagpipe, Fiddle, Shanai</li>
+<li>TinkleBell, Agogo, SteelDrums, Woodblock, TaikoDrum, MelodicTom, SynthDrum, ReverseCymbal</li>
+<li>GuitarFretNoise, BreathNoise, Seashore, BirdTweet, TelephoneRing, Helicopter, Applause, Gunshot</li>
+</ul>
+<h2 id="control-change-constants-0-127">Control Change Constants (0-127)</h2>
+<ul>
+<li>BankSelect, ModulationWheel, Breathcontroller, FootPedal, PortamentoTime, DataEntry, Volume, Balance</li>
+<li>Pan, Expression, EffectControl1, EffectControl2, GeneralPurpose1, GeneralPurpose2, GeneralPurpose3, GeneralPurpose4</li>
+<li>BankSelect_LSB, ModulationWheel_LSB, Breathcontroller_LSB, FootPedal_LSB, PortamentoTime_LSB, DataEntry_LSB, Volume_LSB, Balance_LSB</li>
+<li>Pan_LSB, Expression_LSB, EffectControl1_LSB, EffectControl2_LSB, SustainPedal_on_off, Portamento_on_off, SustenutoPedal_on_off, SoftPedal_on_off</li>
+<li>LegatoPedal_on_off, Hold2Pedal_on_off, SoundVariation, Timbre, ReleaseTime, AttackTime, Brightness, SoundControl6</li>
+<li>SoundControl7, SoundControl8, SoundControl9, SoundControl10, GeneralPurpose5, GeneralPurpose6, GeneralPurpose7, GeneralPurpose8</li>
+<li>PortamentoControl, Effects1Depth, Effects2Depth, Effects3Depth, Effects4Depth, Effects5Depth, Dataincrement, Datadecrement</li>
+<li>NonregisteredParameter_LSB, NonregisteredParameter_MSB, RegisteredParameter_LSB, RegisteredParameter_MSB, AllSoundOff, AllControllersOff, LocalKeyboard_on_off, AllNotesOff</li>
+<li>OmniOff, OmniOn, MonoOn, PolyOn</li>
+</ul>
+<h2 id="percussion-map-constants-34-80">Percussion Map Constants (34-80)</h2>
+<ul>
+<li>AcousticBassDrum, BassDrum1, SideStick, AcousticSnare, HandClap, ElectricSnare, LowFloorTom, ClosedHiHat</li>
+<li>HighFloorTom, PedalHiHat, LowTom, OpenHiHat, LowMidTom, HiMidTom, CrashCymbal1, HighTom</li>
+<li>RideCymbal1, ChineseCymbal, RideBell, Tambourine, SplashCymbal, Cowbell, CrashCymbal2, Vibraslap</li>
+<li>RideCymbal2, HiBongo, LowBongo, MuteHiConga, OpenHiConga, LowConga, HighTimbale, LowTimbale</li>
+<li>HighAgogo, LowAgogo, Cabasa, Maracas, ShortWhistle, LongWhistle, ShortGuiro, LongGuiro</li>
+<li>Claves, HiWoodBlock, LowWoodBlock, MuteCuica, OpenCuica, MuteTriangle, OpenTriangle</li>
+</ul>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Defines constants for GM instruments, controllers and drum map values,
+and dictionaries for reverse mapping to names. Names are sanitized for
+Python syntax but are close to the names listed in
+at https://www.midi.org/specifications-old/item/general-midi-2
+
+Instrument Bank Constants (0-127)
+----------------------------------
+
+* AcousticGrandPiano, BrightAcousticPiano, ElectricGrandPiano, HonkytonkPiano, ElectricPiano1, ElectricPiano2, Harpsichord, Clavi
+* Celesta, Glockenspiel, MusicBox, Vibraphone, Marimba, Xylophone, TubularBells, Dulcimer
+* DrawbarOrgan, PercussiveOrgan, RockOrgan, ChurchOrgan, ReedOrgan, Accordion, Harmonica, TangoAccordion
+* AcousticGuitar_nylon, AcousticGuitar_steel, ElectricGuitar_jazz, ElectricGuitar_clean, ElectricGuitar_muted, OverdrivenGuitar, DistortionGuitar, Guitarharmonics
+* AcousticBass, ElectricBass_finger, ElectricBass_pick, FretlessBass, SlapBass1, SlapBass2, SynthBass1, SynthBass2
+* Violin, Viola, Cello, Contrabass, TremoloStrings, PizzicatoStrings, OrchestralHarp, Timpani
+* StringEnsemble1, StringEnsemble2, SynthStrings1, SynthStrings2, ChoirAahs, VoiceOohs, SynthVoice, OrchestraHit
+* Trumpet, Trombone, Tuba, MutedTrumpet, FrenchHorn, BrassSection, SynthBrass1, SynthBrass2
+* SopranoSax, AltoSax, TenorSax, BaritoneSax, Oboe, EnglishHorn, Bassoon, Clarinet
+* Piccolo, Flute, Recorder, PanFlute, BlownBottle, Shakuhachi, Whistle, Ocarina
+* Lead1_square, Lead2_sawtooth, Lead3_calliope, Lead4_chiff, Lead5_charang, Lead6_voice, Lead7_fifths, Lead8_basslead
+* Pad1_newage, Pad2_warm, Pad3_polysynth, Pad4_choir, Pad5_bowed, Pad6_metallic, Pad7_halo, Pad8_sweep
+* FX1_rain, FX2_soundtrack, FX3_crystal, FX4_atmosphere, FX5_brightness, FX6_goblins, FX7_echoes, FX8_scifi
+* Sitar, Banjo, Shamisen, Koto, Kalimba, Bagpipe, Fiddle, Shanai
+* TinkleBell, Agogo, SteelDrums, Woodblock, TaikoDrum, MelodicTom, SynthDrum, ReverseCymbal
+* GuitarFretNoise, BreathNoise, Seashore, BirdTweet, TelephoneRing, Helicopter, Applause, Gunshot
+
+Control Change Constants (0-127)
+--------------------------------
+
+* BankSelect, ModulationWheel, Breathcontroller, FootPedal, PortamentoTime, DataEntry, Volume, Balance
+* Pan, Expression, EffectControl1, EffectControl2, GeneralPurpose1, GeneralPurpose2, GeneralPurpose3, GeneralPurpose4
+* BankSelect_LSB, ModulationWheel_LSB, Breathcontroller_LSB, FootPedal_LSB, PortamentoTime_LSB, DataEntry_LSB, Volume_LSB, Balance_LSB
+* Pan_LSB, Expression_LSB, EffectControl1_LSB, EffectControl2_LSB, SustainPedal_on_off, Portamento_on_off, SustenutoPedal_on_off, SoftPedal_on_off
+* LegatoPedal_on_off, Hold2Pedal_on_off, SoundVariation, Timbre, ReleaseTime, AttackTime, Brightness, SoundControl6
+* SoundControl7, SoundControl8, SoundControl9, SoundControl10, GeneralPurpose5, GeneralPurpose6, GeneralPurpose7, GeneralPurpose8
+* PortamentoControl, Effects1Depth, Effects2Depth, Effects3Depth, Effects4Depth, Effects5Depth, Dataincrement, Datadecrement
+* NonregisteredParameter_LSB, NonregisteredParameter_MSB, RegisteredParameter_LSB, RegisteredParameter_MSB, AllSoundOff, AllControllersOff, LocalKeyboard_on_off, AllNotesOff
+* OmniOff, OmniOn, MonoOn, PolyOn
+
+Percussion Map Constants (34-80)
+--------------------------------
+
+* AcousticBassDrum, BassDrum1, SideStick, AcousticSnare, HandClap, ElectricSnare, LowFloorTom, ClosedHiHat
+* HighFloorTom, PedalHiHat, LowTom, OpenHiHat, LowMidTom, HiMidTom, CrashCymbal1, HighTom
+* RideCymbal1, ChineseCymbal, RideBell, Tambourine, SplashCymbal, Cowbell, CrashCymbal2, Vibraslap
+* RideCymbal2, HiBongo, LowBongo, MuteHiConga, OpenHiConga, LowConga, HighTimbale, LowTimbale
+* HighAgogo, LowAgogo, Cabasa, Maracas, ShortWhistle, LongWhistle, ShortGuiro, LongGuiro
+* Claves, HiWoodBlock, LowWoodBlock, MuteCuica, OpenCuica, MuteTriangle, OpenTriangle
+&#34;&#34;&#34;
+
+# Named constants for the GM instument map 0-127. 
+
+AcousticGrandPiano = 0
+BrightAcousticPiano = 1
+ElectricGrandPiano = 2
+HonkytonkPiano = 3
+ElectricPiano1 = 4
+ElectricPiano2 = 5
+Harpsichord = 6
+Clavi = 7
+Celesta = 8
+Glockenspiel = 9
+MusicBox = 10
+Vibraphone = 11
+Marimba = 12
+Xylophone = 13
+TubularBells = 14
+Dulcimer = 15
+DrawbarOrgan = 16
+PercussiveOrgan = 17
+RockOrgan = 18
+ChurchOrgan = 19
+ReedOrgan = 20
+Accordion = 21
+Harmonica = 22
+TangoAccordion = 23
+AcousticGuitar_nylon = 24
+AcousticGuitar_steel = 25
+ElectricGuitar_jazz = 26
+ElectricGuitar_clean = 27
+ElectricGuitar_muted = 28
+OverdrivenGuitar = 29
+DistortionGuitar = 30
+Guitarharmonics = 31
+AcousticBass = 32
+ElectricBass_finger = 33
+ElectricBass_pick = 34
+FretlessBass = 35
+SlapBass1 = 36
+SlapBass2 = 37
+SynthBass1 = 38
+SynthBass2 = 39
+Violin = 40
+Viola = 41
+Cello = 42
+Contrabass = 43
+TremoloStrings = 44
+PizzicatoStrings = 45
+OrchestralHarp = 46
+Timpani = 47
+StringEnsemble1 = 48
+StringEnsemble2 = 49
+SynthStrings1 = 50
+SynthStrings2 = 51
+ChoirAahs = 52
+VoiceOohs = 53
+SynthVoice = 54
+OrchestraHit = 55
+Trumpet = 56
+Trombone = 57
+Tuba = 58
+MutedTrumpet = 59
+FrenchHorn = 60
+BrassSection = 61
+SynthBrass1 = 62
+SynthBrass2 = 63
+SopranoSax = 64
+AltoSax = 65
+TenorSax = 66
+BaritoneSax = 67
+Oboe = 68
+EnglishHorn = 69
+Bassoon = 70
+Clarinet = 71
+Piccolo = 72
+Flute = 73
+Recorder = 74
+PanFlute = 75
+BlownBottle = 76
+Shakuhachi = 77
+Whistle = 78
+Ocarina = 79
+Lead1_square = 80
+Lead2_sawtooth = 81
+Lead3_calliope = 82
+Lead4_chiff = 83
+Lead5_charang = 84
+Lead6_voice = 85
+Lead7_fifths = 86
+Lead8_basslead = 87
+Pad1_newage = 88
+Pad2_warm = 89
+Pad3_polysynth = 90
+Pad4_choir = 91
+Pad5_bowed = 92
+Pad6_metallic = 93
+Pad7_halo = 94
+Pad8_sweep = 95
+FX1_rain = 96
+FX2_soundtrack = 97
+FX3_crystal = 98
+FX4_atmosphere = 99
+FX5_brightness = 100
+FX6_goblins = 101
+FX7_echoes = 102
+FX8_scifi = 103
+Sitar = 104
+Banjo = 105
+Shamisen = 106
+Koto = 107
+Kalimba = 108
+Bagpipe = 109
+Fiddle = 110
+Shanai = 111
+TinkleBell = 112
+Agogo = 113
+SteelDrums = 114
+Woodblock = 115
+TaikoDrum = 116
+MelodicTom = 117
+SynthDrum = 118
+ReverseCymbal = 119
+GuitarFretNoise = 120
+BreathNoise = 121
+Seashore = 122
+BirdTweet = 123
+TelephoneRing = 124
+Helicopter = 125
+Applause = 126
+Gunshot = 127
+
+
+instrument_names = {
+    0: &#39;Acoustic Grand Piano&#39;,
+    1: &#39;Bright Acoustic Piano&#39;,
+    2: &#39;Electric Grand Piano&#39;,
+    3: &#39;Honky-tonk Piano&#39;,
+    4: &#39;Electric Piano 1&#39;,
+    5: &#39;Electric Piano 2&#39;,
+    6: &#39;Harpsichord&#39;,
+    7: &#39;Clavi&#39;,
+    8: &#39;Celesta&#39;,
+    9: &#39;Glockenspiel&#39;,
+    10: &#39;Music Box&#39;,
+    11: &#39;Vibraphone&#39;,
+    12: &#39;Marimba&#39;,
+    13: &#39;Xylophone&#39;,
+    14: &#39;Tubular Bells&#39;,
+    15: &#39;Dulcimer&#39;,
+    16: &#39;Drawbar Organ&#39;,
+    17: &#39;Percussive Organ&#39;,
+    18: &#39;Rock Organ&#39;,
+    19: &#39;Church Organ&#39;,
+    20: &#39;Reed Organ&#39;,
+    21: &#39;Accordion&#39;,
+    22: &#39;Harmonica&#39;,
+    23: &#39;Tango Accordion&#39;,
+    24: &#39;Acoustic Guitar (nylon)&#39;,
+    25: &#39;Acoustic Guitar (steel)&#39;,
+    26: &#39;Electric Guitar (jazz)&#39;,
+    27: &#39;Electric Guitar (clean)&#39;,
+    28: &#39;Electric Guitar (muted)&#39;,
+    29: &#39;Overdriven Guitar&#39;,
+    30: &#39;Distortion Guitar&#39;,
+    31: &#39;Guitar harmonics&#39;,
+    32: &#39;Acoustic Bass&#39;,
+    33: &#39;Electric Bass (finger)&#39;,
+    34: &#39;Electric Bass (pick)&#39;,
+    35: &#39;Fretless Bass&#39;,
+    36: &#39;Slap Bass 1&#39;,
+    37: &#39;Slap Bass 2&#39;,
+    38: &#39;Synth Bass 1&#39;,
+    39: &#39;Synth Bass 2&#39;,
+    40: &#39;Violin&#39;,
+    41: &#39;Viola&#39;,
+    42: &#39;Cello&#39;,
+    43: &#39;Contrabass&#39;,
+    44: &#39;Tremolo Strings&#39;,
+    45: &#39;Pizzicato Strings&#39;,
+    46: &#39;Orchestral Harp&#39;,
+    47: &#39;Timpani&#39;,
+    48: &#39;String Ensemble 1&#39;,
+    49: &#39;String Ensemble 2&#39;,
+    50: &#39;SynthStrings 1&#39;,
+    51: &#39;SynthStrings 2&#39;,
+    52: &#39;Choir Aahs&#39;,
+    53: &#39;Voice Oohs&#39;,
+    54: &#39;Synth Voice&#39;,
+    55: &#39;Orchestra Hit&#39;,
+    56: &#39;Trumpet&#39;,
+    57: &#39;Trombone&#39;,
+    58: &#39;Tuba&#39;,
+    59: &#39;Muted Trumpet&#39;,
+    60: &#39;French Horn&#39;,
+    61: &#39;Brass Section&#39;,
+    62: &#39;SynthBrass 1&#39;,
+    63: &#39;SynthBrass 2&#39;,
+    64: &#39;Soprano Sax&#39;,
+    65: &#39;Alto Sax&#39;,
+    66: &#39;Tenor Sax&#39;,
+    67: &#39;Baritone Sax&#39;,
+    68: &#39;Oboe&#39;,
+    69: &#39;English Horn&#39;,
+    70: &#39;Bassoon&#39;,
+    71: &#39;Clarinet&#39;,
+    72: &#39;Piccolo&#39;,
+    73: &#39;Flute&#39;,
+    74: &#39;Recorder&#39;,
+    75: &#39;Pan Flute&#39;,
+    76: &#39;Blown Bottle&#39;,
+    77: &#39;Shakuhachi&#39;,
+    78: &#39;Whistle&#39;,
+    79: &#39;Ocarina&#39;,
+    80: &#39;Lead 1 (square)&#39;,
+    81: &#39;Lead 2 (sawtooth)&#39;,
+    82: &#39;Lead 3 (calliope)&#39;,
+    83: &#39;Lead 4 (chiff)&#39;,
+    84: &#39;Lead 5 (charang)&#39;,
+    85: &#39;Lead 6 (voice)&#39;,
+    86: &#39;Lead 7 (fifths)&#39;,
+    87: &#39;Lead 8 (bass + lead)&#39;,
+    88: &#39;Pad 1 (new age)&#39;,
+    89: &#39;Pad 2 (warm)&#39;,
+    90: &#39;Pad 3 (polysynth)&#39;,
+    91: &#39;Pad 4 (choir)&#39;,
+    92: &#39;Pad 5 (bowed)&#39;,
+    93: &#39;Pad 6 (metallic)&#39;,
+    94: &#39;Pad 7 (halo)&#39;,
+    95: &#39;Pad 8 (sweep)&#39;,
+    96: &#39;FX 1 (rain)&#39;,
+    97: &#39;FX 2 (soundtrack)&#39;,
+    98: &#39;FX 3 (crystal)&#39;,
+    99: &#39;FX 4 (atmosphere)&#39;,
+    100: &#39;FX 5 (brightness)&#39;,
+    101: &#39;FX 6 (goblins)&#39;,
+    102: &#39;FX 7 (echoes)&#39;,
+    103: &#39;FX 8 (sci-fi)&#39;,
+    104: &#39;Sitar&#39;,
+    105: &#39;Banjo&#39;,
+    106: &#39;Shamisen&#39;,
+    107: &#39;Koto&#39;,
+    108: &#39;Kalimba&#39;,
+    109: &#39;Bag pipe&#39;,
+    110: &#39;Fiddle&#39;,
+    111: &#39;Shanai&#39;,
+    112: &#39;Tinkle Bell&#39;,
+    113: &#39;Agogo&#39;,
+    114: &#39;Steel Drums&#39;,
+    115: &#39;Woodblock&#39;,
+    116: &#39;Taiko Drum&#39;,
+    117: &#39;Melodic Tom&#39;,
+    118: &#39;Synth Drum&#39;,
+    119: &#39;Reverse Cymbal&#39;,
+    120: &#39;Guitar Fret Noise&#39;,
+    121: &#39;Breath Noise&#39;,
+    122: &#39;Seashore&#39;,
+    123: &#39;Bird Tweet&#39;,
+    124: &#39;Telephone Ring&#39;,
+    125: &#39;Helicopter&#39;,
+    126: &#39;Applause&#39;,
+    127: &#39;Gunshot&#39;
+}
+&#39;&#39;&#39;
+A dictionary of GM instrument names indexed by program change values 0 to 127. 
+Note: these are the true midi values, i.e. one less than the one-based numbers
+listed in GM tables on the web.
+&#39;&#39;&#39;
+
+
+BankSelect = 0
+ModulationWheel = 1
+Breathcontroller = 2
+FootPedal = 4
+PortamentoTime = 5
+DataEntry = 6
+Volume = 7
+Balance = 8
+Pan = 10
+Expression = 11
+EffectControl1 = 12
+EffectControl2 = 13
+GeneralPurpose1 = 16
+GeneralPurpose2 = 17
+GeneralPurpose3 = 18
+GeneralPurpose4 = 19
+BankSelect_LSB = 32
+ModulationWheel_LSB = 33
+Breathcontroller_LSB = 34
+FootPedal_LSB = 36
+PortamentoTime_LSB = 37
+DataEntry_LSB = 38
+Volume_LSB = 39
+Balance_LSB = 40
+Pan_LSB = 42
+Expression_LSB = 43
+EffectControl1_LSB = 44
+EffectControl2_LSB = 45
+SustainPedal_on_off = 64
+Portamento_on_off = 65
+SustenutoPedal_on_off = 66
+SoftPedal_on_off = 67
+LegatoPedal_on_off = 68
+Hold2Pedal_on_off = 69
+SoundVariation = 70
+Timbre = 71
+ReleaseTime = 72
+AttackTime = 73
+Brightness = 74
+SoundControl6 = 75
+SoundControl7 = 76
+SoundControl8 = 77
+SoundControl9 = 78
+SoundControl10 = 79
+GeneralPurpose5 = 80
+GeneralPurpose6 = 81
+GeneralPurpose7 = 82
+GeneralPurpose8 = 83
+PortamentoControl = 84
+Effects1Depth = 91
+Effects2Depth = 92
+Effects3Depth = 93
+Effects4Depth = 94
+Effects5Depth = 95
+Dataincrement = 96
+Datadecrement = 97
+NonregisteredParameter_LSB = 98
+NonregisteredParameter_MSB = 99
+RegisteredParameter_LSB = 100
+RegisteredParameter_MSB = 101
+AllSoundOff = 120
+AllControllersOff = 121
+LocalKeyboard_on_off = 122
+AllNotesOff = 123
+OmniOff = 124
+OmniOn = 125
+MonoOn = 126
+PolyOn = 127
+
+
+controller_names = {
+    0: &#34;Bank Select&#34;,
+    1: &#34;Modulation Wheel&#34;,
+    2: &#34;Breath controller&#34;,
+    4: &#34;Foot Pedal&#34;,
+    5: &#34;Portamento Time&#34;,
+    6: &#34;Data Entry&#34;,
+    7: &#34;Volume&#34;,
+    8: &#34;Balance&#34;,
+    10: &#34;Pan&#34;,
+    11: &#34;Expression&#34;,
+    12: &#34;Effect Control 1&#34;,
+    13: &#34;Effect Control 2&#34;,
+    16: &#34;General Purpose 1&#34;,
+    17: &#34;General Purpose 2&#34;,
+    18: &#34;General Purpose 3&#34;,
+    19: &#34;General Purpose 4&#34;,
+    32: &#34;Bank Select (LSB)&#34;,
+    33: &#34;Modulation Wheel (LSB)&#34;,
+    34: &#34;Breath controller (LSB)&#34;,
+    36: &#34;Foot Pedal (LSB)&#34;,
+    37: &#34;Portamento Time (LSB)&#34;,
+    38: &#34;Data Entry (LSB)&#34;,
+    39: &#34;Volume (LSB)&#34;,
+    40: &#34;Balance (LSB)&#34;,
+    42: &#34;Pan (LSB)&#34;,
+    43: &#34;Expression (LSB)&#34;,
+    44: &#34;Effect Control 1 (LSB)&#34;,
+    45: &#34;Effect Control 2 (LSB)&#34;,
+    64: &#34;Sustain Pedal (on/off)&#34;,
+    65: &#34;Portamento (on/off)&#34;,
+    66: &#34;Sustenuto Pedal (on/off)&#34;,
+    67: &#34;Soft Pedal (on/off)&#34;,
+    68: &#34;Legato Pedal (on/off)&#34;,
+    69: &#34;Hold 2 Pedal (on/off)&#34;,
+    70: &#34;Sound Variation&#34;,
+    71: &#34;Timbre &#34;,
+    72: &#34;Release Time&#34;,
+    73: &#34;Attack Time&#34;,
+    74: &#34;Brightness&#34;,
+    75: &#34;Sound Control 6&#34;,
+    76: &#34;Sound Control 7&#34;,
+    77: &#34;Sound Control 8&#34;,
+    78: &#34;Sound Control 9&#34;,
+    79: &#34;Sound Control 10&#34;,
+    80: &#34;General Purpose 5&#34;,
+    81: &#34;General Purpose 6&#34;,
+    82: &#34;General Purpose 7&#34;,
+    83: &#34;General Purpose 8&#34;,
+    84: &#34;Portamento Control&#34;,
+    91: &#34;Effects 1 Depth&#34;,
+    92: &#34;Effects 2 Depth&#34;,
+    93: &#34;Effects 3 Depth&#34;,
+    94: &#34;Effects 4 Depth&#34;,
+    95: &#34;Effects 5 Depth&#34;,
+    96: &#34;Data increment&#34;,
+    97: &#34;Data decrement&#34;,
+    98: &#34;Non-registered Parameter (LSB)&#34;,
+    99: &#34;Non-registered Parameter (MSB)&#34;,
+    100: &#34;Registered Parameter (LSB)&#34;,
+    101: &#34;Registered Parameter (MSB)&#34;,
+    120: &#34;All Sound Off&#34;,
+    121: &#34;All Controllers Off&#34;,
+    122: &#34;Local Keyboard (on/off)&#34;,
+    123: &#34;All Notes Off&#34;,
+    124: &#34;Omni Off&#34;,
+    125: &#34;Omni On&#34;,
+    126: &#34;Mono On&#34;,
+    127: &#34;Poly On&#34;
+}
+&#39;&#39;&#39;
+A dictionary of GM controller names indexed by controller change values 0 to 127. 
+Note: these are the true midi values, i.e. one less than the one-based numbers
+listed in GM tables on the web. There are a number of undefined values in the 
+range so you should iterate using controller_names.items() 
+&#39;&#39;&#39;
+
+    
+AcousticBassDrum = 34
+BassDrum1 = 35
+SideStick = 36
+AcousticSnare = 37
+HandClap = 38
+ElectricSnare = 39
+LowFloorTom = 40
+ClosedHiHat = 41
+HighFloorTom = 42
+PedalHiHat = 43
+LowTom = 44
+OpenHiHat = 45
+LowMidTom = 46
+HiMidTom = 47
+CrashCymbal1 = 48
+HighTom = 49
+RideCymbal1 = 50
+ChineseCymbal = 51
+RideBell = 52
+Tambourine = 53
+SplashCymbal = 54
+Cowbell = 55
+CrashCymbal2 = 56
+Vibraslap = 57
+RideCymbal2 = 58
+HiBongo = 59
+LowBongo = 60
+MuteHiConga = 61
+OpenHiConga = 62
+LowConga = 63
+HighTimbale = 64
+LowTimbale = 65
+HighAgogo = 66
+LowAgogo = 67
+Cabasa = 68
+Maracas = 69
+ShortWhistle = 70
+LongWhistle = 71
+ShortGuiro = 72
+LongGuiro = 73
+Claves = 74
+HiWoodBlock = 75
+LowWoodBlock = 76
+MuteCuica = 77
+OpenCuica = 78
+MuteTriangle = 79
+OpenTriangle = 80
+
+
+percussion_names = {
+    34: &#39;Acoustic Bass Drum&#39;,
+    35: &#39;Bass Drum 1&#39;,
+    36: &#39;Side Stick&#39;,
+    37: &#39;Acoustic Snare&#39;,
+    38: &#39;Hand Clap&#39;,
+    39: &#39;Electric Snare&#39;,
+    40: &#39;Low Floor Tom&#39;,
+    41: &#39;Closed Hi Hat&#39;,
+    42: &#39;High Floor Tom&#39;,
+    43: &#39;Pedal Hi Hat&#39;,
+    44: &#39;Low Tom&#39;,
+    45: &#39;Open Hi Hat&#39;,
+    46: &#39;Low-Mid Tom&#39;,
+    47: &#39;Hi-Mid Tom&#39;,
+    48: &#39;Crash Cymbal 1&#39;,
+    49: &#39;High Tom&#39;,
+    50: &#39;Ride Cymbal 1&#39;,
+    51: &#39;Chinese Cymbal&#39;,
+    52: &#39;Ride Bell&#39;,
+    53: &#39;Tambourine&#39;,
+    54: &#39;Splash Cymbal&#39;,
+    55: &#39;Cowbell&#39;,
+    56: &#39;Crash Cymbal 2&#39;,
+    57: &#39;Vibraslap&#39;,
+    58: &#39;Ride Cymbal 2&#39;,
+    59: &#39;Hi Bongo&#39;,
+    60: &#39;Low Bongo&#39;,
+    61: &#39;Mute Hi Conga&#39;,
+    62: &#39;Open Hi Conga&#39;,
+    63: &#39;Low Conga&#39;,
+    64: &#39;High Timbale&#39;,
+    65: &#39;Low Timbale&#39;,
+    66: &#39;High Agogo&#39;,
+    67: &#39;Low Agogo&#39;,
+    68: &#39;Cabasa&#39;,
+    69: &#39;Maracas&#39;,
+    70: &#39;Short Whistle&#39;,
+    71: &#39;Long Whistle&#39;,
+    72: &#39;Short Guiro&#39;,
+    73: &#39;Long Guiro&#39;,
+    74: &#39;Claves&#39;,
+    75: &#39;Hi Wood Block&#39;,
+    76: &#39;Low Wood Block&#39;,
+    77: &#39;Mute Cuica&#39;,
+    78: &#39;Open Cuica&#39;,
+    79: &#39;Mute Triangle&#39;,
+    80: &#39;Open Triangle&#39;,
+}
+&#39;&#39;&#39;
+A dictionary of GM drum map names indexed by controller change values 34 to 80. 
+Note: these are the true midi values, i.e. one less than the one-based numbers
+listed in GM tables on the web.
+&#39;&#39;&#39;
+
+
+if __name__ == &#39;__main__&#39;:
+    ## creates hygenically named constants from the instrument names
+    # for i,n in musx.midi.gm.controller_names.items():
+    #     n = n.replace(&#39; &#39;,&#39;&#39;).replace(&#39;)&#39;,&#39;&#39;).replace(&#39;(&#39;,&#39;_&#39;).replace(&#39;+&#39;,&#39;&#39;).replace(&#39;-&#39;,&#39;&#39;)
+    #     print(f&#34;{n} = {i}&#34;)
+
+    # creates hygenically named constants from the controller names
+    # for i, n in musx.midi.gm.controller_names.items():
+    #     n = n.replace(&#39; &#39;,&#39;&#39;).replace(&#39;)&#39;,&#39;&#39;).replace(&#39;(&#39;,&#39;_&#39;).replace(&#39;+&#39;,&#39;&#39;).replace(&#39;-&#39;,&#39;&#39;).replace(&#39;/&#39;,&#39;_&#39;)
+    #     print(f&#34;{n} = {i}&#34;)
+
+    # creates hygenically named constants from the controller names
+    #for i, n in percussion_names.items():
+    #    n = n.replace(&#39; &#39;,&#39;&#39;).replace(&#39;)&#39;,&#39;&#39;).replace(&#39;(&#39;,&#39;_&#39;).replace(&#39;+&#39;,&#39;&#39;).replace(&#39;-&#39;,&#39;&#39;).replace(&#39;/&#39;,&#39;_&#39;)
+    #    print(f&#34;{n} = {i}&#34;)
+
+    # print(&#34;instrument_names = {&#34;)
+    # for i,n in enumerate(instrument_names):
+    #     print(f&#34;    {i}: &#39;{n}&#39;,&#34;)
+    # print(&#34;}&#34;)
+
+    # print(&#34;percussion_names = {&#34;)
+    # for i,n in enumerate(percussion_names):
+    #    print(f&#34;    {i+34}: &#39;{n}&#39;,&#34;)
+    # print(&#34;}&#34;)
+    pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="musx.midi.gm.controller_names"><code class="name">var <span class="ident">controller_names</span></code></dt>
+<dd>
+<div class="desc"><p>A dictionary of GM controller names indexed by controller change values 0 to 127.
+Note: these are the true midi values, i.e. one less than the one-based numbers
+listed in GM tables on the web. There are a number of undefined values in the
+range so you should iterate using controller_names.items()</p></div>
+</dd>
+<dt id="musx.midi.gm.instrument_names"><code class="name">var <span class="ident">instrument_names</span></code></dt>
+<dd>
+<div class="desc"><p>A dictionary of GM instrument names indexed by program change values 0 to 127.
+Note: these are the true midi values, i.e. one less than the one-based numbers
+listed in GM tables on the web.</p></div>
+</dd>
+<dt id="musx.midi.gm.percussion_names"><code class="name">var <span class="ident">percussion_names</span></code></dt>
+<dd>
+<div class="desc"><p>A dictionary of GM drum map names indexed by controller change values 34 to 80.
+Note: these are the true midi values, i.e. one less than the one-based numbers
+listed in GM tables on the web.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#instrument-bank-constants-0-127">Instrument Bank Constants (0-127)</a></li>
+<li><a href="#control-change-constants-0-127">Control Change Constants (0-127)</a></li>
+<li><a href="#percussion-map-constants-34-80">Percussion Map Constants (34-80)</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx.midi" href="index.html">musx.midi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="musx.midi.gm.controller_names" href="#musx.midi.gm.controller_names">controller_names</a></code></li>
+<li><code><a title="musx.midi.gm.instrument_names" href="#musx.midi.gm.instrument_names">instrument_names</a></code></li>
+<li><code><a title="musx.midi.gm.percussion_names" href="#musx.midi.gm.percussion_names">percussion_names</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

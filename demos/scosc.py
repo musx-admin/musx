@@ -77,7 +77,7 @@ def plain_hunt(q, rhy, dur):
     # Plain Hunt's rotation rules
     rules = [[0, 2, 1], [1, 2, 1]]
     # generate the Plain Hunt pattern for 8 bells
-    peals = musx.allrotations(bells, rules, False, True)
+    peals = musx.all_rotations(bells, rules, False, True)
     # write OscMessages to the OscSeq
     for b in peals:
         f = freqs[b]

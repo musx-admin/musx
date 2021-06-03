@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.spectral API documentation</title>
+<meta name="description" content="Functions and classes for working with microtonality, the harmonic series, and
+spectra.
+For examples of generating microtonal music using midi see …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.spectral</code></h1>
+</header>
+<section id="section-intro">
+<p>Functions and classes for working with microtonality, the harmonic series, and
+spectra.
+For examples of generating microtonal music using midi see the demos
+micro.py, gamelan.py, fm.py, and rm.py.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">################################################################################
+&#34;&#34;&#34;
+Functions and classes for working with microtonality, the harmonic series, and
+spectra.  For examples of generating microtonal music using midi see the demos
+micro.py, gamelan.py, fm.py, and rm.py.
+&#34;&#34;&#34;
+
+import math
+import fractions
+from .pitch import keynum
+from .tools import quantize
+
+
+try:
+    from scipy.special import jn as bes_jn
+except ModuleNotFoundError:
+    def bes_jn(a,b):
+        raise ModuleNotFoundError(&#34;\nfmspectrum(): module scipy.special not found.&#34;)
+
+
+def harmonics(h1, h2, fund=1, reverse=False):
+    &#34;&#34;&#34;
+    Returns the harmonic series ratios between harmonic number
+    h1 to h2 inclusive.
+
+    If 0 &lt; h1 &lt; h2 then the ratios will produce the overtone series, 
+    otherwise (0 &gt; h1 &gt; h2) will produce undertones.  If reverse is
+    False then the overtone ratios are ascending and undertones are
+    decending.
+
+    Parameters
+    ----------
+    h1 : int
+        The starting harmonic. If positive, overtones are produced
+        otherwise negative undertones are produced.
+    h2 : int
+        The ending harmonic (inclusive). If positive it must be
+        equal to or greater than h1. If negativ it must be equal
+        to or less than h1.
+    fund : int | float
+        The fundamental of the series, defaults to 1. If fund is an int
+        then exact Faction harmonics are produced. If fund is a float
+        then the series will be floats as well.
+    reverse : bool
+        If true then overtones are returned reversed order.
+    
+    Returns
+    -------
+    The list of harmonic ratios between h1 and h2 inclusive.
+    &#34;&#34;&#34;
+
+    if not isinstance(h1, int):
+        TypeError(f&#34;not an integer harmonic number: {h1}.&#34;)
+    if not isinstance(h2, int):
+        TypeError(f&#34;not an integer harmonic number: {h2}.&#34;)
+    utones = False
+    harms = []
+    if (0 &lt; h1 &lt; h2):
+        pass
+    elif (0 &gt; h1 &gt; h2):
+        utones = True
+    else:
+        raise ValueError(f&#34;harmonic numbers out of order: {h1} {h2}.&#34;)
+    h1 = fractions.Fraction(abs(h1),1)
+    h2 = fractions.Fraction(abs(h2),1)
+    h = h1
+    f = None
+    while h &lt;= h2:
+        # utones collect the reciprocal
+        f = fund/(h/h1) if utones else fund*(h/h1)
+        harms.append(f)
+        h += 1
+    if reverse:
+        harms.reverse()
+    return harms
+
+
+def temper(ratio, div=12):
+    &#34;&#34;&#34;
+    Converts a frequency ratio into a tempered interval.
+
+    Parameters
+    ----------
+    ratio : int | float | Fraction | list
+        The ratio to convert. The value can be an integer, float,
+        Fraction, or a list of the same.
+    div : int
+        The divisions per octave. 12 will convert to
+        semitones and 1200 will convert to cents.
+    Returns
+    -------
+    The tempered interval.
+    &#34;&#34;&#34;
+
+    func = lambda r,s: math.log(r)/math.log(2.0) * s
+    if type(ratio) is list:
+        return [func(r, div) for r in ratio]
+    return func(ratio, div)
+
+
+def untemper(interval, div=12):
+    &#34;&#34;&#34;
+    Converts a tempered interval into a frequency ratio.
+
+    Parameters
+    ----------
+    interval : int | float
+        The interval to convert. The value can be an integer, float,
+        or a list of the same.
+    div : int
+        The divisions per octave. 12 will convert from
+        semitones and 1200 will convert from cents.
+    Returns
+    -------
+    The untempered frequency ratio
+    &#34;&#34;&#34;
+
+    func = lambda i,d: math.pow(2.0, i/d)
+    if type(interval) is list:
+        return [func(i, div) for i in interval]
+    return func(interval, div)
+
+
+class Spectrum (list):
+
+    def __new__(cls, pairs):
+        &#34;&#34;&#34;
+        Creates a Spectrum out of a list of frequency/amplitude pairs.
+
+        Parameters
+        ----------
+        pairs : list
+            A sorted list of [frequency, amplitude] pairs with lower
+            frequency pairs to the left.
+
+        Returns:
+        A Spectrum.
+        &#34;&#34;&#34;
+        z = 0
+        for t in pairs:
+            if not isinstance(t, list) or len(t) != 2: 
+                raise TypeError(f&#34;not a tuple (frequency, amplitude): {t}.&#34;)
+            if not isinstance(t[0], (int, float)):
+                raise TypeError(f&#34;invalid frequency: {t[0]}.&#34;)
+            if not isinstance(t[1], (int, float)):
+                raise TypeError(f&#34;invalid amplitude: {t[0]}.&#34;)
+            if not t[0] &gt; z:
+                raise ValueError(f&#34;invalid frequency: {t[0]} not greater than {z}.&#34;)
+            # if not t[1] &gt; 0:
+            #     raise ValueError(f&#34;invalid amplitude {t[1]} not greater than 0.&#34;)
+        return super(Spectrum, cls).__new__(cls, pairs)
+
+    def size(self):
+        return len(self)
+
+    def freqs(self):
+        &#34;&#34;&#34;Returns a list of the frequency components in the spectrum.&#34;&#34;&#34;
+        return [t[0] for t in self]
+
+    def amps(self):
+        &#34;&#34;&#34;Returns a list of the amplitude components in the spectrum.&#34;&#34;&#34;
+        return [t[1] for t in self]
+
+    def pairs(self):
+        &#34;&#34;&#34;Returns a list of frequency and amplitude pairs.&#34;&#34;&#34;
+        return list(self)
+
+    def maxfreq(self):
+        &#34;&#34;&#34;Returns the maximum frequency in the spectrum.&#34;&#34;&#34;
+        return self[-1][0]
+
+    def minfreq(self):
+        &#34;&#34;&#34;Returns the minimum frequency in the spectrum.&#34;&#34;&#34;
+        return self[0][0]
+
+    def minamp(self):
+        &#34;&#34;&#34;Returns the minimum amplitude in the spectrum.&#34;&#34;&#34;
+        mina = None
+        for t in self:
+            if not mina or t[1] &lt; mina:
+                 mina = t[1]
+        return mina
+
+    def maxamp(self):
+        &#34;&#34;&#34;Returns the minimum amplitude in the spectrum.&#34;&#34;&#34;
+        maxa = None
+        for t in self:
+            if not maxa or t[1] &gt; maxa:
+                 maxa = t[1]
+        return maxa
+
+    def __str__(self):
+        return f&#39;&lt;Spectrum: {len(self)} {hex(id(self))}&gt;&#39;
+
+    __repr__ = __str__
+
+    def keynums(self, quant=None, unique=None, minkey=0, maxkey=127, thresh=0):
+        &#34;&#34;&#34;
+        Returns a list of the frequency components of spectrum converted to key
+        numbers. 
+
+        Parameters
+        ----------
+        quant : int | float | function | None
+            If quant is a number then the key numbers returned are quantized to
+            that semitonal value, e.g. quant .5 returns key numbers quantized
+            to the nearest quarter-tone and quant 1 returns key numbers rounded
+            to the nearest semitone. Quant can also be a function, e.g. round,
+            ceil, or floor.
+        unique : bool
+            If unique is True then no duplicate key numbers will be returned. 
+        minkey : int | None
+            If a minkey number is specified then spectral values lower than that will be octave 
+            shifted upward until they equal or exceed it.
+        maxkey : int | None
+            If a maxkey number is specified then spectral values higher than that will be octave 
+            shifted downward until they equal or lower than it.
+        thresh : float | None
+            The minimum amplitude that a frequency must possess in order to be
+             returned as keys.
+
+        Returns
+        -------
+        A list of key number from the spectrum.
+        &#34;&#34;&#34;
+        if not (minkey &lt; maxkey):
+            raise TypeError(&#34;minkey {minkey} not less than {maxkey}.&#34;)
+        if callable(quant) or quant is None:
+            func = quant
+        elif isinstance(quant, (int, float)):
+            func = lambda x: quantize(x, quant)
+        else:
+            raise TypeError(&#34;quant value not a callable, number, or None: {quant}.&#34;)
+        keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh]
+        for i in range(len(keys)):
+            while keys[i] &lt; minkey: keys[i] += 12
+            while keys[i] &gt; maxkey: keys[i] -= 12
+            if not minkey &lt;= keys[i] &lt;= maxkey:
+                raise ValueError(f&#34;key {keys[i]} outside bounds {minkey} to {maxkey}.&#34;)
+        if unique:
+            keys = list(dict.fromkeys(keys))
+        return sorted(keys)
+
+    def add(self, freq, amp):
+        &#34;&#34;&#34;
+        Updates the amplitude of an existing [freq,amp] pair or inserts a new
+        pair if freq is not yet in the spectrum.  
+        
+        Warning: add alters the existing spectrum by adding or updating 
+        components.
+
+        Parameters
+        ----------
+        freq : int | float
+            The frequency to add or update.
+        amp : int | float
+            The amplitude to add or update.
+        &#34;&#34;&#34;
+
+        index = 0
+        while index &lt; len(self):
+            if self[index][0] == freq:
+                self[index][1] += amp   # update existing entry
+                return
+            elif self[index][0] &gt; freq: # insert before this one
+                break
+            index += 1
+        #print(&#34;insert freq&#34;, freq, &#34;at index&#34;, index, &#34;in&#34;, spec)
+        self.insert(index, [freq, amp]) # add new entry
+
+
+def fmspectrum(carrier, mratio, index):
+    &#34;&#34;&#34;
+    Returns a spectrum generated by Frequency Modulation.
+    
+    Parameters
+    ---------- 
+    carrier : int | float 
+        The FM carrier frequency, in hertz.
+    mratio : int | float
+        The carrier-to-modulator ratio. 1 means the carrier and modulator
+        are the same frequency, 2 means the modulator frequency is twice
+        the carrier.
+    index : int | float
+        The index of modulation. The number of FM sidebands (spectral
+        components) will be 2*index+1.
+    
+    Returns
+    -------
+    A Spectrum created by frequency modulation.
+    &#34;&#34;&#34;
+
+    mfreq = carrier * mratio
+    sides = round(index) +  1
+    spectrum = {}
+    frq = 0
+    amp = 0
+    for s in range(-sides, sides+1):
+        frq = carrier + (mfreq * s)
+        amp = bes_jn(s, index)
+        if not (amp == 0.0 or frq == 0.0):
+            if frq &lt; 0:
+                frq = abs(frq)
+                amp = -amp
+            if spectrum.get(frq):
+                spectrum[frq] += amp
+            else:
+                spectrum[frq] = amp
+    return Spectrum( sorted( [f, round(abs(a), 3)] for f,a in spectrum.items()) )
+
+
+def rmspectrum(freqs1, freqs2, asfreqs=False):
+    &#34;&#34;&#34;
+    Returns a spectrum generated by ring modulation, where freq1 and freq2
+    can be frequencies, lists of frequencies, or Spectrum objects.
+    
+    Ring moduluation produces a spectrum consiting of the sum and difference
+    tones between all pairs of frequencies in freqs1 and freqs2.
+
+    Parameters
+    ----------
+    freqs1 : int | float | list | Spectrum
+        A hertz value, list of the same, or Spectrum.
+    freqs2 : int | float | list | Spectrum
+        A hertz value, list of the same, or Spectrum.
+    asfreqs : bool
+        If true the spectrum&#39;s frequency values are returned as a
+        list, otherwise the specturm is returned.
+
+    Returns
+    -------
+    A Spectrum or list containing the pairwise sum and difference tones
+    of freqs1 and freqs2.
+    &#34;&#34;&#34;
+    if isinstance(freqs1, Spectrum) or isinstance(freqs2, Spectrum):
+        raise NotImplementedError(&#34;Spectrum input not yet implemented. :(&#34;)
+    if not isinstance(freqs1, list):
+        freqs1 = [freqs1]
+    if not isinstance(freqs2, list):
+        freqs2 = [freqs2]
+    spec = Spectrum([])  # create empty spectrum
+    for f1 in freqs1:
+        for f2 in freqs2:
+            if not f1 == f2:
+                spec.add(abs(f1+f2), 0.0)
+                spec.add(abs(f1-f2), 0.0)
+    return [p[0] for p in spec] if asfreqs else spec
+
+&#34;&#34;&#34;
+from musx.spectral import fmspectrum
+fmspectrum(100, 1.4, 3)
+&#34;&#34;&#34;
+
+def _read_spear_frame(fstr):
+    data = fstr.split(&#34; &#34;)
+    time = float(data.pop(0))
+    size = int(data.pop(0))
+    # omit null frames
+    if not data:
+        return None
+    spec = []
+    for i in range(size):
+        data.pop(0) # flush partial num
+        f = float(data.pop(0)) # read freq
+        a = float(data.pop(0)) # read amp
+        spec.append([f, a])
+    spec.sort(key=lambda a: a[0]) # sort by freq
+    return Spectrum(spec)
+
+
+def import_spear_frames(filename):
+    &#34;&#34;&#34;Imports the contents of a Spear frame data file as a list of Spectrum objects.&#34;&#34;&#34;
+    def rhdr(f):
+        l = f.readline()
+        if l == &#39;&#39;:
+            raise ValueError(f&#34;Reached EOF while parsing file header of {filename}&#34;)
+        return l[:-1]
+    
+    file = open(filename, &#39;r&#39;)
+    line = rhdr(file)
+    if not line ==  &#34;par-text-frame-format&#34;:
+        raise ValueError(f&#34;Expected &#39;par-text-frame-format&#39; but got &#39;{line}&#39;&#34;)
+    line = rhdr(file)
+    if not line ==  &#34;point-type index frequency amplitude&#34;:
+        raise ValueError(f&#34;Expected &#39;point-type index frequency amplitude&#39; but got &#39;{line}&#39;&#34;)
+
+    # flush remaining header lines
+    while True:
+        if line == &#34;frame-data&#34;:
+            break
+        line = rhdr(file)
+
+    # file now at frame-data, read spectra till eof
+    frames = []
+    line = file.readline()
+    while (line):
+        spec = _read_spear_frame(line[:-1])
+        if spec:
+            frames.append(spec)
+        line = file.readline()
+    return frames
+
+def import_spear_partials(filename):
+    &#34;&#34;&#34;Imports the contents of a Spear partials data file as a list of Spectrum objects.&#34;&#34;&#34;
+    raise NotImplementedError(&#34;not implemented yet :(&#34;)
+
+if __name__ == &#39;__main__&#39;:
+    
+    from fractions import Fraction
+    # print(&#34;harmonics(1,8) =&gt;&#34;, harmonics(1, 8))
+    # print(&#34;harmonics(-1,-8) =&gt;&#34;,harmonics(-1, -8))
+    # print(&#34;harmonics(8,16) =&gt;&#34;,harmonics(8, 16))
+    # print(&#34;harmonics(-8,-16) =&gt;&#34;,harmonics(-8, -16))
+    # print(&#34;harmonics(8,16,100) =&gt;&#34;,harmonics(8, 16, fund=100))
+    # print(&#34;harmonics(-8,-16, 100) =&gt;&#34;,harmonics(-8, -16, fund=100))
+    # print(&#34;harmonics(8,16,100) =&gt;&#34;,harmonics(8, 16, fund=100.0))
+    # print(&#34;harmonics(-8,-16, 100) =&gt;&#34;,harmonics(-8, -16, fund=100.0))
+    import musx
+    x=musx.fmspectrum(100, 1.4, 3) 
+    x.keynums()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="musx.spectral.fmspectrum"><code class="name flex">
+<span>def <span class="ident">fmspectrum</span></span>(<span>carrier, mratio, index)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a spectrum generated by Frequency Modulation.</p>
+<h2 id="parameters">Parameters</h2>
+<p>carrier : int | float
+The FM carrier frequency, in hertz.
+mratio : int | float
+The carrier-to-modulator ratio. 1 means the carrier and modulator
+are the same frequency, 2 means the modulator frequency is twice
+the carrier.
+index : int | float
+The index of modulation. The number of FM sidebands (spectral
+components) will be 2*index+1.</p>
+<h2 id="returns">Returns</h2>
+<p>A Spectrum created by frequency modulation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fmspectrum(carrier, mratio, index):
+    &#34;&#34;&#34;
+    Returns a spectrum generated by Frequency Modulation.
+    
+    Parameters
+    ---------- 
+    carrier : int | float 
+        The FM carrier frequency, in hertz.
+    mratio : int | float
+        The carrier-to-modulator ratio. 1 means the carrier and modulator
+        are the same frequency, 2 means the modulator frequency is twice
+        the carrier.
+    index : int | float
+        The index of modulation. The number of FM sidebands (spectral
+        components) will be 2*index+1.
+    
+    Returns
+    -------
+    A Spectrum created by frequency modulation.
+    &#34;&#34;&#34;
+
+    mfreq = carrier * mratio
+    sides = round(index) +  1
+    spectrum = {}
+    frq = 0
+    amp = 0
+    for s in range(-sides, sides+1):
+        frq = carrier + (mfreq * s)
+        amp = bes_jn(s, index)
+        if not (amp == 0.0 or frq == 0.0):
+            if frq &lt; 0:
+                frq = abs(frq)
+                amp = -amp
+            if spectrum.get(frq):
+                spectrum[frq] += amp
+            else:
+                spectrum[frq] = amp
+    return Spectrum( sorted( [f, round(abs(a), 3)] for f,a in spectrum.items()) )</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.harmonics"><code class="name flex">
+<span>def <span class="ident">harmonics</span></span>(<span>h1, h2, fund=1, reverse=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the harmonic series ratios between harmonic number
+h1 to h2 inclusive.</p>
+<p>If 0 &lt; h1 &lt; h2 then the ratios will produce the overtone series,
+otherwise (0 &gt; h1 &gt; h2) will produce undertones.
+If reverse is
+False then the overtone ratios are ascending and undertones are
+decending.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>h1</code></strong> :&ensp;<code>int</code></dt>
+<dd>The starting harmonic. If positive, overtones are produced
+otherwise negative undertones are produced.</dd>
+<dt><strong><code>h2</code></strong> :&ensp;<code>int</code></dt>
+<dd>The ending harmonic (inclusive). If positive it must be
+equal to or greater than h1. If negativ it must be equal
+to or less than h1.</dd>
+<dt><strong><code>fund</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The fundamental of the series, defaults to 1. If fund is an int
+then exact Faction harmonics are produced. If fund is a float
+then the series will be floats as well.</dd>
+<dt><strong><code>reverse</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true then overtones are returned reversed order.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The list of harmonic ratios between h1 and h2 inclusive.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def harmonics(h1, h2, fund=1, reverse=False):
+    &#34;&#34;&#34;
+    Returns the harmonic series ratios between harmonic number
+    h1 to h2 inclusive.
+
+    If 0 &lt; h1 &lt; h2 then the ratios will produce the overtone series, 
+    otherwise (0 &gt; h1 &gt; h2) will produce undertones.  If reverse is
+    False then the overtone ratios are ascending and undertones are
+    decending.
+
+    Parameters
+    ----------
+    h1 : int
+        The starting harmonic. If positive, overtones are produced
+        otherwise negative undertones are produced.
+    h2 : int
+        The ending harmonic (inclusive). If positive it must be
+        equal to or greater than h1. If negativ it must be equal
+        to or less than h1.
+    fund : int | float
+        The fundamental of the series, defaults to 1. If fund is an int
+        then exact Faction harmonics are produced. If fund is a float
+        then the series will be floats as well.
+    reverse : bool
+        If true then overtones are returned reversed order.
+    
+    Returns
+    -------
+    The list of harmonic ratios between h1 and h2 inclusive.
+    &#34;&#34;&#34;
+
+    if not isinstance(h1, int):
+        TypeError(f&#34;not an integer harmonic number: {h1}.&#34;)
+    if not isinstance(h2, int):
+        TypeError(f&#34;not an integer harmonic number: {h2}.&#34;)
+    utones = False
+    harms = []
+    if (0 &lt; h1 &lt; h2):
+        pass
+    elif (0 &gt; h1 &gt; h2):
+        utones = True
+    else:
+        raise ValueError(f&#34;harmonic numbers out of order: {h1} {h2}.&#34;)
+    h1 = fractions.Fraction(abs(h1),1)
+    h2 = fractions.Fraction(abs(h2),1)
+    h = h1
+    f = None
+    while h &lt;= h2:
+        # utones collect the reciprocal
+        f = fund/(h/h1) if utones else fund*(h/h1)
+        harms.append(f)
+        h += 1
+    if reverse:
+        harms.reverse()
+    return harms</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.import_spear_frames"><code class="name flex">
+<span>def <span class="ident">import_spear_frames</span></span>(<span>filename)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Imports the contents of a Spear frame data file as a list of Spectrum objects.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def import_spear_frames(filename):
+    &#34;&#34;&#34;Imports the contents of a Spear frame data file as a list of Spectrum objects.&#34;&#34;&#34;
+    def rhdr(f):
+        l = f.readline()
+        if l == &#39;&#39;:
+            raise ValueError(f&#34;Reached EOF while parsing file header of {filename}&#34;)
+        return l[:-1]
+    
+    file = open(filename, &#39;r&#39;)
+    line = rhdr(file)
+    if not line ==  &#34;par-text-frame-format&#34;:
+        raise ValueError(f&#34;Expected &#39;par-text-frame-format&#39; but got &#39;{line}&#39;&#34;)
+    line = rhdr(file)
+    if not line ==  &#34;point-type index frequency amplitude&#34;:
+        raise ValueError(f&#34;Expected &#39;point-type index frequency amplitude&#39; but got &#39;{line}&#39;&#34;)
+
+    # flush remaining header lines
+    while True:
+        if line == &#34;frame-data&#34;:
+            break
+        line = rhdr(file)
+
+    # file now at frame-data, read spectra till eof
+    frames = []
+    line = file.readline()
+    while (line):
+        spec = _read_spear_frame(line[:-1])
+        if spec:
+            frames.append(spec)
+        line = file.readline()
+    return frames</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.import_spear_partials"><code class="name flex">
+<span>def <span class="ident">import_spear_partials</span></span>(<span>filename)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Imports the contents of a Spear partials data file as a list of Spectrum objects.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def import_spear_partials(filename):
+    &#34;&#34;&#34;Imports the contents of a Spear partials data file as a list of Spectrum objects.&#34;&#34;&#34;
+    raise NotImplementedError(&#34;not implemented yet :(&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.rmspectrum"><code class="name flex">
+<span>def <span class="ident">rmspectrum</span></span>(<span>freqs1, freqs2, asfreqs=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a spectrum generated by ring modulation, where freq1 and freq2
+can be frequencies, lists of frequencies, or Spectrum objects.</p>
+<p>Ring moduluation produces a spectrum consiting of the sum and difference
+tones between all pairs of frequencies in freqs1 and freqs2.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>freqs1</code></strong> :&ensp;<code>int | float | list | Spectrum</code></dt>
+<dd>A hertz value, list of the same, or Spectrum.</dd>
+<dt><strong><code>freqs2</code></strong> :&ensp;<code>int | float | list | Spectrum</code></dt>
+<dd>A hertz value, list of the same, or Spectrum.</dd>
+<dt><strong><code>asfreqs</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true the spectrum's frequency values are returned as a
+list, otherwise the specturm is returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>A <a title="musx.spectral.Spectrum" href="#musx.spectral.Spectrum">Spectrum</a></code> or <code>list containing the pairwise sum and difference tones</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>of freqs1 and freqs2.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rmspectrum(freqs1, freqs2, asfreqs=False):
+    &#34;&#34;&#34;
+    Returns a spectrum generated by ring modulation, where freq1 and freq2
+    can be frequencies, lists of frequencies, or Spectrum objects.
+    
+    Ring moduluation produces a spectrum consiting of the sum and difference
+    tones between all pairs of frequencies in freqs1 and freqs2.
+
+    Parameters
+    ----------
+    freqs1 : int | float | list | Spectrum
+        A hertz value, list of the same, or Spectrum.
+    freqs2 : int | float | list | Spectrum
+        A hertz value, list of the same, or Spectrum.
+    asfreqs : bool
+        If true the spectrum&#39;s frequency values are returned as a
+        list, otherwise the specturm is returned.
+
+    Returns
+    -------
+    A Spectrum or list containing the pairwise sum and difference tones
+    of freqs1 and freqs2.
+    &#34;&#34;&#34;
+    if isinstance(freqs1, Spectrum) or isinstance(freqs2, Spectrum):
+        raise NotImplementedError(&#34;Spectrum input not yet implemented. :(&#34;)
+    if not isinstance(freqs1, list):
+        freqs1 = [freqs1]
+    if not isinstance(freqs2, list):
+        freqs2 = [freqs2]
+    spec = Spectrum([])  # create empty spectrum
+    for f1 in freqs1:
+        for f2 in freqs2:
+            if not f1 == f2:
+                spec.add(abs(f1+f2), 0.0)
+                spec.add(abs(f1-f2), 0.0)
+    return [p[0] for p in spec] if asfreqs else spec</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.temper"><code class="name flex">
+<span>def <span class="ident">temper</span></span>(<span>ratio, div=12)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts a frequency ratio into a tempered interval.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>ratio</code></strong> :&ensp;<code>int | float | Fraction | list</code></dt>
+<dd>The ratio to convert. The value can be an integer, float,
+Fraction, or a list of the same.</dd>
+<dt><strong><code>div</code></strong> :&ensp;<code>int</code></dt>
+<dd>The divisions per octave. 12 will convert to
+semitones and 1200 will convert to cents.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The tempered interval.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def temper(ratio, div=12):
+    &#34;&#34;&#34;
+    Converts a frequency ratio into a tempered interval.
+
+    Parameters
+    ----------
+    ratio : int | float | Fraction | list
+        The ratio to convert. The value can be an integer, float,
+        Fraction, or a list of the same.
+    div : int
+        The divisions per octave. 12 will convert to
+        semitones and 1200 will convert to cents.
+    Returns
+    -------
+    The tempered interval.
+    &#34;&#34;&#34;
+
+    func = lambda r,s: math.log(r)/math.log(2.0) * s
+    if type(ratio) is list:
+        return [func(r, div) for r in ratio]
+    return func(ratio, div)</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.untemper"><code class="name flex">
+<span>def <span class="ident">untemper</span></span>(<span>interval, div=12)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts a tempered interval into a frequency ratio.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>interval</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The interval to convert. The value can be an integer, float,
+or a list of the same.</dd>
+<dt><strong><code>div</code></strong> :&ensp;<code>int</code></dt>
+<dd>The divisions per octave. 12 will convert from
+semitones and 1200 will convert from cents.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>The untempered frequency ratio</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def untemper(interval, div=12):
+    &#34;&#34;&#34;
+    Converts a tempered interval into a frequency ratio.
+
+    Parameters
+    ----------
+    interval : int | float
+        The interval to convert. The value can be an integer, float,
+        or a list of the same.
+    div : int
+        The divisions per octave. 12 will convert from
+        semitones and 1200 will convert from cents.
+    Returns
+    -------
+    The untempered frequency ratio
+    &#34;&#34;&#34;
+
+    func = lambda i,d: math.pow(2.0, i/d)
+    if type(interval) is list:
+        return [func(i, div) for i in interval]
+    return func(interval, div)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="musx.spectral.Spectrum"><code class="flex name class">
+<span>class <span class="ident">Spectrum</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Built-in mutable sequence.</p>
+<p>If no argument is given, the constructor creates a new empty list.
+The argument must be an iterable if specified.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Spectrum (list):
+
+    def __new__(cls, pairs):
+        &#34;&#34;&#34;
+        Creates a Spectrum out of a list of frequency/amplitude pairs.
+
+        Parameters
+        ----------
+        pairs : list
+            A sorted list of [frequency, amplitude] pairs with lower
+            frequency pairs to the left.
+
+        Returns:
+        A Spectrum.
+        &#34;&#34;&#34;
+        z = 0
+        for t in pairs:
+            if not isinstance(t, list) or len(t) != 2: 
+                raise TypeError(f&#34;not a tuple (frequency, amplitude): {t}.&#34;)
+            if not isinstance(t[0], (int, float)):
+                raise TypeError(f&#34;invalid frequency: {t[0]}.&#34;)
+            if not isinstance(t[1], (int, float)):
+                raise TypeError(f&#34;invalid amplitude: {t[0]}.&#34;)
+            if not t[0] &gt; z:
+                raise ValueError(f&#34;invalid frequency: {t[0]} not greater than {z}.&#34;)
+            # if not t[1] &gt; 0:
+            #     raise ValueError(f&#34;invalid amplitude {t[1]} not greater than 0.&#34;)
+        return super(Spectrum, cls).__new__(cls, pairs)
+
+    def size(self):
+        return len(self)
+
+    def freqs(self):
+        &#34;&#34;&#34;Returns a list of the frequency components in the spectrum.&#34;&#34;&#34;
+        return [t[0] for t in self]
+
+    def amps(self):
+        &#34;&#34;&#34;Returns a list of the amplitude components in the spectrum.&#34;&#34;&#34;
+        return [t[1] for t in self]
+
+    def pairs(self):
+        &#34;&#34;&#34;Returns a list of frequency and amplitude pairs.&#34;&#34;&#34;
+        return list(self)
+
+    def maxfreq(self):
+        &#34;&#34;&#34;Returns the maximum frequency in the spectrum.&#34;&#34;&#34;
+        return self[-1][0]
+
+    def minfreq(self):
+        &#34;&#34;&#34;Returns the minimum frequency in the spectrum.&#34;&#34;&#34;
+        return self[0][0]
+
+    def minamp(self):
+        &#34;&#34;&#34;Returns the minimum amplitude in the spectrum.&#34;&#34;&#34;
+        mina = None
+        for t in self:
+            if not mina or t[1] &lt; mina:
+                 mina = t[1]
+        return mina
+
+    def maxamp(self):
+        &#34;&#34;&#34;Returns the minimum amplitude in the spectrum.&#34;&#34;&#34;
+        maxa = None
+        for t in self:
+            if not maxa or t[1] &gt; maxa:
+                 maxa = t[1]
+        return maxa
+
+    def __str__(self):
+        return f&#39;&lt;Spectrum: {len(self)} {hex(id(self))}&gt;&#39;
+
+    __repr__ = __str__
+
+    def keynums(self, quant=None, unique=None, minkey=0, maxkey=127, thresh=0):
+        &#34;&#34;&#34;
+        Returns a list of the frequency components of spectrum converted to key
+        numbers. 
+
+        Parameters
+        ----------
+        quant : int | float | function | None
+            If quant is a number then the key numbers returned are quantized to
+            that semitonal value, e.g. quant .5 returns key numbers quantized
+            to the nearest quarter-tone and quant 1 returns key numbers rounded
+            to the nearest semitone. Quant can also be a function, e.g. round,
+            ceil, or floor.
+        unique : bool
+            If unique is True then no duplicate key numbers will be returned. 
+        minkey : int | None
+            If a minkey number is specified then spectral values lower than that will be octave 
+            shifted upward until they equal or exceed it.
+        maxkey : int | None
+            If a maxkey number is specified then spectral values higher than that will be octave 
+            shifted downward until they equal or lower than it.
+        thresh : float | None
+            The minimum amplitude that a frequency must possess in order to be
+             returned as keys.
+
+        Returns
+        -------
+        A list of key number from the spectrum.
+        &#34;&#34;&#34;
+        if not (minkey &lt; maxkey):
+            raise TypeError(&#34;minkey {minkey} not less than {maxkey}.&#34;)
+        if callable(quant) or quant is None:
+            func = quant
+        elif isinstance(quant, (int, float)):
+            func = lambda x: quantize(x, quant)
+        else:
+            raise TypeError(&#34;quant value not a callable, number, or None: {quant}.&#34;)
+        keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh]
+        for i in range(len(keys)):
+            while keys[i] &lt; minkey: keys[i] += 12
+            while keys[i] &gt; maxkey: keys[i] -= 12
+            if not minkey &lt;= keys[i] &lt;= maxkey:
+                raise ValueError(f&#34;key {keys[i]} outside bounds {minkey} to {maxkey}.&#34;)
+        if unique:
+            keys = list(dict.fromkeys(keys))
+        return sorted(keys)
+
+    def add(self, freq, amp):
+        &#34;&#34;&#34;
+        Updates the amplitude of an existing [freq,amp] pair or inserts a new
+        pair if freq is not yet in the spectrum.  
+        
+        Warning: add alters the existing spectrum by adding or updating 
+        components.
+
+        Parameters
+        ----------
+        freq : int | float
+            The frequency to add or update.
+        amp : int | float
+            The amplitude to add or update.
+        &#34;&#34;&#34;
+
+        index = 0
+        while index &lt; len(self):
+            if self[index][0] == freq:
+                self[index][1] += amp   # update existing entry
+                return
+            elif self[index][0] &gt; freq: # insert before this one
+                break
+            index += 1
+        #print(&#34;insert freq&#34;, freq, &#34;at index&#34;, index, &#34;in&#34;, spec)
+        self.insert(index, [freq, amp]) # add new entry</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.list</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.spectral.Spectrum.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, freq, amp)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates the amplitude of an existing [freq,amp] pair or inserts a new
+pair if freq is not yet in the spectrum.
+</p>
+<p>Warning: add alters the existing spectrum by adding or updating
+components.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>freq</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The frequency to add or update.</dd>
+<dt><strong><code>amp</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The amplitude to add or update.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, freq, amp):
+    &#34;&#34;&#34;
+    Updates the amplitude of an existing [freq,amp] pair or inserts a new
+    pair if freq is not yet in the spectrum.  
+    
+    Warning: add alters the existing spectrum by adding or updating 
+    components.
+
+    Parameters
+    ----------
+    freq : int | float
+        The frequency to add or update.
+    amp : int | float
+        The amplitude to add or update.
+    &#34;&#34;&#34;
+
+    index = 0
+    while index &lt; len(self):
+        if self[index][0] == freq:
+            self[index][1] += amp   # update existing entry
+            return
+        elif self[index][0] &gt; freq: # insert before this one
+            break
+        index += 1
+    #print(&#34;insert freq&#34;, freq, &#34;at index&#34;, index, &#34;in&#34;, spec)
+    self.insert(index, [freq, amp]) # add new entry</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.amps"><code class="name flex">
+<span>def <span class="ident">amps</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of the amplitude components in the spectrum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def amps(self):
+    &#34;&#34;&#34;Returns a list of the amplitude components in the spectrum.&#34;&#34;&#34;
+    return [t[1] for t in self]</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.freqs"><code class="name flex">
+<span>def <span class="ident">freqs</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of the frequency components in the spectrum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def freqs(self):
+    &#34;&#34;&#34;Returns a list of the frequency components in the spectrum.&#34;&#34;&#34;
+    return [t[0] for t in self]</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.keynums"><code class="name flex">
+<span>def <span class="ident">keynums</span></span>(<span>self, quant=None, unique=None, minkey=0, maxkey=127, thresh=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of the frequency components of spectrum converted to key
+numbers. </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>quant</code></strong> :&ensp;<code>int | float | function | None</code></dt>
+<dd>If quant is a number then the key numbers returned are quantized to
+that semitonal value, e.g. quant .5 returns key numbers quantized
+to the nearest quarter-tone and quant 1 returns key numbers rounded
+to the nearest semitone. Quant can also be a function, e.g. round,
+ceil, or floor.</dd>
+<dt><strong><code>unique</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If unique is True then no duplicate key numbers will be returned.</dd>
+<dt><strong><code>minkey</code></strong> :&ensp;<code>int | None</code></dt>
+<dd>If a minkey number is specified then spectral values lower than that will be octave
+shifted upward until they equal or exceed it.</dd>
+<dt><strong><code>maxkey</code></strong> :&ensp;<code>int | None</code></dt>
+<dd>If a maxkey number is specified then spectral values higher than that will be octave
+shifted downward until they equal or lower than it.</dd>
+<dt><strong><code>thresh</code></strong> :&ensp;<code>float | None</code></dt>
+<dd>The minimum amplitude that a frequency must possess in order to be
+returned as keys.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A list of key number from the spectrum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def keynums(self, quant=None, unique=None, minkey=0, maxkey=127, thresh=0):
+    &#34;&#34;&#34;
+    Returns a list of the frequency components of spectrum converted to key
+    numbers. 
+
+    Parameters
+    ----------
+    quant : int | float | function | None
+        If quant is a number then the key numbers returned are quantized to
+        that semitonal value, e.g. quant .5 returns key numbers quantized
+        to the nearest quarter-tone and quant 1 returns key numbers rounded
+        to the nearest semitone. Quant can also be a function, e.g. round,
+        ceil, or floor.
+    unique : bool
+        If unique is True then no duplicate key numbers will be returned. 
+    minkey : int | None
+        If a minkey number is specified then spectral values lower than that will be octave 
+        shifted upward until they equal or exceed it.
+    maxkey : int | None
+        If a maxkey number is specified then spectral values higher than that will be octave 
+        shifted downward until they equal or lower than it.
+    thresh : float | None
+        The minimum amplitude that a frequency must possess in order to be
+         returned as keys.
+
+    Returns
+    -------
+    A list of key number from the spectrum.
+    &#34;&#34;&#34;
+    if not (minkey &lt; maxkey):
+        raise TypeError(&#34;minkey {minkey} not less than {maxkey}.&#34;)
+    if callable(quant) or quant is None:
+        func = quant
+    elif isinstance(quant, (int, float)):
+        func = lambda x: quantize(x, quant)
+    else:
+        raise TypeError(&#34;quant value not a callable, number, or None: {quant}.&#34;)
+    keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh]
+    for i in range(len(keys)):
+        while keys[i] &lt; minkey: keys[i] += 12
+        while keys[i] &gt; maxkey: keys[i] -= 12
+        if not minkey &lt;= keys[i] &lt;= maxkey:
+            raise ValueError(f&#34;key {keys[i]} outside bounds {minkey} to {maxkey}.&#34;)
+    if unique:
+        keys = list(dict.fromkeys(keys))
+    return sorted(keys)</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.maxamp"><code class="name flex">
+<span>def <span class="ident">maxamp</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the minimum amplitude in the spectrum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def maxamp(self):
+    &#34;&#34;&#34;Returns the minimum amplitude in the spectrum.&#34;&#34;&#34;
+    maxa = None
+    for t in self:
+        if not maxa or t[1] &gt; maxa:
+             maxa = t[1]
+    return maxa</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.maxfreq"><code class="name flex">
+<span>def <span class="ident">maxfreq</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the maximum frequency in the spectrum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def maxfreq(self):
+    &#34;&#34;&#34;Returns the maximum frequency in the spectrum.&#34;&#34;&#34;
+    return self[-1][0]</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.minamp"><code class="name flex">
+<span>def <span class="ident">minamp</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the minimum amplitude in the spectrum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def minamp(self):
+    &#34;&#34;&#34;Returns the minimum amplitude in the spectrum.&#34;&#34;&#34;
+    mina = None
+    for t in self:
+        if not mina or t[1] &lt; mina:
+             mina = t[1]
+    return mina</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.minfreq"><code class="name flex">
+<span>def <span class="ident">minfreq</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the minimum frequency in the spectrum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def minfreq(self):
+    &#34;&#34;&#34;Returns the minimum frequency in the spectrum.&#34;&#34;&#34;
+    return self[0][0]</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.pairs"><code class="name flex">
+<span>def <span class="ident">pairs</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of frequency and amplitude pairs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pairs(self):
+    &#34;&#34;&#34;Returns a list of frequency and amplitude pairs.&#34;&#34;&#34;
+    return list(self)</code></pre>
+</details>
+</dd>
+<dt id="musx.spectral.Spectrum.size"><code class="name flex">
+<span>def <span class="ident">size</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def size(self):
+    return len(self)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="musx.spectral.fmspectrum" href="#musx.spectral.fmspectrum">fmspectrum</a></code></li>
+<li><code><a title="musx.spectral.harmonics" href="#musx.spectral.harmonics">harmonics</a></code></li>
+<li><code><a title="musx.spectral.import_spear_frames" href="#musx.spectral.import_spear_frames">import_spear_frames</a></code></li>
+<li><code><a title="musx.spectral.import_spear_partials" href="#musx.spectral.import_spear_partials">import_spear_partials</a></code></li>
+<li><code><a title="musx.spectral.rmspectrum" href="#musx.spectral.rmspectrum">rmspectrum</a></code></li>
+<li><code><a title="musx.spectral.temper" href="#musx.spectral.temper">temper</a></code></li>
+<li><code><a title="musx.spectral.untemper" href="#musx.spectral.untemper">untemper</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="musx.spectral.Spectrum" href="#musx.spectral.Spectrum">Spectrum</a></code></h4>
+<ul class="two-column">
+<li><code><a title="musx.spectral.Spectrum.add" href="#musx.spectral.Spectrum.add">add</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.amps" href="#musx.spectral.Spectrum.amps">amps</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.freqs" href="#musx.spectral.Spectrum.freqs">freqs</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.keynums" href="#musx.spectral.Spectrum.keynums">keynums</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.maxamp" href="#musx.spectral.Spectrum.maxamp">maxamp</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.maxfreq" href="#musx.spectral.Spectrum.maxfreq">maxfreq</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.minamp" href="#musx.spectral.Spectrum.minamp">minamp</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.minfreq" href="#musx.spectral.Spectrum.minfreq">minfreq</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.pairs" href="#musx.spectral.Spectrum.pairs">pairs</a></code></li>
+<li><code><a title="musx.spectral.Spectrum.size" href="#musx.spectral.Spectrum.size">size</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

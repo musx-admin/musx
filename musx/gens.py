@@ -634,6 +634,8 @@ def getstate(cells, pos, inc):
 def rotation(items, swaprules, stop=None):
     """
     Permutes the elements in items according to one or more "swapping rules".
+    See demos/coventry.py for an example of using rotation to create 
+    change-ringing patterns.
     
     Parameters
     ----------
@@ -687,12 +689,13 @@ def rotation(items, swaprules, stop=None):
         i += 1
 
 
-def allrotations (items, rules, groups=False, repeatfirst=False):
+def all_rotations (items, rules, groups=False, repeatfirst=False):
     """
-    Helper function returns a list of all the rotations of items until the first
-    rotation occurs again.  Warning: this function will run until the original 
-    generation returns; rules that do not produce the original generation again
-    will trigger an infinite loop. See: `rotation()`.
+    Helper function used in conjunction with the rotation pattern to return
+    a list of all the rotations of items until the first rotation occurs again.
+    Warning: this function will run until the original generation returns; 
+    rules that do not produce the original generation again will trigger
+    an infinite loop. See: `rotation()`.
 
     Parameters
     ----------

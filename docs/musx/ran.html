@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.ran API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.ran</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import random
+import math
+from .tools import rescale
+
+# moved: between, odds, pick to here
+
+def between(a, b):
+    &#34;&#34;&#34;
+    Returns a random value between a and b (exclusive).
+
+    An int is returned if both a and b are ints,
+    otherwise a float is returned. The a value can be
+    less than, equal to, or greater than b.
+
+    Parameters
+    ----------
+    a : int | float
+        The lower bound for the random selection.
+    b : int | float
+        The upper bound for the random selection.
+
+    Returns
+    -------
+        A randomly chosen value between a and b.
+    &#34;&#34;&#34;
+    if (a &lt; b):
+        if isinstance(a, int) and isinstance(b, int):
+            return random.randrange(a, b)
+        else:
+            return a + (random.random() * (b - a))
+    if (a &gt; b):
+        if isinstance(a, int) and isinstance(b, int):
+            return a - random.randrange(b)
+        else:
+            return a - (random.random() * (a - b))
+    return a
+
+
+def odds(prob, true=True, false=False):
+    &#34;&#34;&#34;
+    Returns true value if a random choice is less than prob else returns
+    the false.
+
+    Parameters
+    ----------
+    prob : float | int
+        A value between 0 and 1 inclusive.
+    true : value
+        If odds is true the true value is returned.
+    false : value
+        If odds is false the false value is returned.
+
+    Returns
+    -------
+    Either the true value or the false value based on probability.
+    &#34;&#34;&#34;
+    if 0 &lt;= prob &lt;= 1.0:
+        return true if random.random() &lt; prob else false
+    raise ValueError(f&#34;{prob} not a number between 0 and 1.&#34;)
+
+
+def pick(*args):
+    &#34;&#34;&#34;
+    Randomly picks one of its arguments to return.
+
+    Parameters
+    ----------
+    *args : variadic
+        A series of values from which one will be randomly selected.
+
+    Returns
+    -------
+    One value from the argument list.
+    &#34;&#34;&#34;
+    return args[random.randrange(len(args))]
+
+
+def vary(value, variance, shift=None):
+    &#34;&#34;&#34;
+    Returns a random number that deviates from value or list of the same by
+    up to variance (1=100%) according to shift. 
+    
+    Parameters
+    ----------
+    value : number | list
+        The value or list of values to vary.
+    variance : number
+        The maximum amount to vary the value by, e.g. 0.5 means the variance
+        could be up to 50% of the input value.
+    shift : None | &#34;+&#34; | &#34;-&#34;
+        Specifies where the variance is placed. If None then then value is at the
+        center of what could be returned. Shift &#34;+&#34; places value at the minimum
+        of what could be returned and &#34;-&#34; means that value is the maximum possible
+        value returned.
+    &#34;&#34;&#34;
+    if isinstance(value, list):
+        return [vary(v, variance, shift) for v in value]
+    if value == 0 or variance == 0:
+        return val
+    r = abs(value * variance)
+    v = random.random() * r
+    if shift == None:
+        return (value - (r * .5)) + v
+    if shift == &#39;+&#39;:
+        return value + v
+    if shift == &#39;-&#39;:
+        return value - v
+    raise ValueError(&#34;shift should be None, &#39;+&#39;, or &#39;-&#39; ({shift})&#34;)
+
+
+def ransegs(num, mapto, rangen=None):
+    &#34;&#34;&#34;
+    Returns a list of random number segments.
+
+    Parameters
+    ----------
+    num : int
+        The number of random values returned in the list.
+    mapto : number | [low, high]
+        If mapto is a number then the values retuned will sum to that number.
+        If mapto is a list then the random values are sorted and scaled to
+        lie proportionatly from low to high.
+    rangen : None | function
+        If function is provided it will be called to return random numbers,
+        otherwise uniform random numbers between are generated.
+    &#34;&#34;&#34;
+    #print(f&#34;ransegs(num={num}, mapto={mapto})&#34;)
+    segs = []
+    rsum = 0
+    if rangen == None:
+        rangen = random.random
+    for i in range(num):
+        n = rangen()
+        segs.append(n)
+        rsum += n
+    if isinstance(mapto, (list, tuple)):
+        segs.sort()
+        #print(&#34;raws&#34;, segs)        
+        for i in range(num):
+            segs[i] = rescale(segs[i], segs[0], segs[-1], mapto[0], mapto[1])
+    else:
+        #print(&#34;raws&#34;, segs)
+        for i in range(num):
+            segs[i] = rescale(segs[i], 0, rsum, 0, mapto)
+    #print(&#34;segs&#34;, segs)
+    return segs
+
+#-----------------------------------------------------------------------------
+# Random number functions with different distributions
+
+def uniran():
+    &#34;&#34;&#34;
+    Returns a uniformly chosen floating point value between 0.0 and 1.0.
+    See also: lowran(), midran(), highran().
+    &#34;&#34;&#34;
+    return random.random()
+
+
+def lowran():
+    &#34;&#34;&#34;
+    Returns a floating point value between 0.0 and 1.0 with lower 
+    values more likely. See also: uniran(), midran(), highran().
+    &#34;&#34;&#34;
+    return min(random.random(), random.random())
+
+
+def midran():
+    &#34;&#34;&#34;
+    Returns a floating point value between 0.0 and 1.0 with midrange
+    values more likely. See also: uniran(), lowran(), highran().
+    &#34;&#34;&#34;
+    return (random.random() + random.random()) / 2.0
+
+
+def highran():
+    &#34;&#34;&#34;
+    Returns a floating point value between 0.0 and 1.0 with higher 
+    values more likely. See also: uniran(), lowran(), midran().
+    &#34;&#34;&#34;
+    return max(random.random(), random.random())
+
+
+def beta(alpha=.5, beta=.5):
+    &#34;&#34;&#34;
+    Returns value between 0 and 1 from the beta distribution (https://en.wikipedia.org/wiki/Beta_distribution).
+    When a=b=1 the distribution is uniform. When alpha=beta, the distribution is 
+    symmetric around .5. When alpha&lt;1 and beta&lt;1 then the density of larger and
+    smaller numbers increases. When alpha&gt;1 and beta&gt;1, density is similar to the
+    gaussian distribution.
+    &#34;&#34;&#34;
+    ra = 1.0 / alpha
+    rb = 1.0 / beta
+    while True:
+        r1 = random.random()
+        r2 = random.random()
+        y1 = r1 ** ra
+        y2 = r2 ** rb
+        y3 = y1 + y2
+        if y3 &lt;= 1.0:
+            return (y1 / y3)
+
+
+def gamma(alpha=1):
+    &#34;&#34;&#34;
+    Returns value greater than 0 from the gamma distribution 
+    (https://en.wikipedia.org/wiki/Gamma_distribution).
+    Parameter alpha controls the distribution&#39;s shape and should be a positive integer
+    (if a non-integer is provided, the value is rounded.) When alpha=1, the 
+    distribution is the same as exponential. As its value increases, the 
+    probability density function becomes a curve with mean=alpha and standard 
+    deviation = sqrt(alpha).
+    &#34;&#34;&#34;
+    r = 1.0
+    n = round(alpha)
+    for i in range(n):
+        r = r * (1 - random.random())
+    return - math.log(r)
+
+
+def poisson(alpha=1):
+    &#34;&#34;&#34;
+    Returns value greater than 0 from the poisson distribution
+    (https://en.wikipedia.org/wiki/Poisson_distribution).
+    Returns positive integer values, theoretically unbounded but practically
+    limited by the alpha parameter. Parameter alpha controls the distribution&#39;s 
+    shape and must be positive: the mean is a and the standard deviation is sqrt(a).
+    &#34;&#34;&#34;
+    b = math.exp( - alpha)
+    n = 0
+    p = 1.0
+    while True:
+        p = p * random.random()
+        n += 1
+        if p &lt; b:
+            return n
+
+
+def expran(alpha=1):
+    &#34;&#34;&#34;
+    Returns a value greater than 0 from the exponential distribution
+    (https://en.wikipedia.org/wiki/Exponential_distribution) with stretching factor alpha.
+    Increasing alpha &#34;prefers&#34; smaller numbers. The distribution is unbounded but when 
+    alpha=1 then %99.9 of the time the value returned will be than 6.9077554, i.e. -log(.001).
+    The distribution density is f(x)=(exp -x) with a mean of 1.0.
+    &#34;&#34;&#34;
+    return (- math.log(1.0 - random.random())) / alpha
+
+
+def gauss(sigma=1, mu=0):
+    &#34;&#34;&#34;
+    Returns unbounded value from the normal distribution
+    (https://en.wikipedia.org/wiki/Normal_distribution) with standard deviation
+    sigma and mean mu.  The spread (standard deviation) is 1.0 centered at 0, 
+    so 68.26% of the results are between -1 and 1 inclusive and 99.74% of the
+    results are between -3 and 3 inclusive.
+    &#34;&#34;&#34;
+    while True:
+        x = -1 + 2 * random.random()
+        y = -1 + 2 * random.random()
+        r2 = (x * x) + (y * y)
+        if not ((r2 &gt; 1.0) or (r2 == 0)):
+            break
+    return (sigma * y * math.sqrt(-2.0 * math.log(r2) / r2)) + mu
+
+
+def cauchy(alpha=False):
+    &#34;&#34;&#34;
+    Returns an unbounded value from the Cauchy distribution
+    (https://en.wikipedia.org/wiki/Cauchy_distribution).
+    The density function is a bell shaped curve centered at 0 similar to a
+    normal distribution but with more values at the extremes. The mean and
+    standard deviation of the Cauchy distribution are undefined. If parameter
+    alpha is True then only positive values are returned. Density is f(x)=1/(pi(1 + x^2)).
+    &#34;&#34;&#34;
+    #return math.tan( math.pi * 2 * (random.random() - 0.5))
+    r = (1.5707964 if alpha else math.pi) * random.random()
+    return sin(r) / cos(r)
+
+#-----------------------------------------------------------------------------
+# Noises white, brown and pink return sample values -1.0 to 1.0
+
+
+def white(level=None):
+    &#34;&#34;&#34;
+    Returns white (uniform) noise samples between -1.0 and 1.0.
+
+    Parameters
+    ----------
+    level : None or int or float
+        An optional scaler on the sample returned.
+    &#34;&#34;&#34;
+    samp = random.random() * 2.0 - 1.0
+    return samp * level if level else samp
+
+
+# def _lowpass(current, previous, alpha):
+#     &#34;&#34;&#34;
+#     The change from one filter output to the next is proportional to the
+#     difference between the previous output and the next input.
+#     &#34;&#34;&#34;
+#     return previous + (alpha * (current - previous))
+#
+# _brown = white()
+# &#34;&#34;&#34; The previous brown sample, initialzed to a random number.&#34;&#34;&#34;
+#
+# def brown(alpha=.02):
+#     global _brown
+#     samp = _lowpass(white(), _brown, alpha)
+#     _brown = samp
+#     return samp * 3.0  # boost the overall gain
+
+
+_brown = 0.0
+
+def brown():
+    &#34;&#34;&#34;
+    Returns brownish (1/f**2) noise samples between -1 and 1.
+    &#34;&#34;&#34;
+    # from http://vellocet.com/dsp/noise/VRand.h
+    # but made to generate between -1 1
+    global _brown
+    while True:
+        r = random.random() * 2 - 1
+        _brown += r
+        if (_brown &lt; -16.0) or (_brown &gt; 16.0):
+            _brown -= r
+        else:
+            break
+    # return interval -1 1.
+    return _brown * 0.0625
+
+
+_pow2 = 5
+_pown = 32
+_pinking = [0.0 for _ in range(_pown+1)]
+
+def _one_over_f_aux(n, rarray, halfrange):
+    s = 0.0
+    for i in range(_pow2):
+        p = 2.0 ** i
+        if not ( (n / p) == ((n - 1) / p) ):
+            rarray[i]=( (random.random() * 2 * halfrange) - halfrange)
+        s += rarray[i]
+    return s
+
+_i = _pown
+
+def pink():
+    &#34;&#34;&#34;
+    Returns pinkish (1/f) noise samples between -1.0 and 1.0.  Based on Gardner
+    (1978) and Dick Moore (1988?).
+    &#34;&#34;&#34;
+    global _i
+    if _i == _pown:
+        r = [0.0 for _ in range(_pow2)]
+        h = 1.0 / _pow2
+        for n in range(_pown):
+            _pinking[n]=_one_over_f_aux(n, r, h)
+        _i = 0
+    else:
+        _i += 1
+    return _pinking[_i]
+
+
+if __name__ == &#39;__main__&#39;:
+    
+    ransegs(num=5, mapto=10)
+    ransegs(num=5, mapto=(0,4))
+    ransegs(num=5, mapto=(-2,4))
+
+    # x = 60
+    # for i in range(20):
+    #     print(x)
+    #     x = drunk(x, width=2)
+    # print(x)
+
+   
+    # for i in range(20):
+    #     print(pink())
+
+    # for i in range(20):
+    #     print(brown())
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    # beta(.3, .3)
+    # x = [pink() for _ in range(10000)]
+    # plt.hist(x, bins=20, facecolor=&#34;blue&#34;, alpha=0.5)
+    # plt.show()
+
+#     y = [expran(1.5) for _ in range(1000)]
+#     plt.hist(y, bins=20, facecolor=&#34;blue&#34;, alpha=0.5)
+#    #plt.plot(y)
+#     plt.show()
+
+
+    
+
+    #ransegs(5, 2, 4)
+    #ransegs(5, 0, 10)
+    #ransegs(5, 0, 10)
+    #ransegs(5, -10, 10)
+    #ransegs(5, sumto=10)
+
+ 
+        
+    #x = ransegs(5, 10)
+    #print(&#34;sum=&#34;, sum(x))
+
+
+
+
+
+
+
+
+
+&#34;&#34;&#34;
+(define (segs num sum)
+  (let ((rgen ran)
+        (args ()))
+    (let* ((rsum (apply rgen args))
+           (head (list rsum))
+           (tail head))
+      (print &#34;rgen &#34; rgen &#34; rsum &#34; rsum &#34; args &#34; args &#34; head&#34; head)
+      (do ((i 1 (+ i 1))
+           (n #f))
+          ((not (&lt; i num))
+           (do ((tail head (cdr tail)))
+               ((null? tail) head)
+             (set-car! tail
+                       (ffi_rescale (car tail) 0 rsum 0 sum 1))))
+        (set! n (apply rgen args))
+        (set-cdr! tail (list n))
+        (set! tail (cdr tail))
+        (set! rsum (+ rsum n))))
+    ))
+(let ((l (segs 7 2)))
+  (print l)
+  (apply + l))
+&#34;&#34;&#34;</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="musx.ran.beta"><code class="name flex">
+<span>def <span class="ident">beta</span></span>(<span>alpha=0.5, beta=0.5)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns value between 0 and 1 from the beta distribution (<a href="https://en.wikipedia.org/wiki/Beta_distribution">https://en.wikipedia.org/wiki/Beta_distribution</a>).
+When a=b=1 the distribution is uniform. When alpha=beta, the distribution is
+symmetric around .5. When alpha&lt;1 and beta&lt;1 then the density of larger and
+smaller numbers increases. When alpha&gt;1 and beta&gt;1, density is similar to the
+gaussian distribution.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def beta(alpha=.5, beta=.5):
+    &#34;&#34;&#34;
+    Returns value between 0 and 1 from the beta distribution (https://en.wikipedia.org/wiki/Beta_distribution).
+    When a=b=1 the distribution is uniform. When alpha=beta, the distribution is 
+    symmetric around .5. When alpha&lt;1 and beta&lt;1 then the density of larger and
+    smaller numbers increases. When alpha&gt;1 and beta&gt;1, density is similar to the
+    gaussian distribution.
+    &#34;&#34;&#34;
+    ra = 1.0 / alpha
+    rb = 1.0 / beta
+    while True:
+        r1 = random.random()
+        r2 = random.random()
+        y1 = r1 ** ra
+        y2 = r2 ** rb
+        y3 = y1 + y2
+        if y3 &lt;= 1.0:
+            return (y1 / y3)</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.between"><code class="name flex">
+<span>def <span class="ident">between</span></span>(<span>a, b)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a random value between a and b (exclusive).</p>
+<p>An int is returned if both a and b are ints,
+otherwise a float is returned. The a value can be
+less than, equal to, or greater than b.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>a</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The lower bound for the random selection.</dd>
+<dt><strong><code>b</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The upper bound for the random selection.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<pre><code>A randomly chosen value between a and b.
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def between(a, b):
+    &#34;&#34;&#34;
+    Returns a random value between a and b (exclusive).
+
+    An int is returned if both a and b are ints,
+    otherwise a float is returned. The a value can be
+    less than, equal to, or greater than b.
+
+    Parameters
+    ----------
+    a : int | float
+        The lower bound for the random selection.
+    b : int | float
+        The upper bound for the random selection.
+
+    Returns
+    -------
+        A randomly chosen value between a and b.
+    &#34;&#34;&#34;
+    if (a &lt; b):
+        if isinstance(a, int) and isinstance(b, int):
+            return random.randrange(a, b)
+        else:
+            return a + (random.random() * (b - a))
+    if (a &gt; b):
+        if isinstance(a, int) and isinstance(b, int):
+            return a - random.randrange(b)
+        else:
+            return a - (random.random() * (a - b))
+    return a</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.brown"><code class="name flex">
+<span>def <span class="ident">brown</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns brownish (1/f**2) noise samples between -1 and 1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def brown():
+    &#34;&#34;&#34;
+    Returns brownish (1/f**2) noise samples between -1 and 1.
+    &#34;&#34;&#34;
+    # from http://vellocet.com/dsp/noise/VRand.h
+    # but made to generate between -1 1
+    global _brown
+    while True:
+        r = random.random() * 2 - 1
+        _brown += r
+        if (_brown &lt; -16.0) or (_brown &gt; 16.0):
+            _brown -= r
+        else:
+            break
+    # return interval -1 1.
+    return _brown * 0.0625</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.cauchy"><code class="name flex">
+<span>def <span class="ident">cauchy</span></span>(<span>alpha=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns an unbounded value from the Cauchy distribution
+(<a href="https://en.wikipedia.org/wiki/Cauchy_distribution">https://en.wikipedia.org/wiki/Cauchy_distribution</a>).
+The density function is a bell shaped curve centered at 0 similar to a
+normal distribution but with more values at the extremes. The mean and
+standard deviation of the Cauchy distribution are undefined. If parameter
+alpha is True then only positive values are returned. Density is f(x)=1/(pi(1 + x^2)).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cauchy(alpha=False):
+    &#34;&#34;&#34;
+    Returns an unbounded value from the Cauchy distribution
+    (https://en.wikipedia.org/wiki/Cauchy_distribution).
+    The density function is a bell shaped curve centered at 0 similar to a
+    normal distribution but with more values at the extremes. The mean and
+    standard deviation of the Cauchy distribution are undefined. If parameter
+    alpha is True then only positive values are returned. Density is f(x)=1/(pi(1 + x^2)).
+    &#34;&#34;&#34;
+    #return math.tan( math.pi * 2 * (random.random() - 0.5))
+    r = (1.5707964 if alpha else math.pi) * random.random()
+    return sin(r) / cos(r)</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.expran"><code class="name flex">
+<span>def <span class="ident">expran</span></span>(<span>alpha=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a value greater than 0 from the exponential distribution
+(<a href="https://en.wikipedia.org/wiki/Exponential_distribution">https://en.wikipedia.org/wiki/Exponential_distribution</a>) with stretching factor alpha.
+Increasing alpha "prefers" smaller numbers. The distribution is unbounded but when
+alpha=1 then %99.9 of the time the value returned will be than 6.9077554, i.e. -log(.001).
+The distribution density is f(x)=(exp -x) with a mean of 1.0.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expran(alpha=1):
+    &#34;&#34;&#34;
+    Returns a value greater than 0 from the exponential distribution
+    (https://en.wikipedia.org/wiki/Exponential_distribution) with stretching factor alpha.
+    Increasing alpha &#34;prefers&#34; smaller numbers. The distribution is unbounded but when 
+    alpha=1 then %99.9 of the time the value returned will be than 6.9077554, i.e. -log(.001).
+    The distribution density is f(x)=(exp -x) with a mean of 1.0.
+    &#34;&#34;&#34;
+    return (- math.log(1.0 - random.random())) / alpha</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.gamma"><code class="name flex">
+<span>def <span class="ident">gamma</span></span>(<span>alpha=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns value greater than 0 from the gamma distribution
+(<a href="https://en.wikipedia.org/wiki/Gamma_distribution">https://en.wikipedia.org/wiki/Gamma_distribution</a>).
+Parameter alpha controls the distribution's shape and should be a positive integer
+(if a non-integer is provided, the value is rounded.) When alpha=1, the
+distribution is the same as exponential. As its value increases, the
+probability density function becomes a curve with mean=alpha and standard
+deviation = sqrt(alpha).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gamma(alpha=1):
+    &#34;&#34;&#34;
+    Returns value greater than 0 from the gamma distribution 
+    (https://en.wikipedia.org/wiki/Gamma_distribution).
+    Parameter alpha controls the distribution&#39;s shape and should be a positive integer
+    (if a non-integer is provided, the value is rounded.) When alpha=1, the 
+    distribution is the same as exponential. As its value increases, the 
+    probability density function becomes a curve with mean=alpha and standard 
+    deviation = sqrt(alpha).
+    &#34;&#34;&#34;
+    r = 1.0
+    n = round(alpha)
+    for i in range(n):
+        r = r * (1 - random.random())
+    return - math.log(r)</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.gauss"><code class="name flex">
+<span>def <span class="ident">gauss</span></span>(<span>sigma=1, mu=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns unbounded value from the normal distribution
+(<a href="https://en.wikipedia.org/wiki/Normal_distribution">https://en.wikipedia.org/wiki/Normal_distribution</a>) with standard deviation
+sigma and mean mu.
+The spread (standard deviation) is 1.0 centered at 0,
+so 68.26% of the results are between -1 and 1 inclusive and 99.74% of the
+results are between -3 and 3 inclusive.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gauss(sigma=1, mu=0):
+    &#34;&#34;&#34;
+    Returns unbounded value from the normal distribution
+    (https://en.wikipedia.org/wiki/Normal_distribution) with standard deviation
+    sigma and mean mu.  The spread (standard deviation) is 1.0 centered at 0, 
+    so 68.26% of the results are between -1 and 1 inclusive and 99.74% of the
+    results are between -3 and 3 inclusive.
+    &#34;&#34;&#34;
+    while True:
+        x = -1 + 2 * random.random()
+        y = -1 + 2 * random.random()
+        r2 = (x * x) + (y * y)
+        if not ((r2 &gt; 1.0) or (r2 == 0)):
+            break
+    return (sigma * y * math.sqrt(-2.0 * math.log(r2) / r2)) + mu</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.highran"><code class="name flex">
+<span>def <span class="ident">highran</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a floating point value between 0.0 and 1.0 with higher
+values more likely. See also: uniran(), lowran(), midran().</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def highran():
+    &#34;&#34;&#34;
+    Returns a floating point value between 0.0 and 1.0 with higher 
+    values more likely. See also: uniran(), lowran(), midran().
+    &#34;&#34;&#34;
+    return max(random.random(), random.random())</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.lowran"><code class="name flex">
+<span>def <span class="ident">lowran</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a floating point value between 0.0 and 1.0 with lower
+values more likely. See also: uniran(), midran(), highran().</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lowran():
+    &#34;&#34;&#34;
+    Returns a floating point value between 0.0 and 1.0 with lower 
+    values more likely. See also: uniran(), midran(), highran().
+    &#34;&#34;&#34;
+    return min(random.random(), random.random())</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.midran"><code class="name flex">
+<span>def <span class="ident">midran</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a floating point value between 0.0 and 1.0 with midrange
+values more likely. See also: uniran(), lowran(), highran().</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def midran():
+    &#34;&#34;&#34;
+    Returns a floating point value between 0.0 and 1.0 with midrange
+    values more likely. See also: uniran(), lowran(), highran().
+    &#34;&#34;&#34;
+    return (random.random() + random.random()) / 2.0</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.odds"><code class="name flex">
+<span>def <span class="ident">odds</span></span>(<span>prob, true=True, false=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true value if a random choice is less than prob else returns
+the false.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>prob</code></strong> :&ensp;<code>float | int</code></dt>
+<dd>A value between 0 and 1 inclusive.</dd>
+<dt><strong><code>true</code></strong> :&ensp;<code>value</code></dt>
+<dd>If odds is true the true value is returned.</dd>
+<dt><strong><code>false</code></strong> :&ensp;<code>value</code></dt>
+<dd>If odds is false the false value is returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Either the true value or the false value based on probability.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def odds(prob, true=True, false=False):
+    &#34;&#34;&#34;
+    Returns true value if a random choice is less than prob else returns
+    the false.
+
+    Parameters
+    ----------
+    prob : float | int
+        A value between 0 and 1 inclusive.
+    true : value
+        If odds is true the true value is returned.
+    false : value
+        If odds is false the false value is returned.
+
+    Returns
+    -------
+    Either the true value or the false value based on probability.
+    &#34;&#34;&#34;
+    if 0 &lt;= prob &lt;= 1.0:
+        return true if random.random() &lt; prob else false
+    raise ValueError(f&#34;{prob} not a number between 0 and 1.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.pick"><code class="name flex">
+<span>def <span class="ident">pick</span></span>(<span>*args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Randomly picks one of its arguments to return.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>*args</code></strong> :&ensp;<code>variadic</code></dt>
+<dd>A series of values from which one will be randomly selected.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>One value from the argument list.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pick(*args):
+    &#34;&#34;&#34;
+    Randomly picks one of its arguments to return.
+
+    Parameters
+    ----------
+    *args : variadic
+        A series of values from which one will be randomly selected.
+
+    Returns
+    -------
+    One value from the argument list.
+    &#34;&#34;&#34;
+    return args[random.randrange(len(args))]</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.pink"><code class="name flex">
+<span>def <span class="ident">pink</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns pinkish (1/f) noise samples between -1.0 and 1.0.
+Based on Gardner
+(1978) and Dick Moore (1988?).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pink():
+    &#34;&#34;&#34;
+    Returns pinkish (1/f) noise samples between -1.0 and 1.0.  Based on Gardner
+    (1978) and Dick Moore (1988?).
+    &#34;&#34;&#34;
+    global _i
+    if _i == _pown:
+        r = [0.0 for _ in range(_pow2)]
+        h = 1.0 / _pow2
+        for n in range(_pown):
+            _pinking[n]=_one_over_f_aux(n, r, h)
+        _i = 0
+    else:
+        _i += 1
+    return _pinking[_i]</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.poisson"><code class="name flex">
+<span>def <span class="ident">poisson</span></span>(<span>alpha=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns value greater than 0 from the poisson distribution
+(<a href="https://en.wikipedia.org/wiki/Poisson_distribution">https://en.wikipedia.org/wiki/Poisson_distribution</a>).
+Returns positive integer values, theoretically unbounded but practically
+limited by the alpha parameter. Parameter alpha controls the distribution's
+shape and must be positive: the mean is a and the standard deviation is sqrt(a).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def poisson(alpha=1):
+    &#34;&#34;&#34;
+    Returns value greater than 0 from the poisson distribution
+    (https://en.wikipedia.org/wiki/Poisson_distribution).
+    Returns positive integer values, theoretically unbounded but practically
+    limited by the alpha parameter. Parameter alpha controls the distribution&#39;s 
+    shape and must be positive: the mean is a and the standard deviation is sqrt(a).
+    &#34;&#34;&#34;
+    b = math.exp( - alpha)
+    n = 0
+    p = 1.0
+    while True:
+        p = p * random.random()
+        n += 1
+        if p &lt; b:
+            return n</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.ransegs"><code class="name flex">
+<span>def <span class="ident">ransegs</span></span>(<span>num, mapto, rangen=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of random number segments.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>num</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of random values returned in the list.</dd>
+<dt><strong><code>mapto</code></strong> :&ensp;<code>number | [low, high]</code></dt>
+<dd>If mapto is a number then the values retuned will sum to that number.
+If mapto is a list then the random values are sorted and scaled to
+lie proportionatly from low to high.</dd>
+<dt><strong><code>rangen</code></strong> :&ensp;<code>None | function</code></dt>
+<dd>If function is provided it will be called to return random numbers,
+otherwise uniform random numbers between are generated.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ransegs(num, mapto, rangen=None):
+    &#34;&#34;&#34;
+    Returns a list of random number segments.
+
+    Parameters
+    ----------
+    num : int
+        The number of random values returned in the list.
+    mapto : number | [low, high]
+        If mapto is a number then the values retuned will sum to that number.
+        If mapto is a list then the random values are sorted and scaled to
+        lie proportionatly from low to high.
+    rangen : None | function
+        If function is provided it will be called to return random numbers,
+        otherwise uniform random numbers between are generated.
+    &#34;&#34;&#34;
+    #print(f&#34;ransegs(num={num}, mapto={mapto})&#34;)
+    segs = []
+    rsum = 0
+    if rangen == None:
+        rangen = random.random
+    for i in range(num):
+        n = rangen()
+        segs.append(n)
+        rsum += n
+    if isinstance(mapto, (list, tuple)):
+        segs.sort()
+        #print(&#34;raws&#34;, segs)        
+        for i in range(num):
+            segs[i] = rescale(segs[i], segs[0], segs[-1], mapto[0], mapto[1])
+    else:
+        #print(&#34;raws&#34;, segs)
+        for i in range(num):
+            segs[i] = rescale(segs[i], 0, rsum, 0, mapto)
+    #print(&#34;segs&#34;, segs)
+    return segs</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.uniran"><code class="name flex">
+<span>def <span class="ident">uniran</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a uniformly chosen floating point value between 0.0 and 1.0.
+See also: lowran(), midran(), highran().</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def uniran():
+    &#34;&#34;&#34;
+    Returns a uniformly chosen floating point value between 0.0 and 1.0.
+    See also: lowran(), midran(), highran().
+    &#34;&#34;&#34;
+    return random.random()</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.vary"><code class="name flex">
+<span>def <span class="ident">vary</span></span>(<span>value, variance, shift=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a random number that deviates from value or list of the same by
+up to variance (1=100%) according to shift. </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>value</code></strong> :&ensp;<code>number | list</code></dt>
+<dd>The value or list of values to vary.</dd>
+<dt><strong><code>variance</code></strong> :&ensp;<code>number</code></dt>
+<dd>The maximum amount to vary the value by, e.g. 0.5 means the variance
+could be up to 50% of the input value.</dd>
+<dt><strong><code>shift</code></strong> :&ensp;<code>None | "+" | "-"</code></dt>
+<dd>Specifies where the variance is placed. If None then then value is at the
+center of what could be returned. Shift "+" places value at the minimum
+of what could be returned and "-" means that value is the maximum possible
+value returned.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vary(value, variance, shift=None):
+    &#34;&#34;&#34;
+    Returns a random number that deviates from value or list of the same by
+    up to variance (1=100%) according to shift. 
+    
+    Parameters
+    ----------
+    value : number | list
+        The value or list of values to vary.
+    variance : number
+        The maximum amount to vary the value by, e.g. 0.5 means the variance
+        could be up to 50% of the input value.
+    shift : None | &#34;+&#34; | &#34;-&#34;
+        Specifies where the variance is placed. If None then then value is at the
+        center of what could be returned. Shift &#34;+&#34; places value at the minimum
+        of what could be returned and &#34;-&#34; means that value is the maximum possible
+        value returned.
+    &#34;&#34;&#34;
+    if isinstance(value, list):
+        return [vary(v, variance, shift) for v in value]
+    if value == 0 or variance == 0:
+        return val
+    r = abs(value * variance)
+    v = random.random() * r
+    if shift == None:
+        return (value - (r * .5)) + v
+    if shift == &#39;+&#39;:
+        return value + v
+    if shift == &#39;-&#39;:
+        return value - v
+    raise ValueError(&#34;shift should be None, &#39;+&#39;, or &#39;-&#39; ({shift})&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.white"><code class="name flex">
+<span>def <span class="ident">white</span></span>(<span>level=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns white (uniform) noise samples between -1.0 and 1.0.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>level</code></strong> :&ensp;<code>None</code> or <code>int</code> or <code>float</code></dt>
+<dd>An optional scaler on the sample returned.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def white(level=None):
+    &#34;&#34;&#34;
+    Returns white (uniform) noise samples between -1.0 and 1.0.
+
+    Parameters
+    ----------
+    level : None or int or float
+        An optional scaler on the sample returned.
+    &#34;&#34;&#34;
+    samp = random.random() * 2.0 - 1.0
+    return samp * level if level else samp</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="musx.ran.beta" href="#musx.ran.beta">beta</a></code></li>
+<li><code><a title="musx.ran.between" href="#musx.ran.between">between</a></code></li>
+<li><code><a title="musx.ran.brown" href="#musx.ran.brown">brown</a></code></li>
+<li><code><a title="musx.ran.cauchy" href="#musx.ran.cauchy">cauchy</a></code></li>
+<li><code><a title="musx.ran.expran" href="#musx.ran.expran">expran</a></code></li>
+<li><code><a title="musx.ran.gamma" href="#musx.ran.gamma">gamma</a></code></li>
+<li><code><a title="musx.ran.gauss" href="#musx.ran.gauss">gauss</a></code></li>
+<li><code><a title="musx.ran.highran" href="#musx.ran.highran">highran</a></code></li>
+<li><code><a title="musx.ran.lowran" href="#musx.ran.lowran">lowran</a></code></li>
+<li><code><a title="musx.ran.midran" href="#musx.ran.midran">midran</a></code></li>
+<li><code><a title="musx.ran.odds" href="#musx.ran.odds">odds</a></code></li>
+<li><code><a title="musx.ran.pick" href="#musx.ran.pick">pick</a></code></li>
+<li><code><a title="musx.ran.pink" href="#musx.ran.pink">pink</a></code></li>
+<li><code><a title="musx.ran.poisson" href="#musx.ran.poisson">poisson</a></code></li>
+<li><code><a title="musx.ran.ransegs" href="#musx.ran.ransegs">ransegs</a></code></li>
+<li><code><a title="musx.ran.uniran" href="#musx.ran.uniran">uniran</a></code></li>
+<li><code><a title="musx.ran.vary" href="#musx.ran.vary">vary</a></code></li>
+<li><code><a title="musx.ran.white" href="#musx.ran.white">white</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

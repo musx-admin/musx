@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>musx.tools API documentation</title>
+<meta name="description" content="An assortmant of music composition tools for working with randomness,
+rescaling, arithmetic, etc." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.tools</code></h1>
+</header>
+<section id="section-intro">
+<p>An assortmant of music composition tools for working with randomness,
+rescaling, arithmetic, etc.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">###############################################################################
+&#34;&#34;&#34;
+An assortmant of music composition tools for working with randomness, 
+rescaling, arithmetic, etc.
+&#34;&#34;&#34;
+
+import types
+import math
+import random
+import subprocess
+
+__pdoc__ = {
+    &#39;parse_string_sequence&#39;: False
+}
+
+def isgen(x):
+    &#34;&#34;&#34;Returns True if x is a generator.&#34;&#34;&#34;
+    return isinstance(x, types.GeneratorType)
+
+
+def isfunc(x):
+    &#34;&#34;&#34;Returns True if x is a function.&#34;&#34;&#34;
+    return isinstance(x, types.FunctionType)
+
+
+def isseq(x):
+    &#34;&#34;&#34;Returns True if x is a list or tuple.&#34;&#34;&#34;
+    return isinstance(x, (list, tuple))
+
+
+def isnum(x, others=None):
+    &#34;&#34;&#34;
+    Returns True if x is an int or float of one of the
+    other number types passed in (e.g. Fraction, complex).
+    &#34;&#34;&#34;
+    if isinstance(x, (int, float)):
+        return True
+    if others:
+        return isinstance(x, others)
+    return False
+
+
+def rescale(x, x1, x2, y1, y2, mode=&#39;lin&#39;):
+    &#34;&#34;&#34;
+    Maps the value x ranging between x1 and x2 into a proportional value
+    between y1 and y2.
+    
+    Parameters
+    ----------
+    x : int | float
+        The value to rescale.
+    x1 : int | float
+        The lower limit of input range.
+    x2 : int | float
+        The upper limit of input range.
+    y1 : int | float
+        The lowest limit of output range.
+    y2 : int | float
+        The upper limit of output range.
+    mode : string
+        If mode is &#39;lin&#39; then linear scaling occurs, &#39;cos&#39; produces cosine
+        scaling, &#39;exp&#39; produces exponential scaling, and &#39;-exp&#39; produces 
+        inverted exponential.
+
+    Returns
+    -------
+    The rescaled value.
+    &#34;&#34;&#34;
+    if x &gt; x2: return y2
+    if x &lt;= x1: return y1
+    # as x moves x1 to x2 mu moves 0 to 1
+    mu = (x - x1) / (x2 - x1)
+    if mode == &#39;lin&#39;:
+        #return (((y2 - y1) / (x2 - x1)) * (x - x1)) + y1
+        return (y1 * (1 - mu) + (y2 * mu))
+    elif mode == &#39;cos&#39;:
+        mu2 = (1 - math.cos(mu * math.pi)) / 2
+        return (y1 * (1 - mu2) + y2 * mu2)
+    elif mode in [&#39;exp&#39;,&#39;-exp&#39;]:
+        # # http://www.pmean.com/10/ExponentialInterpolation.html
+        # if y1==0: y1=0.00001
+        # return y1 * ((y2/y1) ** (mu))
+        # #https://docs.fincad.com/support/developerfunc/mathref/Interpolation.htm
+        # if y1==0: y1=0.00001
+        # m = math.log(y2 / y1) / (x2 - x1)
+        # k = y1 * math.pow(math.e, -m * x1)
+        # return k * math.pow(math.e, m * x)
+
+        # a base that yields a slope that is not too steep or shallow...
+        b = 512
+        if mode == &#39;exp&#39;:
+            return y1 + ( ((y2 - y1) / b) * math.pow(b, mu) )
+        b = 1/b
+        return y1 + ( ((y2 - y1) / (b - 1)) * (math.pow(b, mu) - 1) )
+    raise ValueError(f&#34;mode {mode} is not &#39;lin&#39;, &#39;cos&#39;, &#39;exp&#39;, or &#39;-exp&#39;.&#34;)
+
+
+def frange(start, stop=None, step=None):
+    &#34;&#34;&#34;
+    Returns an iterator produceing a series of floats from start (inclusive)
+    to stop (exclusive) by step.
+
+    Parameters
+    ----------
+    frange can be called with one, two or three arguments:
+    
+    * frange(stop)
+    * frange(start, stop)
+    * frange(start, stop, step)
+
+    start : int | float
+        The starting value of the sequence.
+
+    stop : int | float
+        The exclusive upper (or lower) bounds of the iteration.
+
+    step : int | float
+        The increment (or decrement) to move by. Defaults to 1.
+
+    Returns
+    -------
+    Values ranging from start to stop (exclusive).
+    &#34;&#34;&#34;
+    if stop is None:
+        stop = start
+        start = 0.0
+    else:
+        start += 0.0
+
+    if step is None:
+        step = 1.0
+    else:
+        step += 0.0
+    i = 1
+    init = start # initial start value (offset)
+    # no iteration if step is 0 or reversed direction of start -&gt; stop.
+    while step != 0:
+        if step &gt; 0 and start &gt;= stop:
+            break
+        if step &lt; 0 and start &lt;= stop:
+            break
+        yield start
+        # start += step   # arrg! cumulative addition yields wonky numbers
+        start = (step * i) + init  # scale by step and shift to start
+        i += 1
+
+
+def rand(limit):
+    &#34;&#34;&#34;
+    Returns a generator that produces uniform random numbers below limit.
+
+    Parameters
+    ----------
+    limit : int | float
+        Sets the exlusive upper bound for random selection. If limit
+        is an integer then integer values are returned otherwise float
+        values are returned.
+    &#34;&#34;&#34;
+    if isinstance(limit, int):
+        def irand():
+            while True:
+                yield random.randrange(limit)
+        return irand()
+    elif isinstance(limit, float):
+        def frand():
+            while True:
+                yield random.random() * limit
+        return frand()
+    raise TypeError(&#34;limit not an int or float: {limit}.&#34;)
+
+
+def quantize(number, stepsize):
+    &#34;&#34;&#34;Quantizes number to a given step size.&#34;&#34;&#34;
+    return math.floor( (number/stepsize) + .5) * stepsize
+
+
+def deltas(numbers):
+    &#34;&#34;&#34;
+    Returns the changes between consecutive numbers in a list of numbers.
+
+    Example: deltas([1,5,3])  -&gt;  [4, -2]
+
+    Parameters
+    ----------
+    numbers : list
+        The list of numbers to process.
+
+    Returns
+    -------
+    A list containing the differences between a series of numbers.
+    &#34;&#34;&#34;
+    return [l - r for l,r in zip(numbers[1:], numbers[:])]
+
+
+def _expl(powr, y0, y1, base):
+    if powr &lt; 0:
+        powr=0.0
+    elif powr &gt; 1: 
+        powr = 1.0
+    if base == 1.0:
+        return y0 + (powr * (y1 - y0))
+    return y0 + ( ( (y1 - y0) / (base - 1.0) ) * ((base ** powr) - 1.0) )
+
+
+def _explseg(i, length, summ, powr):
+    if i &gt;= length:
+        i += -1
+    x1 = (i+1) / length
+    x2 = i / length
+    f1 = _expl(x1, 0.0, 1.0, powr)
+    f2 = 0.0 if (i &lt;= 0) else _expl( x2, 0.0, 1.0, powr)
+    return summ * (f1 - f2)
+
+
+def explsegs(num, summ, base=2):
+    segs = []
+    for i in range(num):
+        segs.append(_explseg(i, num, summ, base))
+    return segs
+
+
+def _geoseg( i, length, summ, base):
+    if length == 0:
+        return 0.0
+    a = summ * ((1.0 - base) / (1.0 - (base ** length)))
+    return  a * (base ** i)
+
+
+def geosegs(num, summ, base=2):
+    segs = []
+    for i in range(num):
+        segs.append(_geoseg(i, num, summ, base))
+    return segs
+
+
+def _map_lists(func, left, right):
+    if type(left) is list:
+        if type(right) is list:
+            assert len(left) == len(right), &#34;lists are different lengths.&#34;
+            return [func(l,r) for l,r in zip(left,right)]
+        else:
+            return [func(l,right) for l in left]
+    else:
+        if type(right) is list:
+            return [func(left,r) for r in right]
+        else:
+            return func(left,right)
+    
+
+def multiply(left, right):
+    &#34;&#34;&#34;
+    List-aware multiplication.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l*r, left, right)
+
+
+def add(left, right):
+    &#34;&#34;&#34;
+    List-aware addition.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l+r, left, right)
+
+
+def subtract(left, right):
+    &#34;&#34;&#34;
+    List-aware subtraction.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l-r, left, right)
+
+
+def divide(left, right):
+    &#34;&#34;&#34;
+    List-aware division.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l/r, left, right)
+
+
+def _rem(x,y):
+    #return math.copysign(x % y, x)
+    mod = x % y
+    res = math.copysign(mod, x)
+    return int(res) if isinstance(mod, int) else res
+
+
+def fit(num, lb, ub, mode=&#39;wrap&#39;):
+    &#34;&#34;&#34;
+    Forces a number to lie between a lower and upper bound according to mode. 
+
+    Parameters
+    ----------
+    num : int | float
+        The number to fit.
+    lb : int | float
+        The lower bound.
+    ub : int | float
+        The upper bound.
+    mode : &#39;reflect&#39; | &#39;limit&#39; | &#39;wrap&#39;
+        If mode is &#39;reflect&#39; then the min and max boundaries reflect the value back into range.\
+        If mode is &#39;wrap&#39; then num will be the remainder of num % boundaries.
+
+    Returns
+    -------
+    The value of num coerced to lie within the range lb to ub.
+
+    Raises
+    ------
+    ValueError if mode is not one of the supported modes.
+
+    Examples
+    --------
+    ```python
+    [fit(i, 0, 10) for i in range(-20, 21, 5)]
+    ```
+    &#34;&#34;&#34;
+    if lb &gt; ub:
+        ub, lb = lb, ub
+    if lb &lt;= num &lt;= ub:
+        return num
+    b = ub if num &gt; ub else lb
+    if mode == &#39;limit&#39;:
+        return b
+    rng = ub - lb
+    if mode == &#39;reflect&#39;:
+        # shift num to 0 to compare with range
+        # limit num to rng*2 (rising/reflecting)
+        num = _rem(num - b, (rng * 2))
+        if abs(num) &gt; rng:   # in range2
+            if num &gt;= 0:
+                num = num - (rng * 2)
+            else:
+                num = num + (rng * 2)
+        else:
+            num = -num
+        return num + b
+    if mode == &#39;wrap&#39;:
+        return (lb if b == ub else ub) + _rem(num - b, rng)
+    raise ValueError(f&#34;{mode} not one of [&#39;reflect&#39;, &#39;limit&#39;, &#39;wrap&#39;].&#34;)
+
+&#39;&#39;&#39;
+(defun fit (number lb ub &amp;optional (mode :reflect))
+  (when (&gt; lb ub) (rotatef lb ub))
+  (if (&lt;= lb number ub)
+      number
+      (let ((b (if (&gt; number ub) ub lb)) (r (- ub lb)))
+        (case mode
+          ((:limit) b)
+          ((:reflect)
+           (let* ((2r (* 2 r)) 
+                  (v (rem (- number b) 2r)))
+             (+ (if (&gt; (abs v) r)
+                    (funcall (if (&gt;= v 0) #&#39;- #&#39;+) v 2r)
+                    (- v))
+                b)))
+          ((:wrap) (+ (if (= b ub) lb ub) (rem (- number b) r)))
+          (t (error &#34;~s is not :limit, :reflect or :wrap&#34; mode))))))
+&#39;&#39;&#39;
+
+midiextensions = (&#39;.mid&#39;, &#39;.midi&#39;)
+&#34;&#34;&#34;
+A tuple of allowable midi file extensions. Defaults to (&#39;.mid&#39;, &#39;.midi&#39;).
+&#34;&#34;&#34;
+
+midiplayer = &#39;&#39;
+
+
+def setmidiplayer(command):
+    &#34;&#34;&#34;
+    Assign a shell command (string) that will play a midi file.
+
+    Parameter
+    ---------
+    command : string
+        The shell command that will play a midi file.
+
+    Example
+    -------
+    setmidiplayer(&#39;fluidsynth -iq -g1 /Users/taube/SoundFonts/MuseScore_General.sf2&#39;)
+    &#34;&#34;&#34;    
+    
+    global midiplayer
+    midiplayer = command
+
+
+audioextensions = (&#39;.aiff&#39;, &#39;.wav&#39;, &#39;.mp3&#39;, &#39;.mp4&#39;)
+&#34;&#34;&#34;
+A tuple of allowable audio file extensions. 
+Defaults to (&#39;.aiff&#39;, &#39;.wav&#39;, &#39;.mp3&#39;, &#39;.mp4&#39;).
+&#34;&#34;&#34;
+
+
+audioplayer = &#39;&#39;
+&#34;&#34;&#34;
+A shell command (string) that accepts one argument,
+a pathname (file) to play. See: setaudioplayer().
+&#34;&#34;&#34;
+
+
+def setaudioplayer(command):
+    &#34;&#34;&#34;
+    Assign a shell command (string) that will play an audio file.
+
+    Parameter
+    ---------
+    command : string
+        The shell command that will play an audio file.
+
+    Example
+    -------
+    setaudioplayer(&#39;afplay&#39;)
+    &#34;&#34;&#34;    
+    
+    global audioplayer
+    audioplayer = command
+
+
+def playfile(file, wait=False):
+    &#34;&#34;&#34;
+    Plays a midi or audio file using the shell commands you have specified
+    for midiplayer and audioplayer. See: setaudioplayer, setmidiplayer.
+
+    Parameters
+    ----------
+    file : string
+        The file to play.
+    wait : bool
+        If true playfile waits until the file has finished playing
+        before returning, otherwise playfile returns immediately.
+    &#34;&#34;&#34;
+    args = []
+    kind = &#39;&#39;
+    if file.endswith(midiextensions):
+        kind = &#39;midi&#39;
+        if midiplayer:
+            args = midiplayer.split() + [file]
+    elif file.endswith(audioextensions):
+        kind = &#39;audio&#39;
+        if audioplayer:
+            args = audioplayer.split() + [file] 
+    if args:
+        p = subprocess.Popen(args)
+        if wait:
+            p.wait()
+    else:
+        help = f&#34;playfile(): Don&#39;t know how to play &#39;{file}&#39;:&#34;
+        if kind:
+            help += f&#34; use musx.set{kind}player() to set a shell command to play {kind} files.&#34;
+        else:
+            help += f&#34; file type not found in musx.midiextensions or musx.audioextensions.&#34;
+        print(help)
+
+
+def parse_string_sequence(string):
+    # split string at blank spaces, replace each repeat token &#39;,&#39; by
+    # repeated value, check for dangling and undelimited repeats.
+    seq = []
+    for raw in string.split():
+        tok = raw.rstrip(&#39;,&#39;)
+        if tok:
+            if &#39;,&#39; not in tok:
+                for _ in range(len(raw) - len(tok) + 1):
+                    seq.append(tok)
+            else:
+                raise SyntaxError(f&#34;undelimited &#39;,&#39; in &#39;{tok}&#39;.&#34;)
+        else:
+            raise SyntaxError(f&#34;dangling repeat &#39;,&#39; in &#39;{string}&#39;.&#34;)
+    return seq</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="musx.tools.audioextensions"><code class="name">var <span class="ident">audioextensions</span></code></dt>
+<dd>
+<div class="desc"><p>A tuple of allowable audio file extensions.
+Defaults to ('.aiff', '.wav', '.mp3', '.mp4').</p></div>
+</dd>
+<dt id="musx.tools.audioplayer"><code class="name">var <span class="ident">audioplayer</span></code></dt>
+<dd>
+<div class="desc"><p>A shell command (string) that accepts one argument,
+a pathname (file) to play. See: setaudioplayer().</p></div>
+</dd>
+<dt id="musx.tools.midiextensions"><code class="name">var <span class="ident">midiextensions</span></code></dt>
+<dd>
+<div class="desc"><p>A tuple of allowable midi file extensions. Defaults to ('.mid', '.midi').</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="musx.tools.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>left, right)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List-aware addition.</p>
+<p>Left and right can be numbers or lists, if both are lists
+they must be of the same length.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(left, right):
+    &#34;&#34;&#34;
+    List-aware addition.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l+r, left, right)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.deltas"><code class="name flex">
+<span>def <span class="ident">deltas</span></span>(<span>numbers)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the changes between consecutive numbers in a list of numbers.</p>
+<p>Example: deltas([1,5,3])
+-&gt;
+[4, -2]</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>numbers</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of numbers to process.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A list containing the differences between a series of numbers.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def deltas(numbers):
+    &#34;&#34;&#34;
+    Returns the changes between consecutive numbers in a list of numbers.
+
+    Example: deltas([1,5,3])  -&gt;  [4, -2]
+
+    Parameters
+    ----------
+    numbers : list
+        The list of numbers to process.
+
+    Returns
+    -------
+    A list containing the differences between a series of numbers.
+    &#34;&#34;&#34;
+    return [l - r for l,r in zip(numbers[1:], numbers[:])]</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.divide"><code class="name flex">
+<span>def <span class="ident">divide</span></span>(<span>left, right)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List-aware division.</p>
+<p>Left and right can be numbers or lists, if both are lists
+they must be of the same length.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def divide(left, right):
+    &#34;&#34;&#34;
+    List-aware division.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l/r, left, right)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.explsegs"><code class="name flex">
+<span>def <span class="ident">explsegs</span></span>(<span>num, summ, base=2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def explsegs(num, summ, base=2):
+    segs = []
+    for i in range(num):
+        segs.append(_explseg(i, num, summ, base))
+    return segs</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.fit"><code class="name flex">
+<span>def <span class="ident">fit</span></span>(<span>num, lb, ub, mode='wrap')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Forces a number to lie between a lower and upper bound according to mode. </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>num</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The number to fit.</dd>
+<dt><strong><code>lb</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The lower bound.</dd>
+<dt><strong><code>ub</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The upper bound.</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>'reflect' | 'limit' | 'wrap'</code></dt>
+<dd>If mode is 'reflect' then the min and max boundaries reflect the value back into range.
+If mode is 'wrap' then num will be the remainder of num % boundaries.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The value of num coerced to lie within the range lb to ub.</p>
+<h2 id="raises">Raises</h2>
+<p>ValueError if mode is not one of the supported modes.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">[fit(i, 0, 10) for i in range(-20, 21, 5)]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fit(num, lb, ub, mode=&#39;wrap&#39;):
+    &#34;&#34;&#34;
+    Forces a number to lie between a lower and upper bound according to mode. 
+
+    Parameters
+    ----------
+    num : int | float
+        The number to fit.
+    lb : int | float
+        The lower bound.
+    ub : int | float
+        The upper bound.
+    mode : &#39;reflect&#39; | &#39;limit&#39; | &#39;wrap&#39;
+        If mode is &#39;reflect&#39; then the min and max boundaries reflect the value back into range.\
+        If mode is &#39;wrap&#39; then num will be the remainder of num % boundaries.
+
+    Returns
+    -------
+    The value of num coerced to lie within the range lb to ub.
+
+    Raises
+    ------
+    ValueError if mode is not one of the supported modes.
+
+    Examples
+    --------
+    ```python
+    [fit(i, 0, 10) for i in range(-20, 21, 5)]
+    ```
+    &#34;&#34;&#34;
+    if lb &gt; ub:
+        ub, lb = lb, ub
+    if lb &lt;= num &lt;= ub:
+        return num
+    b = ub if num &gt; ub else lb
+    if mode == &#39;limit&#39;:
+        return b
+    rng = ub - lb
+    if mode == &#39;reflect&#39;:
+        # shift num to 0 to compare with range
+        # limit num to rng*2 (rising/reflecting)
+        num = _rem(num - b, (rng * 2))
+        if abs(num) &gt; rng:   # in range2
+            if num &gt;= 0:
+                num = num - (rng * 2)
+            else:
+                num = num + (rng * 2)
+        else:
+            num = -num
+        return num + b
+    if mode == &#39;wrap&#39;:
+        return (lb if b == ub else ub) + _rem(num - b, rng)
+    raise ValueError(f&#34;{mode} not one of [&#39;reflect&#39;, &#39;limit&#39;, &#39;wrap&#39;].&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.frange"><code class="name flex">
+<span>def <span class="ident">frange</span></span>(<span>start, stop=None, step=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns an iterator produceing a series of floats from start (inclusive)
+to stop (exclusive) by step.</p>
+<h2 id="parameters">Parameters</h2>
+<p>frange can be called with one, two or three arguments:</p>
+<ul>
+<li>frange(stop)</li>
+<li>frange(start, stop)</li>
+<li>frange(start, stop, step)</li>
+</ul>
+<dl>
+<dt><strong><code>start</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The starting value of the sequence.</dd>
+<dt><strong><code>stop</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The exclusive upper (or lower) bounds of the iteration.</dd>
+<dt><strong><code>step</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The increment (or decrement) to move by. Defaults to 1.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Values ranging from start to stop (exclusive).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def frange(start, stop=None, step=None):
+    &#34;&#34;&#34;
+    Returns an iterator produceing a series of floats from start (inclusive)
+    to stop (exclusive) by step.
+
+    Parameters
+    ----------
+    frange can be called with one, two or three arguments:
+    
+    * frange(stop)
+    * frange(start, stop)
+    * frange(start, stop, step)
+
+    start : int | float
+        The starting value of the sequence.
+
+    stop : int | float
+        The exclusive upper (or lower) bounds of the iteration.
+
+    step : int | float
+        The increment (or decrement) to move by. Defaults to 1.
+
+    Returns
+    -------
+    Values ranging from start to stop (exclusive).
+    &#34;&#34;&#34;
+    if stop is None:
+        stop = start
+        start = 0.0
+    else:
+        start += 0.0
+
+    if step is None:
+        step = 1.0
+    else:
+        step += 0.0
+    i = 1
+    init = start # initial start value (offset)
+    # no iteration if step is 0 or reversed direction of start -&gt; stop.
+    while step != 0:
+        if step &gt; 0 and start &gt;= stop:
+            break
+        if step &lt; 0 and start &lt;= stop:
+            break
+        yield start
+        # start += step   # arrg! cumulative addition yields wonky numbers
+        start = (step * i) + init  # scale by step and shift to start
+        i += 1</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.geosegs"><code class="name flex">
+<span>def <span class="ident">geosegs</span></span>(<span>num, summ, base=2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def geosegs(num, summ, base=2):
+    segs = []
+    for i in range(num):
+        segs.append(_geoseg(i, num, summ, base))
+    return segs</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.isfunc"><code class="name flex">
+<span>def <span class="ident">isfunc</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns True if x is a function.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isfunc(x):
+    &#34;&#34;&#34;Returns True if x is a function.&#34;&#34;&#34;
+    return isinstance(x, types.FunctionType)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.isgen"><code class="name flex">
+<span>def <span class="ident">isgen</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns True if x is a generator.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isgen(x):
+    &#34;&#34;&#34;Returns True if x is a generator.&#34;&#34;&#34;
+    return isinstance(x, types.GeneratorType)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.isnum"><code class="name flex">
+<span>def <span class="ident">isnum</span></span>(<span>x, others=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns True if x is an int or float of one of the
+other number types passed in (e.g. Fraction, complex).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isnum(x, others=None):
+    &#34;&#34;&#34;
+    Returns True if x is an int or float of one of the
+    other number types passed in (e.g. Fraction, complex).
+    &#34;&#34;&#34;
+    if isinstance(x, (int, float)):
+        return True
+    if others:
+        return isinstance(x, others)
+    return False</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.isseq"><code class="name flex">
+<span>def <span class="ident">isseq</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns True if x is a list or tuple.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isseq(x):
+    &#34;&#34;&#34;Returns True if x is a list or tuple.&#34;&#34;&#34;
+    return isinstance(x, (list, tuple))</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.multiply"><code class="name flex">
+<span>def <span class="ident">multiply</span></span>(<span>left, right)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List-aware multiplication.</p>
+<p>Left and right can be numbers or lists, if both are lists
+they must be of the same length.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multiply(left, right):
+    &#34;&#34;&#34;
+    List-aware multiplication.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l*r, left, right)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.playfile"><code class="name flex">
+<span>def <span class="ident">playfile</span></span>(<span>file, wait=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Plays a midi or audio file using the shell commands you have specified
+for midiplayer and audioplayer. See: setaudioplayer, setmidiplayer.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file</code></strong> :&ensp;<code>string</code></dt>
+<dd>The file to play.</dd>
+<dt><strong><code>wait</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true playfile waits until the file has finished playing
+before returning, otherwise playfile returns immediately.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def playfile(file, wait=False):
+    &#34;&#34;&#34;
+    Plays a midi or audio file using the shell commands you have specified
+    for midiplayer and audioplayer. See: setaudioplayer, setmidiplayer.
+
+    Parameters
+    ----------
+    file : string
+        The file to play.
+    wait : bool
+        If true playfile waits until the file has finished playing
+        before returning, otherwise playfile returns immediately.
+    &#34;&#34;&#34;
+    args = []
+    kind = &#39;&#39;
+    if file.endswith(midiextensions):
+        kind = &#39;midi&#39;
+        if midiplayer:
+            args = midiplayer.split() + [file]
+    elif file.endswith(audioextensions):
+        kind = &#39;audio&#39;
+        if audioplayer:
+            args = audioplayer.split() + [file] 
+    if args:
+        p = subprocess.Popen(args)
+        if wait:
+            p.wait()
+    else:
+        help = f&#34;playfile(): Don&#39;t know how to play &#39;{file}&#39;:&#34;
+        if kind:
+            help += f&#34; use musx.set{kind}player() to set a shell command to play {kind} files.&#34;
+        else:
+            help += f&#34; file type not found in musx.midiextensions or musx.audioextensions.&#34;
+        print(help)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.quantize"><code class="name flex">
+<span>def <span class="ident">quantize</span></span>(<span>number, stepsize)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Quantizes number to a given step size.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def quantize(number, stepsize):
+    &#34;&#34;&#34;Quantizes number to a given step size.&#34;&#34;&#34;
+    return math.floor( (number/stepsize) + .5) * stepsize</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.rand"><code class="name flex">
+<span>def <span class="ident">rand</span></span>(<span>limit)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a generator that produces uniform random numbers below limit.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>limit</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>Sets the exlusive upper bound for random selection. If limit
+is an integer then integer values are returned otherwise float
+values are returned.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rand(limit):
+    &#34;&#34;&#34;
+    Returns a generator that produces uniform random numbers below limit.
+
+    Parameters
+    ----------
+    limit : int | float
+        Sets the exlusive upper bound for random selection. If limit
+        is an integer then integer values are returned otherwise float
+        values are returned.
+    &#34;&#34;&#34;
+    if isinstance(limit, int):
+        def irand():
+            while True:
+                yield random.randrange(limit)
+        return irand()
+    elif isinstance(limit, float):
+        def frand():
+            while True:
+                yield random.random() * limit
+        return frand()
+    raise TypeError(&#34;limit not an int or float: {limit}.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.rescale"><code class="name flex">
+<span>def <span class="ident">rescale</span></span>(<span>x, x1, x2, y1, y2, mode='lin')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Maps the value x ranging between x1 and x2 into a proportional value
+between y1 and y2.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The value to rescale.</dd>
+<dt><strong><code>x1</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The lower limit of input range.</dd>
+<dt><strong><code>x2</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The upper limit of input range.</dd>
+<dt><strong><code>y1</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The lowest limit of output range.</dd>
+<dt><strong><code>y2</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The upper limit of output range.</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>string</code></dt>
+<dd>If mode is 'lin' then linear scaling occurs, 'cos' produces cosine
+scaling, 'exp' produces exponential scaling, and '-exp' produces
+inverted exponential.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The rescaled value.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rescale(x, x1, x2, y1, y2, mode=&#39;lin&#39;):
+    &#34;&#34;&#34;
+    Maps the value x ranging between x1 and x2 into a proportional value
+    between y1 and y2.
+    
+    Parameters
+    ----------
+    x : int | float
+        The value to rescale.
+    x1 : int | float
+        The lower limit of input range.
+    x2 : int | float
+        The upper limit of input range.
+    y1 : int | float
+        The lowest limit of output range.
+    y2 : int | float
+        The upper limit of output range.
+    mode : string
+        If mode is &#39;lin&#39; then linear scaling occurs, &#39;cos&#39; produces cosine
+        scaling, &#39;exp&#39; produces exponential scaling, and &#39;-exp&#39; produces 
+        inverted exponential.
+
+    Returns
+    -------
+    The rescaled value.
+    &#34;&#34;&#34;
+    if x &gt; x2: return y2
+    if x &lt;= x1: return y1
+    # as x moves x1 to x2 mu moves 0 to 1
+    mu = (x - x1) / (x2 - x1)
+    if mode == &#39;lin&#39;:
+        #return (((y2 - y1) / (x2 - x1)) * (x - x1)) + y1
+        return (y1 * (1 - mu) + (y2 * mu))
+    elif mode == &#39;cos&#39;:
+        mu2 = (1 - math.cos(mu * math.pi)) / 2
+        return (y1 * (1 - mu2) + y2 * mu2)
+    elif mode in [&#39;exp&#39;,&#39;-exp&#39;]:
+        # # http://www.pmean.com/10/ExponentialInterpolation.html
+        # if y1==0: y1=0.00001
+        # return y1 * ((y2/y1) ** (mu))
+        # #https://docs.fincad.com/support/developerfunc/mathref/Interpolation.htm
+        # if y1==0: y1=0.00001
+        # m = math.log(y2 / y1) / (x2 - x1)
+        # k = y1 * math.pow(math.e, -m * x1)
+        # return k * math.pow(math.e, m * x)
+
+        # a base that yields a slope that is not too steep or shallow...
+        b = 512
+        if mode == &#39;exp&#39;:
+            return y1 + ( ((y2 - y1) / b) * math.pow(b, mu) )
+        b = 1/b
+        return y1 + ( ((y2 - y1) / (b - 1)) * (math.pow(b, mu) - 1) )
+    raise ValueError(f&#34;mode {mode} is not &#39;lin&#39;, &#39;cos&#39;, &#39;exp&#39;, or &#39;-exp&#39;.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.setaudioplayer"><code class="name flex">
+<span>def <span class="ident">setaudioplayer</span></span>(<span>command)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Assign a shell command (string) that will play an audio file.</p>
+<h2 id="parameter">Parameter</h2>
+<p>command : string
+The shell command that will play an audio file.</p>
+<h2 id="example">Example</h2>
+<p>setaudioplayer('afplay')</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setaudioplayer(command):
+    &#34;&#34;&#34;
+    Assign a shell command (string) that will play an audio file.
+
+    Parameter
+    ---------
+    command : string
+        The shell command that will play an audio file.
+
+    Example
+    -------
+    setaudioplayer(&#39;afplay&#39;)
+    &#34;&#34;&#34;    
+    
+    global audioplayer
+    audioplayer = command</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.setmidiplayer"><code class="name flex">
+<span>def <span class="ident">setmidiplayer</span></span>(<span>command)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Assign a shell command (string) that will play a midi file.</p>
+<h2 id="parameter">Parameter</h2>
+<p>command : string
+The shell command that will play a midi file.</p>
+<h2 id="example">Example</h2>
+<p>setmidiplayer('fluidsynth -iq -g1 /Users/taube/SoundFonts/MuseScore_General.sf2')</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setmidiplayer(command):
+    &#34;&#34;&#34;
+    Assign a shell command (string) that will play a midi file.
+
+    Parameter
+    ---------
+    command : string
+        The shell command that will play a midi file.
+
+    Example
+    -------
+    setmidiplayer(&#39;fluidsynth -iq -g1 /Users/taube/SoundFonts/MuseScore_General.sf2&#39;)
+    &#34;&#34;&#34;    
+    
+    global midiplayer
+    midiplayer = command</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.subtract"><code class="name flex">
+<span>def <span class="ident">subtract</span></span>(<span>left, right)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List-aware subtraction.</p>
+<p>Left and right can be numbers or lists, if both are lists
+they must be of the same length.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subtract(left, right):
+    &#34;&#34;&#34;
+    List-aware subtraction.
+    
+    Left and right can be numbers or lists, if both are lists
+    they must be of the same length.
+    &#34;&#34;&#34;
+    return _map_lists(lambda l,r: l-r, left, right)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="musx.tools.audioextensions" href="#musx.tools.audioextensions">audioextensions</a></code></li>
+<li><code><a title="musx.tools.audioplayer" href="#musx.tools.audioplayer">audioplayer</a></code></li>
+<li><code><a title="musx.tools.midiextensions" href="#musx.tools.midiextensions">midiextensions</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="musx.tools.add" href="#musx.tools.add">add</a></code></li>
+<li><code><a title="musx.tools.deltas" href="#musx.tools.deltas">deltas</a></code></li>
+<li><code><a title="musx.tools.divide" href="#musx.tools.divide">divide</a></code></li>
+<li><code><a title="musx.tools.explsegs" href="#musx.tools.explsegs">explsegs</a></code></li>
+<li><code><a title="musx.tools.fit" href="#musx.tools.fit">fit</a></code></li>
+<li><code><a title="musx.tools.frange" href="#musx.tools.frange">frange</a></code></li>
+<li><code><a title="musx.tools.geosegs" href="#musx.tools.geosegs">geosegs</a></code></li>
+<li><code><a title="musx.tools.isfunc" href="#musx.tools.isfunc">isfunc</a></code></li>
+<li><code><a title="musx.tools.isgen" href="#musx.tools.isgen">isgen</a></code></li>
+<li><code><a title="musx.tools.isnum" href="#musx.tools.isnum">isnum</a></code></li>
+<li><code><a title="musx.tools.isseq" href="#musx.tools.isseq">isseq</a></code></li>
+<li><code><a title="musx.tools.multiply" href="#musx.tools.multiply">multiply</a></code></li>
+<li><code><a title="musx.tools.playfile" href="#musx.tools.playfile">playfile</a></code></li>
+<li><code><a title="musx.tools.quantize" href="#musx.tools.quantize">quantize</a></code></li>
+<li><code><a title="musx.tools.rand" href="#musx.tools.rand">rand</a></code></li>
+<li><code><a title="musx.tools.rescale" href="#musx.tools.rescale">rescale</a></code></li>
+<li><code><a title="musx.tools.setaudioplayer" href="#musx.tools.setaudioplayer">setaudioplayer</a></code></li>
+<li><code><a title="musx.tools.setmidiplayer" href="#musx.tools.setmidiplayer">setmidiplayer</a></code></li>
+<li><code><a title="musx.tools.subtract" href="#musx.tools.subtract">subtract</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

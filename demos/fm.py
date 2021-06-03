@@ -47,14 +47,14 @@ def fm_improv(score, line, beat):
         ismel = odds(.7)
         rhy = pick(dur, dur / 2, dur / 4)
         f, r, x = hertz(knum), between(1.1, 1.9), pick(1, 2, 3)
-        print("\ncarrier=",f,"c/m ratio=",r,"fm index=",x)
+        #print("\ncarrier=",f,"c/m ratio=",r,"fm index=",x)
         spec = fmspectrum(f,r,x)
         keys = spec.keynums(unique=True, minkey=knum-14, maxkey=knum+14)
 
         if ismel:
             random.shuffle(keys)
         sub = rhy / len(keys) if ismel else 0
-        print("melody:" if ismel else "chord:", "time=", score.now, "duration=", rhy, "keys=", keys)
+        #print("melody:" if ismel else "chord:", "time=", score.now, "duration=", rhy, "keys=", keys)
         for i, k in enumerate(keys):
             m = Note(time=score.now + (i * sub), duration=dur, pitch=k, amplitude=amp)
             score.add(m)
