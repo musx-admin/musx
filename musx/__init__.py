@@ -25,6 +25,7 @@ from .midi.midievent import *
 from .midi.midifile import *
 from .seq import *
 from .gens import *
+from .paint import *
 from .pitch import *
 from .note import *
 from .interval import *

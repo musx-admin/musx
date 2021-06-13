@@ -14,7 +14,7 @@ import ctcsound
 if __name__ == '__main__':
     from musx import Score, Seq, MidiFile
     from musx.midi.gm import Vibraphone
-    from .paint import brush, spray
+    from musx.paint import brush, spray
 
     # Scale1 is a 7-tone microtonal scale that evokes the Pelog scale.
     scale1 = [0, 2.2, 3.8, 6.6, 7.1, 9.3, 10, 12, 14.4, 15.8, 18.6, 19.1]

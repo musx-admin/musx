@@ -19,7 +19,7 @@ import musx
 import ctcsound
 from musx import Score, Seq, MidiFile, rhythm, keynum
 from musx.midi.gm import AcousticGrandPiano, Violin
-from .paint import brush
+from musx.paint import brush
 
 
 piano_talea = rhythm('q q q e e. e e e e e. e. e. s e e. q h', tempo=80)
