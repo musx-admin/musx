@@ -10,6 +10,8 @@ from .measure import Measure
 from .mode import Mode
 from .meter import Meter
 from .part import Part
+from ..pitch import Pitch
+from ..note import Note
 
 """
 # creating the MusicXml python file:
@@ -160,10 +162,31 @@ def parse_attributes(elem, data):
             key = Key(int(fifths), mode, staff)
             measure.keys.append(key)
 
-
 def parse_note(elem, data):
-    pass
+    first = elem[0].tag
+    if first in ['grace', 'cue']:
+        return
+    if first == 'chord':
+        # elem is a chord tone
+        pass
+    else:
+        # elem is a non-chord tone
+        pass
+    for e in elem.iter(): 
+        print("***", element_info(e))
 
+        if e.tag == 'pitch':
+            step = e.findtext('step')
+            alter = e.findtext('alter')
+            if alter:
+                alter = {-2: 'bb', -1: 'b', 0: '', 1: '#', 2: '##'}.get(int(alter), '')
+            octave = e.findtext('octave')
+            pitch = Pitch(step + alter + octave)
+            print("***", pitch)
+        elif e.tag == 'rest':
+            pass
+        elif e.tag == 'chord':
+            pass
 
 def parse_rest(elem, data):
     pass
@@ -201,7 +224,7 @@ def load(path):
     }
     # a depth-first traversal of all elements in the document.
     for x in root.iter():
-        print(f"tag={x.tag}, attrs={x.attrib}, text='{x.text.strip() if x.text else ''}', children={len(x)}")
+        #print(f"tag={x.tag}, attrs={x.attrib}, text='{x.text.strip() if x.text else ''}', children={len(x)}")
         func = element_parsers.get(x.tag)
         if func:
             #print(element_info(x))

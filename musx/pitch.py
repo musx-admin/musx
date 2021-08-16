@@ -305,7 +305,8 @@ class Pitch (PitchBase):
             return f'Pitch("{s}")'
         return 'Pitch()'
 
-        __str__ == __repr__
+    def __str__(self):
+        return self.string()
 
     # def __str__(self):
     #     """

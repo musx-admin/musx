@@ -9,6 +9,7 @@ from .midi import midievent as me
 from .midi import midimsg as mm
 from .tools import quantize
 from .pitch import Pitch
+from fractions import Fraction
 
 class Event:
     """
@@ -39,7 +40,7 @@ class Event:
 
     @time.setter
     def time(self, val):
-        if isinstance(val, (int, float)) and val >= 0:
+        if isinstance(val, (int, float, Fraction)) and val >= 0:
             self._time = val
         else:
             raise ValueError(f"Invalid time value: {val}.")
@@ -54,10 +55,10 @@ class Note (Event):
 
     Parameters
     ----------
-    time : int | float
+    time : int | float | Fraction
         The onset time in seconds, defaults to 0.0.  For ways to specify
         time and duration metrically, see `rhythm()` and `intempo()`.
-    duration : int | float
+    duration : int | float | Fraction
         The duration in seconds, defaults to 1.0. For ways to specify
         duration and time metrically, see `rhythm()` and `intempo()`.
     pitch : int | float | Pitch
@@ -95,7 +96,7 @@ class Note (Event):
 
     @time.setter
     def time(self, val):
-        if isinstance(val, (int, float)) and val >= 0:
+        if isinstance(val, (int, float, Fraction)) and val >= 0:
             self._time = val
         else:
             raise ValueError(f"Invalid time value: {val}.")
@@ -114,7 +115,7 @@ class Note (Event):
 
     @duration.setter
     def duration(self, val):
-        if isinstance(val, (int, float)) and val > 0:
+        if isinstance(val, (int, float, Fraction)) and val > 0:
             self._duration = val
         else:
             raise ValueError(f"Invalid duration value: {val}.")
@@ -170,6 +171,9 @@ class Note (Event):
         self._instrument = val
 
     def __repr__(self):
+        if isinstance(self.pitch, Pitch):
+            if self.pitch.is_empty():
+                return f"Rest({self.time}, {self.duration})"
         return f'Note({self._time}, {self._duration}, {self._pitch}, {self._amplitude}, {self._instrument})'
 
     __str__ = __repr__
