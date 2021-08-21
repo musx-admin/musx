@@ -87,6 +87,7 @@ class Note (Event):
         self.amplitude = amplitude
         self.instrument = instrument
         self._children = []
+        self._mxml = {}
 
     @property
     def time(self):
@@ -223,10 +224,25 @@ class Note (Event):
         return len(self._children) > 0
 
     def chord(self):
-        """Returns a list containing this note and any childen."""
+        """
+        Returns a list containing this note and any childen.
+        """
         notes = [self]
         notes.extend(self._children)
         return notes
+
+    def get_mxml(self, key, default=None):
+        """
+        Returns the mxml value of the given key, or a default value if
+        the key is not in the note's mxml dictionary.
+        """
+        return self._mxml.get(key, default)
+
+    def set_mxml(self, key, value):
+        """
+        Assigns the mxml key and value to the note.
+        """
+        self._mxml[key] = value
 
     def __iter__(self):
         """
@@ -243,7 +259,10 @@ class Note (Event):
     def __str__(self):
         name = "Chord" if self.is_chord() else "Note"
         pstr = ":".join([str(c.pitch) for c in self.chord()]) if self.is_chord() else str(self.pitch)
-        return f"<{name}: {self._time}, {self._duration}, {pstr}, {self._amplitude}, {self._instrument}>"
+        mxml = ", ".join(f"{str(k)}={v}" for k,v in self._mxml.items())
+        if mxml:
+            mxml = " "+mxml
+        return f"<{name}: {self._time}, {self._duration}, {pstr}, {self._amplitude}, {self._instrument}{mxml}>"
 
     # No special repr() method for now...
     __repr__ = __str__

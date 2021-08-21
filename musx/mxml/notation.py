@@ -138,7 +138,8 @@ def parse_barline(elem, DATA):
     elif text == 'none': barline = Barline.Regular(location) #Barline.INVISIBLE
     elif text == None: barline = Barline.Regular(location) #Barline.INVISIBLE
     assert barline, f"MusicXml: Invalid barline value: '{text}'."
-    DATA['measure'].barlines.append(barline)
+    #DATA['measure'].barlines.append(barline)
+    DATA['measure'].add_element(barline)
 
 def parse_part(elem, DATA):
     # create a new part and add it to the score
@@ -147,9 +148,14 @@ def parse_part(elem, DATA):
     DATA['part'] = part
     DATA['score'].add_part(part)
     # initialize DATA for the new part.
-    DATA['divisions'] = 1
+#    DATA['divisions'] = 1
     DATA['measure'] = None
     DATA['note'] = None
+    # added these
+    # DATA['onset'] = None
+    # DATA['meter'] = None
+    # DATA['key'] =  None
+    # DATA['onset'] = None
 
 def parse_measure(elem, DATA):
     # create a new measure and add it to the part
@@ -162,6 +168,7 @@ def parse_measure(elem, DATA):
     # initialize data that resets each measure
     DATA['note'] = None
     DATA['onset'] = Fraction(0,1)
+
 
 def parse_attributes(elem, DATA):
     measure = DATA['measure']
@@ -184,13 +191,15 @@ def parse_attributes(elem, DATA):
             elif sign == 'percussion':
                 clef = Clef.Percussion(staff)
             assert clef, f"No clef for sign '{sign}' and line '{line}'"
-            measure.clefs.append(clef)
+            #measure.clefs.append(clef)
+            measure.add_element(clef)
         elif s.tag == 'time':
             num = s.findtext('beats')
             den = s.findtext('beat-type')
             staff = int(s.get("number", "0")) # 0=all staffs
             meter = Meter(int(num), int(den), staff)
-            measure.meters.append(meter)
+            #measure.meters.append(meter)
+            measure.add_element(meter)
             DATA['meter'] = meter
         elif s.tag == 'key':
             fifths = s.findtext('fifths')
@@ -200,10 +209,10 @@ def parse_attributes(elem, DATA):
             'lydian': Mode.LYDIAN, 'mixolydian': Mode.MIXOLYDIAN, 'aeolian': Mode.AEOLIAN, 'ionian': Mode.IONIAN, 
             'locrian': Mode.LOCRIAN}[text]
             key = Key(int(fifths), mode, staff)
-            measure.keys.append(key)
+#            measure.keys.append(key)
+            measure.add_element(key)
             DATA['key'] = key
-    # if this measure is partial set the time to meter duration -
-    
+
 
 def parse_note(elem, DATA):
     first = elem[0].tag
@@ -252,7 +261,9 @@ def parse_note(elem, DATA):
         #print("*****", "measnum=", DATA['measure'].id, "measuredur=", DATA['meter'].measure_dur(), "duration=", duration)
     else:
         onset = DATA['onset']
-    note = Note(time=onset, duration=duration, pitch=pitch, instrument=voice)
+    #print("part=", DATA['part'].id, "measure=", DATA['measure'].id, " onset=", onset, " pitch=", pitch)
+    note = Note(time=onset, duration=duration, pitch=pitch) #, instrument=voice
+    note.set_mxml('voice', voice)
     if type == 'chord':
         # if chording add note as a child of the previous note
         DATA['note'].add_child(note)

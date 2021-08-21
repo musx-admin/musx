@@ -1,80 +1,58 @@
-###############################################################################
-"""A class representing a measure of music."""
+"""
+A class representing a measure of music.
+"""
 
-from .voice import Voice
+from ..note import Event, Note
 
 class Measure:
 
     def __init__(self, id):
         """
-        The initializer (__init__) sets the Measure attributes self.id, self.clef,
-        self.key, self.meter, self.voices, self.barline, self.partial,
-        and self.staff. Initialize self.voices to an empty list and self.staff to None.
+        A class that represents a measure of music in a Part. Measures can 
+        contain both Notes (tagged as Note, Chord or Rest) as well as 
+        notational objects such as Key, Clef, Meter, Barline, etc. 
 
         Parameters
         ----------
-
-        bid : int
-            An integer for the bar's id attribute.
-        clef : Clef
-            A Clef for the bar's clef attribute. Defaults to None.
-        key : Key
-            A Key for the bar's measure attribute.  Defaults to None.
-        meter : Meter
-            A Meter for the bar's meter attribute. Defaults to None.
-        barline : Barline
-            A Barline for the bar's barline attribute. Defaults to None.
-        partial : boolean
-            A boolean value for the bar's partial attribute. If true the bar
-            is an incomplete (e.g. pickup) measure. Defaults to False.
+        id : The measure's unique integer identifier in its owning Part.
         """
         # The measure's integer identifier in its owning Part.
         self.id = id
-        # Optional Clef(s) for the measure.
-        self.clefs = []
-        # Optional Key(s) for the measure.
-        self.keys = []
-        # Optional Meter(s) for the measure.
-        self.meters = []
-        # The list of Voices in the measure.
-        self.voices = []
-        # The left/right Barlines for the measure.
-        self.barlines = []
+        # The measure's elements, in MusicXml order.
+        self.elements = []
         # If true the measure is an incomplete (pickup) measure.
         self.partial = False
-        # The bar's owning Staff.
-        self.staff = None
 
     def __str__(self):
-        text = f'<Measure: {self.id}'
-        for c in self.clefs:
-            text += " " + str(c)
-        for m in self.meters:
-            text += " " + str(m)
-        for k in self.keys:
-            text += " " + str(k)
-        #print("*** barlines", len(self.barlines))
-        for b in self.barlines:
-            text += " " + str(b)
-        text += ">"
-        return text
+        return f'<Measure: {self.id}>'
 
     __repr__ = __str__
 
     def __iter__(self):
         """
-        Implements Measure iteration
+        Interates the Measure's elements.
         """
-        return iter(self.voices)
+        return iter(self.elements)
 
-    # def num_voices(self):
-    #     """Returns the number of voices in the bar."""
-    #     return len(self.voices)
+    def add_element(self, element):
+        """
+        Adds a measure element to the measure in the same order as written
+        int the MusicXml score file.  The element can be a Note (tagged as
+        either a Note, Rest or Chord), or an mxml notational object such as
+        a Clef, Key, Meter, Barline, etc. 
+        """
+        self.elements.append(element)
 
-    def add_element(self, note):
-        self.voices.append(note)
-
-
-if __name__ == "__main__":
-    # add your testing code here.
-    pass
+    def get_voices(self):
+        """
+        Returns a dictionary whose keys are voice id's and whose values are
+        the time ordered Notes that belong to that voice.
+        """
+        voices = {}
+        for e in self.elements:
+            if isinstance(e, Note):
+                v = e.get_mxml('voice',1)
+                try: voices[v].append(e)
+                except KeyError:
+                    voices[v] = [e]
+        return voices
