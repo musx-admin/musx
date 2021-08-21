@@ -36,5 +36,6 @@ $ cd musx
 $ python3
 >> import musx.mxml.notation as notation
 >> score = notation.load("scores/HelloWorld.musicxml")
+>> score.print()
 ```
 

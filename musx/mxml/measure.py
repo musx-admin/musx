@@ -49,10 +49,10 @@ class Measure:
         text = f'<Measure: {self.id}'
         for c in self.clefs:
             text += " " + str(c)
-        for k in self.keys:
-            text += " " + str(k)
         for m in self.meters:
             text += " " + str(m)
+        for k in self.keys:
+            text += " " + str(k)
         #print("*** barlines", len(self.barlines))
         for b in self.barlines:
             text += " " + str(b)
@@ -67,9 +67,12 @@ class Measure:
         """
         return iter(self.voices)
 
-    def num_voices(self):
-        """Returns the number of voices in the bar."""
-        return len(self.voices)
+    # def num_voices(self):
+    #     """Returns the number of voices in the bar."""
+    #     return len(self.voices)
+
+    def add_element(self, note):
+        self.voices.append(note)
 
 
 if __name__ == "__main__":

@@ -57,7 +57,7 @@ import math
 from . import tools
 
 PitchBase = namedtuple('PitchBase', ['letter', 'accidental', 'octave'])
-PitchBase.__doc__ = """Base class for the immutable implementation of Pitch."""
+#PitchBase.__doc__ = """Base class for the immutable implementation of Pitch."""
 
 
 class Pitch (PitchBase):
@@ -178,8 +178,8 @@ class Pitch (PitchBase):
 
     def __new__(cls, arg=None):
         # Check for valid types and lengths up front.
-        if arg is None:
-            return cls._values_to_pitch(arg, arg, arg)
+        if arg is None or arg in ['R','r']:
+            return cls._values_to_pitch(None, None, None)
         if isinstance(arg, list):
             if len(arg) == 3 and all(isinstance(a, int) for a in arg):
                 return cls._values_to_pitch(*arg)
@@ -276,7 +276,7 @@ class Pitch (PitchBase):
         ------
         * ValueError is arg is not a valid pitch name.
         """
-        if let is None:
+        if let is None or let in ['R', 'r']:
             return super(Pitch, cls).__new__(cls, None, None, None)
         if 0 <= let <= 6:
             if 0 <= acc <= 4:
@@ -301,7 +301,7 @@ class Pitch (PitchBase):
         a Pitch with the same content as this pitch.
         """
         s = self.string()
-        if s:
+        if s != "R":
             return f'Pitch("{s}")'
         return 'Pitch()'
 
@@ -496,7 +496,7 @@ class Pitch (PitchBase):
         return 'C#7'.
         """
         if self.is_empty():
-            return ''
+            return 'R'
         s = self._letter_names[self.letter]
         s += self._accidental_names[self.accidental]
         s += self._octave_names[self.octave]

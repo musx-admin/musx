@@ -1,7 +1,30 @@
-from musx.tools import parse_string_sequence
+"""
+A module for loading and saving MusicXml scores.
+
+# creating the MusicXml python file:
+(venv) $ generateDS.py -o musicxml.py --root-element "score_partwise" schema/musicxml.xsd 
+
+# Working with low-level lxml Element trees (musicxml.py):
+$ python3
+>>> import musx.mxml.musicxml as musicxml
+>>> musicxml.parse("Scores/001-2s.xml") 
+
+# Working with high-level Notation objects:
+$ python3
+>>> import musx.mxml.notation as notation
+>>> score = notation.load("scores/HelloWorld.musicxml")
+>>> score.print()
+
+>>> from musx.note import Note; from fractions import Fraction; from musx.pitch import Pitch
+>>> n=Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("C4"))
+>>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("Fs5")))
+>>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("E1")))
+"""
+
 import re
 from lxml import etree
 from enum import Enum, auto
+from fractions import Fraction
 from . import musicxml
 from .barline import Barline
 from .clef import Clef
@@ -13,18 +36,30 @@ from .part import Part
 from ..pitch import Pitch
 from ..note import Note
 
-"""
-# creating the MusicXml python file:
-(venv) $ generateDS.py -o musicxml.py --root-element "score_partwise" schema/musicxml.xsd 
+# _DATA is a template dictionary defining the 'running state' of MusicXml parsing.
+# The load() method copies the template for each score it parses and passes it to
+# the parsing routines so they can access and store parsing data.
+#
+# score: The Notation representing the score.
+# part:  The current Part. This value resets for every new part.
+# measure: The current measure. This value resets for every new measure and every part.
+# divisions: The current division. This value resets for every new division and every part
+# note: The current note. This value changes for every new note, measure, and part.
+# meter: ???
+# key: ???
+# onset: The Fraction onset time for the next note. This value is reset to 0 (or
+# to measure_dur-note_dur for partial measures) and incremented by the duration of
+# notes, forwards and backups.
+_DATA = {
+        "score": None, "part": None, "measure": None, "divisions": None,
+        "note": None, "meter:": None, "key": None, "onset": None
+    }
 
-# Working directly with generateDS code:
-import musx.mxml.musicxml as musicxml
-musicxml.parse("Scores/001-2s.xml") 
 
-# Working with notation classes
-import musx.mxml.mxmlfile
-musx.mxml.mxmlfile.read("scores/HelloWorld.musicxml")
-"""
+def _elementinfo(e):
+    """Helper function to print all Element info"""
+    return f"tag={e.tag}, attrs={e.attrib}, text='{e.text.strip() if e.text else ''}', children={len(e)}"
+
 
 class Notation():
     def __init__(self, metadata={}, parts=[]):
@@ -70,7 +105,7 @@ x=musx.mxml.mxmlfile.read("scores/HelloWorld.musicxml")
 x.parts[0].measures[0].elements
 """
 
-def parse_barline(elem, data):
+def parse_barline(elem, DATA):
     """
     tag=barline, attrs={'location': 'right'}, text='', children=2
     tag=bar-style, attrs={}, text='light-heavy', children=0
@@ -103,33 +138,37 @@ def parse_barline(elem, data):
     elif text == 'none': barline = Barline.Regular(location) #Barline.INVISIBLE
     elif text == None: barline = Barline.Regular(location) #Barline.INVISIBLE
     assert barline, f"MusicXml: Invalid barline value: '{text}'."
-    data['measure'].barlines.append(barline)
+    DATA['measure'].barlines.append(barline)
 
-def parse_part(elem, data):
+def parse_part(elem, DATA):
     # create a new part and add it to the score
     part = Part()
     part.id = elem.get('id')
-    data['part'] = part
-    data['score'].add_part(part)
-    data['divisions'] = 1
-    data['measure'] = None
+    DATA['part'] = part
+    DATA['score'].add_part(part)
+    # initialize DATA for the new part.
+    DATA['divisions'] = 1
+    DATA['measure'] = None
+    DATA['note'] = None
 
-def parse_measure(elem, data):
+def parse_measure(elem, DATA):
     # create a new measure and add it to the part
     measure = Measure(elem.get('number'))
-    if elem.get('implict') == 'yes':
+    if elem.get('implicit') == 'yes':
         measure.partial = True
-    data['measure'] = measure
-    data['part'].add_measure(measure)
+    DATA['measure'] = measure
+    # add the new measure to the part
+    DATA['part'].add_measure(measure)
+    # initialize data that resets each measure
+    DATA['note'] = None
+    DATA['onset'] = Fraction(0,1)
 
-def parse_attributes(elem, data):
-    measure = data['measure']
-    isempty = measure.num_voices() == 0
-
+def parse_attributes(elem, DATA):
+    measure = DATA['measure']
     for s in elem.iter(): 
         if s.tag == 'divisions':
             divs = s.text
-            data['divisions'] = int(divs)
+            DATA['divisions'] = int(divs)
         elif s.tag == 'clef':
             sign = s.findtext('sign')
             line = s.findtext('line')
@@ -152,6 +191,7 @@ def parse_attributes(elem, data):
             staff = int(s.get("number", "0")) # 0=all staffs
             meter = Meter(int(num), int(den), staff)
             measure.meters.append(meter)
+            DATA['meter'] = meter
         elif s.tag == 'key':
             fifths = s.findtext('fifths')
             text = s.findtext('mode', "major")
@@ -161,78 +201,118 @@ def parse_attributes(elem, data):
             'locrian': Mode.LOCRIAN}[text]
             key = Key(int(fifths), mode, staff)
             measure.keys.append(key)
+            DATA['key'] = key
+    # if this measure is partial set the time to meter duration -
+    
 
-def parse_note(elem, data):
+def parse_note(elem, DATA):
     first = elem[0].tag
+    # first can be 'grace', 'cue', 'chord', 'rest'
     if first in ['grace', 'cue']:
         return
-    if first == 'chord':
-        # elem is a chord tone
-        pass
-    else:
-        # elem is a non-chord tone
-        pass
+    type = 'note'
+    duration = None
+    pitch = None
+    voice = 1    # ??? default?
+    staff = None # ??? default?
+    dots = 0
+    note = None
     for e in elem.iter(): 
-        print("***", element_info(e))
-
+        #print("***", _elementinfo(e))
         if e.tag == 'pitch':
             step = e.findtext('step')
-            alter = e.findtext('alter')
+            alter = e.findtext('alter', "")
             if alter:
                 alter = {-2: 'bb', -1: 'b', 0: '', 1: '#', 2: '##'}.get(int(alter), '')
             octave = e.findtext('octave')
             pitch = Pitch(step + alter + octave)
-            print("***", pitch)
         elif e.tag == 'rest':
-            pass
+            type = e.tag
+            pitch = Pitch()
         elif e.tag == 'chord':
+            type = e.tag
+        elif e.tag == 'duration':
+            duration = int(e.text.strip())
+        elif e.tag == 'dot':
+            dots += 1
+        elif e.tag == 'type':
             pass
+        elif e.tag == 'stem':
+            pass
+        elif e.tag == 'voice':
+            voice = int(e.text)
+        elif e.tag == 'staff':
+            pass
+        elif e.tag == 'notations':
+            pass
+    # duration == dur/div * 1/4 == dur/(div*4)
+    duration = Fraction(duration, DATA['divisions'] * 4)
+    if DATA['measure'].partial:
+        onset = DATA['meter'].measure_dur() - duration
+        #print("*****", "measnum=", DATA['measure'].id, "measuredur=", DATA['meter'].measure_dur(), "duration=", duration)
+    else:
+        onset = DATA['onset']
+    note = Note(time=onset, duration=duration, pitch=pitch, instrument=voice)
+    if type == 'chord':
+        # if chording add note as a child of the previous note
+        DATA['note'].add_child(note)
+    else:
+        # if note or rest add it to the current measure and update onset time.
+        DATA['note'] = note
+        DATA['measure'].add_element(note)
+        DATA['onset'] += duration
+    #print("***", "type:", type, "onset:", onset, "dur:", duration, "dots:", dots, "pitch:", pitch, "voice:", voice)
+    # score time: if this is a partial measure then the onset time of the note
+    # is calcuated as measuredur - duration
+    # create the note and fill its attributes. if it is a chord, then update the
+    # measure to contain a Chord instead of a Note.
 
-def parse_rest(elem, data):
-    pass
+def parse_backup(elem, DATA):
+    duration = int(elem.findtext('duration'))
+    duration = Fraction(duration, DATA['divisions'] * 4)
+    DATA['onset'] -= duration
+    
+def parse_forward(elem, DATA):
+    duration = int(elem.findtext('duration'))
+    duration = Fraction(duration, DATA['divisions'] * 4)
+    DATA['onset'] += duration
+    # FIXME: what to do with these?
+    #elem.findtext('staff')
+    #elem.findtext('voice')
 
+# Dictionary of parsing function accessed by the corresponding MusicXml tag names.  Tags that
+# are not in this dictionary are either omitted (not parsed) or parsed by a function that is
+# in the dictionary.
 
-def element_info(e):
-    return f"tag={e.tag}, attrs={e.attrib}, text='{e.text.strip() if e.text else ''}', children={len(e)}"
-
-
-element_parsers = {
+_PARSERS = {
     'part': parse_part, 
     'measure': parse_measure, 
     'attributes': parse_attributes, 
     'barline': parse_barline,
     'note': parse_note,
-    'rest': parse_rest
+    'backup': parse_backup,
+    'forward': parse_forward
     }
-"""
-To parse an xml element add its tag as a key and its parser function as
-its value to the dictionary. The parsing function accepts two arguments:
-(element, datadict), where element is the lxml Element to parse and datadict
-is a dictionary that includes the running status of the parser, e.g. the
-score, current part, current measure, and the arser functions added or update
-whatever they want in the dictionary. Elements whose tags are not in 
-dictionary will not parsed.  If a parser performs subelement parsing, dont 
-add those subelement tags to element_parser else they will be parsed twice...
-"""
-    
+
 def load(path):
+    global _DATA
     document = musicxml.parse(path, silence=True) 
     assert isinstance(document, musicxml.score_partwise), f"not a partwise musicxml file: '{path}'."
     root = getattr(document, 'gds_elementtree_node_') # root element of document
     assert isinstance(root, etree._Element) and root.tag == 'score-partwise', f"not a score-partwise element: {root}."
-    parsed = {"score": Notation(), "part": None, "measure": None, "divisons": 1,
-    }
+    # a dictionary containng 'running state' for parsing.
+    DATA = _DATA.copy()
+    DATA['score'] = Notation()
+    DATA['divisions'] = 1
+    #print("*******", DATA)
     # a depth-first traversal of all elements in the document.
     for x in root.iter():
         #print(f"tag={x.tag}, attrs={x.attrib}, text='{x.text.strip() if x.text else ''}', children={len(x)}")
-        func = element_parsers.get(x.tag)
+        func = _PARSERS.get(x.tag)
         if func:
-            #print(element_info(x))
-            func(x, parsed)
-
-    return parsed['score']
-
-
+            #print(_elementinfo(x))
+            func(x, DATA)
+    return DATA['score']
 
 if __name__ == "__main__":
     pass

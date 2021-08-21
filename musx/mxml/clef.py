@@ -2,8 +2,8 @@
 """
 An enumeration of music clefs: Treble, Soprano, MezzoSoprano, Alto, Tenor,
 Baritone, Bass, Treble8va, Bass8va, Treble15ma, Bass15ma, TenorTreble, 
-BaritoneF, SubBass, FrenchViolin, Percussion. To create a clef call its class
-factory method dont use Clef().
+BaritoneF, SubBass, FrenchViolin, Percussion. To create a Clef call one of the
+class factory methods don't use Clef().
 """
 
 # __pdoc__ = {
