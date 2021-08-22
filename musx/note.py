@@ -256,9 +256,17 @@ class Note (Event):
         """
         return len(self._children)
 
+    def _tagged_pitch_str(self):
+        """
+        Returns a tag-specific pitch string: if the Note's tag is 'note' then the pitch name is
+        returned, if the tag is 'chord' then pitch names delimited by ":" are returned and if
+        the tag is 'rest' the string 'R' is returned.
+        """
+        return ":".join([str(c.pitch) for c in self.chord()]) if self.is_chord() else str(self.pitch)
+
     def __str__(self):
         name = "Chord" if self.is_chord() else "Note"
-        pstr = ":".join([str(c.pitch) for c in self.chord()]) if self.is_chord() else str(self.pitch)
+        pstr = self._tagged_pitch_str()
         mxml = ", ".join(f"{str(k)}={v}" for k,v in self._mxml.items())
         if mxml:
             mxml = " "+mxml

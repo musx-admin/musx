@@ -1,25 +1,25 @@
 """
 A module for loading and saving MusicXml scores.
+"""
 
 # creating the MusicXml python file:
-(venv) $ generateDS.py -o musicxml.py --root-element "score_partwise" schema/musicxml.xsd 
-
+# (venv) $ generateDS.py -o musicxml.py --root-element "score_partwise" schema/musicxml.xsd 
+#
 # Working with low-level lxml Element trees (musicxml.py):
-$ python3
->>> import musx.mxml.musicxml as musicxml
->>> musicxml.parse("Scores/001-2s.xml") 
-
+# $ python3
+# >>> import musx.mxml.musicxml as musicxml
+# >>> musicxml.parse("Scores/001-2s.xml") 
+#
 # Working with high-level Notation objects:
-$ python3
->>> import musx.mxml.notation as notation
->>> score = notation.load("scores/HelloWorld.musicxml")
->>> score.print()
-
->>> from musx.note import Note; from fractions import Fraction; from musx.pitch import Pitch
->>> n=Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("C4"))
->>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("Fs5")))
->>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("E1")))
-"""
+# $ python3
+# >>> import musx.mxml.notation as notation
+# >>> score = notation.load("scores/HelloWorld.musicxml")
+# >>> score.print()
+#
+# >>> from musx.note import Note; from fractions import Fraction; from musx.pitch import Pitch
+# >>> n=Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("C4"))
+# >>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("Fs5")))
+# >>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("E1")))
 
 import re
 from lxml import etree
@@ -36,32 +36,41 @@ from .part import Part
 from ..pitch import Pitch
 from ..note import Note
 
-# _DATA is a template dictionary defining the 'running state' of MusicXml parsing.
-# The load() method copies the template for each score it parses and passes it to
-# the parsing routines so they can access and store parsing data.
-#
-# score: The Notation representing the score.
-# part:  The current Part. This value resets for every new part.
-# measure: The current measure. This value resets for every new measure and every part.
-# divisions: The current division. This value resets for every new division and every part
-# note: The current note. This value changes for every new note, measure, and part.
-# meter: ???
-# key: ???
-# onset: The Fraction onset time for the next note. This value is reset to 0 (or
-# to measure_dur-note_dur for partial measures) and incremented by the duration of
-# notes, forwards and backups.
 _DATA = {
         "score": None, "part": None, "measure": None, "divisions": None,
         "note": None, "meter:": None, "key": None, "onset": None
     }
+"""
+A template dictionary defining the 'running status' of MusicXml parsing.
+The load() method copies the template for each score it parses and passes it to
+the parsing routines so they can access and store relevant data.
+
+score: The Notation representing the score.
+part:  The current Part. This value resets for every new part.
+measure: The current measure. This value resets for every new measure and every part.
+divisions: The current division. This value resets for every new division and every part
+note: The current note. This value changes for every new note, measure, and part.
+meter: The most recent meter
+key: The most recent key
+onset: The Fraction onset time for the next note. This value is reset to 0 (or
+to measureDur - noteDur for partial measures) and incremented by the duration of
+notes, forwards and backups.
+"""
 
 
 def _elementinfo(e):
-    """Helper function to print all Element info"""
+    """
+    Helper function prints Element info
+    """
     return f"tag={e.tag}, attrs={e.attrib}, text='{e.text.strip() if e.text else ''}', children={len(e)}"
 
 
 class Notation():
+    """
+    A class representing a score containing Notes as well as notational objects such
+    as keys, clefs, meters, barlines, etc.  Notations can be created from scratch or
+    loaded from MusicXml files.
+    """
     def __init__(self, metadata={}, parts=[]):
         self.metadata = metadata
         self.parts = []
@@ -96,6 +105,79 @@ class Notation():
     def add_element(self, element):
         #element.measure = self  # back link from element to its measure
         self.elements.append(element)
+    
+    def timepoints(self, trace=True):
+        # Flop the part measures so all measures with the same id are grouped
+        # together, e.g.: [[1,2,3],[1,2,3]] => [[1,1],[2,2],[3,3]]
+        groups = [measures for measures in zip(*[part.measures for part in self])]
+        # iterate each group of measures
+        timepoints = []
+        for group in groups:
+            # iterate each measure in the group combining their timepoints
+            measurepoints = []
+            for measure in group:
+                for element in measure:
+                    if isinstance(element, Note):
+                        ident = f"{measure.part.id}.{measure.id}.{element.get_mxml('voice')}"
+                        onset = element.time
+                        try: 
+                            have = next((x for x in measurepoints if x.onset == onset))
+                            have.notemap[ident] = element
+                        except StopIteration:
+                            tp = Timepoint(onset)
+                            tp.notemap[ident] = element
+                            measurepoints.append(tp)
+                
+            # sort the measure timepoints by their onsets
+            measurepoints.sort()
+            if trace:
+                for tp in measurepoints:
+                    print(str(tp))
+                    print('----------------------------------------------------------------')
+            timepoints.append(measurepoints)
+        return timepoints
+
+ 
+class Timepoint():
+    """
+    A Timepoint contains an onset time in a measure and a vertical 'slice'
+    of all the notes that start at that beat irrespective of which part,
+    staff or voice they belong to. The note entries within each Timepoint
+    are maintained in a dictionary whose keys are part.measure.voice
+    identifiers and whose values are the notes that occur there.
+    
+    Parameters
+    ----------
+    beat : Ratio
+        The ratio start time of the timepoint in the measure.
+    nmap : dict
+        The note map of the timepoint. This is a dictionary of notes whose
+        keys are the part/voice identifiers active in the measure.
+    """
+    def __init__(self, onset):
+        ## The ratio start time in the measure.
+        self.onset = onset
+        ## The note map dictionary, keys are pvids (part/voice identifiers)
+        # from the score and values are either Notes, Chords or Rests.
+        self.notemap = {}
+
+    def __lt__(self, other):
+        """
+        Returns true if self.beat is less than other, otherwise returns false.
+        """
+        return self.onset < other.onset
+
+    def __str__(self):
+        """
+        Returns a string contains the class name, the self.index attribute,
+        and a hexidecimal id.
+        """
+        #return f"<Timepoint {str(self.onset)} {len(self.notemap)}>"
+        pstr = ", ".join([n._tagged_pitch_str() for n in self.notemap.values()])
+        return f"<Timepoint: {str(self.onset)} ({pstr})>"
+
+    __repr__ = __str__
+
 
 ##############################################################################
 
