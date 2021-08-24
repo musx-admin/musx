@@ -1,4 +1,3 @@
-################################################################################
 """
 The seq module provide support for reading and writing sequences of events that
 are sorted by time.
@@ -19,7 +18,7 @@ class Seq:
     def __init__(self, events=[]):
         """
         A time ordered sequence of Event objects, e.g. instances of
-        Note, MidiEvent, or some other user defined subclass.
+        Note, MidiEvent, or some other user defined Event subclass.
 
         A Seq is an iterable so its events can be iterated, sliced and 
         mapped.
@@ -62,7 +61,7 @@ class Seq:
     def map(self, func):
         """
         Maps a function of one argument over all the events in the sequence
-        and returns a list of the collected results.
+        and returns a list of the results returned by the function.
 
         Parameters
         ----------
@@ -91,21 +90,11 @@ class Seq:
         for i in range(start, end):
             e = self.events[i]
             print(i, e.time, e, sep='\t')
-        # col1 = len(str(end))
-        # col2 = len(str(round(self.events[end-1].time, 3)))
-        # fmat = "{:" + str(col1) + "} {:" + str(col2) + "} {}"
-        # if hints:
-        #     fmat += "\t# {}"
-        #     for i in range(start, end):
-        #         e = self.events[i]
-        #         print(fmat.format(i, round(e.time, 3), e.message, e.hint()))
-        # else:
-        #     for i in range(start, end):
-        #         e = self.events[i]
-        #         print(fmat.format(i, round(e.time, 3), e.message))
 
     def append(self, ev):
-        """Adds an event to the end of the sequence without checking time."""
+        """
+        Adds an event to the end of the sequence without checking time.
+        """
         self.events.append(ev)
 
     def add(self, ev):
@@ -120,46 +109,18 @@ class Seq:
             while i < l and self.events[i].time <= ev.time:
                 i += 1
             self.events.insert(i, ev) 
-    
-#     def play(self, port, block=True):
-#         """
-#         Plays the midi messages in the sequence out an open rtmidi output port.
-#         The midi data should only contain valid midi channel messages, i.e. no 
-#         meta or sysex messages.
 
-#         Parameters
-#         ----------
-#         port : rtmidi.MidiOut
-#             An open rtimidi MidiOut object.
-#         block : bool
-#             If true then play() will block for the duration of the playback.
-#         """
-#         if not self.events:
-#             raise ValueError(f"no midi events to play")
-#         if not 'rtmidi' in sys.modules:
-#             raise RuntimeError(f"module rtmidi is not loaded")
-#         if not isinstance(port, sys.modules['rtmidi'].MidiOut):
-#             raise TypeError(f"port is not an instance of rtmidi.MidiOut")
-#         player = threading.Thread(target=_rtplayer, args=(self.events, port))#, daemon=True
-#         player.start()
-#         # block until playback  is done.
-#         if block:
-#             player.join()
-
-
-# def _rtplayer(midi, port):
-#     length = len(midi)
-#     thistime = midi[0].time
-#     nexttime = thistime
-#     i = 0
-#     while i < length:
-#         if midi[i].time == thistime:
-#             #print(f'playing {seq[i]}')
-#             port.send_message(midi[i].message)
-#             i += 1
-#             continue
-#         # if here then midi[i] is later than thistime so sleep
-#         nexttime = midi[i].time
-#         #print(f'waiting {nexttime-thistime}')
-#         time.sleep(nexttime - thistime) 
-#         thistime = nexttime
+    def serialize(self, skiprests=True):
+        """
+        Iterator that yields consecutive notes, chord members, and optionally, rests.
+        """
+        for x in self.events:
+            try:
+                tag = x.tag
+                if tag == 'rest' and skiprests:
+                    continue
+                yield x
+                for c in x:
+                    yield c
+            except AttributeError:
+                yield x

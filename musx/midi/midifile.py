@@ -117,7 +117,7 @@ class MidiFile:
         
         Parameters
         ----------
-        time : 'secs' | 'ticks' | 'raw'
+        time : 'secs' | 'ticks' | 'raw' | Fraction()
             The format to import midi time values as. 'secs' is seconds,
             'ticks' is time expressed in midi ticks, and 'raw' are the
             raw delta values that precede each event in the file. The

@@ -1,5 +1,5 @@
 """
-A module for loading and saving MusicXml scores.
+A module for loading and saving MusicXml scores. As of Aug '21 file loading is implemented.
 """
 
 # creating the MusicXml python file:
@@ -21,7 +21,7 @@ A module for loading and saving MusicXml scores.
 # >>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("Fs5")))
 # >>> n.add_child(Note(time=Fraction(0,1), duration=Fraction(1,4), pitch=Pitch("E1")))
 
-import re
+import re, os
 from lxml import etree
 from enum import Enum, auto
 from fractions import Fraction
@@ -36,48 +36,58 @@ from .part import Part
 from ..pitch import Pitch
 from ..note import Note
 
+
+# A template dictionary defining the 'running status' of MusicXml parsing. The
+# load() method copies the template for each score it parses and passes it to
+# the parsing routines so they can access and store relevant data:
+#   score: The Notation being created
+#   part: The current Part. This value resets for every new part.
+#   measure: The current measure. This value resets for every new measure and every part.
+#   divisions: The current division. This value resets for every new division and every part
+#   note: The current note. This value changes for every new note, measure, and part.
+#   meter: The most recent meter encountered in the score.
+#   key: The most recent key encountered in the score.
+#   onset: The Fraction onset time for the next note. This value is reset to 0 for each
+#          measure, (or to measureDur - noteDur for partial measures) and incremented
+#          by the duration of notes, forwards and backups.
 _DATA = {
         "score": None, "part": None, "measure": None, "divisions": None,
         "note": None, "meter:": None, "key": None, "onset": None
     }
-"""
-A template dictionary defining the 'running status' of MusicXml parsing.
-The load() method copies the template for each score it parses and passes it to
-the parsing routines so they can access and store relevant data.
-
-score: The Notation representing the score.
-part:  The current Part. This value resets for every new part.
-measure: The current measure. This value resets for every new measure and every part.
-divisions: The current division. This value resets for every new division and every part
-note: The current note. This value changes for every new note, measure, and part.
-meter: The most recent meter
-key: The most recent key
-onset: The Fraction onset time for the next note. This value is reset to 0 (or
-to measureDur - noteDur for partial measures) and incremented by the duration of
-notes, forwards and backups.
-"""
-
-
-def _elementinfo(e):
-    """
-    Helper function prints Element info
-    """
-    return f"tag={e.tag}, attrs={e.attrib}, text='{e.text.strip() if e.text else ''}', children={len(e)}"
 
 
 class Notation():
     """
-    A class representing a score containing Notes as well as notational objects such
-    as keys, clefs, meters, barlines, etc.  Notations can be created from scratch or
-    loaded from MusicXml files.
+    A class representing a MusicXml score. A Notation contains Part objects and
+    metadata. A Part contains Measure objects, and a Measure contains Note objects
+    as well as non-event notational objects such as Key, Clef, Meter, Barline.
+
+    Given a Notation you can iterate all its elements like this:
+    
+    for part in notation:
+        for measure in part:
+            for element in measure:
+                print(element)
+    
+    To access vertical note structures in the score's measures you can iterate the
+    score's timepoints like this:
+
+    for measure in notation.timepoints():
+        for timepoint in measure:
+            print(timepoint)
     """
     def __init__(self, metadata={}, parts=[]):
         self.metadata = metadata
+        """A dictionary of MusicXml score metadata."""
         self.parts = []
+        """The score's list of musical parts."""
         for p in parts:
             self.add_part(p)
 
-    def __iter__(self):     
+    def __iter__(self):
+        """
+        Iterates the Part objects in the Notation.
+        """     
         return iter(self.parts)
     
     def __repr__(self):
@@ -89,10 +99,16 @@ class Notation():
     __str__ = __repr__
 
     def add_part(self, part):
+        """
+        Appends a Part to the Notation's part list.
+        """
         part.score = self  # back link from part to its score
         self.parts.append(part)
     
     def print(self):
+        """
+        Recursively prints the contents of the Notation.
+        """
         pad = "  "
         print(pad*0, self, sep=None)
         for p in self:
@@ -101,12 +117,11 @@ class Notation():
                 print(pad*2, m)
                 for e in m:
                     print(pad*3, e)
-
-    def add_element(self, element):
-        #element.measure = self  # back link from element to its measure
-        self.elements.append(element)
     
-    def timepoints(self, trace=True):
+    def timepoints(self, trace=False):
+        """
+        Returns a list of Timepoint objects grouped in measures. See: Timepoint.
+        """
         # Flop the part measures so all measures with the same id are grouped
         # together, e.g.: [[1,2,3],[1,2,3]] => [[1,1],[2,2],[3,3]]
         groups = [measures for measures in zip(*[part.measures for part in self])]
@@ -140,18 +155,19 @@ class Notation():
  
 class Timepoint():
     """
-    A Timepoint contains an onset time in a measure and a vertical 'slice'
-    of all the notes that start at that beat irrespective of which part,
-    staff or voice they belong to. The note entries within each Timepoint
-    are maintained in a dictionary whose keys are part.measure.voice
-    identifiers and whose values are the notes that occur there.
+    A Timepoint is an analytical structure that contains an onset time in a
+    measure and the vertical 'slice' of all the notes that begin at that beat
+    irrespective of which part, staff or voice they belong to. The note 
+    entries within each Timepoint are maintained in a dictionary whose keys
+    are part.measure.voice identifiers and whose values are the notes that
+    begin at the Timepoint's beat.
     
     Parameters
     ----------
-    beat : Ratio
-        The ratio start time of the timepoint in the measure.
+    beat : Fraction
+        The metric onset of the timepoint in the measure.
     nmap : dict
-        The note map of the timepoint. This is a dictionary of notes whose
+        The note map of the timepoint is a dictionary of notes whose
         keys are the part/voice identifiers active in the measure.
     """
     def __init__(self, onset):
@@ -181,18 +197,15 @@ class Timepoint():
 
 ##############################################################################
 
-"""
-import musx.mxml.mxmlfile
-x=musx.mxml.mxmlfile.read("scores/HelloWorld.musicxml")
-x.parts[0].measures[0].elements
-"""
 
-def parse_barline(elem, DATA):
+def _elementinfo(e):
     """
-    tag=barline, attrs={'location': 'right'}, text='', children=2
-    tag=bar-style, attrs={}, text='light-heavy', children=0
-    tag=repeat, attrs={'direction': 'backward'}, text='', children=0
+    Helper function prints Element info
     """
+    return f"tag={e.tag}, attrs={e.attrib}, text='{e.text.strip() if e.text else ''}', children={len(e)}"
+
+
+def _parse_barline(elem, DATA):
     text = None
     repeat = None
     barline = None
@@ -223,7 +236,8 @@ def parse_barline(elem, DATA):
     #DATA['measure'].barlines.append(barline)
     DATA['measure'].add_element(barline)
 
-def parse_part(elem, DATA):
+
+def _parse_part(elem, DATA):
     # create a new part and add it to the score
     part = Part()
     part.id = elem.get('id')
@@ -239,7 +253,8 @@ def parse_part(elem, DATA):
     # DATA['key'] =  None
     # DATA['onset'] = None
 
-def parse_measure(elem, DATA):
+
+def _parse_measure(elem, DATA):
     # create a new measure and add it to the part
     measure = Measure(elem.get('number'))
     if elem.get('implicit') == 'yes':
@@ -252,7 +267,7 @@ def parse_measure(elem, DATA):
     DATA['onset'] = Fraction(0,1)
 
 
-def parse_attributes(elem, DATA):
+def _parse_attributes(elem, DATA):
     measure = DATA['measure']
     for s in elem.iter(): 
         if s.tag == 'divisions':
@@ -296,7 +311,7 @@ def parse_attributes(elem, DATA):
             DATA['key'] = key
 
 
-def parse_note(elem, DATA):
+def _parse_note(elem, DATA):
     first = elem[0].tag
     # first can be 'grace', 'cue', 'chord', 'rest'
     if first in ['grace', 'cue']:
@@ -309,7 +324,6 @@ def parse_note(elem, DATA):
     dots = 0
     note = None
     for e in elem.iter(): 
-        #print("***", _elementinfo(e))
         if e.tag == 'pitch':
             step = e.findtext('step')
             alter = e.findtext('alter', "")
@@ -360,12 +374,14 @@ def parse_note(elem, DATA):
     # create the note and fill its attributes. if it is a chord, then update the
     # measure to contain a Chord instead of a Note.
 
-def parse_backup(elem, DATA):
+
+def _parse_backup(elem, DATA):
     duration = int(elem.findtext('duration'))
     duration = Fraction(duration, DATA['divisions'] * 4)
     DATA['onset'] -= duration
     
-def parse_forward(elem, DATA):
+
+def _parse_forward(elem, DATA):
     duration = int(elem.findtext('duration'))
     duration = Fraction(duration, DATA['divisions'] * 4)
     DATA['onset'] += duration
@@ -373,39 +389,58 @@ def parse_forward(elem, DATA):
     #elem.findtext('staff')
     #elem.findtext('voice')
 
-# Dictionary of parsing function accessed by the corresponding MusicXml tag names.  Tags that
-# are not in this dictionary are either omitted (not parsed) or parsed by a function that is
-# in the dictionary.
 
+def _parse_work_title(elem, DATA):
+    DATA['score'].metadata['title'] = elem.text
+
+
+def _parse_work_creator(elem, DATA):
+    DATA['score'].metadata['creator'] = elem.text
+
+
+def _parse_work_rights(elem, DATA):
+    DATA['score'].metadata['rights'] = elem.text
+
+
+# Dictionary of parsing functions accessed by the corresponding MusicXml tag
+# name.  Tags that are not in this dictionary are either not parsed or parsed
+# by a function that is in the dictionary.
 _PARSERS = {
-    'part': parse_part, 
-    'measure': parse_measure, 
-    'attributes': parse_attributes, 
-    'barline': parse_barline,
-    'note': parse_note,
-    'backup': parse_backup,
-    'forward': parse_forward
+    'part': _parse_part, 
+    'measure': _parse_measure, 
+    'attributes': _parse_attributes, 
+    'barline': _parse_barline,
+    'note': _parse_note,
+    'backup': _parse_backup,
+    'forward': _parse_forward,
+    'work-title': _parse_work_title,
+    'creator': _parse_work_creator,
+    'rights': _parse_work_rights
     }
 
-def load(path):
+
+def load(path, trace=False):
+    """
+    Loads a MusicXml file into a Notation object.
+    """
     global _DATA
     document = musicxml.parse(path, silence=True) 
     assert isinstance(document, musicxml.score_partwise), f"not a partwise musicxml file: '{path}'."
     root = getattr(document, 'gds_elementtree_node_') # root element of document
     assert isinstance(root, etree._Element) and root.tag == 'score-partwise', f"not a score-partwise element: {root}."
-    # a dictionary containng 'running state' for parsing.
+    # a dictionary maintaining the running status of parsing.
     DATA = _DATA.copy()
-    DATA['score'] = Notation()
-    DATA['divisions'] = 1
-    #print("*******", DATA)
+    DATA['score'] = Notation(metadata={'file': os.path.abspath(path)})
+    DATA['divisions'] = 1 # default MusicXml divisions is 1 quarter note.
     # a depth-first traversal of all elements in the document.
     for x in root.iter():
-        #print(f"tag={x.tag}, attrs={x.attrib}, text='{x.text.strip() if x.text else ''}', children={len(x)}")
-        func = _PARSERS.get(x.tag)
-        if func:
-            #print(_elementinfo(x))
-            func(x, DATA)
+        if trace:
+            print(f"tag={x.tag}, attrs={x.attrib}, text='{x.text.strip() if x.text else ''}', children={len(x)}")
+        parser = _PARSERS.get(x.tag)
+        if parser:
+            parser(x, DATA)
     return DATA['score']
+
 
 if __name__ == "__main__":
     pass

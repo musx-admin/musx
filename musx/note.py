@@ -1,9 +1,8 @@
 """
 Defines a base Event class for musical events, a generic Note class to
-represent time, duration, pitch, and amplitude, and a Chord class to
-bundle Notes with a common start time and duration. Notes are automatically
-converted to whatever format is requred by a specific back ends, e.g. MIDI,
-Csound, or MusicXml.
+represent time, duration, pitch, and amplitude. Notes can represent chords
+and rests and are automatically converted to whatever format is requred by
+a specific back ends, e.g. MIDI, Csound, or MusicXml.
 """
 
 from .midi import midievent as me
@@ -32,10 +31,6 @@ class Event:
         """
         The start time of the event in seconds, defaults to 0.0.  For ways
         to specify time metrically, see `rhythm()` and `intempo()`.
-
-        Raises
-        ------
-        ValueError if the time value is not a number >= 0.
         """
         return self._time
 
@@ -54,6 +49,10 @@ class Note (Event):
     passed to methods in the MIDI or Csound modules the note data will
     be automatically converted to the format supported by the module.
 
+    In addition to single tones, Notes can have children, in which case 
+    the note is tagged as a chord, and if a Note contins an empty pitch 
+    (e.g. Pitch()) it is tagged as a rest. See Note.tag
+
     Parameters
     ----------
     time : int | float | Fraction
@@ -62,12 +61,15 @@ class Note (Event):
     duration : int | float | Fraction
         The duration in seconds, defaults to 1.0. For ways to specify
         duration and time metrically, see `rhythm()` and `intempo()`.
-    pitch : int | float | Pitch
-        An int or float key number 0 to 127, or a `Pitch` object. 
-        Defaults to 60 (C4). If pitch is a float *kkk.cc* then
+    pitch : int | float | Pitch | list
+        An int or float key number 0 to 127, or a `Pitch` object, or list
+        of the same. Defaults to 60 (C4). If pitch is a float *kkk.cc* then
         *kkk* is the midi key number and *cc* is cents above that midi
-        key's equal tempered frequency. See `MidiFile.metatrack()`
-        for more information.
+        key's equal tempered frequency. If the pitch is an empty Pitch the
+        note is tagged as a rest. If a list of pitches is provided the
+        note will contain the first Pitch and the remaining pitches will
+        be converted to childen Notes, each child note containing the same
+        attribute values as the parent.
     amplitude : int | float
         An amplitude 0.0 to 1.0, defaults to 0.5.
     instrument : value
@@ -78,26 +80,17 @@ class Note (Event):
     def __init__(self, time=0.0, duration=1.0, pitch=60, amplitude=.5, instrument=0):
         super().__init__(time)
         self.duration = duration
-        # # If the note contains more than one pitch the first is assigned to self._pitch
-        # # and the others are cached in the _otherpitches attribute.
-        # self._otherpitches = []
-        # # self.pitch is a setter: if pitch is a list the first pitch will be assigned 
-        # # to self._pitch and the remaining pitches are cached in _otherpitches
-        self.pitch = pitch
         self.amplitude = amplitude
         self.instrument = instrument
         self._children = []
         self._mxml = {}
+        self.pitch = pitch
 
     @property
     def time(self):
         """
         The start time of the note in seconds, defaults to 0.0.  For ways
         to specify metric time, see: `rhythm()` and `intempo()`.
-
-        Raises
-        ------
-        ValueError if the time value is not a number >= 0.
         """
         return self._time
 
@@ -113,10 +106,6 @@ class Note (Event):
         """
         The duration of the note in seconds, defaults to 1.0. For ways
         to specify metric durations, see: `rhythm()` and `intempo()`.
- 
-        Raises
-        ------
-        ValueError if the duration value is not a number greater than 0.
         """
         return self._duration
 
@@ -130,38 +119,32 @@ class Note (Event):
     @property
     def pitch(self):
         """
-        A `Pitch` object or an int or float key number, defaults to 60. If you output
-        a note to midi, pitch will be automatically scaled to an int or float keynum.
- 
-        Raises
-        ------
-        ValueError if the pitch is not a Pitch or a number between 0 and 127 inclusive.
+        A `Pitch` object or an int or float key number, or list of the same. Defaults
+        to 60 (Middle C). If the pitch is a list of pitches, the note will maintain
+        the first pitch and the other pitches will be assigned to child notes of this
+        note, e.g. a chord.
         """
         return self._pitch
 
     @pitch.setter
     def pitch(self, val):
-        self._pitch = val
-        # def checkpitch(p):
-        #     if (isinstance(p, (int, float)) and (0 <= p <= 127)) or isinstance(p, Pitch):
-        #         return p
-        #     raise ValueError(f"Invalid Note pitch: {p}.")    
-        # # if isinstance(val, list) and len(val)>0:
-        # #     self._pitch = checkpitch(val[0])
-        # #     for v in val[1:]:
-        # #         self._otherpitches.append(checkpitch(v))
-        # # else:
-        #     self._pitch = checkpitch(val)
+        def checkpitch(p):
+            if (isinstance(p, (int, float)) and (0 <= p <= 127)) or isinstance(p, Pitch):
+                return p
+            raise ValueError(f"Invalid Note pitch: {p}.")    
+        if isinstance(val, list) and len(val)>0:
+            self._pitch = checkpitch(val[0])
+            for p in val[1:]:
+                self.add_child(Note(time=self.time, duration=self.duration, pitch=p,
+                    amplitude=self.amplitude, instrument=self.instrument))
+        else:
+            self._pitch = checkpitch(val)
 
     @property
     def amplitude(self):
         """
         A value between 0.0 and 1.0 inclusive, defaults to 0.5. If you output
         a note to midi, amplitude will be automatically scaled to 0-127 inclusive.
-
-        Raises
-        ------
-        ValueError if the amplitude value is not a number between 0 and 1 inclusive.
         """
         return self._amplitude
 
@@ -189,11 +172,11 @@ class Note (Event):
         """
         Either 'note', 'rest' or 'chord' depending the note's current state: if the note has
         any children the tag is 'chord', else if the pitch of the note is empty the tag is 'rest'
-        else the tag is 'note'.
+        otherwise the tag is 'note'.
         """
         if self._children:
             return 'chord'
-        if self.pitch.is_empty():
+        if isinstance(self.pitch, Pitch) and self.pitch.is_empty():
             return 'rest'
         return 'note'
 
@@ -202,11 +185,9 @@ class Note (Event):
         Adds a child note and tags this note as a chord.
         """
         if isinstance(note, Note):
-            # Not sure if I want or need to do this...
+            # Not sure if I want to do this...
             if self._children and self._children[0].time != note.time:
                 raise ValueError(f'Conflicting note onset times in chord: {self._children[0].time} and {note.time}.')
-            # if self._children and self._children[0].duration != note.duration:
-            #     raise ValueError(f'Conflicting note durations in chord: {self._children[0].duration} and {note.duration}.')
             self._children.append(note)
         else:
             raise ValueError(f'Invalid child: {note}.')
@@ -219,7 +200,7 @@ class Note (Event):
 
     def is_chord(self):
         """
-        Returns true if the note contains any children.
+        Returns true if the note contains children.
         """
         return len(self._children) > 0
 
@@ -233,7 +214,7 @@ class Note (Event):
 
     def get_mxml(self, key, default=None):
         """
-        Returns the mxml value of the given key, or a default value if
+        Returns the mxml value of the given key, or the default value if
         the key is not in the note's mxml dictionary.
         """
         return self._mxml.get(key, default)
@@ -275,71 +256,7 @@ class Note (Event):
     # No special repr() method for now...
     __repr__ = __str__
 
-    # def __repr__(self):
-    #     if self.is_rest():
-    #         return f"Note({repr(self.time)}, {repr(self.duration)}, Pitch())"
-    #     # if self.is_chord():
-    #     #     return f"Note({repr(self.time)}, {repr(self.duration)}, {repr(self.pitches())}, {repr(self._amplitude)}, {repr(self._instrument)})"
-    #     return f"Note({repr(self._time)}, {repr(self._duration)}, {repr(self._pitch)}, {repr(self._amplitude)}, {repr(self._instrument)})"
-
     def _pitchtokey(self):
         if isinstance(self._pitch, Pitch):
             return self._pitch.keynum()
         return self._pitch
-
-
-# class Chord(Event):
-#     """
-#     A class defining a musical chord. The onset time and duration of the chord
-#     will be determined by the first note added to the chord, and all other notes
-#     must agree with the time and duration of the first note.
-
-#     Parameters
-#     ----------
-#     notes : A list of zero or more Notes, defaults to the empty list.
-#     """
-#     def __init__(self, notes=[]):
-#         #super().__init__(time_)
-#         if not isinstance(notes, list):
-#             notes = [notes]
-#         self._notes = []
-#         for n in notes:
-#             self.add_note(n)
-#         self._voice = None
-
-#     def __len__(self):
-#         return len(self._notes)
-
-#     def __iter__(self):
-#         return iter(self._notes)
-
-#     def __str__(self):
-#         cstr = ":".join([str(n.pitch) for n in self.notes])
-#         return f'<Chord: {str(self.time)} {str(self.duration)} {cstr}>'
-
-#     def __repr__(self):
-#         cstr = ", ".join([repr(n) for n in self.notes])
-#         return f'Chord({cstr})'
-
-#     @property
-#     def time(self):
-#         return self._notes[0].time if self._notes else None
-    
-#     @property
-#     def duration(self):
-#         return self._notes[0].duration if self._notes else None
-    
-#     @property
-#     def notes(self):
-#         return self._notes
-
-#     def add_note(self, note):
-#         """Appends a note to the chord."""
-#         if isinstance(note, Note):
-#             if self._notes and self._notes[0].time != note.time:
-#                 raise ValueError(f'Conflicting note onset times in chord: {self._notes[0].time} and {note.time}.')
-#             if self._notes and self._notes[0].duration != note.duration:
-#                 raise ValueError(f'Conflicting note durations in chord: {self._notes[0].duration} and {note.duration}.')
-#             self._notes.append(note)
-#         else:
-#             raise ValueError(f'Invalid chord note: {note}.')
