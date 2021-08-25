@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>musx.mxml.mark API documentation</title>
+<meta name="description" content="The Mark class inherits from IntEnum to enumerate various types of notation
+marks that appear in musical scores. The mark module provides four …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.mxml.mark</code></h1>
+</header>
+<section id="section-intro">
+<p>The Mark class inherits from IntEnum to enumerate various types of notation
+marks that appear in musical scores. The mark module provides four top-level
+'group' constants: DYNAMIC, ARTICULATION, ORNAMENT, and TEMPORAL that are
+assigned the values 0 to 3 left-shifted by 8 bits.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">###############################################################################
+
+&#34;&#34;&#34;
+The Mark class inherits from IntEnum to enumerate various types of notation
+marks that appear in musical scores. The mark module provides four top-level 
+&#39;group&#39; constants: DYNAMIC, ARTICULATION, ORNAMENT, and TEMPORAL that are
+assigned the values 0 to 3 left-shifted by 8 bits.
+&#34;&#34;&#34;
+
+from enum import IntEnum
+
+# Mark group constants 0-3 left-shifted 8 bits.
+DYNAMIC = 0 &lt;&lt; 8
+ARTICULATION = 1 &lt;&lt; 8
+ORNAMENT = 2 &lt;&lt; 8
+TEMPORAL = 3 &lt;&lt; 8
+
+
+class Mark (IntEnum):
+    &#34;&#34;&#34;
+    The Mark class inherits from IntEnum to enumerate various types
+    of notation marks that appear in musical scores. Each Mark enum is
+    a 16 bit value with the format &#39;ggggggggrrrrrrrr&#39;, where:
+    
+    ```py
+    7654321076543210
+    gggggggg--------   the &#39;group&#39; of the mark (dynamic, articulation, etc.)
+    --------rrrrrrrr   the &#39;rank&#39; of the identifier within its group.
+    ```
+
+    The DYNAMIC group enums are: NIENTE, PPPP, PPP, PP, P, MP, MF, F, FF, FFF,
+    FFFF, SFZ, CRESCENDO, CRESCENDO_END, DECRESCENDO, DECRESCENDO_END.
+    These enums all have DYNAMIC as their upper byte and their lower byte
+    holds their rank value 0-15.
+
+    The ARTICULATION group enums are: TENUTO, DETATCHED, STACCATO, STACCATISSIMO,
+    ACCENT, MARCATO. These enums all have ARTICULATION as their upper byte and
+    their lower byte holds their rank value 0-5.
+
+    The ORNAMENT group enums are: TRILL, MORDENT, TURN. These enums all have
+    ORNAMENT as their upper byte and their lower byte holds their rank value 0-2.
+
+    The TEMPORAL group enums are: FERMATA, ACCEL, DEACCEL. These enums all have
+    TEMPORAL as their upper byte and their lower byte holds their rank value 0-2.
+
+    See the following links for information about various musical marks.
+    https://en.wikipedia.org/wiki/Dynamics_(music), 
+    https://en.wikipedia.org/wiki/Articulation_(music),
+    https://en.wikipedia.org/wiki/Ornament_(music)
+    &#34;&#34;&#34; 
+
+    NIENTE = DYNAMIC + 0
+    PPPP = DYNAMIC + 1
+    PPP = DYNAMIC + 2
+    PP = DYNAMIC + 3
+    P = DYNAMIC + 4
+    MP = DYNAMIC + 5
+    MF = DYNAMIC + 6
+    F = DYNAMIC + 7
+    FF = DYNAMIC + 8
+    FFF = DYNAMIC + 9
+    FFFF = DYNAMIC + 10
+    SFZ = DYNAMIC + 11
+    CRESCENDO = DYNAMIC + 12
+    CRESCENDO_END = DYNAMIC + 13
+    DECRESCENDO = DYNAMIC + 14
+    DECRESCENDO_END = DYNAMIC + 15
+
+    TENUTO = ARTICULATION + 0
+    DETATCHED = ARTICULATION + 1
+    STACCATO = ARTICULATION + 2
+    STACCATISSIMO = ARTICULATION + 3
+    ACCENT = ARTICULATION + 4
+    MARCATO = ARTICULATION + 5
+
+    TRILL = ORNAMENT + 0
+    MORDENT = ORNAMENT + 1
+    TURN = ORNAMENT + 2
+
+    FERMATA = TEMPORAL + 0
+    ACCEL = TEMPORAL + 1
+    DEACCEL = TEMPORAL + 2
+
+
+    def rank(self):
+        &#34;&#34;&#34;Returns the mark&#39;s rank number from the lower eight bits of the enum.&#34;&#34;&#34;
+        return self.value &amp; 0x00FF
+
+    
+    def group(self):
+        &#34;&#34;&#34;Returns the mark&#39;s group number from the upper eight bits of the enum.&#34;&#34;&#34;
+        return self.value &amp; 0xFF00
+
+
+def _test_marks():
+    print(&#39;Testing mark.py ... &#39;, end=&#39;&#39;)
+    Mark[&#34;PPPP&#34;]
+    Mark[&#34;PPP&#34;]
+    Mark[&#34;PP&#34;]
+    Mark[&#34;P&#34;]
+    Mark[&#34;MP&#34;]
+    Mark[&#34;MF&#34;]
+    Mark[&#34;F&#34;]
+    Mark[&#34;FF&#34;]
+    Mark[&#34;FFF&#34;]
+    Mark[&#34;FFFF&#34;]
+    Mark[&#34;SFZ&#34;]
+    Mark[&#34;CRESCENDO&#34;]
+    Mark[&#34;CRESCENDO_END&#34;]
+    Mark[&#34;DECRESCENDO&#34;]
+    Mark[&#34;DECRESCENDO_END&#34;]
+    Mark[&#34;TENUTO&#34;]
+    Mark[&#34;DETATCHED&#34;]
+    Mark[&#34;STACCATO&#34;]
+    Mark[&#34;STACCATISSIMO&#34;]
+    Mark[&#34;ACCENT&#34;]
+    Mark[&#34;MARCATO&#34;]
+    Mark[&#34;TRILL&#34;]
+    Mark[&#34;MORDENT&#34;]
+    Mark[&#34;TURN&#34;]
+    Mark[&#34;FERMATA&#34;]
+    Mark[&#34;ACCEL&#34;]
+    Mark[&#34;DEACCEL&#34;]
+
+    assert DYNAMIC == Mark[&#34;PPPP&#34;].group()
+    assert DYNAMIC == Mark[&#34;PPP&#34;].group()
+    assert DYNAMIC == Mark[&#34;PP&#34;].group()
+    assert DYNAMIC == Mark[&#34;P&#34;].group()
+    assert DYNAMIC == Mark[&#34;MP&#34;].group()
+    assert DYNAMIC == Mark[&#34;MF&#34;].group()
+    assert DYNAMIC == Mark[&#34;F&#34;].group()
+    assert DYNAMIC == Mark[&#34;FF&#34;].group()
+    assert DYNAMIC == Mark[&#34;FFF&#34;].group()
+    assert DYNAMIC == Mark[&#34;FFFF&#34;].group()
+    assert DYNAMIC == Mark[&#34;SFZ&#34;].group()
+    assert DYNAMIC == Mark[&#34;CRESCENDO&#34;].group()
+    assert DYNAMIC == Mark[&#34;CRESCENDO_END&#34;].group()
+    assert DYNAMIC == Mark[&#34;DECRESCENDO&#34;].group()
+    assert DYNAMIC == Mark[&#34;DECRESCENDO_END&#34;].group()
+
+    assert ARTICULATION == Mark[&#34;TENUTO&#34;].group()
+    assert ARTICULATION == Mark[&#34;DETATCHED&#34;].group()
+    assert ARTICULATION == Mark[&#34;STACCATO&#34;].group()
+    assert ARTICULATION == Mark[&#34;STACCATISSIMO&#34;].group()
+    assert ARTICULATION == Mark[&#34;ACCENT&#34;].group()
+    assert ARTICULATION == Mark[&#34;MARCATO&#34;].group()
+
+    assert ORNAMENT == Mark[&#34;TRILL&#34;].group()
+    assert ORNAMENT == Mark[&#34;MORDENT&#34;].group()
+    assert ORNAMENT == Mark[&#34;TURN&#34;].group()
+
+    assert TEMPORAL == Mark[&#34;FERMATA&#34;].group()
+    assert TEMPORAL == Mark[&#34;ACCEL&#34;].group()
+    assert TEMPORAL == Mark[&#34;DEACCEL&#34;].group()
+    print(&#39;Done!&#39;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="musx.mxml.mark.Mark"><code class="flex name class">
+<span>class <span class="ident">Mark</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The Mark class inherits from IntEnum to enumerate various types
+of notation marks that appear in musical scores. Each Mark enum is
+a 16 bit value with the format 'ggggggggrrrrrrrr', where:</p>
+<pre><code class="language-py">7654321076543210
+gggggggg--------   the 'group' of the mark (dynamic, articulation, etc.)
+--------rrrrrrrr   the 'rank' of the identifier within its group.
+</code></pre>
+<p>The DYNAMIC group enums are: NIENTE, PPPP, PPP, PP, P, MP, MF, F, FF, FFF,
+FFFF, SFZ, CRESCENDO, CRESCENDO_END, DECRESCENDO, DECRESCENDO_END.
+These enums all have DYNAMIC as their upper byte and their lower byte
+holds their rank value 0-15.</p>
+<p>The ARTICULATION group enums are: TENUTO, DETATCHED, STACCATO, STACCATISSIMO,
+ACCENT, MARCATO. These enums all have ARTICULATION as their upper byte and
+their lower byte holds their rank value 0-5.</p>
+<p>The ORNAMENT group enums are: TRILL, MORDENT, TURN. These enums all have
+ORNAMENT as their upper byte and their lower byte holds their rank value 0-2.</p>
+<p>The TEMPORAL group enums are: FERMATA, ACCEL, DEACCEL. These enums all have
+TEMPORAL as their upper byte and their lower byte holds their rank value 0-2.</p>
+<p>See the following links for information about various musical marks.
+<a href="https://en.wikipedia.org/wiki/Dynamics_(music),">https://en.wikipedia.org/wiki/Dynamics_(music),</a>
+<a href="https://en.wikipedia.org/wiki/Articulation_(music),">https://en.wikipedia.org/wiki/Articulation_(music),</a>
+<a href="https://en.wikipedia.org/wiki/Ornament_(music)">https://en.wikipedia.org/wiki/Ornament_(music)</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Mark (IntEnum):
+    &#34;&#34;&#34;
+    The Mark class inherits from IntEnum to enumerate various types
+    of notation marks that appear in musical scores. Each Mark enum is
+    a 16 bit value with the format &#39;ggggggggrrrrrrrr&#39;, where:
+    
+    ```py
+    7654321076543210
+    gggggggg--------   the &#39;group&#39; of the mark (dynamic, articulation, etc.)
+    --------rrrrrrrr   the &#39;rank&#39; of the identifier within its group.
+    ```
+
+    The DYNAMIC group enums are: NIENTE, PPPP, PPP, PP, P, MP, MF, F, FF, FFF,
+    FFFF, SFZ, CRESCENDO, CRESCENDO_END, DECRESCENDO, DECRESCENDO_END.
+    These enums all have DYNAMIC as their upper byte and their lower byte
+    holds their rank value 0-15.
+
+    The ARTICULATION group enums are: TENUTO, DETATCHED, STACCATO, STACCATISSIMO,
+    ACCENT, MARCATO. These enums all have ARTICULATION as their upper byte and
+    their lower byte holds their rank value 0-5.
+
+    The ORNAMENT group enums are: TRILL, MORDENT, TURN. These enums all have
+    ORNAMENT as their upper byte and their lower byte holds their rank value 0-2.
+
+    The TEMPORAL group enums are: FERMATA, ACCEL, DEACCEL. These enums all have
+    TEMPORAL as their upper byte and their lower byte holds their rank value 0-2.
+
+    See the following links for information about various musical marks.
+    https://en.wikipedia.org/wiki/Dynamics_(music), 
+    https://en.wikipedia.org/wiki/Articulation_(music),
+    https://en.wikipedia.org/wiki/Ornament_(music)
+    &#34;&#34;&#34; 
+
+    NIENTE = DYNAMIC + 0
+    PPPP = DYNAMIC + 1
+    PPP = DYNAMIC + 2
+    PP = DYNAMIC + 3
+    P = DYNAMIC + 4
+    MP = DYNAMIC + 5
+    MF = DYNAMIC + 6
+    F = DYNAMIC + 7
+    FF = DYNAMIC + 8
+    FFF = DYNAMIC + 9
+    FFFF = DYNAMIC + 10
+    SFZ = DYNAMIC + 11
+    CRESCENDO = DYNAMIC + 12
+    CRESCENDO_END = DYNAMIC + 13
+    DECRESCENDO = DYNAMIC + 14
+    DECRESCENDO_END = DYNAMIC + 15
+
+    TENUTO = ARTICULATION + 0
+    DETATCHED = ARTICULATION + 1
+    STACCATO = ARTICULATION + 2
+    STACCATISSIMO = ARTICULATION + 3
+    ACCENT = ARTICULATION + 4
+    MARCATO = ARTICULATION + 5
+
+    TRILL = ORNAMENT + 0
+    MORDENT = ORNAMENT + 1
+    TURN = ORNAMENT + 2
+
+    FERMATA = TEMPORAL + 0
+    ACCEL = TEMPORAL + 1
+    DEACCEL = TEMPORAL + 2
+
+
+    def rank(self):
+        &#34;&#34;&#34;Returns the mark&#39;s rank number from the lower eight bits of the enum.&#34;&#34;&#34;
+        return self.value &amp; 0x00FF
+
+    
+    def group(self):
+        &#34;&#34;&#34;Returns the mark&#39;s group number from the upper eight bits of the enum.&#34;&#34;&#34;
+        return self.value &amp; 0xFF00</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.IntEnum</li>
+<li>builtins.int</li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="musx.mxml.mark.Mark.ACCEL"><code class="name">var <span class="ident">ACCEL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.ACCENT"><code class="name">var <span class="ident">ACCENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.CRESCENDO"><code class="name">var <span class="ident">CRESCENDO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.CRESCENDO_END"><code class="name">var <span class="ident">CRESCENDO_END</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.DEACCEL"><code class="name">var <span class="ident">DEACCEL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.DECRESCENDO"><code class="name">var <span class="ident">DECRESCENDO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.DECRESCENDO_END"><code class="name">var <span class="ident">DECRESCENDO_END</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.DETATCHED"><code class="name">var <span class="ident">DETATCHED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.F"><code class="name">var <span class="ident">F</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.FERMATA"><code class="name">var <span class="ident">FERMATA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.FF"><code class="name">var <span class="ident">FF</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.FFF"><code class="name">var <span class="ident">FFF</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.FFFF"><code class="name">var <span class="ident">FFFF</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.MARCATO"><code class="name">var <span class="ident">MARCATO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.MF"><code class="name">var <span class="ident">MF</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.MORDENT"><code class="name">var <span class="ident">MORDENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.MP"><code class="name">var <span class="ident">MP</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.NIENTE"><code class="name">var <span class="ident">NIENTE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.P"><code class="name">var <span class="ident">P</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.PP"><code class="name">var <span class="ident">PP</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.PPP"><code class="name">var <span class="ident">PPP</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.PPPP"><code class="name">var <span class="ident">PPPP</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.SFZ"><code class="name">var <span class="ident">SFZ</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.STACCATISSIMO"><code class="name">var <span class="ident">STACCATISSIMO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.STACCATO"><code class="name">var <span class="ident">STACCATO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.TENUTO"><code class="name">var <span class="ident">TENUTO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.TRILL"><code class="name">var <span class="ident">TRILL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="musx.mxml.mark.Mark.TURN"><code class="name">var <span class="ident">TURN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.mxml.mark.Mark.group"><code class="name flex">
+<span>def <span class="ident">group</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the mark's group number from the upper eight bits of the enum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def group(self):
+    &#34;&#34;&#34;Returns the mark&#39;s group number from the upper eight bits of the enum.&#34;&#34;&#34;
+    return self.value &amp; 0xFF00</code></pre>
+</details>
+</dd>
+<dt id="musx.mxml.mark.Mark.rank"><code class="name flex">
+<span>def <span class="ident">rank</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the mark's rank number from the lower eight bits of the enum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rank(self):
+    &#34;&#34;&#34;Returns the mark&#39;s rank number from the lower eight bits of the enum.&#34;&#34;&#34;
+    return self.value &amp; 0x00FF</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx.mxml" href="index.html">musx.mxml</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="musx.mxml.mark.Mark" href="#musx.mxml.mark.Mark">Mark</a></code></h4>
+<ul class="two-column">
+<li><code><a title="musx.mxml.mark.Mark.ACCEL" href="#musx.mxml.mark.Mark.ACCEL">ACCEL</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.ACCENT" href="#musx.mxml.mark.Mark.ACCENT">ACCENT</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.CRESCENDO" href="#musx.mxml.mark.Mark.CRESCENDO">CRESCENDO</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.CRESCENDO_END" href="#musx.mxml.mark.Mark.CRESCENDO_END">CRESCENDO_END</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.DEACCEL" href="#musx.mxml.mark.Mark.DEACCEL">DEACCEL</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.DECRESCENDO" href="#musx.mxml.mark.Mark.DECRESCENDO">DECRESCENDO</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.DECRESCENDO_END" href="#musx.mxml.mark.Mark.DECRESCENDO_END">DECRESCENDO_END</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.DETATCHED" href="#musx.mxml.mark.Mark.DETATCHED">DETATCHED</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.F" href="#musx.mxml.mark.Mark.F">F</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.FERMATA" href="#musx.mxml.mark.Mark.FERMATA">FERMATA</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.FF" href="#musx.mxml.mark.Mark.FF">FF</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.FFF" href="#musx.mxml.mark.Mark.FFF">FFF</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.FFFF" href="#musx.mxml.mark.Mark.FFFF">FFFF</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.MARCATO" href="#musx.mxml.mark.Mark.MARCATO">MARCATO</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.MF" href="#musx.mxml.mark.Mark.MF">MF</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.MORDENT" href="#musx.mxml.mark.Mark.MORDENT">MORDENT</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.MP" href="#musx.mxml.mark.Mark.MP">MP</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.NIENTE" href="#musx.mxml.mark.Mark.NIENTE">NIENTE</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.P" href="#musx.mxml.mark.Mark.P">P</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.PP" href="#musx.mxml.mark.Mark.PP">PP</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.PPP" href="#musx.mxml.mark.Mark.PPP">PPP</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.PPPP" href="#musx.mxml.mark.Mark.PPPP">PPPP</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.SFZ" href="#musx.mxml.mark.Mark.SFZ">SFZ</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.STACCATISSIMO" href="#musx.mxml.mark.Mark.STACCATISSIMO">STACCATISSIMO</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.STACCATO" href="#musx.mxml.mark.Mark.STACCATO">STACCATO</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.TENUTO" href="#musx.mxml.mark.Mark.TENUTO">TENUTO</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.TRILL" href="#musx.mxml.mark.Mark.TRILL">TRILL</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.TURN" href="#musx.mxml.mark.Mark.TURN">TURN</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.group" href="#musx.mxml.mark.Mark.group">group</a></code></li>
+<li><code><a title="musx.mxml.mark.Mark.rank" href="#musx.mxml.mark.Mark.rank">rank</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

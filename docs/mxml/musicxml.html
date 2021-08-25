@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>musx.midi API documentation</title>
-<meta name="description" content="A package providing full support for reading and writing data to midi files
-and ports. The module has several layers: …" />
+<title>musx.mxml.musicxml API documentation</title>
+<meta name="description" content="A module that implements the complete MusicXml schema. This file was created using generateDS and is too large to include in the documentation." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -20,65 +19,41 @@ and ports. The module has several layers: …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>musx.midi</code></h1>
+<h1 class="title">Module <code>musx.mxml.musicxml</code></h1>
 </header>
 <section id="section-intro">
-<p>A package providing full support for reading and writing data to midi files
-and ports. The module has several layers:</p>
-<ul>
-<li>midimsg.py : a functional interface for creating low-level midi message lists.</li>
-<li>midievent.py : an object oriented layer above midimsg.py that represents
-midi data as class instances with attributes time and message.</li>
-<li>midifile.py : reads and writes data to midi files.</li>
-</ul>
+<p>A module that implements the complete MusicXml schema. This file was created using generateDS and is too large to include in the documentation.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
-A package providing full support for reading and writing data to midi files
-and ports. The module has several layers:
+<pre><code class="python">&#39;A module that implements the complete MusicXml schema. This file was created using generateDS and is too large to include in the documentation.&#39;
 
-* midimsg.py : a functional interface for creating low-level midi message lists.
-* midievent.py : an object oriented layer above midimsg.py that represents
-midi data as class instances with attributes time and message.
-* midifile.py : reads and writes data to midi files.
-&#34;&#34;&#34;
-
-from .midimsg import *
-from .midifile import *
-from .midievent import *</code></pre>
+def parse(inFileName, silence=False, print_warnings=True):
+    pass</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="musx.midi.gm" href="gm.html">musx.midi.gm</a></code></dt>
+<dt id="musx.mxml.musicxml.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>inFileName, silence=False, print_warnings=True)</span>
+</code></dt>
 <dd>
-<div class="desc"><p>Defines constants for GM instruments, controllers and drum map values,
-and dictionaries for reverse mapping to names. Names are sanitized for
-Python …</p></div>
-</dd>
-<dt><code class="name"><a title="musx.midi.midievent" href="midievent.html">musx.midi.midievent</a></code></dt>
-<dd>
-<div class="desc"><p>The midievent module provides object oriented support for working with midi
-messages. To represent basic midi on and off data you should use a <code>Note</code>
-…</p></div>
-</dd>
-<dt><code class="name"><a title="musx.midi.midifile" href="midifile.html">musx.midi.midifile</a></code></dt>
-<dd>
-<div class="desc"><p>The midifile module provide support for reading and writing midi files.</p></div>
-</dd>
-<dt><code class="name"><a title="musx.midi.midimsg" href="midimsg.html">musx.midi.midimsg</a></code></dt>
-<dd>
-<div class="desc"><p>A module that defines low level constructors and accessors for manipulating
-lists of bytes as midi messsages.</p></div>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse(inFileName, silence=False, print_warnings=True):
+    pass</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -91,15 +66,12 @@ lists of bytes as midi messsages.</p></div>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="musx" href="../index.html">musx</a></code></li>
+<li><code><a title="musx.mxml" href="index.html">musx.mxml</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="musx.midi.gm" href="gm.html">musx.midi.gm</a></code></li>
-<li><code><a title="musx.midi.midievent" href="midievent.html">musx.midi.midievent</a></code></li>
-<li><code><a title="musx.midi.midifile" href="midifile.html">musx.midi.midifile</a></code></li>
-<li><code><a title="musx.midi.midimsg" href="midimsg.html">musx.midi.midimsg</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="musx.mxml.musicxml.parse" href="#musx.mxml.musicxml.parse">parse</a></code></li>
 </ul>
 </li>
 </ul>
