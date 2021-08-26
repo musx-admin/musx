@@ -96,7 +96,7 @@ class Key:
         &#34;&#34;&#34;
         Returns the print representation of the key.
         &#34;&#34;&#34;
-        staff = &#34;all&#34; if self.staffnum == 0 else self.staffnum
+        staff = &#34;all&#34; if self.staffid == 0 else self.staffid
         if self.mode:
             # Force tonic pnum to display &#34;#&#34; and &#34;b&#34; as accidental.
             text = self.tonic().name
@@ -232,7 +232,7 @@ value is 0 the key is associated will all staffs.</dd>
         &#34;&#34;&#34;
         Returns the print representation of the key.
         &#34;&#34;&#34;
-        staff = &#34;all&#34; if self.staffnum == 0 else self.staffnum
+        staff = &#34;all&#34; if self.staffid == 0 else self.staffid
         if self.mode:
             # Force tonic pnum to display &#34;#&#34; and &#34;b&#34; as accidental.
             text = self.tonic().name

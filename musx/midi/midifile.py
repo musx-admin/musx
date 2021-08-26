@@ -485,7 +485,7 @@ class MidiFile:
         off_queue = []
         # write out all the events in the track
         ##foo = 0
-        for ev in track:
+        for ev in track.serialize():
             ##print(foo,"\t", ev); foo += 1
             # write out any pending offs <= ev.time
             prev_time = MidiFile._write_offs(stream, off_queue, ev.time, prev_time, divs)

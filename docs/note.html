@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.note API documentation</title>
-<meta name="description" content="Defines a base Event class for musical events, a generic Note class to
-represent time, duration, pitch, and amplitude. Notes can represent chords
-and …" />
+<meta name="description" content="Defines a base Event class for musical events and a generic Note subclass to
+represent time, duration, pitch, and amplitude. Notes can also represent …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -24,19 +23,19 @@ and …" />
 <h1 class="title">Module <code>musx.note</code></h1>
 </header>
 <section id="section-intro">
-<p>Defines a base Event class for musical events, a generic Note class to
-represent time, duration, pitch, and amplitude. Notes can represent chords
-and rests and are automatically converted to whatever format is requred by
-a specific back ends, e.g. MIDI, Csound, or MusicXml.</p>
+<p>Defines a base Event class for musical events and a generic Note subclass to
+represent time, duration, pitch, and amplitude. Notes can also represent chords`
+and rests according to their attribute values. A note's attribute values are
+automatically converted to whatever format is required by a specific backend.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Defines a base Event class for musical events, a generic Note class to
-represent time, duration, pitch, and amplitude. Notes can represent chords
-and rests and are automatically converted to whatever format is requred by
-a specific back ends, e.g. MIDI, Csound, or MusicXml.
+Defines a base Event class for musical events and a generic Note subclass to
+represent time, duration, pitch, and amplitude. Notes can also represent chords`
+and rests according to their attribute values. A note&#39;s attribute values are 
+automatically converted to whatever format is required by a specific backend.
 &#34;&#34;&#34;
 
 from .midi import midievent as me
@@ -48,15 +47,15 @@ from fractions import Fraction
 class Event:
     &#34;&#34;&#34;
     A base class for defining musical events. Any subclass of Event can
-    be added to a `Seq` object.
+    be added to a `musx.seq.Seq` object.
 
     Parameters
     ----------
     time : int | float
         The onset time in seconds, defaults to 0.0.  For ways to specify
-        time and duration metrically, see `rhythm()` and `intempo()`.
+        time and duration metrically, see `musx.rhythm.rhythm()` and
+        `musx.rhythm.intempo()`.
     &#34;&#34;&#34;
-      
     def __init__(self, time):
         self.time = time
 
@@ -64,7 +63,8 @@ class Event:
     def time(self):
         &#34;&#34;&#34;
         The start time of the event in seconds, defaults to 0.0.  For ways
-        to specify time metrically, see `rhythm()` and `intempo()`.
+        to specify time metrically, see `musx.rhythm.rhythm()` and
+        `musx.rhythm.intempo()`.
         &#34;&#34;&#34;
         return self._time
 
@@ -78,14 +78,14 @@ class Event:
 
 class Note (Event):
     &#34;&#34;&#34;
-    Creates a Note instance from its arguments. A Note is a sound event
-    that can be used in different contexts. For example, if a Note is
-    passed to methods in the MIDI or Csound modules the note data will
-    be automatically converted to the format supported by the module.
+    Creates a Note instance from its arguments. A Note is a generic sound
+    event that can be used in different contexts. For example, if a Note
+    is passed to methods in the MIDI or Csound backends the note data is
+    automatically converted to the format supported by that module.
 
     In addition to single tones, Notes can have children, in which case 
-    the note is tagged as a chord, and if a Note contins an empty pitch 
-    (e.g. Pitch()) it is tagged as a rest. See Note.tag
+    it is auto-tagged as a chord; if a Note contains an empty pitch 
+    it is tagged as a rest. See Note.tag
 
     Parameters
     ----------
@@ -102,8 +102,8 @@ class Note (Event):
         key&#39;s equal tempered frequency. If the pitch is an empty Pitch the
         note is tagged as a rest. If a list of pitches is provided the
         note will contain the first Pitch and the remaining pitches will
-        be converted to childen Notes, each child note containing the same
-        attribute values as the parent.
+        be converted to child Notes, each child containing the same
+        attribute values as the parent notw except for pitch.
     amplitude : int | float
         An amplitude 0.0 to 1.0, defaults to 0.5.
     instrument : value
@@ -153,10 +153,11 @@ class Note (Event):
     @property
     def pitch(self):
         &#34;&#34;&#34;
-        A `Pitch` object or an int or float key number, or list of the same. Defaults
-        to 60 (Middle C). If the pitch is a list of pitches, the note will maintain
-        the first pitch and the other pitches will be assigned to child notes of this
-        note, e.g. a chord.
+        A `musx.pitch.Pitch` object or an int or float key number, or list of
+        the same. Defaults to 60 (Middle C). If the pitch is assigned a list 
+        of pitches, the note will keep the first pitch and the other pitches
+        will be assigned to child notes of this note, which will then be 
+        tagged as a chord.
         &#34;&#34;&#34;
         return self._pitch
 
@@ -204,9 +205,10 @@ class Note (Event):
     @property
     def tag(self):
         &#34;&#34;&#34;
-        Either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39; depending the note&#39;s current state: if the note has
-        any children the tag is &#39;chord&#39;, else if the pitch of the note is empty the tag is &#39;rest&#39;
-        otherwise the tag is &#39;note&#39;.
+        The value of tag is either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39; depending the
+        note&#39;s current state: if the note has any children the tag is &#39;chord&#39;,
+        else if the pitch of the note is empty the tag is &#39;rest&#39; otherwise the
+        tag is &#39;note&#39;.
         &#34;&#34;&#34;
         if self._children:
             return &#39;chord&#39;
@@ -216,7 +218,7 @@ class Note (Event):
 
     def add_child(self, note):
         &#34;&#34;&#34;
-        Adds a child note and tags this note as a chord.
+        Adds note as a child of this note and tags itself as a chord.
         &#34;&#34;&#34;
         if isinstance(note, Note):
             # Not sure if I want to do this...
@@ -311,13 +313,14 @@ class Note (Event):
 </code></dt>
 <dd>
 <div class="desc"><p>A base class for defining musical events. Any subclass of Event can
-be added to a <code>Seq</code> object.</p>
+be added to a <code><a title="musx.seq.Seq" href="seq.html#musx.seq.Seq">Seq</a></code> object.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>time</code></strong> :&ensp;<code>int | float</code></dt>
 <dd>The onset time in seconds, defaults to 0.0.
 For ways to specify
-time and duration metrically, see <code>rhythm()</code> and <code>intempo()</code>.</dd>
+time and duration metrically, see <code><a title="musx.rhythm.rhythm" href="rhythm.html#musx.rhythm.rhythm">rhythm()</a></code> and
+<code><a title="musx.rhythm.intempo" href="rhythm.html#musx.rhythm.intempo">intempo()</a></code>.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -326,15 +329,15 @@ time and duration metrically, see <code>rhythm()</code> and <code>intempo()</cod
 <pre><code class="python">class Event:
     &#34;&#34;&#34;
     A base class for defining musical events. Any subclass of Event can
-    be added to a `Seq` object.
+    be added to a `musx.seq.Seq` object.
 
     Parameters
     ----------
     time : int | float
         The onset time in seconds, defaults to 0.0.  For ways to specify
-        time and duration metrically, see `rhythm()` and `intempo()`.
+        time and duration metrically, see `musx.rhythm.rhythm()` and
+        `musx.rhythm.intempo()`.
     &#34;&#34;&#34;
-      
     def __init__(self, time):
         self.time = time
 
@@ -342,7 +345,8 @@ time and duration metrically, see <code>rhythm()</code> and <code>intempo()</cod
     def time(self):
         &#34;&#34;&#34;
         The start time of the event in seconds, defaults to 0.0.  For ways
-        to specify time metrically, see `rhythm()` and `intempo()`.
+        to specify time metrically, see `musx.rhythm.rhythm()` and
+        `musx.rhythm.intempo()`.
         &#34;&#34;&#34;
         return self._time
 
@@ -364,7 +368,8 @@ time and duration metrically, see <code>rhythm()</code> and <code>intempo()</cod
 <dd>
 <div class="desc"><p>The start time of the event in seconds, defaults to 0.0.
 For ways
-to specify time metrically, see <code>rhythm()</code> and <code>intempo()</code>.</p></div>
+to specify time metrically, see <code><a title="musx.rhythm.rhythm" href="rhythm.html#musx.rhythm.rhythm">rhythm()</a></code> and
+<code><a title="musx.rhythm.intempo" href="rhythm.html#musx.rhythm.intempo">intempo()</a></code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -373,7 +378,8 @@ to specify time metrically, see <code>rhythm()</code> and <code>intempo()</code>
 def time(self):
     &#34;&#34;&#34;
     The start time of the event in seconds, defaults to 0.0.  For ways
-    to specify time metrically, see `rhythm()` and `intempo()`.
+    to specify time metrically, see `musx.rhythm.rhythm()` and
+    `musx.rhythm.intempo()`.
     &#34;&#34;&#34;
     return self._time</code></pre>
 </details>
@@ -385,13 +391,13 @@ def time(self):
 <span>(</span><span>time=0.0, duration=1.0, pitch=60, amplitude=0.5, instrument=0)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates a Note instance from its arguments. A Note is a sound event
-that can be used in different contexts. For example, if a Note is
-passed to methods in the MIDI or Csound modules the note data will
-be automatically converted to the format supported by the module.</p>
+<div class="desc"><p>Creates a Note instance from its arguments. A Note is a generic sound
+event that can be used in different contexts. For example, if a Note
+is passed to methods in the MIDI or Csound backends the note data is
+automatically converted to the format supported by that module.</p>
 <p>In addition to single tones, Notes can have children, in which case
-the note is tagged as a chord, and if a Note contins an empty pitch
-(e.g. Pitch()) it is tagged as a rest. See Note.tag</p>
+it is auto-tagged as a chord; if a Note contains an empty pitch
+it is tagged as a rest. See Note.tag</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>time</code></strong> :&ensp;<code>int | float | Fraction</code></dt>
@@ -408,8 +414,8 @@ of the same. Defaults to 60 (C4). If pitch is a float <em>kkk.cc</em> then
 key's equal tempered frequency. If the pitch is an empty Pitch the
 note is tagged as a rest. If a list of pitches is provided the
 note will contain the first Pitch and the remaining pitches will
-be converted to childen Notes, each child note containing the same
-attribute values as the parent.</dd>
+be converted to child Notes, each child containing the same
+attribute values as the parent notw except for pitch.</dd>
 <dt><strong><code>amplitude</code></strong> :&ensp;<code>int | float</code></dt>
 <dd>An amplitude 0.0 to 1.0, defaults to 0.5.</dd>
 <dt><strong><code>instrument</code></strong> :&ensp;<code>value</code></dt>
@@ -423,14 +429,14 @@ generating midi then this value should be a channel integer
 </summary>
 <pre><code class="python">class Note (Event):
     &#34;&#34;&#34;
-    Creates a Note instance from its arguments. A Note is a sound event
-    that can be used in different contexts. For example, if a Note is
-    passed to methods in the MIDI or Csound modules the note data will
-    be automatically converted to the format supported by the module.
+    Creates a Note instance from its arguments. A Note is a generic sound
+    event that can be used in different contexts. For example, if a Note
+    is passed to methods in the MIDI or Csound backends the note data is
+    automatically converted to the format supported by that module.
 
     In addition to single tones, Notes can have children, in which case 
-    the note is tagged as a chord, and if a Note contins an empty pitch 
-    (e.g. Pitch()) it is tagged as a rest. See Note.tag
+    it is auto-tagged as a chord; if a Note contains an empty pitch 
+    it is tagged as a rest. See Note.tag
 
     Parameters
     ----------
@@ -447,8 +453,8 @@ generating midi then this value should be a channel integer
         key&#39;s equal tempered frequency. If the pitch is an empty Pitch the
         note is tagged as a rest. If a list of pitches is provided the
         note will contain the first Pitch and the remaining pitches will
-        be converted to childen Notes, each child note containing the same
-        attribute values as the parent.
+        be converted to child Notes, each child containing the same
+        attribute values as the parent notw except for pitch.
     amplitude : int | float
         An amplitude 0.0 to 1.0, defaults to 0.5.
     instrument : value
@@ -498,10 +504,11 @@ generating midi then this value should be a channel integer
     @property
     def pitch(self):
         &#34;&#34;&#34;
-        A `Pitch` object or an int or float key number, or list of the same. Defaults
-        to 60 (Middle C). If the pitch is a list of pitches, the note will maintain
-        the first pitch and the other pitches will be assigned to child notes of this
-        note, e.g. a chord.
+        A `musx.pitch.Pitch` object or an int or float key number, or list of
+        the same. Defaults to 60 (Middle C). If the pitch is assigned a list 
+        of pitches, the note will keep the first pitch and the other pitches
+        will be assigned to child notes of this note, which will then be 
+        tagged as a chord.
         &#34;&#34;&#34;
         return self._pitch
 
@@ -549,9 +556,10 @@ generating midi then this value should be a channel integer
     @property
     def tag(self):
         &#34;&#34;&#34;
-        Either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39; depending the note&#39;s current state: if the note has
-        any children the tag is &#39;chord&#39;, else if the pitch of the note is empty the tag is &#39;rest&#39;
-        otherwise the tag is &#39;note&#39;.
+        The value of tag is either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39; depending the
+        note&#39;s current state: if the note has any children the tag is &#39;chord&#39;,
+        else if the pitch of the note is empty the tag is &#39;rest&#39; otherwise the
+        tag is &#39;note&#39;.
         &#34;&#34;&#34;
         if self._children:
             return &#39;chord&#39;
@@ -561,7 +569,7 @@ generating midi then this value should be a channel integer
 
     def add_child(self, note):
         &#34;&#34;&#34;
-        Adds a child note and tags this note as a chord.
+        Adds note as a child of this note and tags itself as a chord.
         &#34;&#34;&#34;
         if isinstance(note, Note):
             # Not sure if I want to do this...
@@ -699,10 +707,11 @@ def instrument(self):
 </dd>
 <dt id="musx.note.Note.pitch"><code class="name">var <span class="ident">pitch</span></code></dt>
 <dd>
-<div class="desc"><p>A <code>Pitch</code> object or an int or float key number, or list of the same. Defaults
-to 60 (Middle C). If the pitch is a list of pitches, the note will maintain
-the first pitch and the other pitches will be assigned to child notes of this
-note, e.g. a chord.</p></div>
+<div class="desc"><p>A <code><a title="musx.pitch.Pitch" href="pitch.html#musx.pitch.Pitch">Pitch</a></code> object or an int or float key number, or list of
+the same. Defaults to 60 (Middle C). If the pitch is assigned a list
+of pitches, the note will keep the first pitch and the other pitches
+will be assigned to child notes of this note, which will then be
+tagged as a chord.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -710,19 +719,21 @@ note, e.g. a chord.</p></div>
 <pre><code class="python">@property
 def pitch(self):
     &#34;&#34;&#34;
-    A `Pitch` object or an int or float key number, or list of the same. Defaults
-    to 60 (Middle C). If the pitch is a list of pitches, the note will maintain
-    the first pitch and the other pitches will be assigned to child notes of this
-    note, e.g. a chord.
+    A `musx.pitch.Pitch` object or an int or float key number, or list of
+    the same. Defaults to 60 (Middle C). If the pitch is assigned a list 
+    of pitches, the note will keep the first pitch and the other pitches
+    will be assigned to child notes of this note, which will then be 
+    tagged as a chord.
     &#34;&#34;&#34;
     return self._pitch</code></pre>
 </details>
 </dd>
 <dt id="musx.note.Note.tag"><code class="name">var <span class="ident">tag</span></code></dt>
 <dd>
-<div class="desc"><p>Either 'note', 'rest' or 'chord' depending the note's current state: if the note has
-any children the tag is 'chord', else if the pitch of the note is empty the tag is 'rest'
-otherwise the tag is 'note'.</p></div>
+<div class="desc"><p>The value of tag is either 'note', 'rest' or 'chord' depending the
+note's current state: if the note has any children the tag is 'chord',
+else if the pitch of the note is empty the tag is 'rest' otherwise the
+tag is 'note'.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -730,9 +741,10 @@ otherwise the tag is 'note'.</p></div>
 <pre><code class="python">@property
 def tag(self):
     &#34;&#34;&#34;
-    Either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39; depending the note&#39;s current state: if the note has
-    any children the tag is &#39;chord&#39;, else if the pitch of the note is empty the tag is &#39;rest&#39;
-    otherwise the tag is &#39;note&#39;.
+    The value of tag is either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39; depending the
+    note&#39;s current state: if the note has any children the tag is &#39;chord&#39;,
+    else if the pitch of the note is empty the tag is &#39;rest&#39; otherwise the
+    tag is &#39;note&#39;.
     &#34;&#34;&#34;
     if self._children:
         return &#39;chord&#39;
@@ -766,14 +778,14 @@ def time(self):
 <span>def <span class="ident">add_child</span></span>(<span>self, note)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Adds a child note and tags this note as a chord.</p></div>
+<div class="desc"><p>Adds note as a child of this note and tags itself as a chord.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add_child(self, note):
     &#34;&#34;&#34;
-    Adds a child note and tags this note as a chord.
+    Adds note as a child of this note and tags itself as a chord.
     &#34;&#34;&#34;
     if isinstance(note, Note):
         # Not sure if I want to do this...
