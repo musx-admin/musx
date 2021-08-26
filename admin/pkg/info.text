@@ -2,16 +2,6 @@ instructions:
 https://packaging.python.org/tutorials/packaging-projects/
 https://medium.com/@joel.barmettler/how-to-upload-your-python-package-to-pypi-65edc5fe9c56
 
-website:
-https://pypi.org
-ricktaube
-1.farstar
-
-user name:
-__token__
-
-my token:
-pypi-AgEIcHlwaS5vcmcCJDZlNjRjYTA3LTc2NzQtNGY1Mi1hMmIyLWIxMzQ0NWUyMDUwZAACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYg_FUl8AVrQtYo0BXsAE3LaF_nHv9L3PeCYWbhRqCwAP0
 
 -------------------
 # edit setup.py and bump the version
