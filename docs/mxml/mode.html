@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.mxml.mode API documentation</title>
-<meta name="description" content="An enumeration of all the 7-tone modes: MAJOR, MINOR, IONIAN, DORIAN,
-PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. The value for each mode
-…" />
+<meta name="description" content="An enumeration of the diatonc modes: MAJOR, MINOR, IONIAN, DORIAN,
+PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. IONIAN and AEOLIAN
+are synonyms …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -24,29 +24,18 @@ PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. The value for each mode
 <h1 class="title">Module <code>musx.mxml.mode</code></h1>
 </header>
 <section id="section-intro">
-<p>An enumeration of all the 7-tone modes: MAJOR, MINOR, IONIAN, DORIAN,
-PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. The value for each mode
-should be a number index 0-6 representing its diatonic scale degree C-B.
-For example, MAJOR will be 0 (C), MINOR is 5 (A) and Dorian is 1 (D).
-Define IONIAN and AEOLIAN as synonyms for MAJOR and MINOR by assigning
-them their corresponding enum value.</p>
+<p>An enumeration of the diatonc modes: MAJOR, MINOR, IONIAN, DORIAN,
+PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. IONIAN and AEOLIAN
+are synonyms for MAJOR and MINOR</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">###############################################################################
+<pre><code class="python">&#34;&#34;&#34;
+An enumeration of the diatonc modes: MAJOR, MINOR, IONIAN, DORIAN,
+PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. IONIAN and AEOLIAN
+are synonyms for MAJOR and MINOR
 &#34;&#34;&#34;
-An enumeration of all the 7-tone modes: MAJOR, MINOR, IONIAN, DORIAN,
-PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. The value for each mode
-should be a number index 0-6 representing its diatonic scale degree C-B.
-For example, MAJOR will be 0 (C), MINOR is 5 (A) and Dorian is 1 (D).
-Define IONIAN and AEOLIAN as synonyms for MAJOR and MINOR by assigning
-them their corresponding enum value.
-&#34;&#34;&#34;
-
-__pdoc__ = {
-    &#39;Mode.__init__&#39;: False
-}
 
 from enum import IntEnum
 
@@ -63,35 +52,13 @@ class Mode (IntEnum):
     AEOLIAN = MINOR
     LOCRIAN = 7
     
-    # def short_name(self):
-    #     &#34;&#34;&#34;
-    #     Returns only the first three characters of the mode&#39;s name.
-    #     &#34;&#34;&#34;
-    #     return self.name[:3]
-    
     def tonic_degree(self):
         &#34;&#34;&#34;
-        Returns the integer degree number representing the starting
-        scale degree of the mode. Thus IONIAN and MAJOR are 0,
-        DORIAN is 1, LOCRIAN is 6 and so on.
+        Returns the integer scale degree number representing the starting
+        scale degree of the mode. Thus IONIAN and MAJOR are 0, DORIAN is
+        1, LOCRIAN is 6 and so on.
         &#34;&#34;&#34;
-        return self.value - 1
-
-if __name__ == &#39;__main__&#39;:
-    def _test_modes():
-        print(&#39;Testing mode.py ... &#39;, end=&#39;&#39;)
-        assert 1 == Mode[&#39;MAJOR&#39;]
-        assert 2 == Mode[&#39;DORIAN&#39;]
-        assert 3 == Mode[&#39;PHRYGIAN&#39;]
-        assert 4 == Mode[&#39;LYDIAN&#39;]
-        assert 5 == Mode[&#39;MIXOLYDIAN&#39;]
-        assert 6 == Mode[&#39;MINOR&#39;]
-        assert 7 == Mode[&#39;LOCRIAN&#39;]
-        assert 7 == len(Mode)
-        assert Mode[&#39;IONIAN&#39;] is Mode[&#39;MAJOR&#39;]
-        assert Mode[&#39;AEOLIAN&#39;] is Mode[&#39;MINOR&#39;]
-        print(&#39;Done!&#39;)
-    _test_modes()</code></pre>
+        return self.value - 1</code></pre>
 </details>
 </section>
 <section>
@@ -105,6 +72,7 @@ if __name__ == &#39;__main__&#39;:
 <dl>
 <dt id="musx.mxml.mode.Mode"><code class="flex name class">
 <span>class <span class="ident">Mode</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An enumeration.</p></div>
@@ -124,17 +92,11 @@ if __name__ == &#39;__main__&#39;:
     AEOLIAN = MINOR
     LOCRIAN = 7
     
-    # def short_name(self):
-    #     &#34;&#34;&#34;
-    #     Returns only the first three characters of the mode&#39;s name.
-    #     &#34;&#34;&#34;
-    #     return self.name[:3]
-    
     def tonic_degree(self):
         &#34;&#34;&#34;
-        Returns the integer degree number representing the starting
-        scale degree of the mode. Thus IONIAN and MAJOR are 0,
-        DORIAN is 1, LOCRIAN is 6 and so on.
+        Returns the integer scale degree number representing the starting
+        scale degree of the mode. Thus IONIAN and MAJOR are 0, DORIAN is
+        1, LOCRIAN is 6 and so on.
         &#34;&#34;&#34;
         return self.value - 1</code></pre>
 </details>
@@ -189,18 +151,18 @@ if __name__ == &#39;__main__&#39;:
 <span>def <span class="ident">tonic_degree</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the integer degree number representing the starting
-scale degree of the mode. Thus IONIAN and MAJOR are 0,
-DORIAN is 1, LOCRIAN is 6 and so on.</p></div>
+<div class="desc"><p>Returns the integer scale degree number representing the starting
+scale degree of the mode. Thus IONIAN and MAJOR are 0, DORIAN is
+1, LOCRIAN is 6 and so on.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def tonic_degree(self):
     &#34;&#34;&#34;
-    Returns the integer degree number representing the starting
-    scale degree of the mode. Thus IONIAN and MAJOR are 0,
-    DORIAN is 1, LOCRIAN is 6 and so on.
+    Returns the integer scale degree number representing the starting
+    scale degree of the mode. Thus IONIAN and MAJOR are 0, DORIAN is
+    1, LOCRIAN is 6 and so on.
     &#34;&#34;&#34;
     return self.value - 1</code></pre>
 </details>

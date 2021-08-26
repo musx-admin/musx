@@ -25,46 +25,56 @@ HeavyHeavy, HeavyLight, InteriorDouble, FinalDouble, BackwardRepeat, …" />
 <section id="section-intro">
 <p>An enumeration of measure barlines: Regular, Dotted, Dashed, Tick, Short, Heavy,
 HeavyHeavy, HeavyLight, InteriorDouble, FinalDouble, BackwardRepeat, ForwardRepeat,
-DoubleRepeat. To create a Barline call one of the class factory methods, don't use
-Barline().
-The parameter <em>loc</em> must be one of: "left", "right", "middle".</p>
+DoubleRepeat.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">###############################################################################
-&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;
 An enumeration of measure barlines: Regular, Dotted, Dashed, Tick, Short, Heavy, 
 HeavyHeavy, HeavyLight, InteriorDouble, FinalDouble, BackwardRepeat, ForwardRepeat,
-DoubleRepeat. To create a Barline call one of the class factory methods, don&#39;t use
-Barline().  The parameter &lt;em&gt;loc&lt;/em&gt; must be one of: &#34;left&#34;, &#34;right&#34;, &#34;middle&#34;.
+DoubleRepeat.
 &#34;&#34;&#34;
 
 class Barline:
+    &#34;&#34;&#34;
+    To create a Barline don&#39;t call the constructor directly, call one of the class
+    factory methods listed below. 
+    &#34;&#34;&#34;
 
     def __init__(self, ident, location):
         self.ident = ident
         self.location = location
 
     @classmethod
-    def Regular(cls, location):
-        return cls(1, location)
-
-    @classmethod
-    def Dotted(cls, location):
-        return cls(2, location)
+    def BackwardRepeat(cls, location):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        location: str
+            Either &#34;left&#34;, &#34;right&#34; or &#34;both&#34;.
+        &#34;&#34;&#34;
+        return cls(11, location)
 
     @classmethod
     def Dashed(cls, location):
         return cls(3, location)
 
     @classmethod
-    def Tick(cls, location):
-        return cls(4, location)
+    def Dotted(cls, location):
+        return cls(2, location)
 
     @classmethod
-    def Short(cls, location):
-        return cls(5, location)
+    def DoubleRepeat(cls, location):
+        return cls(13, location)
+
+    @classmethod
+    def FinalDouble(cls, location):
+        return cls(10, location)
+
+    @classmethod
+    def ForwardRepeat(cls, location):
+        return cls(12, location)
 
     @classmethod
     def Heavy(cls, location):
@@ -83,20 +93,16 @@ class Barline:
         return cls(9, location)
 
     @classmethod
-    def FinalDouble(cls, location):
-        return cls(10, location)
+    def Regular(cls, location):
+        return cls(1, location)
 
     @classmethod
-    def BackwardRepeat(cls, location):
-        return cls(11, location)
+    def Short(cls, location):
+        return cls(5, location)
 
     @classmethod
-    def ForwardRepeat(cls, location):
-        return cls(12, location)
-
-    @classmethod
-    def DoubleRepeat(cls, location):
-        return cls(13, location)
+    def Tick(cls, location):
+        return cls(4, location)
 
     _names = {
             1: &#34;Regular&#34;, 2: &#34;Dotted&#34;, 3: &#34;Dashed&#34;, 4: &#34;Tick&#34;,  5: &#34;Short&#34;, 6: &#34;Heavy&#34;,
@@ -127,36 +133,51 @@ class Barline:
 <span>(</span><span>ident, location)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>To create a Barline don't call the constructor directly, call one of the class
+factory methods listed below.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Barline:
+    &#34;&#34;&#34;
+    To create a Barline don&#39;t call the constructor directly, call one of the class
+    factory methods listed below. 
+    &#34;&#34;&#34;
 
     def __init__(self, ident, location):
         self.ident = ident
         self.location = location
 
     @classmethod
-    def Regular(cls, location):
-        return cls(1, location)
-
-    @classmethod
-    def Dotted(cls, location):
-        return cls(2, location)
+    def BackwardRepeat(cls, location):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        location: str
+            Either &#34;left&#34;, &#34;right&#34; or &#34;both&#34;.
+        &#34;&#34;&#34;
+        return cls(11, location)
 
     @classmethod
     def Dashed(cls, location):
         return cls(3, location)
 
     @classmethod
-    def Tick(cls, location):
-        return cls(4, location)
+    def Dotted(cls, location):
+        return cls(2, location)
 
     @classmethod
-    def Short(cls, location):
-        return cls(5, location)
+    def DoubleRepeat(cls, location):
+        return cls(13, location)
+
+    @classmethod
+    def FinalDouble(cls, location):
+        return cls(10, location)
+
+    @classmethod
+    def ForwardRepeat(cls, location):
+        return cls(12, location)
 
     @classmethod
     def Heavy(cls, location):
@@ -175,20 +196,16 @@ class Barline:
         return cls(9, location)
 
     @classmethod
-    def FinalDouble(cls, location):
-        return cls(10, location)
+    def Regular(cls, location):
+        return cls(1, location)
 
     @classmethod
-    def BackwardRepeat(cls, location):
-        return cls(11, location)
+    def Short(cls, location):
+        return cls(5, location)
 
     @classmethod
-    def ForwardRepeat(cls, location):
-        return cls(12, location)
-
-    @classmethod
-    def DoubleRepeat(cls, location):
-        return cls(13, location)
+    def Tick(cls, location):
+        return cls(4, location)
 
     _names = {
             1: &#34;Regular&#34;, 2: &#34;Dotted&#34;, 3: &#34;Dashed&#34;, 4: &#34;Tick&#34;,  5: &#34;Short&#34;, 6: &#34;Heavy&#34;,
@@ -207,13 +224,23 @@ class Barline:
 <span>def <span class="ident">BackwardRepeat</span></span>(<span>location)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>location</code></strong> :&ensp;<code>str</code></dt>
+<dd>Either "left", "right" or "both".</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
 def BackwardRepeat(cls, location):
+    &#34;&#34;&#34;
+    Parameters
+    ----------
+    location: str
+        Either &#34;left&#34;, &#34;right&#34; or &#34;both&#34;.
+    &#34;&#34;&#34;
     return cls(11, location)</code></pre>
 </details>
 </dd>

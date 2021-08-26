@@ -1,37 +1,49 @@
 
-###############################################################################
 """
 An enumeration of measure barlines: Regular, Dotted, Dashed, Tick, Short, Heavy, 
 HeavyHeavy, HeavyLight, InteriorDouble, FinalDouble, BackwardRepeat, ForwardRepeat,
-DoubleRepeat. To create a Barline call one of the class factory methods, don't use
-Barline().  The parameter <em>loc</em> must be one of: "left", "right", "middle".
+DoubleRepeat.
 """
 
 class Barline:
+    """
+    To create a Barline don't call the constructor directly, call one of the class
+    factory methods listed below. 
+    """
 
     def __init__(self, ident, location):
         self.ident = ident
         self.location = location
 
     @classmethod
-    def Regular(cls, location):
-        return cls(1, location)
-
-    @classmethod
-    def Dotted(cls, location):
-        return cls(2, location)
+    def BackwardRepeat(cls, location):
+        """
+        Parameters
+        ----------
+        location: str
+            Either "left", "right" or "both".
+        """
+        return cls(11, location)
 
     @classmethod
     def Dashed(cls, location):
         return cls(3, location)
 
     @classmethod
-    def Tick(cls, location):
-        return cls(4, location)
+    def Dotted(cls, location):
+        return cls(2, location)
 
     @classmethod
-    def Short(cls, location):
-        return cls(5, location)
+    def DoubleRepeat(cls, location):
+        return cls(13, location)
+
+    @classmethod
+    def FinalDouble(cls, location):
+        return cls(10, location)
+
+    @classmethod
+    def ForwardRepeat(cls, location):
+        return cls(12, location)
 
     @classmethod
     def Heavy(cls, location):
@@ -50,20 +62,16 @@ class Barline:
         return cls(9, location)
 
     @classmethod
-    def FinalDouble(cls, location):
-        return cls(10, location)
+    def Regular(cls, location):
+        return cls(1, location)
 
     @classmethod
-    def BackwardRepeat(cls, location):
-        return cls(11, location)
+    def Short(cls, location):
+        return cls(5, location)
 
     @classmethod
-    def ForwardRepeat(cls, location):
-        return cls(12, location)
-
-    @classmethod
-    def DoubleRepeat(cls, location):
-        return cls(13, location)
+    def Tick(cls, location):
+        return cls(4, location)
 
     _names = {
             1: "Regular", 2: "Dotted", 3: "Dashed", 4: "Tick",  5: "Short", 6: "Heavy",

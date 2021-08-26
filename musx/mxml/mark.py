@@ -1,10 +1,7 @@
-###############################################################################
-
 """
 The Mark class inherits from IntEnum to enumerate various types of notation
-marks that appear in musical scores. The mark module provides four top-level 
-'group' constants: DYNAMIC, ARTICULATION, ORNAMENT, and TEMPORAL that are
-assigned the values 0 to 3 left-shifted by 8 bits.
+marks that appear in musical scores. Marks belong to one of four top-level 
+'group' constants: DYNAMIC, ARTICULATION, ORNAMENT, and TEMPORAL.
 """
 
 from enum import IntEnum
@@ -19,14 +16,7 @@ TEMPORAL = 3 << 8
 class Mark (IntEnum):
     """
     The Mark class inherits from IntEnum to enumerate various types
-    of notation marks that appear in musical scores. Each Mark enum is
-    a 16 bit value with the format 'ggggggggrrrrrrrr', where:
-    
-    ```py
-    7654321076543210
-    gggggggg--------   the 'group' of the mark (dynamic, articulation, etc.)
-    --------rrrrrrrr   the 'rank' of the identifier within its group.
-    ```
+    of notation marks that appear in musical scores.
 
     The DYNAMIC group enums are: NIENTE, PPPP, PPP, PP, P, MP, MF, F, FF, FFF,
     FFFF, SFZ, CRESCENDO, CRESCENDO_END, DECRESCENDO, DECRESCENDO_END.
@@ -83,73 +73,10 @@ class Mark (IntEnum):
 
 
     def rank(self):
-        """Returns the mark's rank number from the lower eight bits of the enum."""
+        """Returns the mark's rank number."""
         return self.value & 0x00FF
 
     
     def group(self):
-        """Returns the mark's group number from the upper eight bits of the enum."""
+        """Returns the mark's group number."""
         return self.value & 0xFF00
-
-
-def _test_marks():
-    print('Testing mark.py ... ', end='')
-    Mark["PPPP"]
-    Mark["PPP"]
-    Mark["PP"]
-    Mark["P"]
-    Mark["MP"]
-    Mark["MF"]
-    Mark["F"]
-    Mark["FF"]
-    Mark["FFF"]
-    Mark["FFFF"]
-    Mark["SFZ"]
-    Mark["CRESCENDO"]
-    Mark["CRESCENDO_END"]
-    Mark["DECRESCENDO"]
-    Mark["DECRESCENDO_END"]
-    Mark["TENUTO"]
-    Mark["DETATCHED"]
-    Mark["STACCATO"]
-    Mark["STACCATISSIMO"]
-    Mark["ACCENT"]
-    Mark["MARCATO"]
-    Mark["TRILL"]
-    Mark["MORDENT"]
-    Mark["TURN"]
-    Mark["FERMATA"]
-    Mark["ACCEL"]
-    Mark["DEACCEL"]
-
-    assert DYNAMIC == Mark["PPPP"].group()
-    assert DYNAMIC == Mark["PPP"].group()
-    assert DYNAMIC == Mark["PP"].group()
-    assert DYNAMIC == Mark["P"].group()
-    assert DYNAMIC == Mark["MP"].group()
-    assert DYNAMIC == Mark["MF"].group()
-    assert DYNAMIC == Mark["F"].group()
-    assert DYNAMIC == Mark["FF"].group()
-    assert DYNAMIC == Mark["FFF"].group()
-    assert DYNAMIC == Mark["FFFF"].group()
-    assert DYNAMIC == Mark["SFZ"].group()
-    assert DYNAMIC == Mark["CRESCENDO"].group()
-    assert DYNAMIC == Mark["CRESCENDO_END"].group()
-    assert DYNAMIC == Mark["DECRESCENDO"].group()
-    assert DYNAMIC == Mark["DECRESCENDO_END"].group()
-
-    assert ARTICULATION == Mark["TENUTO"].group()
-    assert ARTICULATION == Mark["DETATCHED"].group()
-    assert ARTICULATION == Mark["STACCATO"].group()
-    assert ARTICULATION == Mark["STACCATISSIMO"].group()
-    assert ARTICULATION == Mark["ACCENT"].group()
-    assert ARTICULATION == Mark["MARCATO"].group()
-
-    assert ORNAMENT == Mark["TRILL"].group()
-    assert ORNAMENT == Mark["MORDENT"].group()
-    assert ORNAMENT == Mark["TURN"].group()
-
-    assert TEMPORAL == Mark["FERMATA"].group()
-    assert TEMPORAL == Mark["ACCEL"].group()
-    assert TEMPORAL == Mark["DEACCEL"].group()
-    print('Done!')

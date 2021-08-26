@@ -27,9 +27,7 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">###############################################################################
-
-&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;
 A class representing standard musical meters.
 &#34;&#34;&#34;
 
@@ -37,20 +35,19 @@ from fractions import Fraction
 
 
 class Meter:
+    &#34;&#34;&#34;
+    Returns a meter with integer attributes num and den set.
 
+    Parameters
+    ----------
+    num : int
+        The numerator, an integer between 1 and 16 inclusive.
+    den : int
+        The denominator, a power of 2 between 1 and 32 inclusive.
+    staffnum : int
+        The staff number of the meter, 0 if meter applies to all staffs. 
+    &#34;&#34;&#34;
     def __init__(self, num, den, staffnum):
-        &#34;&#34;&#34;
-        Returns a meter with integer attributes num and den set.
-        
-        Parameters
-        ----------
-        num : int
-            The numerator, an integer between 1 and 16 inclusive.
-        den : int
-            The denominator, a power of 2 between 1 and 32 inclusive.
-        staffnum : int
-            The staff number of the meter, 0 if meter applies to all staffs. 
-        &#34;&#34;&#34;
         if not isinstance(num, int):
             raise TypeError(f&#34;Invalid meter numerator: {num}.&#34;)
         if not 1 &lt;= num &lt;= 16:
@@ -61,12 +58,12 @@ class Meter:
             raise ValueError(f&#34;Invalid meter denominator: {den}.&#34;)
         if not isinstance(staffnum, int):
             raise ValueError(f&#34;Invalid staff number: {num}&#34;)
-        ## The numerator number of the meter.
         self.num = num
-        ## The denominator number of the meter.
+        &#34;&#34;&#34;The numerator number of the meter.&#34;&#34;&#34;
         self.den = den
-        # The staff number of the meter (0=All)
+        &#34;&#34;&#34;The denominator number of the meter.&#34;&#34;&#34;   
         self.staffnum = staffnum
+        &#34;&#34;&#34;The staff number of the meter (0=All).&#34;&#34;&#34;
 
     def __str__(self):
         &#34;&#34;&#34;
@@ -137,11 +134,9 @@ class Meter:
 
     def beat(self):
         &#34;&#34;&#34;
-        Returns a Fraction representing the meter&#39;s beat. For example,
-        4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
-        and 3/2 returns a beat of 1/2. The method should raise
-        a NotImplementedError If the meter is not simple or compound.
-        See: Fraction.
+        Returns a Fraction representing the meter&#39;s beat duration. For
+        example, 4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
+        and 3/2 returns a beat of 1/2.
         &#34;&#34;&#34;
         if self.is_simple():
             return Fraction(1, self.den)
@@ -153,127 +148,11 @@ class Meter:
 
     def measure_dur(self):
         &#34;&#34;&#34;
-        Returns a Fraction representing the meter&#39;s total measure duration, in beats.
-        For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter returns 3/4,
-        and 3/2 returns a duration of 3/2. See: Fraction.
+        Returns a Fraction representing the meter&#39;s total measure duration, in
+        beats. For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter
+        returns 3/4, and 3/2 returns a duration of 3/2. See: Fraction.
         &#34;&#34;&#34;
-        return Fraction(1, self.den) * self.num
-
-
-&#39;&#39;&#39;
-from mus.meter import Meter
-from mus.Fraction import Fraction
-&#39;&#39;&#39;
-
-
-def _test_meters():
-    assert Fraction(&#34;1/2&#34;) == Meter(1, 2).measure_dur()
-    assert Fraction(&#34;1/16&#34;) == Meter(2, 32).measure_dur()
-    assert Fraction(&#34;3/2&#34;) == Meter(3, 2).measure_dur()
-    assert Fraction(&#34;1/4&#34;) == Meter(4, 16).measure_dur()
-    assert Fraction(&#34;5/8&#34;) == Meter(5, 8).measure_dur()
-    assert Fraction(&#34;3/2&#34;) == Meter(6, 4).measure_dur()
-    assert Fraction(&#34;7/8&#34;) == Meter(7, 8).measure_dur()
-    assert Fraction(&#34;4/1&#34;) == Meter(8, 2).measure_dur()
-    assert Fraction(&#34;9/4&#34;) == Meter(9, 4).measure_dur()
-    assert Fraction(&#34;10/4&#34;) == Meter(10, 4).measure_dur()
-    assert Fraction(&#34;11/16&#34;) == Meter(11, 16).measure_dur()
-    assert Fraction(&#34;12/1&#34;) == Meter(12, 1).measure_dur()
-    assert Fraction(&#34;13/2&#34;) == Meter(13, 2).measure_dur()
-    assert Fraction(&#34;7/2&#34;) == Meter(14, 4).measure_dur()
-    assert Fraction(&#34;15/32&#34;) == Meter(15, 32).measure_dur()
-    assert Fraction(&#34;1/1&#34;) == Meter(16, 16).measure_dur()
-
-    assert Fraction(&#34;1/2&#34;) == Meter(1, 2).beat()
-    assert Fraction(&#34;1/32&#34;) == Meter(2, 32).beat()
-    assert Fraction(&#34;1/2&#34;) == Meter(3, 2).beat()
-    assert Fraction(&#34;1/16&#34;) == Meter(4, 16).beat()
-    assert Fraction(&#34;3/4&#34;) == Meter(6, 4).beat()
-    assert Fraction(&#34;1/8&#34;) == Meter(4, 8).beat()
-    assert Fraction(&#34;3/4&#34;) == Meter(9, 4).beat()
-    assert Fraction(&#34;3/1&#34;) == Meter(12, 1).beat()
-    assert Fraction(&#34;3/32&#34;) == Meter(15, 32).beat()
-    assert Fraction(&#34;3/1&#34;) == Meter(12, 1).beat()
-
-    assert Meter(15, 32).is_compound()
-    assert Meter(12, 4).is_compound()
-    assert Meter(9, 16).is_compound()
-    assert Meter(6, 2).is_compound()
-
-    assert Meter(2, 32).is_simple()
-    assert Meter(1, 4).is_simple()
-    assert Meter(4, 16).is_simple()
-    assert Meter(3, 2).is_simple()
-
-    assert Meter(2, 32).is_duple()
-    assert Meter(2, 32).is_duple()
-    assert not Meter(4, 16).is_duple()
-    assert not Meter(3, 2).is_duple()
-
-    assert Meter(3, 32).is_triple()
-    assert Meter(3, 32).is_triple()
-    assert not Meter(4, 16).is_triple()
-    assert Meter(3, 2).is_triple()
-
-    assert not Meter(2, 2).is_quadruple()
-    assert not Meter(7, 4).is_quadruple()
-    assert Meter(4, 2).is_quadruple()
-    assert Meter(12, 1).is_quadruple()
-
-    assert Meter(5, 2).is_quintuple()
-    assert not Meter(7, 4).is_quintuple()
-    assert Meter(5, 2).is_quintuple()
-    assert Meter(5, 2).is_quintuple()
-
-    assert Meter(7, 32).is_septuple()
-    assert not Meter(11, 2).is_septuple()
-    assert not Meter(13, 8).is_septuple()
-    assert not Meter(15, 2).is_septuple()
-
-    assert Meter(7, 32).is_complex()
-    assert Meter(8, 8).is_complex()
-    assert Meter(10, 2).is_complex()
-    assert Meter(11, 8).is_complex()
-    assert Meter(14, 2).is_complex()
-    assert not Meter(15, 2).is_complex()
-
-    # TypeError
-
-    msg1, msg2 = &#34;Received wrong type of exception.&#34;, \
-                 &#34;Expected exception did not happen.&#34;
-
-    # TYPE ERRORS
-    err = TypeError
-    try: Meter(4, 4.0)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-
-    # VALUE ERRORS
-    err = ValueError
-
-    try: Meter(4, 5)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    try: Meter(0, 4)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    try: Meter(0, 4)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    err = NotImplementedError
-
-    try: Fraction(&#34;5/8&#34;) == Meter(5, 8).beat()
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2</code></pre>
+        return Fraction(1, self.den) * self.num</code></pre>
 </details>
 </section>
 <section>
@@ -305,20 +184,19 @@ def _test_meters():
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Meter:
+    &#34;&#34;&#34;
+    Returns a meter with integer attributes num and den set.
 
+    Parameters
+    ----------
+    num : int
+        The numerator, an integer between 1 and 16 inclusive.
+    den : int
+        The denominator, a power of 2 between 1 and 32 inclusive.
+    staffnum : int
+        The staff number of the meter, 0 if meter applies to all staffs. 
+    &#34;&#34;&#34;
     def __init__(self, num, den, staffnum):
-        &#34;&#34;&#34;
-        Returns a meter with integer attributes num and den set.
-        
-        Parameters
-        ----------
-        num : int
-            The numerator, an integer between 1 and 16 inclusive.
-        den : int
-            The denominator, a power of 2 between 1 and 32 inclusive.
-        staffnum : int
-            The staff number of the meter, 0 if meter applies to all staffs. 
-        &#34;&#34;&#34;
         if not isinstance(num, int):
             raise TypeError(f&#34;Invalid meter numerator: {num}.&#34;)
         if not 1 &lt;= num &lt;= 16:
@@ -329,12 +207,12 @@ def _test_meters():
             raise ValueError(f&#34;Invalid meter denominator: {den}.&#34;)
         if not isinstance(staffnum, int):
             raise ValueError(f&#34;Invalid staff number: {num}&#34;)
-        ## The numerator number of the meter.
         self.num = num
-        ## The denominator number of the meter.
+        &#34;&#34;&#34;The numerator number of the meter.&#34;&#34;&#34;
         self.den = den
-        # The staff number of the meter (0=All)
+        &#34;&#34;&#34;The denominator number of the meter.&#34;&#34;&#34;   
         self.staffnum = staffnum
+        &#34;&#34;&#34;The staff number of the meter (0=All).&#34;&#34;&#34;
 
     def __str__(self):
         &#34;&#34;&#34;
@@ -405,11 +283,9 @@ def _test_meters():
 
     def beat(self):
         &#34;&#34;&#34;
-        Returns a Fraction representing the meter&#39;s beat. For example,
-        4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
-        and 3/2 returns a beat of 1/2. The method should raise
-        a NotImplementedError If the meter is not simple or compound.
-        See: Fraction.
+        Returns a Fraction representing the meter&#39;s beat duration. For
+        example, 4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
+        and 3/2 returns a beat of 1/2.
         &#34;&#34;&#34;
         if self.is_simple():
             return Fraction(1, self.den)
@@ -421,34 +297,45 @@ def _test_meters():
 
     def measure_dur(self):
         &#34;&#34;&#34;
-        Returns a Fraction representing the meter&#39;s total measure duration, in beats.
-        For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter returns 3/4,
-        and 3/2 returns a duration of 3/2. See: Fraction.
+        Returns a Fraction representing the meter&#39;s total measure duration, in
+        beats. For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter
+        returns 3/4, and 3/2 returns a duration of 3/2. See: Fraction.
         &#34;&#34;&#34;
         return Fraction(1, self.den) * self.num</code></pre>
 </details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="musx.mxml.meter.Meter.den"><code class="name">var <span class="ident">den</span></code></dt>
+<dd>
+<div class="desc"><p>The denominator number of the meter.</p></div>
+</dd>
+<dt id="musx.mxml.meter.Meter.num"><code class="name">var <span class="ident">num</span></code></dt>
+<dd>
+<div class="desc"><p>The numerator number of the meter.</p></div>
+</dd>
+<dt id="musx.mxml.meter.Meter.staffnum"><code class="name">var <span class="ident">staffnum</span></code></dt>
+<dd>
+<div class="desc"><p>The staff number of the meter (0=All).</p></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="musx.mxml.meter.Meter.beat"><code class="name flex">
 <span>def <span class="ident">beat</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a Fraction representing the meter's beat. For example,
-4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
-and 3/2 returns a beat of 1/2. The method should raise
-a NotImplementedError If the meter is not simple or compound.
-See: Fraction.</p></div>
+<div class="desc"><p>Returns a Fraction representing the meter's beat duration. For
+example, 4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
+and 3/2 returns a beat of 1/2.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def beat(self):
     &#34;&#34;&#34;
-    Returns a Fraction representing the meter&#39;s beat. For example,
-    4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
-    and 3/2 returns a beat of 1/2. The method should raise
-    a NotImplementedError If the meter is not simple or compound.
-    See: Fraction.
+    Returns a Fraction representing the meter&#39;s beat duration. For
+    example, 4/4 returns a beat of 1/4, 6/8 meter returns the beat 3/8,
+    and 3/2 returns a beat of 1/2.
     &#34;&#34;&#34;
     if self.is_simple():
         return Fraction(1, self.den)
@@ -590,18 +477,18 @@ See: Fraction.</p></div>
 <span>def <span class="ident">measure_dur</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a Fraction representing the meter's total measure duration, in beats.
-For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter returns 3/4,
-and 3/2 returns a duration of 3/2. See: Fraction.</p></div>
+<div class="desc"><p>Returns a Fraction representing the meter's total measure duration, in
+beats. For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter
+returns 3/4, and 3/2 returns a duration of 3/2. See: Fraction.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def measure_dur(self):
     &#34;&#34;&#34;
-    Returns a Fraction representing the meter&#39;s total measure duration, in beats.
-    For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter returns 3/4,
-    and 3/2 returns a duration of 3/2. See: Fraction.
+    Returns a Fraction representing the meter&#39;s total measure duration, in
+    beats. For example, 4/4 returns a duration Fraction of 1/1, 6/8 meter
+    returns 3/4, and 3/2 returns a duration of 3/2. See: Fraction.
     &#34;&#34;&#34;
     return Fraction(1, self.den) * self.num</code></pre>
 </details>
@@ -628,6 +515,7 @@ and 3/2 returns a duration of 3/2. See: Fraction.</p></div>
 <h4><code><a title="musx.mxml.meter.Meter" href="#musx.mxml.meter.Meter">Meter</a></code></h4>
 <ul class="two-column">
 <li><code><a title="musx.mxml.meter.Meter.beat" href="#musx.mxml.meter.Meter.beat">beat</a></code></li>
+<li><code><a title="musx.mxml.meter.Meter.den" href="#musx.mxml.meter.Meter.den">den</a></code></li>
 <li><code><a title="musx.mxml.meter.Meter.is_complex" href="#musx.mxml.meter.Meter.is_complex">is_complex</a></code></li>
 <li><code><a title="musx.mxml.meter.Meter.is_compound" href="#musx.mxml.meter.Meter.is_compound">is_compound</a></code></li>
 <li><code><a title="musx.mxml.meter.Meter.is_duple" href="#musx.mxml.meter.Meter.is_duple">is_duple</a></code></li>
@@ -637,6 +525,8 @@ and 3/2 returns a duration of 3/2. See: Fraction.</p></div>
 <li><code><a title="musx.mxml.meter.Meter.is_simple" href="#musx.mxml.meter.Meter.is_simple">is_simple</a></code></li>
 <li><code><a title="musx.mxml.meter.Meter.is_triple" href="#musx.mxml.meter.Meter.is_triple">is_triple</a></code></li>
 <li><code><a title="musx.mxml.meter.Meter.measure_dur" href="#musx.mxml.meter.Meter.measure_dur">measure_dur</a></code></li>
+<li><code><a title="musx.mxml.meter.Meter.num" href="#musx.mxml.meter.Meter.num">num</a></code></li>
+<li><code><a title="musx.mxml.meter.Meter.staffnum" href="#musx.mxml.meter.Meter.staffnum">staffnum</a></code></li>
 </ul>
 </li>
 </ul>

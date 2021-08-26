@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.mxml.notation API documentation</title>
-<meta name="description" content="A module for loading and saving MusicXml scores. As of Aug &#39;21 file loading is implemented." />
+<meta name="description" content="A module for loading and saving MusicXml scores. As of Aug &#39;21 loading is fully
+implemented ." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,13 +23,15 @@
 <h1 class="title">Module <code>musx.mxml.notation</code></h1>
 </header>
 <section id="section-intro">
-<p>A module for loading and saving MusicXml scores. As of Aug '21 file loading is implemented.</p>
+<p>A module for loading and saving MusicXml scores. As of Aug '21 loading is fully
+implemented .</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-A module for loading and saving MusicXml scores. As of Aug &#39;21 file loading is implemented.
+A module for loading and saving MusicXml scores. As of Aug &#39;21 loading is fully
+implemented .
 &#34;&#34;&#34;
 
 # creating the MusicXml python file:
@@ -65,7 +68,6 @@ from .part import Part
 from ..pitch import Pitch
 from ..note import Note
 
-
 # A template dictionary defining the &#39;running status&#39; of MusicXml parsing. The
 # load() method copies the template for each score it parses and passes it to
 # the parsing routines so they can access and store relevant data:
@@ -88,28 +90,35 @@ _DATA = {
 class Notation():
     &#34;&#34;&#34;
     A class representing a MusicXml score. A Notation contains Part objects and
-    metadata. A Part contains Measure objects, and a Measure contains Note objects
-    as well as non-event notational objects such as Key, Clef, Meter, Barline.
+    metadata. 
+
+    Parameters
+    ----------
+    metadata : dict
+        A dictionary of metadata about the MusicXml score, e.g. title,
+        copyright, etc.
+    parts : list
+        A list of Parts parsed from the MusicXml file.
 
     Given a Notation you can iterate all its elements like this:
-    
-    for part in notation:
-        for measure in part:
-            for element in measure:
-                print(element)
-    
+
+        for part in notation:
+            for measure in part:
+                for element in measure:
+                    print(element)
+
     To access vertical note structures in the score&#39;s measures you can iterate the
     score&#39;s timepoints like this:
 
-    for measure in notation.timepoints():
-        for timepoint in measure:
-            print(timepoint)
+        for measure in notation.timepoints():
+            for timepoint in measure:
+                print(timepoint)
     &#34;&#34;&#34;
     def __init__(self, metadata={}, parts=[]):
         self.metadata = metadata
         &#34;&#34;&#34;A dictionary of MusicXml score metadata.&#34;&#34;&#34;
         self.parts = []
-        &#34;&#34;&#34;The score&#39;s list of musical parts.&#34;&#34;&#34;
+        &#34;&#34;&#34;A list containing the score&#39;s musical parts.&#34;&#34;&#34;
         for p in parts:
             self.add_part(p)
 
@@ -184,7 +193,7 @@ class Notation():
  
 class Timepoint():
     &#34;&#34;&#34;
-    A Timepoint is an analytical structure that contains an onset time in a
+    A Timepoint is an analytical structure containing an onset beat in a
     measure and the vertical &#39;slice&#39; of all the notes that begin at that beat
     irrespective of which part, staff or voice they belong to. The note 
     entries within each Timepoint are maintained in a dictionary whose keys
@@ -193,18 +202,15 @@ class Timepoint():
     
     Parameters
     ----------
-    beat : Fraction
+    onset : Fraction
         The metric onset of the timepoint in the measure.
-    nmap : dict
-        The note map of the timepoint is a dictionary of notes whose
-        keys are the part/voice identifiers active in the measure.
     &#34;&#34;&#34;
     def __init__(self, onset):
-        ## The ratio start time in the measure.
         self.onset = onset
-        ## The note map dictionary, keys are pvids (part/voice identifiers)
-        # from the score and values are either Notes, Chords or Rests.
+        &#34;&#34;&#34;The ratio start time of the timepoint in its measure.&#34;&#34;&#34;
         self.notemap = {}
+        &#34;&#34;&#34;The note map dictionary. Its keys are part.measure.voice identifiers
+        and its values are `musx.note.Note` objects tagged as either notes, chords or rests.&#34;&#34;&#34;
 
     def __lt__(self, other):
         &#34;&#34;&#34;
@@ -268,8 +274,7 @@ def _parse_barline(elem, DATA):
 
 def _parse_part(elem, DATA):
     # create a new part and add it to the score
-    part = Part()
-    part.id = elem.get(&#39;id&#39;)
+    part = Part(elem.get(&#39;id&#39;))
     DATA[&#39;part&#39;] = part
     DATA[&#39;score&#39;].add_part(part)
     # initialize DATA for the new part.
@@ -450,7 +455,15 @@ _PARSERS = {
 
 def load(path, trace=False):
     &#34;&#34;&#34;
-    Loads a MusicXml file into a Notation object.
+    Returns a `Notation` containing the contents of a MusicXml file.
+
+    Parameters
+    ----------
+    path : string
+        The pathname of the MusicXml file to load.
+    trace : bool
+        If true the raw MusicXml elements are printed to the terminal
+        during the loading process.
     &#34;&#34;&#34;
     global _DATA
     document = musicxml.parse(path, silence=True) 
@@ -486,14 +499,30 @@ if __name__ == &#34;__main__&#34;:
 <span>def <span class="ident">load</span></span>(<span>path, trace=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Loads a MusicXml file into a Notation object.</p></div>
+<div class="desc"><p>Returns a <code><a title="musx.mxml.notation.Notation" href="#musx.mxml.notation.Notation">Notation</a></code> containing the contents of a MusicXml file.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>string</code></dt>
+<dd>The pathname of the MusicXml file to load.</dd>
+<dt><strong><code>trace</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true the raw MusicXml elements are printed to the terminal
+during the loading process.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def load(path, trace=False):
     &#34;&#34;&#34;
-    Loads a MusicXml file into a Notation object.
+    Returns a `Notation` containing the contents of a MusicXml file.
+
+    Parameters
+    ----------
+    path : string
+        The pathname of the MusicXml file to load.
+    trace : bool
+        If true the raw MusicXml elements are printed to the terminal
+        during the loading process.
     &#34;&#34;&#34;
     global _DATA
     document = musicxml.parse(path, silence=True) 
@@ -525,18 +554,27 @@ if __name__ == &#34;__main__&#34;:
 </code></dt>
 <dd>
 <div class="desc"><p>A class representing a MusicXml score. A Notation contains Part objects and
-metadata. A Part contains Measure objects, and a Measure contains Note objects
-as well as non-event notational objects such as Key, Clef, Meter, Barline.</p>
+metadata. </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>metadata</code></strong> :&ensp;<code>dict</code></dt>
+<dd>A dictionary of metadata about the MusicXml score, e.g. title,
+copyright, etc.</dd>
+<dt><strong><code>parts</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of Parts parsed from the MusicXml file.</dd>
+</dl>
 <p>Given a Notation you can iterate all its elements like this:</p>
-<p>for part in notation:
-for measure in part:
-for element in measure:
-print(element)</p>
+<pre><code>for part in notation:
+    for measure in part:
+        for element in measure:
+            print(element)
+</code></pre>
 <p>To access vertical note structures in the score's measures you can iterate the
 score's timepoints like this:</p>
-<p>for measure in notation.timepoints():
-for timepoint in measure:
-print(timepoint)</p></div>
+<pre><code>for measure in notation.timepoints():
+    for timepoint in measure:
+        print(timepoint)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -544,28 +582,35 @@ print(timepoint)</p></div>
 <pre><code class="python">class Notation():
     &#34;&#34;&#34;
     A class representing a MusicXml score. A Notation contains Part objects and
-    metadata. A Part contains Measure objects, and a Measure contains Note objects
-    as well as non-event notational objects such as Key, Clef, Meter, Barline.
+    metadata. 
+
+    Parameters
+    ----------
+    metadata : dict
+        A dictionary of metadata about the MusicXml score, e.g. title,
+        copyright, etc.
+    parts : list
+        A list of Parts parsed from the MusicXml file.
 
     Given a Notation you can iterate all its elements like this:
-    
-    for part in notation:
-        for measure in part:
-            for element in measure:
-                print(element)
-    
+
+        for part in notation:
+            for measure in part:
+                for element in measure:
+                    print(element)
+
     To access vertical note structures in the score&#39;s measures you can iterate the
     score&#39;s timepoints like this:
 
-    for measure in notation.timepoints():
-        for timepoint in measure:
-            print(timepoint)
+        for measure in notation.timepoints():
+            for timepoint in measure:
+                print(timepoint)
     &#34;&#34;&#34;
     def __init__(self, metadata={}, parts=[]):
         self.metadata = metadata
         &#34;&#34;&#34;A dictionary of MusicXml score metadata.&#34;&#34;&#34;
         self.parts = []
-        &#34;&#34;&#34;The score&#39;s list of musical parts.&#34;&#34;&#34;
+        &#34;&#34;&#34;A list containing the score&#39;s musical parts.&#34;&#34;&#34;
         for p in parts:
             self.add_part(p)
 
@@ -645,7 +690,7 @@ print(timepoint)</p></div>
 </dd>
 <dt id="musx.mxml.notation.Notation.parts"><code class="name">var <span class="ident">parts</span></code></dt>
 <dd>
-<div class="desc"><p>The score's list of musical parts.</p></div>
+<div class="desc"><p>A list containing the score's musical parts.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -741,7 +786,7 @@ print(timepoint)</p></div>
 <span>(</span><span>onset)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A Timepoint is an analytical structure that contains an onset time in a
+<div class="desc"><p>A Timepoint is an analytical structure containing an onset beat in a
 measure and the vertical 'slice' of all the notes that begin at that beat
 irrespective of which part, staff or voice they belong to. The note
 entries within each Timepoint are maintained in a dictionary whose keys
@@ -749,11 +794,8 @@ are part.measure.voice identifiers and whose values are the notes that
 begin at the Timepoint's beat.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>beat</code></strong> :&ensp;<code>Fraction</code></dt>
+<dt><strong><code>onset</code></strong> :&ensp;<code>Fraction</code></dt>
 <dd>The metric onset of the timepoint in the measure.</dd>
-<dt><strong><code>nmap</code></strong> :&ensp;<code>dict</code></dt>
-<dd>The note map of the timepoint is a dictionary of notes whose
-keys are the part/voice identifiers active in the measure.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -761,7 +803,7 @@ keys are the part/voice identifiers active in the measure.</dd>
 </summary>
 <pre><code class="python">class Timepoint():
     &#34;&#34;&#34;
-    A Timepoint is an analytical structure that contains an onset time in a
+    A Timepoint is an analytical structure containing an onset beat in a
     measure and the vertical &#39;slice&#39; of all the notes that begin at that beat
     irrespective of which part, staff or voice they belong to. The note 
     entries within each Timepoint are maintained in a dictionary whose keys
@@ -770,18 +812,15 @@ keys are the part/voice identifiers active in the measure.</dd>
     
     Parameters
     ----------
-    beat : Fraction
+    onset : Fraction
         The metric onset of the timepoint in the measure.
-    nmap : dict
-        The note map of the timepoint is a dictionary of notes whose
-        keys are the part/voice identifiers active in the measure.
     &#34;&#34;&#34;
     def __init__(self, onset):
-        ## The ratio start time in the measure.
         self.onset = onset
-        ## The note map dictionary, keys are pvids (part/voice identifiers)
-        # from the score and values are either Notes, Chords or Rests.
+        &#34;&#34;&#34;The ratio start time of the timepoint in its measure.&#34;&#34;&#34;
         self.notemap = {}
+        &#34;&#34;&#34;The note map dictionary. Its keys are part.measure.voice identifiers
+        and its values are `musx.note.Note` objects tagged as either notes, chords or rests.&#34;&#34;&#34;
 
     def __lt__(self, other):
         &#34;&#34;&#34;
@@ -800,6 +839,18 @@ keys are the part/voice identifiers active in the measure.</dd>
 
     __repr__ = __str__</code></pre>
 </details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="musx.mxml.notation.Timepoint.notemap"><code class="name">var <span class="ident">notemap</span></code></dt>
+<dd>
+<div class="desc"><p>The note map dictionary. Its keys are part.measure.voice identifiers
+and its values are <code><a title="musx.note.Note" href="../note.html#musx.note.Note">Note</a></code> objects tagged as either notes, chords or rests.</p></div>
+</dd>
+<dt id="musx.mxml.notation.Timepoint.onset"><code class="name">var <span class="ident">onset</span></code></dt>
+<dd>
+<div class="desc"><p>The ratio start time of the timepoint in its measure.</p></div>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -834,6 +885,10 @@ keys are the part/voice identifiers active in the measure.</dd>
 </li>
 <li>
 <h4><code><a title="musx.mxml.notation.Timepoint" href="#musx.mxml.notation.Timepoint">Timepoint</a></code></h4>
+<ul class="">
+<li><code><a title="musx.mxml.notation.Timepoint.notemap" href="#musx.mxml.notation.Timepoint.notemap">notemap</a></code></li>
+<li><code><a title="musx.mxml.notation.Timepoint.onset" href="#musx.mxml.notation.Timepoint.onset">onset</a></code></li>
+</ul>
 </li>
 </ul>
 </li>

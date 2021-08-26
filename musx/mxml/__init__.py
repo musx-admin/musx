@@ -1,9 +1,7 @@
 """
-A package providing support for reading notation data from MusicXml files.
-
-* notation.py : a class that represents the musical content of a MusixXml file
-* musicxml.py : classes and methods generated from the musicxml schema using generateDS.
-* mxml.
+A package providing support for reading and writeing notation data from MusicXml files.
+The MusicXml schema is defined in the file musicxml.py, which was auto-generated
+using the awesome [generateDS](https://pypi.org/project/generateDS/) package.
 """
 
 from .barline import *

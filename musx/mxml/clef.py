@@ -1,14 +1,8 @@
-###############################################################################
 """
 An enumeration of music clefs: Treble, Soprano, MezzoSoprano, Alto, Tenor,
 Baritone, Bass, Treble8va, Bass8va, Treble15ma, Bass15ma, TenorTreble, 
-BaritoneF, SubBass, FrenchViolin, Percussion. To create a Clef call one of the
-class factory methods don't use Clef().
+BaritoneF, SubBass, FrenchViolin, Percussion. 
 """
-
-# __pdoc__ = {
-#     'Clef.__init__': False
-# }
 
 from enum import Enum
 
@@ -24,13 +18,27 @@ _SPACE_ABOVE_BOTTOM_LINE = 1
 _BOTTOM_LINE = 0
 
 class Clef:
-    """Use the class factory methods to create specific clefs."""
+    """
+    To create a Clef don't call the constructor directly, call one of the class
+    factory methods listed below.
+    """
     def __init__(self, staffnum, ident, linespace, transpostion):
         self.staffnum = staffnum
         self.ident = ident
         self.linespace = linespace
         self.transpostion = transpostion
 
+    @classmethod
+    def Alto(cls, staffnum=None):
+        """
+        Parameters
+        ----------
+        staffnum : int
+            The MusicXml staff number of the clef. If zero then the clef is attached
+            to all staffs.
+        """
+        return cls(staffnum, 3, _MIDDLE_LINE, 0)
+        
     @classmethod
     def Treble(cls, staffnum=None):
         return cls(staffnum, 0, _LINE_BELOW_MIDDLE_LINE, 0)
@@ -43,9 +51,6 @@ class Clef:
     def MezzoSoprano(cls, staffnum=None):
         return cls(staffnum, 2, _LINE_BELOW_MIDDLE_LINE, 0)
 
-    @classmethod
-    def Alto(cls, staffnum=None):
-        return cls(staffnum, 3, _MIDDLE_LINE, 0)
 
     @classmethod
     def Tenor(cls, staffnum=None):

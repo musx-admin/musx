@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.mxml.key API documentation</title>
-<meta name="description" content="The Key class represents the complete chromatic set of keys in western music." />
+<meta name="description" content="A class that represents a key signature and mode." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,21 +22,14 @@
 <h1 class="title">Module <code>musx.mxml.key</code></h1>
 </header>
 <section id="section-intro">
-<p>The Key class represents the complete chromatic set of keys in western music.</p>
+<p>A class that represents a key signature and mode.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">###############################################################################
+<pre><code class="python">&#34;&#34;&#34;
+A class that represents a key signature and mode.
 &#34;&#34;&#34;
-The Key class represents the complete chromatic set of keys in western music.
-&#34;&#34;&#34;
-
-
-__pdoc__ = {
-    &#39;Key.__init__&#39;: True, &#39;Key.__str__&#39;: True, &#39;Key.__repr__&#39;: True
-}
-
 
 from ..pitch import Pitch
 from .mode import Mode
@@ -46,11 +39,19 @@ from ..interval import Interval
 class Key:
     &#34;&#34;&#34;
     A key consists of an integer &#39;signum&#39; representing the number of sharps or
-    flats in the key&#39;s signature, and a Mode (Enum). Keys can return Pnums
-    representing their tonic note and diatonic scale degrees.
-    See: https://en.wikipedia.org/wiki/Key_(music)
+    flats in the key&#39;s signature, and a `musx.mxml.mode.Mode`.
+ 
+    Parameters
+    ----------
+    signum : int
+        A value -7 to 7 representing the number of flats (negative) or sharps (positive)
+        in the key signature.
+    mode : Mode
+        A Mode enum, or its case-insensitive string name.
+    staffid : int
+        The staff number to which the Key will be associated. If the
+        value is 0 the key is associated will all staffs.
     &#34;&#34;&#34;
-
     # Private map of key signature numbers (-7 to 7) to Pitch.pnums
     # representing the tonic notes of the major keys in the cycle of
     # fifths. For example, the signum -1 maps to Pitch.pnum.F, the
@@ -67,21 +68,9 @@ class Key:
                Mode.PHRYGIAN: &#39;M3&#39;, Mode.LYDIAN: &#39;P4&#39;, Mode.MIXOLYDIAN: &#39;P5&#39;,
                Mode.LOCRIAN: &#39;M7&#39;}
 
-    def __init__(self, signum, mode, staffnum):
+    def __init__(self, signum, mode, staffid):
         &#34;&#34;&#34;
         Creates a Key from an integer key signature identifier and mode.
-        
-        Parameters
-        ----------
-        signum : int
-            A value -7 to 7 representing the number of flats (negative) or sharps (positive).
-        mode : Mode
-            A Mode enum, or its case-insensitive string name.
-
-        Raises 
-        ------
-        A TypeError if signum is not an integer or if mode is not a Mode or string.&lt;br&gt;
-        A ValueError if the signum integer or the mode string is invalid.
         &#34;&#34;&#34;
         if isinstance(signum, int):
             if -7 &lt;= signum &lt;= 7:
@@ -101,7 +90,7 @@ class Key:
         # The Mode of the key.
         self.mode = mode
         # The staff number of the key (0=All)
-        self.staffnum = staffnum
+        self.staffid = staffid
 
     def __str__(self):
         &#34;&#34;&#34;
@@ -123,46 +112,10 @@ class Key:
                 text += &#34;sharp&#34; if self.signum == 1 else &#34;flat&#34;
         return f&#39;&lt;Key: {text} staff={staff}&gt;&#39; # {hex(id(self))}
 
-    # def __repr__(self):
-    #     &#34;&#34;&#34;
-    #     Returns the external representation of the Key including the
-    #     constructor name, signum, and the capitalized version of the
-    #     mode&#39;s name.
-        
-    #     Examples
-    #     --------
-    #     &#39;Key(4, &#34;Dorian&#34;)&#39;&lt;br&gt;
-    #     &#39;Key(-1, &#34;Major&#34;)&#39;
-    #     &#34;&#34;&#34;
-    #     return f&#39;Key({self.signum}, &#34;{self.mode.name.capitalize()}&#34;)&#39;
-
-    # def string(self):
-    #     &#34;&#34;&#34;
-    #     Returns a string containing the name of the tonic Pnum, a
-    #     hyphen, and the capitalized version of the mode&#39;s name.
-    
-    #     Examples
-    #     --------
-    #     &#39;Fs-Dorian&#39;,&lt;br&gt;
-    #     &#39;Bf-Phrygian&#39;,&lt;br&gt;
-    #     &#39;B-Major&#39;
-    #     &#34;&#34;&#34;
-    #     return f&#39;{self.tonic().name}-{self.mode.name.capitalize()}&#39;
-
     def tonic(self):
         &#34;&#34;&#34;
-        Returns a Pnum representing the key&#39;s tonic. The tonic can
-        be calculated by transposing the Major tonic (Pnum) by the
-        interval distance of the mode above the major. The
-        transposition can be performed using that interval&#39;s transpose()
-        method. The interval distances of Major up to Locrian are:
-        P1, M2, M3, P4, P5, M6, M7.
-        
-        Examples
-        --------
-        Key(0, &#34;lydian&#34;).tonic() is Pnum F.&lt;br&gt;
-        Key(2, &#34;dorian&#34;).tonic() is Pnum E.&lt;br&gt;
-        Key(-6, &#34;phrygian&#34;).tonic() is Pnum Bf.&lt;br&gt;
+        Returns a Pnum representing the key&#39;s tonic note. See `musx.pitch.Pitch`
+        for documentation on Pnum.
         &#34;&#34;&#34;
         ton = self._tonics[self.signum]
         if self.mode is Mode.MAJOR:
@@ -171,8 +124,8 @@ class Key:
 
     def scale(self):
         &#34;&#34;&#34;
-        Returns a list of Pnums representing the unique pitches of the key&#39;s
-        diatonic scale. The octave completion should NOT be included in the list.
+        Returns a list of Pnums representing the pitches of the key&#39;s
+        diatonic scale. The octave completion is not included in the list.
         &#34;&#34;&#34;
         steps = [Interval(&#39;M2&#39;), Interval(&#39;M2&#39;), Interval(&#39;m2&#39;),
                  Interval(&#39;M2&#39;), Interval(&#39;M2&#39;), Interval(&#39;M2&#39;),
@@ -184,394 +137,7 @@ class Key:
         for s in order[:-1]:
             tonic = s.transpose(tonic)
             scale.append(tonic)
-        return scale
-
-
-def _test_keys():
-    # for s in range(-7, 8):
-    #     for m in [&#39;Major&#39;, &#39;Minor&#39;, &#34;Dorian&#34;, &#34;Phrygian&#34;, &#34;Mixolydian&#34;,
-    #               &#34;Aeolian&#34;, &#34;Locrian&#34;]:
-    #         print(f&#39;assert \&#39;Key({s}, &#34;{m}&#34;)\&#39;&#39;, &#34;==&#34;, f&#34;Key({s}, &#39;{m}&#39;).__repr__()&#34;)
-
-    # for s in range(-7, 8):
-    #     for m in [&#39;Major&#39;, &#39;Minor&#39;, &#34;Dorian&#34;, &#34;Phrygian&#34;, &#34;Mixolydian&#34;,
-    #               &#34;Aeolian&#34;, &#34;Locrian&#34;]:
-    #         print(f&#34;assert &#39;{Key(s, m).tonic().name}&#39;&#34;, &#34;==&#34;, f&#34;Key({s}, &#39;{m}&#39;).tonic().name&#34;)
-
-    # for s in range(-7, 8):
-    #     for m in [&#39;Major&#39;, &#39;Minor&#39;, &#34;Dorian&#34;, &#34;Phrygian&#34;, &#34;Mixolydian&#34;,
-    #               &#34;Aeolian&#34;, &#34;Locrian&#34;]:
-    #         print(f&#34;assert &#39;{Key(s, m).scale()[-1].name}&#39;&#34;, &#34;==&#34;, f&#34;Key({s}, &#39;{m}&#39;).scale()[-1].name&#34;)
-
-    print(&#39;Testing key.py ... &#39;, end=&#39;&#39;)
-    assert &#39;Key(-7, &#34;Major&#34;)&#39; == Key(-7, &#39;Major&#39;).__repr__()
-    assert &#39;Key(-7, &#34;Minor&#34;)&#39; == Key(-7, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(-7, &#34;Dorian&#34;)&#39; == Key(-7, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(-7, &#34;Phrygian&#34;)&#39; == Key(-7, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(-7, &#34;Mixolydian&#34;)&#39; == Key(-7, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(-7, &#34;Minor&#34;)&#39; == Key(-7, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(-7, &#34;Locrian&#34;)&#39; == Key(-7, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(-6, &#34;Major&#34;)&#39; == Key(-6, &#39;Major&#39;).__repr__()
-    assert &#39;Key(-6, &#34;Minor&#34;)&#39; == Key(-6, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(-6, &#34;Dorian&#34;)&#39; == Key(-6, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(-6, &#34;Phrygian&#34;)&#39; == Key(-6, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(-6, &#34;Mixolydian&#34;)&#39; == Key(-6, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(-6, &#34;Minor&#34;)&#39; == Key(-6, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(-6, &#34;Locrian&#34;)&#39; == Key(-6, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(-5, &#34;Major&#34;)&#39; == Key(-5, &#39;Major&#39;).__repr__()
-    assert &#39;Key(-5, &#34;Minor&#34;)&#39; == Key(-5, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(-5, &#34;Dorian&#34;)&#39; == Key(-5, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(-5, &#34;Phrygian&#34;)&#39; == Key(-5, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(-5, &#34;Mixolydian&#34;)&#39; == Key(-5, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(-5, &#34;Minor&#34;)&#39; == Key(-5, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(-5, &#34;Locrian&#34;)&#39; == Key(-5, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(-4, &#34;Major&#34;)&#39; == Key(-4, &#39;Major&#39;).__repr__()
-    assert &#39;Key(-4, &#34;Minor&#34;)&#39; == Key(-4, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(-4, &#34;Dorian&#34;)&#39; == Key(-4, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(-4, &#34;Phrygian&#34;)&#39; == Key(-4, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(-4, &#34;Mixolydian&#34;)&#39; == Key(-4, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(-4, &#34;Minor&#34;)&#39; == Key(-4, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(-4, &#34;Locrian&#34;)&#39; == Key(-4, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(-3, &#34;Major&#34;)&#39; == Key(-3, &#39;Major&#39;).__repr__()
-    assert &#39;Key(-3, &#34;Minor&#34;)&#39; == Key(-3, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(-3, &#34;Dorian&#34;)&#39; == Key(-3, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(-3, &#34;Phrygian&#34;)&#39; == Key(-3, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(-3, &#34;Mixolydian&#34;)&#39; == Key(-3, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(-3, &#34;Minor&#34;)&#39; == Key(-3, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(-3, &#34;Locrian&#34;)&#39; == Key(-3, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(-2, &#34;Major&#34;)&#39; == Key(-2, &#39;Major&#39;).__repr__()
-    assert &#39;Key(-2, &#34;Minor&#34;)&#39; == Key(-2, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(-2, &#34;Dorian&#34;)&#39; == Key(-2, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(-2, &#34;Phrygian&#34;)&#39; == Key(-2, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(-2, &#34;Mixolydian&#34;)&#39; == Key(-2, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(-2, &#34;Minor&#34;)&#39; == Key(-2, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(-2, &#34;Locrian&#34;)&#39; == Key(-2, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(-1, &#34;Major&#34;)&#39; == Key(-1, &#39;Major&#39;).__repr__()
-    assert &#39;Key(-1, &#34;Minor&#34;)&#39; == Key(-1, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(-1, &#34;Dorian&#34;)&#39; == Key(-1, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(-1, &#34;Phrygian&#34;)&#39; == Key(-1, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(-1, &#34;Mixolydian&#34;)&#39; == Key(-1, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(-1, &#34;Minor&#34;)&#39; == Key(-1, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(-1, &#34;Locrian&#34;)&#39; == Key(-1, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(0, &#34;Major&#34;)&#39; == Key(0, &#39;Major&#39;).__repr__()
-    assert &#39;Key(0, &#34;Minor&#34;)&#39; == Key(0, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(0, &#34;Dorian&#34;)&#39; == Key(0, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(0, &#34;Phrygian&#34;)&#39; == Key(0, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(0, &#34;Mixolydian&#34;)&#39; == Key(0, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(0, &#34;Minor&#34;)&#39; == Key(0, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(0, &#34;Locrian&#34;)&#39; == Key(0, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(1, &#34;Major&#34;)&#39; == Key(1, &#39;Major&#39;).__repr__()
-    assert &#39;Key(1, &#34;Minor&#34;)&#39; == Key(1, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(1, &#34;Dorian&#34;)&#39; == Key(1, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(1, &#34;Phrygian&#34;)&#39; == Key(1, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(1, &#34;Mixolydian&#34;)&#39; == Key(1, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(1, &#34;Minor&#34;)&#39; == Key(1, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(1, &#34;Locrian&#34;)&#39; == Key(1, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(2, &#34;Major&#34;)&#39; == Key(2, &#39;Major&#39;).__repr__()
-    assert &#39;Key(2, &#34;Minor&#34;)&#39; == Key(2, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(2, &#34;Dorian&#34;)&#39; == Key(2, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(2, &#34;Phrygian&#34;)&#39; == Key(2, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(2, &#34;Mixolydian&#34;)&#39; == Key(2, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(2, &#34;Minor&#34;)&#39; == Key(2, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(2, &#34;Locrian&#34;)&#39; == Key(2, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(3, &#34;Major&#34;)&#39; == Key(3, &#39;Major&#39;).__repr__()
-    assert &#39;Key(3, &#34;Minor&#34;)&#39; == Key(3, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(3, &#34;Dorian&#34;)&#39; == Key(3, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(3, &#34;Phrygian&#34;)&#39; == Key(3, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(3, &#34;Mixolydian&#34;)&#39; == Key(3, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(3, &#34;Minor&#34;)&#39; == Key(3, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(3, &#34;Locrian&#34;)&#39; == Key(3, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(4, &#34;Major&#34;)&#39; == Key(4, &#39;Major&#39;).__repr__()
-    assert &#39;Key(4, &#34;Minor&#34;)&#39; == Key(4, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(4, &#34;Dorian&#34;)&#39; == Key(4, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(4, &#34;Phrygian&#34;)&#39; == Key(4, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(4, &#34;Mixolydian&#34;)&#39; == Key(4, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(4, &#34;Minor&#34;)&#39; == Key(4, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(4, &#34;Locrian&#34;)&#39; == Key(4, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(5, &#34;Major&#34;)&#39; == Key(5, &#39;Major&#39;).__repr__()
-    assert &#39;Key(5, &#34;Minor&#34;)&#39; == Key(5, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(5, &#34;Dorian&#34;)&#39; == Key(5, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(5, &#34;Phrygian&#34;)&#39; == Key(5, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(5, &#34;Mixolydian&#34;)&#39; == Key(5, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(5, &#34;Minor&#34;)&#39; == Key(5, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(5, &#34;Locrian&#34;)&#39; == Key(5, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(6, &#34;Major&#34;)&#39; == Key(6, &#39;Major&#39;).__repr__()
-    assert &#39;Key(6, &#34;Minor&#34;)&#39; == Key(6, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(6, &#34;Dorian&#34;)&#39; == Key(6, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(6, &#34;Phrygian&#34;)&#39; == Key(6, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(6, &#34;Mixolydian&#34;)&#39; == Key(6, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(6, &#34;Minor&#34;)&#39; == Key(6, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(6, &#34;Locrian&#34;)&#39; == Key(6, &#39;Locrian&#39;).__repr__()
-    assert &#39;Key(7, &#34;Major&#34;)&#39; == Key(7, &#39;Major&#39;).__repr__()
-    assert &#39;Key(7, &#34;Minor&#34;)&#39; == Key(7, &#39;Minor&#39;).__repr__()
-    assert &#39;Key(7, &#34;Dorian&#34;)&#39; == Key(7, &#39;Dorian&#39;).__repr__()
-    assert &#39;Key(7, &#34;Phrygian&#34;)&#39; == Key(7, &#39;Phrygian&#39;).__repr__()
-    assert &#39;Key(7, &#34;Mixolydian&#34;)&#39; == Key(7, &#39;Mixolydian&#39;).__repr__()
-    assert &#39;Key(7, &#34;Minor&#34;)&#39; == Key(7, &#39;Aeolian&#39;).__repr__()
-    assert &#39;Key(7, &#34;Locrian&#34;)&#39; == Key(7, &#39;Locrian&#39;).__repr__()
-
-    assert &#39;Cf&#39; == Key(-7, &#39;Major&#39;).tonic().name
-    assert &#39;Af&#39; == Key(-7, &#39;Minor&#39;).tonic().name
-    assert &#39;Df&#39; == Key(-7, &#39;Dorian&#39;).tonic().name
-    assert &#39;Ef&#39; == Key(-7, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Gf&#39; == Key(-7, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;Af&#39; == Key(-7, &#39;Aeolian&#39;).tonic().name
-    assert &#39;Bf&#39; == Key(-7, &#39;Locrian&#39;).tonic().name
-    assert &#39;Gf&#39; == Key(-6, &#39;Major&#39;).tonic().name
-    assert &#39;Ef&#39; == Key(-6, &#39;Minor&#39;).tonic().name
-    assert &#39;Af&#39; == Key(-6, &#39;Dorian&#39;).tonic().name
-    assert &#39;Bf&#39; == Key(-6, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Df&#39; == Key(-6, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;Ef&#39; == Key(-6, &#39;Aeolian&#39;).tonic().name
-    assert &#39;F&#39; == Key(-6, &#39;Locrian&#39;).tonic().name
-    assert &#39;Df&#39; == Key(-5, &#39;Major&#39;).tonic().name
-    assert &#39;Bf&#39; == Key(-5, &#39;Minor&#39;).tonic().name
-    assert &#39;Ef&#39; == Key(-5, &#39;Dorian&#39;).tonic().name
-    assert &#39;F&#39; == Key(-5, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Af&#39; == Key(-5, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;Bf&#39; == Key(-5, &#39;Aeolian&#39;).tonic().name
-    assert &#39;C&#39; == Key(-5, &#39;Locrian&#39;).tonic().name
-    assert &#39;Af&#39; == Key(-4, &#39;Major&#39;).tonic().name
-    assert &#39;F&#39; == Key(-4, &#39;Minor&#39;).tonic().name
-    assert &#39;Bf&#39; == Key(-4, &#39;Dorian&#39;).tonic().name
-    assert &#39;C&#39; == Key(-4, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Ef&#39; == Key(-4, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;F&#39; == Key(-4, &#39;Aeolian&#39;).tonic().name
-    assert &#39;G&#39; == Key(-4, &#39;Locrian&#39;).tonic().name
-    assert &#39;Ef&#39; == Key(-3, &#39;Major&#39;).tonic().name
-    assert &#39;C&#39; == Key(-3, &#39;Minor&#39;).tonic().name
-    assert &#39;F&#39; == Key(-3, &#39;Dorian&#39;).tonic().name
-    assert &#39;G&#39; == Key(-3, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Bf&#39; == Key(-3, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;C&#39; == Key(-3, &#39;Aeolian&#39;).tonic().name
-    assert &#39;D&#39; == Key(-3, &#39;Locrian&#39;).tonic().name
-    assert &#39;Bf&#39; == Key(-2, &#39;Major&#39;).tonic().name
-    assert &#39;G&#39; == Key(-2, &#39;Minor&#39;).tonic().name
-    assert &#39;C&#39; == Key(-2, &#39;Dorian&#39;).tonic().name
-    assert &#39;D&#39; == Key(-2, &#39;Phrygian&#39;).tonic().name
-    assert &#39;F&#39; == Key(-2, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;G&#39; == Key(-2, &#39;Aeolian&#39;).tonic().name
-    assert &#39;A&#39; == Key(-2, &#39;Locrian&#39;).tonic().name
-    assert &#39;F&#39; == Key(-1, &#39;Major&#39;).tonic().name
-    assert &#39;D&#39; == Key(-1, &#39;Minor&#39;).tonic().name
-    assert &#39;G&#39; == Key(-1, &#39;Dorian&#39;).tonic().name
-    assert &#39;A&#39; == Key(-1, &#39;Phrygian&#39;).tonic().name
-    assert &#39;C&#39; == Key(-1, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;D&#39; == Key(-1, &#39;Aeolian&#39;).tonic().name
-    assert &#39;E&#39; == Key(-1, &#39;Locrian&#39;).tonic().name
-    assert &#39;C&#39; == Key(0, &#39;Major&#39;).tonic().name
-    assert &#39;A&#39; == Key(0, &#39;Minor&#39;).tonic().name
-    assert &#39;D&#39; == Key(0, &#39;Dorian&#39;).tonic().name
-    assert &#39;E&#39; == Key(0, &#39;Phrygian&#39;).tonic().name
-    assert &#39;G&#39; == Key(0, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;A&#39; == Key(0, &#39;Aeolian&#39;).tonic().name
-    assert &#39;B&#39; == Key(0, &#39;Locrian&#39;).tonic().name
-    assert &#39;G&#39; == Key(1, &#39;Major&#39;).tonic().name
-    assert &#39;E&#39; == Key(1, &#39;Minor&#39;).tonic().name
-    assert &#39;A&#39; == Key(1, &#39;Dorian&#39;).tonic().name
-    assert &#39;B&#39; == Key(1, &#39;Phrygian&#39;).tonic().name
-    assert &#39;D&#39; == Key(1, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;E&#39; == Key(1, &#39;Aeolian&#39;).tonic().name
-    assert &#39;Fs&#39; == Key(1, &#39;Locrian&#39;).tonic().name
-    assert &#39;D&#39; == Key(2, &#39;Major&#39;).tonic().name
-    assert &#39;B&#39; == Key(2, &#39;Minor&#39;).tonic().name
-    assert &#39;E&#39; == Key(2, &#39;Dorian&#39;).tonic().name
-    assert &#39;Fs&#39; == Key(2, &#39;Phrygian&#39;).tonic().name
-    assert &#39;A&#39; == Key(2, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;B&#39; == Key(2, &#39;Aeolian&#39;).tonic().name
-    assert &#39;Cs&#39; == Key(2, &#39;Locrian&#39;).tonic().name
-    assert &#39;A&#39; == Key(3, &#39;Major&#39;).tonic().name
-    assert &#39;Fs&#39; == Key(3, &#39;Minor&#39;).tonic().name
-    assert &#39;B&#39; == Key(3, &#39;Dorian&#39;).tonic().name
-    assert &#39;Cs&#39; == Key(3, &#39;Phrygian&#39;).tonic().name
-    assert &#39;E&#39; == Key(3, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;Fs&#39; == Key(3, &#39;Aeolian&#39;).tonic().name
-    assert &#39;Gs&#39; == Key(3, &#39;Locrian&#39;).tonic().name
-    assert &#39;E&#39; == Key(4, &#39;Major&#39;).tonic().name
-    assert &#39;Cs&#39; == Key(4, &#39;Minor&#39;).tonic().name
-    assert &#39;Fs&#39; == Key(4, &#39;Dorian&#39;).tonic().name
-    assert &#39;Gs&#39; == Key(4, &#39;Phrygian&#39;).tonic().name
-    assert &#39;B&#39; == Key(4, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;Cs&#39; == Key(4, &#39;Aeolian&#39;).tonic().name
-    assert &#39;Ds&#39; == Key(4, &#39;Locrian&#39;).tonic().name
-    assert &#39;B&#39; == Key(5, &#39;Major&#39;).tonic().name
-    assert &#39;Gs&#39; == Key(5, &#39;Minor&#39;).tonic().name
-    assert &#39;Cs&#39; == Key(5, &#39;Dorian&#39;).tonic().name
-    assert &#39;Ds&#39; == Key(5, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Fs&#39; == Key(5, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;Gs&#39; == Key(5, &#39;Aeolian&#39;).tonic().name
-    assert &#39;As&#39; == Key(5, &#39;Locrian&#39;).tonic().name
-    assert &#39;Fs&#39; == Key(6, &#39;Major&#39;).tonic().name
-    assert &#39;Ds&#39; == Key(6, &#39;Minor&#39;).tonic().name
-    assert &#39;Gs&#39; == Key(6, &#39;Dorian&#39;).tonic().name
-    assert &#39;As&#39; == Key(6, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Cs&#39; == Key(6, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;Ds&#39; == Key(6, &#39;Aeolian&#39;).tonic().name
-    assert &#39;Es&#39; == Key(6, &#39;Locrian&#39;).tonic().name
-    assert &#39;Cs&#39; == Key(7, &#39;Major&#39;).tonic().name
-    assert &#39;As&#39; == Key(7, &#39;Minor&#39;).tonic().name
-    assert &#39;Ds&#39; == Key(7, &#39;Dorian&#39;).tonic().name
-    assert &#39;Es&#39; == Key(7, &#39;Phrygian&#39;).tonic().name
-    assert &#39;Gs&#39; == Key(7, &#39;Mixolydian&#39;).tonic().name
-    assert &#39;As&#39; == Key(7, &#39;Aeolian&#39;).tonic().name
-    assert &#39;Bs&#39; == Key(7, &#39;Locrian&#39;).tonic().name
-
-    assert &#39;Bf&#39; == Key(-7, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Gf&#39; == Key(-7, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Cf&#39; == Key(-7, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Df&#39; == Key(-7, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Ff&#39; == Key(-7, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Gf&#39; == Key(-7, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;Af&#39; == Key(-7, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;F&#39; == Key(-6, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Df&#39; == Key(-6, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Gf&#39; == Key(-6, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Af&#39; == Key(-6, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Cf&#39; == Key(-6, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Df&#39; == Key(-6, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;Ef&#39; == Key(-6, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;C&#39; == Key(-5, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Af&#39; == Key(-5, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Df&#39; == Key(-5, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Ef&#39; == Key(-5, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Gf&#39; == Key(-5, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Af&#39; == Key(-5, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;Bf&#39; == Key(-5, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;G&#39; == Key(-4, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Ef&#39; == Key(-4, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Af&#39; == Key(-4, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Bf&#39; == Key(-4, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Df&#39; == Key(-4, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Ef&#39; == Key(-4, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;F&#39; == Key(-4, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;D&#39; == Key(-3, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Bf&#39; == Key(-3, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Ef&#39; == Key(-3, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;F&#39; == Key(-3, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Af&#39; == Key(-3, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Bf&#39; == Key(-3, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;C&#39; == Key(-3, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;A&#39; == Key(-2, &#39;Major&#39;).scale()[-1].name
-    assert &#39;F&#39; == Key(-2, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Bf&#39; == Key(-2, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;C&#39; == Key(-2, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Ef&#39; == Key(-2, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;F&#39; == Key(-2, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;G&#39; == Key(-2, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;E&#39; == Key(-1, &#39;Major&#39;).scale()[-1].name
-    assert &#39;C&#39; == Key(-1, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;F&#39; == Key(-1, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;G&#39; == Key(-1, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Bf&#39; == Key(-1, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;C&#39; == Key(-1, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;D&#39; == Key(-1, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;B&#39; == Key(0, &#39;Major&#39;).scale()[-1].name
-    assert &#39;G&#39; == Key(0, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;C&#39; == Key(0, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;D&#39; == Key(0, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;F&#39; == Key(0, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;G&#39; == Key(0, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;A&#39; == Key(0, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;Fs&#39; == Key(1, &#39;Major&#39;).scale()[-1].name
-    assert &#39;D&#39; == Key(1, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;G&#39; == Key(1, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;A&#39; == Key(1, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;C&#39; == Key(1, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;D&#39; == Key(1, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;E&#39; == Key(1, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;Cs&#39; == Key(2, &#39;Major&#39;).scale()[-1].name
-    assert &#39;A&#39; == Key(2, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;D&#39; == Key(2, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;E&#39; == Key(2, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;G&#39; == Key(2, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;A&#39; == Key(2, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;B&#39; == Key(2, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;Gs&#39; == Key(3, &#39;Major&#39;).scale()[-1].name
-    assert &#39;E&#39; == Key(3, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;A&#39; == Key(3, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;B&#39; == Key(3, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;D&#39; == Key(3, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;E&#39; == Key(3, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;Fs&#39; == Key(3, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;Ds&#39; == Key(4, &#39;Major&#39;).scale()[-1].name
-    assert &#39;B&#39; == Key(4, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;E&#39; == Key(4, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Fs&#39; == Key(4, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;A&#39; == Key(4, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;B&#39; == Key(4, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;Cs&#39; == Key(4, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;As&#39; == Key(5, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Fs&#39; == Key(5, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;B&#39; == Key(5, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Cs&#39; == Key(5, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;E&#39; == Key(5, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Fs&#39; == Key(5, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;Gs&#39; == Key(5, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;Es&#39; == Key(6, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Cs&#39; == Key(6, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Fs&#39; == Key(6, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Gs&#39; == Key(6, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;B&#39; == Key(6, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Cs&#39; == Key(6, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;Ds&#39; == Key(6, &#39;Locrian&#39;).scale()[-1].name
-    assert &#39;Bs&#39; == Key(7, &#39;Major&#39;).scale()[-1].name
-    assert &#39;Gs&#39; == Key(7, &#39;Minor&#39;).scale()[-1].name
-    assert &#39;Cs&#39; == Key(7, &#39;Dorian&#39;).scale()[-1].name
-    assert &#39;Ds&#39; == Key(7, &#39;Phrygian&#39;).scale()[-1].name
-    assert &#39;Fs&#39; == Key(7, &#39;Mixolydian&#39;).scale()[-1].name
-    assert &#39;Gs&#39; == Key(7, &#39;Aeolian&#39;).scale()[-1].name
-    assert &#39;As&#39; == Key(7, &#39;Locrian&#39;).scale()[-1].name
-
-    # ERRORS
-    msg1, msg2 = &#34;Received wrong type of exception.&#34;, \
-                 &#34;Expected exception did not happen.&#34;
-
-    # TYPE ERRORS
-    err = TypeError
-
-    try: Key(1.0, &#34;major&#34;)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    try: Key(0, .4)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    # TYPE ERRORS
-    err = ValueError
-
-    try: Key(-7, &#34;foo&#34;)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    try:  Key(-7, &#34;&#34;)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    try: Key(-8, &#34;lydian&#34;)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    try: Key(10, &#34;major&#34;)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    try: Key(0, &#34; major &#34;)
-    except err: pass
-    except: assert False, msg1
-    else: assert False, msg2
-
-    print(&#39;Done!&#39;)
-
-
-if __name__ == &#39;__main__&#39;:
-    _test_keys()</code></pre>
+        return scale</code></pre>
 </details>
 </section>
 <section>
@@ -585,23 +151,23 @@ if __name__ == &#39;__main__&#39;:
 <dl>
 <dt id="musx.mxml.key.Key"><code class="flex name class">
 <span>class <span class="ident">Key</span></span>
+<span>(</span><span>signum, mode, staffid)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>A key consists of an integer 'signum' representing the number of sharps or
-flats in the key's signature, and a Mode (Enum). Keys can return Pnums
-representing their tonic note and diatonic scale degrees.
-See: <a href="https://en.wikipedia.org/wiki/Key_(music)">https://en.wikipedia.org/wiki/Key_(music)</a></p>
-<p>Creates a Key from an integer key signature identifier and mode.</p>
+flats in the key's signature, and a <code><a title="musx.mxml.mode.Mode" href="mode.html#musx.mxml.mode.Mode">Mode</a></code>.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>signum</code></strong> :&ensp;<code>int</code></dt>
-<dd>A value -7 to 7 representing the number of flats (negative) or sharps (positive).</dd>
+<dd>A value -7 to 7 representing the number of flats (negative) or sharps (positive)
+in the key signature.</dd>
 <dt><strong><code>mode</code></strong> :&ensp;<code>Mode</code></dt>
 <dd>A Mode enum, or its case-insensitive string name.</dd>
+<dt><strong><code>staffid</code></strong> :&ensp;<code>int</code></dt>
+<dd>The staff number to which the Key will be associated. If the
+value is 0 the key is associated will all staffs.</dd>
 </dl>
-<h2 id="raises">Raises</h2>
-<p>A TypeError if signum is not an integer or if mode is not a Mode or string.<br>
-A ValueError if the signum integer or the mode string is invalid.</p></div>
+<p>Creates a Key from an integer key signature identifier and mode.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -609,11 +175,19 @@ A ValueError if the signum integer or the mode string is invalid.</p></div>
 <pre><code class="python">class Key:
     &#34;&#34;&#34;
     A key consists of an integer &#39;signum&#39; representing the number of sharps or
-    flats in the key&#39;s signature, and a Mode (Enum). Keys can return Pnums
-    representing their tonic note and diatonic scale degrees.
-    See: https://en.wikipedia.org/wiki/Key_(music)
+    flats in the key&#39;s signature, and a `musx.mxml.mode.Mode`.
+ 
+    Parameters
+    ----------
+    signum : int
+        A value -7 to 7 representing the number of flats (negative) or sharps (positive)
+        in the key signature.
+    mode : Mode
+        A Mode enum, or its case-insensitive string name.
+    staffid : int
+        The staff number to which the Key will be associated. If the
+        value is 0 the key is associated will all staffs.
     &#34;&#34;&#34;
-
     # Private map of key signature numbers (-7 to 7) to Pitch.pnums
     # representing the tonic notes of the major keys in the cycle of
     # fifths. For example, the signum -1 maps to Pitch.pnum.F, the
@@ -630,21 +204,9 @@ A ValueError if the signum integer or the mode string is invalid.</p></div>
                Mode.PHRYGIAN: &#39;M3&#39;, Mode.LYDIAN: &#39;P4&#39;, Mode.MIXOLYDIAN: &#39;P5&#39;,
                Mode.LOCRIAN: &#39;M7&#39;}
 
-    def __init__(self, signum, mode, staffnum):
+    def __init__(self, signum, mode, staffid):
         &#34;&#34;&#34;
         Creates a Key from an integer key signature identifier and mode.
-        
-        Parameters
-        ----------
-        signum : int
-            A value -7 to 7 representing the number of flats (negative) or sharps (positive).
-        mode : Mode
-            A Mode enum, or its case-insensitive string name.
-
-        Raises 
-        ------
-        A TypeError if signum is not an integer or if mode is not a Mode or string.&lt;br&gt;
-        A ValueError if the signum integer or the mode string is invalid.
         &#34;&#34;&#34;
         if isinstance(signum, int):
             if -7 &lt;= signum &lt;= 7:
@@ -664,7 +226,7 @@ A ValueError if the signum integer or the mode string is invalid.</p></div>
         # The Mode of the key.
         self.mode = mode
         # The staff number of the key (0=All)
-        self.staffnum = staffnum
+        self.staffid = staffid
 
     def __str__(self):
         &#34;&#34;&#34;
@@ -686,46 +248,10 @@ A ValueError if the signum integer or the mode string is invalid.</p></div>
                 text += &#34;sharp&#34; if self.signum == 1 else &#34;flat&#34;
         return f&#39;&lt;Key: {text} staff={staff}&gt;&#39; # {hex(id(self))}
 
-    # def __repr__(self):
-    #     &#34;&#34;&#34;
-    #     Returns the external representation of the Key including the
-    #     constructor name, signum, and the capitalized version of the
-    #     mode&#39;s name.
-        
-    #     Examples
-    #     --------
-    #     &#39;Key(4, &#34;Dorian&#34;)&#39;&lt;br&gt;
-    #     &#39;Key(-1, &#34;Major&#34;)&#39;
-    #     &#34;&#34;&#34;
-    #     return f&#39;Key({self.signum}, &#34;{self.mode.name.capitalize()}&#34;)&#39;
-
-    # def string(self):
-    #     &#34;&#34;&#34;
-    #     Returns a string containing the name of the tonic Pnum, a
-    #     hyphen, and the capitalized version of the mode&#39;s name.
-    
-    #     Examples
-    #     --------
-    #     &#39;Fs-Dorian&#39;,&lt;br&gt;
-    #     &#39;Bf-Phrygian&#39;,&lt;br&gt;
-    #     &#39;B-Major&#39;
-    #     &#34;&#34;&#34;
-    #     return f&#39;{self.tonic().name}-{self.mode.name.capitalize()}&#39;
-
     def tonic(self):
         &#34;&#34;&#34;
-        Returns a Pnum representing the key&#39;s tonic. The tonic can
-        be calculated by transposing the Major tonic (Pnum) by the
-        interval distance of the mode above the major. The
-        transposition can be performed using that interval&#39;s transpose()
-        method. The interval distances of Major up to Locrian are:
-        P1, M2, M3, P4, P5, M6, M7.
-        
-        Examples
-        --------
-        Key(0, &#34;lydian&#34;).tonic() is Pnum F.&lt;br&gt;
-        Key(2, &#34;dorian&#34;).tonic() is Pnum E.&lt;br&gt;
-        Key(-6, &#34;phrygian&#34;).tonic() is Pnum Bf.&lt;br&gt;
+        Returns a Pnum representing the key&#39;s tonic note. See `musx.pitch.Pitch`
+        for documentation on Pnum.
         &#34;&#34;&#34;
         ton = self._tonics[self.signum]
         if self.mode is Mode.MAJOR:
@@ -734,8 +260,8 @@ A ValueError if the signum integer or the mode string is invalid.</p></div>
 
     def scale(self):
         &#34;&#34;&#34;
-        Returns a list of Pnums representing the unique pitches of the key&#39;s
-        diatonic scale. The octave completion should NOT be included in the list.
+        Returns a list of Pnums representing the pitches of the key&#39;s
+        diatonic scale. The octave completion is not included in the list.
         &#34;&#34;&#34;
         steps = [Interval(&#39;M2&#39;), Interval(&#39;M2&#39;), Interval(&#39;m2&#39;),
                  Interval(&#39;M2&#39;), Interval(&#39;M2&#39;), Interval(&#39;M2&#39;),
@@ -751,106 +277,20 @@ A ValueError if the signum integer or the mode string is invalid.</p></div>
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="musx.mxml.key.Key.__init__"><code class="name flex">
-<span>def <span class="ident">__init__</span></span>(<span>self, signum, mode, staffnum)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Creates a Key from an integer key signature identifier and mode.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>signum</code></strong> :&ensp;<code>int</code></dt>
-<dd>A value -7 to 7 representing the number of flats (negative) or sharps (positive).</dd>
-<dt><strong><code>mode</code></strong> :&ensp;<code>Mode</code></dt>
-<dd>A Mode enum, or its case-insensitive string name.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<p>A TypeError if signum is not an integer or if mode is not a Mode or string.<br>
-A ValueError if the signum integer or the mode string is invalid.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def __init__(self, signum, mode, staffnum):
-    &#34;&#34;&#34;
-    Creates a Key from an integer key signature identifier and mode.
-    
-    Parameters
-    ----------
-    signum : int
-        A value -7 to 7 representing the number of flats (negative) or sharps (positive).
-    mode : Mode
-        A Mode enum, or its case-insensitive string name.
-
-    Raises 
-    ------
-    A TypeError if signum is not an integer or if mode is not a Mode or string.&lt;br&gt;
-    A ValueError if the signum integer or the mode string is invalid.
-    &#34;&#34;&#34;
-    if isinstance(signum, int):
-        if -7 &lt;= signum &lt;= 7:
-            if isinstance(mode, str):
-                m = mode
-                mode = Mode.__dict__.get(m.upper())
-                if mode is None:
-                    raise ValueError(f&#34;&#39;{m}&#39; is an invalid mode name.&#34;)
-            elif not isinstance(mode, Mode):
-                raise TypeError(f&#39;{signum} is not a Mode or mode name.&#39;)
-        else:
-            raise ValueError(f&#39;{signum} is not a key signature between -7 and 7.&#39;)
-    else:
-        raise TypeError(f&#39;{signum} is not a key signature between -7 and 7.&#39;)
-    # The the number of flats or sharp, -7 to 7
-    self.signum = signum
-    # The Mode of the key.
-    self.mode = mode
-    # The staff number of the key (0=All)
-    self.staffnum = staffnum</code></pre>
-</details>
-</dd>
-<dt id="musx.mxml.key.Key.__str__"><code class="name flex">
-<span>def <span class="ident">__str__</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Returns the print representation of the key.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def __str__(self):
-    &#34;&#34;&#34;
-    Returns the print representation of the key.
-    &#34;&#34;&#34;
-    staff = &#34;all&#34; if self.staffnum == 0 else self.staffnum
-    if self.mode:
-        # Force tonic pnum to display &#34;#&#34; and &#34;b&#34; as accidental.
-        text = self.tonic().name
-        text = text.replace(&#39;f&#39;, &#39;b&#39;) if &#39;f&#39; in text else text.replace(&#39;s&#39;, &#39;#&#39;)
-        text += f&#39;-{self.mode.name.capitalize()}&#39;
-    else:
-        text = str(abs(self.signum)) + &#34; &#34;
-        if abs(self.signum) &gt; 1: 
-            text += &#34;sharps&#34; if self.signum &gt; 0 else &#34;flats&#34;
-        elif self.signum == 0: 
-            text += &#34;accidentals&#34;
-        else: 
-            text += &#34;sharp&#34; if self.signum == 1 else &#34;flat&#34;
-    return f&#39;&lt;Key: {text} staff={staff}&gt;&#39; # {hex(id(self))}</code></pre>
-</details>
-</dd>
 <dt id="musx.mxml.key.Key.scale"><code class="name flex">
 <span>def <span class="ident">scale</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a list of Pnums representing the unique pitches of the key's
-diatonic scale. The octave completion should NOT be included in the list.</p></div>
+<div class="desc"><p>Returns a list of Pnums representing the pitches of the key's
+diatonic scale. The octave completion is not included in the list.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def scale(self):
     &#34;&#34;&#34;
-    Returns a list of Pnums representing the unique pitches of the key&#39;s
-    diatonic scale. The octave completion should NOT be included in the list.
+    Returns a list of Pnums representing the pitches of the key&#39;s
+    diatonic scale. The octave completion is not included in the list.
     &#34;&#34;&#34;
     steps = [Interval(&#39;M2&#39;), Interval(&#39;M2&#39;), Interval(&#39;m2&#39;),
              Interval(&#39;M2&#39;), Interval(&#39;M2&#39;), Interval(&#39;M2&#39;),
@@ -869,34 +309,16 @@ diatonic scale. The octave completion should NOT be included in the list.</p></d
 <span>def <span class="ident">tonic</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a Pnum representing the key's tonic. The tonic can
-be calculated by transposing the Major tonic (Pnum) by the
-interval distance of the mode above the major. The
-transposition can be performed using that interval's transpose()
-method. The interval distances of Major up to Locrian are:
-P1, M2, M3, P4, P5, M6, M7.</p>
-<h2 id="examples">Examples</h2>
-<p>Key(0, "lydian").tonic() is Pnum F.<br>
-Key(2, "dorian").tonic() is Pnum E.<br>
-Key(-6, "phrygian").tonic() is Pnum Bf.<br></p></div>
+<div class="desc"><p>Returns a Pnum representing the key's tonic note. See <code><a title="musx.pitch.Pitch" href="../pitch.html#musx.pitch.Pitch">Pitch</a></code>
+for documentation on Pnum.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def tonic(self):
     &#34;&#34;&#34;
-    Returns a Pnum representing the key&#39;s tonic. The tonic can
-    be calculated by transposing the Major tonic (Pnum) by the
-    interval distance of the mode above the major. The
-    transposition can be performed using that interval&#39;s transpose()
-    method. The interval distances of Major up to Locrian are:
-    P1, M2, M3, P4, P5, M6, M7.
-    
-    Examples
-    --------
-    Key(0, &#34;lydian&#34;).tonic() is Pnum F.&lt;br&gt;
-    Key(2, &#34;dorian&#34;).tonic() is Pnum E.&lt;br&gt;
-    Key(-6, &#34;phrygian&#34;).tonic() is Pnum Bf.&lt;br&gt;
+    Returns a Pnum representing the key&#39;s tonic note. See `musx.pitch.Pitch`
+    for documentation on Pnum.
     &#34;&#34;&#34;
     ton = self._tonics[self.signum]
     if self.mode is Mode.MAJOR:
@@ -925,8 +347,6 @@ Key(-6, "phrygian").tonic() is Pnum Bf.<br></p></div>
 <li>
 <h4><code><a title="musx.mxml.key.Key" href="#musx.mxml.key.Key">Key</a></code></h4>
 <ul class="">
-<li><code><a title="musx.mxml.key.Key.__init__" href="#musx.mxml.key.Key.__init__">__init__</a></code></li>
-<li><code><a title="musx.mxml.key.Key.__str__" href="#musx.mxml.key.Key.__str__">__str__</a></code></li>
 <li><code><a title="musx.mxml.key.Key.scale" href="#musx.mxml.key.Key.scale">scale</a></code></li>
 <li><code><a title="musx.mxml.key.Key.tonic" href="#musx.mxml.key.Key.tonic">tonic</a></code></li>
 </ul>

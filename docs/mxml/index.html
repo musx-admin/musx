@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.mxml API documentation</title>
-<meta name="description" content="A package providing support for reading notation data from MusicXml files …" />
+<meta name="description" content="A package providing support for reading and writeing notation data from MusicXml files.
+The MusicXml schema is defined in the file musicxml.py, which …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,22 +23,17 @@
 <h1 class="title">Module <code>musx.mxml</code></h1>
 </header>
 <section id="section-intro">
-<p>A package providing support for reading notation data from MusicXml files.</p>
-<ul>
-<li>notation.py : a class that represents the musical content of a MusixXml file</li>
-<li>musicxml.py : classes and methods generated from the musicxml schema using generateDS.</li>
-<li>mxml.</li>
-</ul>
+<p>A package providing support for reading and writeing notation data from MusicXml files.
+The MusicXml schema is defined in the file musicxml.py, which was auto-generated
+using the awesome <a href="https://pypi.org/project/generateDS/">generateDS</a> package.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-A package providing support for reading notation data from MusicXml files.
-
-* notation.py : a class that represents the musical content of a MusixXml file
-* musicxml.py : classes and methods generated from the musicxml schema using generateDS.
-* mxml.
+A package providing support for reading and writeing notation data from MusicXml files.
+The MusicXml schema is defined in the file musicxml.py, which was auto-generated
+using the awesome [generateDS](https://pypi.org/project/generateDS/) package.
 &#34;&#34;&#34;
 
 from .barline import *
@@ -69,12 +65,12 @@ Baritone, Bass, Treble8va, Bass8va, Treble15ma, Bass15ma, TenorTreble,
 </dd>
 <dt><code class="name"><a title="musx.mxml.key" href="key.html">musx.mxml.key</a></code></dt>
 <dd>
-<div class="desc"><p>The Key class represents the complete chromatic set of keys in western music.</p></div>
+<div class="desc"><p>A class that represents a key signature and mode.</p></div>
 </dd>
 <dt><code class="name"><a title="musx.mxml.mark" href="mark.html">musx.mxml.mark</a></code></dt>
 <dd>
 <div class="desc"><p>The Mark class inherits from IntEnum to enumerate various types of notation
-marks that appear in musical scores. The mark module provides four …</p></div>
+marks that appear in musical scores. Marks belong to one of four top-level …</p></div>
 </dd>
 <dt><code class="name"><a title="musx.mxml.measure" href="measure.html">musx.mxml.measure</a></code></dt>
 <dd>
@@ -86,9 +82,9 @@ marks that appear in musical scores. The mark module provides four …</p></div>
 </dd>
 <dt><code class="name"><a title="musx.mxml.mode" href="mode.html">musx.mxml.mode</a></code></dt>
 <dd>
-<div class="desc"><p>An enumeration of all the 7-tone modes: MAJOR, MINOR, IONIAN, DORIAN,
-PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. The value for each mode
-…</p></div>
+<div class="desc"><p>An enumeration of the diatonc modes: MAJOR, MINOR, IONIAN, DORIAN,
+PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. IONIAN and AEOLIAN
+are synonyms …</p></div>
 </dd>
 <dt><code class="name"><a title="musx.mxml.musicxml" href="musicxml.html">musx.mxml.musicxml</a></code></dt>
 <dd>
@@ -96,11 +92,12 @@ PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, and LOCRIAN. The value for each mode
 </dd>
 <dt><code class="name"><a title="musx.mxml.notation" href="notation.html">musx.mxml.notation</a></code></dt>
 <dd>
-<div class="desc"><p>A module for loading and saving MusicXml scores. As of Aug '21 file loading is implemented.</p></div>
+<div class="desc"><p>A module for loading and saving MusicXml scores. As of Aug '21 loading is fully
+implemented .</p></div>
 </dd>
 <dt><code class="name"><a title="musx.mxml.part" href="part.html">musx.mxml.part</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>A class that represents a musical part in a <code><a title="musx.mxml.notation.Notation" href="notation.html#musx.mxml.notation.Notation">Notation</a></code>.</p></div>
 </dd>
 <dt><code class="name"><a title="musx.mxml.voice" href="voice.html">musx.mxml.voice</a></code></dt>
 <dd>

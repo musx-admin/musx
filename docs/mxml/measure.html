@@ -34,37 +34,39 @@ A class that represents a measure of music in a Part.
 from ..note import Event, Note
 
 class Measure:
+    &#34;&#34;&#34;
+    A class that represents a measure of music in a `musx.mxml.part.Part`. A Measure
+    contain notes -- tagged as either `note`, `chord` or `rest` -- as
+    well as notational objects such as `musx.mxml.key.Key`, `musx.mxml.clef.Clef`, etc. 
+        
+    A Measure that has been added to a Part contains a backpointer to its owning part.
+
+    Parameters
+    ----------
+    id : int
+        The measure&#39;s unique integer identifier in its owning Part.
+    &#34;&#34;&#34;
 
     def __init__(self, id):
-        &#34;&#34;&#34;
-        A class that represents a measure of music in a Part. A Measure
-        contains Notes (tagged as either Note, Chord or Rest) as well as 
-        notational objects such as Key, Clef, Meter, Barline, etc. 
-
-        Parameters
-        ----------
-        id : The measure&#39;s unique integer identifier in its owning Part.
-        &#34;&#34;&#34;
-        # The measure&#39;s integer identifier in its owning Part.
         self.id = id
-        # The measure&#39;s elements, in MusicXml order.
+        &#34;&#34;&#34;The measure&#39;s integer identifier in its owning Part.&#34;&#34;&#34;
         self.elements = []
-        # If true the measure is an incomplete (pickup) measure.
+        &#34;&#34;&#34;The measure&#39;s elements, in MusicXml file order.&#34;&#34;&#34;
         self.partial = False
+        &#34;&#34;&#34;If true the measure is an incomplete (pickup) measure.&#34;&#34;&#34;
 
     def add_element(self, element):
         &#34;&#34;&#34;
-        Adds a measure element to the measure in the same order as occurring
-        in the MusicXml score file.  The element can be a Note (which will be
-        tagged as either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39;), or an mxml notational
-        object such as a Clef, Key, Meter, Barline, etc. 
+        Adds a measure element in MusicXml order.  The element can be a
+        `musx.note.Note` or a notational object such as a `musx.mxml.key.Key` 
+        or `musx.mxml.clef.Clef`, etc. 
         &#34;&#34;&#34;
         self.elements.append(element)
 
     def voices(self):
         &#34;&#34;&#34;
         Returns a dictionary whose keys are the Measure&#39;s voice ids and whose
-        values are the time ordered Notes that belong to that voice.
+        values are the time ordered notes that belong to that voice.
         &#34;&#34;&#34;
         voices = {}
         for e in self.elements:
@@ -101,47 +103,53 @@ class Measure:
 <span>(</span><span>id)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A class that represents a measure of music in a Part. A Measure
-contains Notes (tagged as either Note, Chord or Rest) as well as
-notational objects such as Key, Clef, Meter, Barline, etc. </p>
+<div class="desc"><p>A class that represents a measure of music in a <code><a title="musx.mxml.part.Part" href="part.html#musx.mxml.part.Part">Part</a></code>. A Measure
+contain notes &ndash; tagged as either <code>note</code>, <code>chord</code> or <code>rest</code> &ndash; as
+well as notational objects such as <code><a title="musx.mxml.key.Key" href="key.html#musx.mxml.key.Key">Key</a></code>, <code><a title="musx.mxml.clef.Clef" href="clef.html#musx.mxml.clef.Clef">Clef</a></code>, etc. </p>
+<p>A Measure that has been added to a Part contains a backpointer to its owning part.</p>
 <h2 id="parameters">Parameters</h2>
-<p>id : The measure's unique integer identifier in its owning Part.</p></div>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>The measure's unique integer identifier in its owning Part.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Measure:
+    &#34;&#34;&#34;
+    A class that represents a measure of music in a `musx.mxml.part.Part`. A Measure
+    contain notes -- tagged as either `note`, `chord` or `rest` -- as
+    well as notational objects such as `musx.mxml.key.Key`, `musx.mxml.clef.Clef`, etc. 
+        
+    A Measure that has been added to a Part contains a backpointer to its owning part.
+
+    Parameters
+    ----------
+    id : int
+        The measure&#39;s unique integer identifier in its owning Part.
+    &#34;&#34;&#34;
 
     def __init__(self, id):
-        &#34;&#34;&#34;
-        A class that represents a measure of music in a Part. A Measure
-        contains Notes (tagged as either Note, Chord or Rest) as well as 
-        notational objects such as Key, Clef, Meter, Barline, etc. 
-
-        Parameters
-        ----------
-        id : The measure&#39;s unique integer identifier in its owning Part.
-        &#34;&#34;&#34;
-        # The measure&#39;s integer identifier in its owning Part.
         self.id = id
-        # The measure&#39;s elements, in MusicXml order.
+        &#34;&#34;&#34;The measure&#39;s integer identifier in its owning Part.&#34;&#34;&#34;
         self.elements = []
-        # If true the measure is an incomplete (pickup) measure.
+        &#34;&#34;&#34;The measure&#39;s elements, in MusicXml file order.&#34;&#34;&#34;
         self.partial = False
+        &#34;&#34;&#34;If true the measure is an incomplete (pickup) measure.&#34;&#34;&#34;
 
     def add_element(self, element):
         &#34;&#34;&#34;
-        Adds a measure element to the measure in the same order as occurring
-        in the MusicXml score file.  The element can be a Note (which will be
-        tagged as either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39;), or an mxml notational
-        object such as a Clef, Key, Meter, Barline, etc. 
+        Adds a measure element in MusicXml order.  The element can be a
+        `musx.note.Note` or a notational object such as a `musx.mxml.key.Key` 
+        or `musx.mxml.clef.Clef`, etc. 
         &#34;&#34;&#34;
         self.elements.append(element)
 
     def voices(self):
         &#34;&#34;&#34;
         Returns a dictionary whose keys are the Measure&#39;s voice ids and whose
-        values are the time ordered Notes that belong to that voice.
+        values are the time ordered notes that belong to that voice.
         &#34;&#34;&#34;
         voices = {}
         for e in self.elements:
@@ -163,27 +171,40 @@ notational objects such as Key, Clef, Meter, Barline, etc. </p>
 
     __repr__ = __str__</code></pre>
 </details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="musx.mxml.measure.Measure.elements"><code class="name">var <span class="ident">elements</span></code></dt>
+<dd>
+<div class="desc"><p>The measure's elements, in MusicXml file order.</p></div>
+</dd>
+<dt id="musx.mxml.measure.Measure.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dd>
+<div class="desc"><p>The measure's integer identifier in its owning Part.</p></div>
+</dd>
+<dt id="musx.mxml.measure.Measure.partial"><code class="name">var <span class="ident">partial</span></code></dt>
+<dd>
+<div class="desc"><p>If true the measure is an incomplete (pickup) measure.</p></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="musx.mxml.measure.Measure.add_element"><code class="name flex">
 <span>def <span class="ident">add_element</span></span>(<span>self, element)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Adds a measure element to the measure in the same order as occurring
-in the MusicXml score file.
-The element can be a Note (which will be
-tagged as either 'note', 'rest' or 'chord'), or an mxml notational
-object such as a Clef, Key, Meter, Barline, etc.</p></div>
+<div class="desc"><p>Adds a measure element in MusicXml order.
+The element can be a
+<code><a title="musx.note.Note" href="../note.html#musx.note.Note">Note</a></code> or a notational object such as a <code><a title="musx.mxml.key.Key" href="key.html#musx.mxml.key.Key">Key</a></code>
+or <code><a title="musx.mxml.clef.Clef" href="clef.html#musx.mxml.clef.Clef">Clef</a></code>, etc.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add_element(self, element):
     &#34;&#34;&#34;
-    Adds a measure element to the measure in the same order as occurring
-    in the MusicXml score file.  The element can be a Note (which will be
-    tagged as either &#39;note&#39;, &#39;rest&#39; or &#39;chord&#39;), or an mxml notational
-    object such as a Clef, Key, Meter, Barline, etc. 
+    Adds a measure element in MusicXml order.  The element can be a
+    `musx.note.Note` or a notational object such as a `musx.mxml.key.Key` 
+    or `musx.mxml.clef.Clef`, etc. 
     &#34;&#34;&#34;
     self.elements.append(element)</code></pre>
 </details>
@@ -193,7 +214,7 @@ object such as a Clef, Key, Meter, Barline, etc.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns a dictionary whose keys are the Measure's voice ids and whose
-values are the time ordered Notes that belong to that voice.</p></div>
+values are the time ordered notes that belong to that voice.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -201,7 +222,7 @@ values are the time ordered Notes that belong to that voice.</p></div>
 <pre><code class="python">def voices(self):
     &#34;&#34;&#34;
     Returns a dictionary whose keys are the Measure&#39;s voice ids and whose
-    values are the time ordered Notes that belong to that voice.
+    values are the time ordered notes that belong to that voice.
     &#34;&#34;&#34;
     voices = {}
     for e in self.elements:
@@ -235,6 +256,9 @@ values are the time ordered Notes that belong to that voice.</p></div>
 <h4><code><a title="musx.mxml.measure.Measure" href="#musx.mxml.measure.Measure">Measure</a></code></h4>
 <ul class="">
 <li><code><a title="musx.mxml.measure.Measure.add_element" href="#musx.mxml.measure.Measure.add_element">add_element</a></code></li>
+<li><code><a title="musx.mxml.measure.Measure.elements" href="#musx.mxml.measure.Measure.elements">elements</a></code></li>
+<li><code><a title="musx.mxml.measure.Measure.id" href="#musx.mxml.measure.Measure.id">id</a></code></li>
+<li><code><a title="musx.mxml.measure.Measure.partial" href="#musx.mxml.measure.Measure.partial">partial</a></code></li>
 <li><code><a title="musx.mxml.measure.Measure.voices" href="#musx.mxml.measure.Measure.voices">voices</a></code></li>
 </ul>
 </li>

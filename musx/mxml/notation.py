@@ -1,5 +1,6 @@
 """
-A module for loading and saving MusicXml scores. As of Aug '21 file loading is implemented.
+A module for loading and saving MusicXml scores. As of Aug '21 loading is fully
+implemented .
 """
 
 # creating the MusicXml python file:
@@ -36,7 +37,6 @@ from .part import Part
 from ..pitch import Pitch
 from ..note import Note
 
-
 # A template dictionary defining the 'running status' of MusicXml parsing. The
 # load() method copies the template for each score it parses and passes it to
 # the parsing routines so they can access and store relevant data:
@@ -59,28 +59,35 @@ _DATA = {
 class Notation():
     """
     A class representing a MusicXml score. A Notation contains Part objects and
-    metadata. A Part contains Measure objects, and a Measure contains Note objects
-    as well as non-event notational objects such as Key, Clef, Meter, Barline.
+    metadata. 
+
+    Parameters
+    ----------
+    metadata : dict
+        A dictionary of metadata about the MusicXml score, e.g. title,
+        copyright, etc.
+    parts : list
+        A list of Parts parsed from the MusicXml file.
 
     Given a Notation you can iterate all its elements like this:
-    
-    for part in notation:
-        for measure in part:
-            for element in measure:
-                print(element)
-    
+
+        for part in notation:
+            for measure in part:
+                for element in measure:
+                    print(element)
+
     To access vertical note structures in the score's measures you can iterate the
     score's timepoints like this:
 
-    for measure in notation.timepoints():
-        for timepoint in measure:
-            print(timepoint)
+        for measure in notation.timepoints():
+            for timepoint in measure:
+                print(timepoint)
     """
     def __init__(self, metadata={}, parts=[]):
         self.metadata = metadata
         """A dictionary of MusicXml score metadata."""
         self.parts = []
-        """The score's list of musical parts."""
+        """A list containing the score's musical parts."""
         for p in parts:
             self.add_part(p)
 
@@ -155,7 +162,7 @@ class Notation():
  
 class Timepoint():
     """
-    A Timepoint is an analytical structure that contains an onset time in a
+    A Timepoint is an analytical structure containing an onset beat in a
     measure and the vertical 'slice' of all the notes that begin at that beat
     irrespective of which part, staff or voice they belong to. The note 
     entries within each Timepoint are maintained in a dictionary whose keys
@@ -164,18 +171,15 @@ class Timepoint():
     
     Parameters
     ----------
-    beat : Fraction
+    onset : Fraction
         The metric onset of the timepoint in the measure.
-    nmap : dict
-        The note map of the timepoint is a dictionary of notes whose
-        keys are the part/voice identifiers active in the measure.
     """
     def __init__(self, onset):
-        ## The ratio start time in the measure.
         self.onset = onset
-        ## The note map dictionary, keys are pvids (part/voice identifiers)
-        # from the score and values are either Notes, Chords or Rests.
+        """The ratio start time of the timepoint in its measure."""
         self.notemap = {}
+        """The note map dictionary. Its keys are part.measure.voice identifiers
+        and its values are `musx.note.Note` objects tagged as either notes, chords or rests."""
 
     def __lt__(self, other):
         """
@@ -239,8 +243,7 @@ def _parse_barline(elem, DATA):
 
 def _parse_part(elem, DATA):
     # create a new part and add it to the score
-    part = Part()
-    part.id = elem.get('id')
+    part = Part(elem.get('id'))
     DATA['part'] = part
     DATA['score'].add_part(part)
     # initialize DATA for the new part.
@@ -421,7 +424,15 @@ _PARSERS = {
 
 def load(path, trace=False):
     """
-    Loads a MusicXml file into a Notation object.
+    Returns a `Notation` containing the contents of a MusicXml file.
+
+    Parameters
+    ----------
+    path : string
+        The pathname of the MusicXml file to load.
+    trace : bool
+        If true the raw MusicXml elements are printed to the terminal
+        during the loading process.
     """
     global _DATA
     document = musicxml.parse(path, silence=True) 
