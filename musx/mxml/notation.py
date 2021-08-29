@@ -394,7 +394,19 @@ def _parse_forward(elem, DATA):
 
 
 def _parse_work_title(elem, DATA):
-    DATA['score'].metadata['title'] = elem.text
+    DATA['score'].metadata['work-title'] = elem.text
+
+
+def _parse_work_number(elem, DATA):
+    DATA['score'].metadata['work-number'] = elem.text
+
+
+def _parse_movement_title(elem, DATA):
+    DATA['score'].metadata['movement-title'] = elem.text
+
+
+def _parse_movement_number(elem, DATA):
+    DATA['score'].metadata['movement-number'] = elem.text
 
 
 def _parse_work_creator(elem, DATA):
@@ -405,18 +417,48 @@ def _parse_work_rights(elem, DATA):
     DATA['score'].metadata['rights'] = elem.text
 
 
+def _parse_score_part(elem, DATA):
+    # elem is 'score-part'
+    metadata = DATA['score'].metadata
+    try:
+        partdata = metadata['partdata']
+    except KeyError:
+        partdata = {}
+        metadata['partdata'] = partdata
+    # add an empty info dictionary for the new part id.
+    id = elem.get('id')
+    partdata[id] = {'name': "", 'channel': 0, 'program': 0, 'volume': 90/127}
+    info = partdata[id]
+    for e in elem.iter():
+        if e.tag == 'part-name':
+            info['name'] = e.text.strip()
+        elif e.tag == 'midi-channel':
+            info['channel'] = int(e.text)
+        elif e.tag == 'midi-program':
+            info['program'] = int(e.text)
+        elif e.tag == 'volume':
+            info['program'] = int(e.text)
+
+def _parse_tempo(elem, DATA):
+    print("***", _elementinfo(elem))
+
 # Dictionary of parsing functions accessed by the corresponding MusicXml tag
 # name.  Tags that are not in this dictionary are either not parsed or parsed
 # by a function that is in the dictionary.
 _PARSERS = {
+    'score-part': _parse_score_part,
     'part': _parse_part, 
     'measure': _parse_measure, 
     'attributes': _parse_attributes, 
     'barline': _parse_barline,
+    'tempo': _parse_tempo,
     'note': _parse_note,
     'backup': _parse_backup,
     'forward': _parse_forward,
     'work-title': _parse_work_title,
+    'work-number': _parse_work_number,
+    'movement-title': _parse_movement_title,
+    'movement-number': _parse_movement_number,
     'creator': _parse_work_creator,
     'rights': _parse_work_rights
     }
