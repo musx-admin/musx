@@ -16,7 +16,10 @@ python3 -m demos.gamelan
 ```
 """
 
-version="2.0.0"
+# Do not alter this version line, it is automatically replaced by the correct
+# version number when the software is released.
+
+version="N.N.N"
 
 from .rhythm import *
 from .midi import gm
