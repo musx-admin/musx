@@ -48,8 +48,7 @@ from ..note import Note
 #   meter: The most recent meter encountered in the score.
 #   key: The most recent key encountered in the score.
 #   onset: The Fraction onset time for the next note. This value is reset to 0 for each
-#          measure, (or to measureDur - noteDur for partial measures) and incremented
-#          by the duration of notes, forwards and backups.
+#          measure and incremented by the duration of notes, forwards and backups.
 _DATA = {
         "score": None, "part": None, "measure": None, "divisions": None,
         "note": None, "meter:": None, "key": None, "onset": None
@@ -198,6 +197,29 @@ class Timepoint():
 
     __repr__ = __str__
 
+class Tempo():
+    """
+    Creates a tempo marking.
+    Parameters
+    ----------
+    tempo : int
+        The tempo expressed as quarter notes per minute.
+    beat : Fraction
+        The beat value for the tempo change, defaults to Fraction(1,4) or a quarter note.
+    """
+    def __init__(self, tempo, beat=Fraction(1,4)):
+        self.tempo = tempo
+        self.beat = beat
+
+    def scale_to_tempo(self, value):
+        return value/self.beat * 60 / self.tempo
+    
+    def __str__(self):
+        return f"<Tempo: {self.tempo} {str(self.beat)}>"
+    
+    def __repr__(self):
+        return f"Tempo({self.tempo}, {repr(self.beat)})"
+
 
 ##############################################################################
 
@@ -260,6 +282,17 @@ def _parse_part(elem, DATA):
 def _parse_measure(elem, DATA):
     # create a new measure and add it to the part
     measure = Measure(elem.get('number'))
+    # cache the starting beat of this measure in the score. all
+    # note times in the measure will be relative to this onset.
+    if not DATA['measure']:
+        measure.onset = 0  # onset 0 for first measure in each part
+    else:
+        # access the last note of the previous measure to calculate
+        # the onset time of this (new) measure
+        for e in DATA['measure'].elements[::-1]:
+            if isinstance(e, Note):
+                measure.onset = DATA['measure'].onset + e.time + e.duration
+                break
     if elem.get('implicit') == 'yes':
         measure.partial = True
     DATA['measure'] = measure
@@ -326,6 +359,7 @@ def _parse_note(elem, DATA):
     staff = None # ??? default?
     dots = 0
     note = None
+    #tupa,tupn = None,None
     for e in elem.iter(): 
         if e.tag == 'pitch':
             step = e.findtext('step')
@@ -351,15 +385,14 @@ def _parse_note(elem, DATA):
             voice = int(e.text)
         elif e.tag == 'staff':
             pass
-        elif e.tag == 'notations':
-            pass
     # duration == dur/div * 1/4 == dur/(div*4)
     duration = Fraction(duration, DATA['divisions'] * 4)
-    if DATA['measure'].partial:
-        onset = DATA['meter'].measure_dur() - duration
-        #print("*****", "measnum=", DATA['measure'].id, "measuredur=", DATA['meter'].measure_dur(), "duration=", duration)
-    else:
-        onset = DATA['onset']
+    onset = DATA['onset']
+    # if DATA['measure'].partial:
+    #     onset = DATA['meter'].measure_dur() - duration
+    #     #print("*****", "measnum=", DATA['measure'].id, "measuredur=", DATA['meter'].measure_dur(), "duration=", duration)
+    # else:
+    #     onset = DATA['onset']
     #print("part=", DATA['part'].id, "measure=", DATA['measure'].id, " onset=", onset, " pitch=", pitch)
     note = Note(time=onset, duration=duration, pitch=pitch) #, instrument=voice
     note.set_mxml('voice', voice)
@@ -431,16 +464,21 @@ def _parse_score_part(elem, DATA):
     info = partdata[id]
     for e in elem.iter():
         if e.tag == 'part-name':
-            info['name'] = e.text.strip()
+            if e.text: # apparently this can be empty! (chopin_prelude_op28_no20.xml)
+                info['name'] = e.text.strip()
         elif e.tag == 'midi-channel':
             info['channel'] = int(e.text)
         elif e.tag == 'midi-program':
             info['program'] = int(e.text)
         elif e.tag == 'volume':
-            info['program'] = int(e.text)
+            info['volume'] = float(e.text)
 
-def _parse_tempo(elem, DATA):
-    print("***", _elementinfo(elem))
+
+def _parse_sound(elem, DATA):
+    tempo=elem.get("tempo", None)
+    if tempo:
+        print("**** TEMPO measure=", DATA['measure'].id, ", tempo=", tempo)
+        DATA['measure'].add_element(Tempo(int(tempo)))
 
 # Dictionary of parsing functions accessed by the corresponding MusicXml tag
 # name.  Tags that are not in this dictionary are either not parsed or parsed
@@ -451,7 +489,7 @@ _PARSERS = {
     'measure': _parse_measure, 
     'attributes': _parse_attributes, 
     'barline': _parse_barline,
-    'tempo': _parse_tempo,
+    #'tempo': _parse_tempo,
     'note': _parse_note,
     'backup': _parse_backup,
     'forward': _parse_forward,
@@ -460,7 +498,8 @@ _PARSERS = {
     'movement-title': _parse_movement_title,
     'movement-number': _parse_movement_number,
     'creator': _parse_work_creator,
-    'rights': _parse_work_rights
+    'rights': _parse_work_rights,
+    'sound': _parse_sound
     }
 
 

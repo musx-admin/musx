@@ -25,6 +25,8 @@ class Measure:
         """The measure's elements, in MusicXml file order."""
         self.partial = False
         """If true the measure is an incomplete (pickup) measure."""
+        self.onset = False
+        """The onset time of the measure expressed as a fraction."""
 
     def add_element(self, element):
         """
