@@ -5,11 +5,12 @@ and rests according to their attribute values. A note's attribute values are
 automatically converted to whatever format is required by a specific backend.
 """
 
+from fractions import Fraction
+from copy import copy, deepcopy
 from .midi import midievent as me
 from .midi import midimsg as mm
 from .tools import quantize
 from .pitch import Pitch
-from fractions import Fraction
 
 class Event:
     """
@@ -79,6 +80,8 @@ class Note (Event):
         0 to 15, inclusive. 
     """
     def __init__(self, time=0.0, duration=1.0, pitch=60, amplitude=.5, instrument=0):
+        # WARNING: if you add new attributes be sure to update copy() and
+        # copy_at_tempo() as needed.
         super().__init__(time)
         self.duration = duration
         self.amplitude = amplitude
@@ -263,3 +266,42 @@ class Note (Event):
         if isinstance(self._pitch, Pitch):
             return self._pitch.keynum()
         return self._pitch
+
+    # def __deepcopy__(self, memo):
+    #     cls = self.__class__
+    #     result = cls.__new__(cls)
+    #     memo[id(self)] = result
+    #     for k, v in self.__dict__.items():
+    #         setattr(result, k, deepcopy(v, memo))
+    #     return result
+
+    def copy(self):
+        # ARRRG! Tried __deepcopy__ but gave up for now...
+        """
+        Returns a deep copy of this Note and all its children.
+        """
+        cpy = Note() 
+        cpy._time = self._time
+        cpy._duration = self._duration
+        cpy._amplitude = self._amplitude
+        cpy._pitch = self._pitch
+        cpy._instrument = self._instrument
+        cpy._children = [c.copy() for c in self._children]
+        cpy._mxml = self._mxml.copy()
+        return cpy
+
+    def copy_at_tempo(self, tempo_scalar):
+        """
+        Returns a copy of this note with its time and duration adjusted by
+        tempo_scaler, a metronome value per quarter: 60.0 / (1/4 * tempo)
+        """
+        cpy = Note() 
+        cpy._time = self._time * tempo_scalar
+        cpy._duration = self._duration * tempo_scalar
+        cpy._amplitude = self._amplitude
+        cpy._pitch = self._pitch
+        cpy._instrument = self._instrument
+        cpy._children = [c.copy_at_tempo(tempo_scalar) for c in self._children]
+        cpy._mxml = self._mxml.copy()     
+        return cpy
+        

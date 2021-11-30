@@ -26,6 +26,7 @@ import re, os
 from lxml import etree
 from enum import Enum, auto
 from fractions import Fraction
+from copy import copy
 from . import musicxml
 from .barline import Barline
 from .clef import Clef
@@ -49,9 +50,10 @@ from ..note import Note
 #   key: The most recent key encountered in the score.
 #   onset: The Fraction onset time for the next note. This value is reset to 0 for each
 #          measure and incremented by the duration of notes, forwards and backups.
+#   tempo: A tempo map in score beats.
 _DATA = {
-        "score": None, "part": None, "measure": None, "divisions": None,
-        "note": None, "meter:": None, "key": None, "onset": None
+    "score": None, "part": None, "measure": None, "divisions": None,
+    "note": None, "meter:": None, "key": None, "onset": None, "tempo": None
     }
 
 
@@ -83,7 +85,7 @@ class Notation():
                 print(timepoint)
     """
     def __init__(self, metadata={}, parts=[]):
-        self.metadata = metadata
+        self.metadata = copy(metadata)
         """A dictionary of MusicXml score metadata."""
         self.parts = []
         """A list containing the score's musical parts."""
@@ -158,6 +160,20 @@ class Notation():
             timepoints.append(measurepoints)
         return timepoints
 
+    def seq(self, applytempo=True):
+        """
+        Returns a sequence of copied notes for playback or writing to midi files.
+        Parameters
+        ----------
+        tempocurve : bool
+            If true the timepoints 
+        """
+        pass
+        # tpoints = self.timepoints()
+        # tempomap = self.metadata['tempo-map']
+        # for measlist in tpoints:
+        #     for point in measlist:
+
  
 class Timepoint():
     """
@@ -196,6 +212,7 @@ class Timepoint():
         return f"<Timepoint: {str(self.onset)} ({pstr})>"
 
     __repr__ = __str__
+
 
 class Tempo():
     """
@@ -476,9 +493,17 @@ def _parse_score_part(elem, DATA):
 
 def _parse_sound(elem, DATA):
     tempo=elem.get("tempo", None)
-    if tempo:
-        print("**** TEMPO measure=", DATA['measure'].id, ", tempo=", tempo)
-        DATA['measure'].add_element(Tempo(int(tempo)))
+    if tempo: 
+        # add next tempo to map: [<scoretime> <tempo>]
+        scoretime = DATA['measure'].onset + DATA['onset']
+        thistempo = [ scoretime*1.0, int(tempo) ]
+        DATA['score'].metadata['tempo-map'].extend(thistempo)
+
+# def _parse_sound(elem, DATA):
+#     tempo=elem.get("tempo", None)
+#     if tempo:
+#         print("**** TEMPO measure=", DATA['measure'].id, ", tempo=", tempo)
+#         DATA['measure'].add_element(Tempo(int(tempo)))
 
 # Dictionary of parsing functions accessed by the corresponding MusicXml tag
 # name.  Tags that are not in this dictionary are either not parsed or parsed
@@ -489,7 +514,6 @@ _PARSERS = {
     'measure': _parse_measure, 
     'attributes': _parse_attributes, 
     'barline': _parse_barline,
-    #'tempo': _parse_tempo,
     'note': _parse_note,
     'backup': _parse_backup,
     'forward': _parse_forward,
@@ -522,8 +546,9 @@ def load(path, trace=False):
     assert isinstance(root, etree._Element) and root.tag == 'score-partwise', f"not a score-partwise element: {root}."
     # a dictionary maintaining the running status of parsing.
     DATA = _DATA.copy()
-    DATA['score'] = Notation(metadata={'file': os.path.abspath(path)})
+    DATA['score'] = Notation(metadata={'file': os.path.abspath(path), 'tempo-map': []})
     DATA['divisions'] = 1 # default MusicXml divisions is 1 quarter note.
+    DATA['tempo'] = [] # list of [score_time tempo ..]
     # a depth-first traversal of all elements in the document.
     for x in root.iter():
         if trace:
@@ -531,6 +556,9 @@ def load(path, trace=False):
         parser = _PARSERS.get(x.tag)
         if parser:
             parser(x, DATA)
+    # # default tempo is 120 ??
+    # if not DATA['score']['tempo-map']:
+    #     DATA['score']['tempo-map'].extend([Fraction(0,1), Tempo(120)])
     return DATA['score']
 
 
