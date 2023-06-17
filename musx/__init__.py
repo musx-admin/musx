@@ -1,18 +1,20 @@
 """
 musx (pronounced *muse ex*) is a package for composing and processing symbolic
 music information. It contains a large set of compositional tools adapted from
-my Common Music and Grace systems, including support for complex pattern
-generation, randomness, mapping, enveloping, spectral composition, and 
-microtonality. The musx package currently provides back ends to read and write
-midi files and Csound (thank you Michael Gogins!) and it is straightforward
-to add other backends to connect to different systems, for example to send
-data to an app via portmidi or to SuperCollider via osc. If you are new to
-musx or Python the place to start is by reading this documentation and
-trying out the material in the demos directory. After restoring the demos,
-you can generate output by running them as scripts:
+my Common Music and Grace systems, including support for complex pattern generation,
+randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
+scores. The musx package currently provides back ends to read and write midi files
+and Csound (thank you Michael Gogins!) and it is straightforward to add other
+backends to connect to different systems, for example to send data to an app via
+portmidi or to SuperCollider via osc. If you are new to musx or Python the place to
+start is by reading this documentation and trying out the material in the demos and
+tutorials directories. After restoring the demos, you can generate output by
+running them as scripts or using the jupyter notebook versions:
 
 ```bash
-python3 -m demos.gamelan
+python -m demos.gamelan
+
+jupyter notebook demos/gamelan.ipynb
 ```
 """
 

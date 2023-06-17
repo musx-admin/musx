@@ -4,14 +4,14 @@ steps. To run the script first make sure your musx virtual environment is
 running and that your working directory is the top-level of the musx repo. Then
 execute this makerelease script and pass it the software's new version number:
 
-    (venv) $ cd /path/to/musx
-    (venv) $ python3 scripts/makerelease.py 1.2.3
+    (musxenv) $ cd /path/to/musx
+    (musxenv) $ python admin/makerelease.py 1.2.3
 
 To upload the release to the pip repository after executing the script do:
 
-    (venv) $ cd /tmp/musx-release
-    (venv) $ python3 -m build
-    (venv) $ python3 -m twine upload dist/*
+    (musxenv) $ cd /tmp/musx-release
+    (musxenv) $ python -m build
+    (musxenv) $ python -m twine upload dist/*
 """
 
 # instructions:
@@ -34,7 +34,7 @@ helpstr = '''
     Takes one required argument, the release tag, a string of three ints
     separated by periods.
 
-    Example: $ python3 admin/makerelease.py 1.2.3
+    Example: $ python admin/makerelease.py 1.2.3
 '''
 
 
@@ -122,6 +122,6 @@ if __name__ == '__main__':
     print(f"""
 To upload to pip do:
     $ cd {rel_dir}
-    $ python3 -m build
-    $ python3 -m twine upload dist/*
+    $ python -m build
+    $ python -m twine upload dist/*
 """)

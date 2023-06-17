@@ -2,90 +2,103 @@
 
 This document explains how to install musx in a Python [virtual environment](https://docs.python.org/3/library/venv.html).  A virtual environment is an independent Python installation dedicated to a specific project (such as musx) without affecting your computer's global Python environment.  Highly recommended!
 
-0) The musx package requires Python 3.9 or higher.  You can download the most recent releases of Python from https://www.python.org/downloads/. Once downloaded, double-click the installation package to install Python on your computer.
+0. The musx package requires Python 3.9 or higher.  You can download the most recent releases of Python from https://www.python.org/downloads/. Once downloaded, double-click the installation package to install Python on your computer.
 
-1) Open your computer's terminal application, create a directory dedicated to working with musx, then cd into your new workspace (note: the $ represents the terminal's prompt, do not type this as part of your command):
+1. Open your computer's terminal application, create a directory dedicated to working with musx, then cd into your new workspace (note: the $ represents your terminal's prompt, do not type $ as part of your command!):
 
-  ```
+  ``` 
   $ mkdir ~/projects/mymusx
   $ cd ~/projects/mymusx
   ```
 
-2) Call Python 3.9 or higher and create a virtual environment (venv) for musx:
+2. Call Python 3.9 or higher and create a virtual environment (musxenv) for musx:
 
   ``` 
-  $ python3.10 -m venv venv
+  $ python3.10 -m venv musxenv
   ```
 
-3) Activate the musx virtual environment. Once activated you will see the name of your environnment (venv) prepended to each terminal prompt:
+3. Activate the musxenv virtual environment. Once activated you will see the name of the environnment prepended to your terminal's prompt:
 
   ```
-  $ source venv/bin/activate
-  (venv) $
+  $ source musxenv/bin/activate
+  (musxenv) $
   ```
 
-4) With venv activated you can use the generic 'python' command to invoke the correct Python version:
+4. With musxenv activated you can now use the generic 'python' command to invoke the correct Python version for the environment:
 
   ```
-  (venv) $ python
+  (musxenv) $ python
    Python 3.10.6 (v3.10.6:9c7b4bd164, Aug  1 2022, 17:13:48) [Clang 13.0.0 (clang-1300.0.29.30)] on darwin
    Type "help", "copyright", "credits" or "license" for more information.
    >>> quit()
-   (venv) $
+   (musxenv) $
   ```
 
-5) Make sure venv will use the latest versions of pip, setuptools and wheel:
+5. Next, make sure the musxenv environment uses the latest versions of pip, setuptools and wheel:
 
   ```
-  (venv) $ python -m pip install --upgrade pip setuptools wheel
+  (musxenv) $ python -m pip install --upgrade pip setuptools wheel
   ```
 
-6) Install the [matplotlib](https://matplotlib.org/), [scipy](https://www.scipy.org/), and [jupyter](https://pypi.org/project/jupyter/) packages to work with musx's interactive demos and tutorials:
+6. Install the musx support packages [matplotlib](https://matplotlib.org/), [scipy](https://www.scipy.org/), [jupyter](https://pypi.org/project/jupyter/), and [lxml](https://pypi.org/project/lxml/).  This will take a minute or two...
 
   ```
-  (venv) $ python -m pip install matplotlib
-  
-  (venv) $ python -m pip install scipy
-
-  (venv) $ python -m pip install jupyter
+  (musxenv) $ python -m pip install matplotlib scipy jupyter lxml
   ```
 
-7) Now install the latest musx package and (optionally) copy its documentation and demo directories into your working musx directory:
+7. Associate the musxenv environment name with your jupyter kernel so you can select musxenv as the notebook's kernel when you run musx demos and tutorials in jupyter notebooks.  The jupyter kernel will inform you where it saves the kernel spec should you want to edit its properties further:
 
-```
-(venv) $ python -m pip install musx
+  ```
+  (musxenv) $ python -m ipykernel install --user --name=musxenv
+  Installed kernelspec musxvenv in /Users/taube/Library/Jupyter/kernels/musxenv
+  ```
 
-(venv) $ cp -r venv/site-packages/musx/doc ./doc
+8. Now install musx and (optionally) copy its documentation and demo directories into your mymusx working directory for easy access:
 
-(venv) $ cp -r venv/site-packages/musx/demos ./demos
-```
+  ```
+(musxenv) $ python -m pip install musx
 
-8) Test that musx works by starting up python, importing the musx package, and calling a function:
+(musxenv) $ cp -r musxenv/site-packages/musx/doc ./doc
 
-```
-(venv) $ python
-Python 3.10.6 (v3.10.6:9c7b4bd164, Aug  1 2022, 17:13:48) [Clang 13.0.0 (clang-1300.0.29.30)] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>> import musx
->>> musx.keynum('C4')
-60
->>> exit()
-(venv) $
-```
+(musxenv) $ cp -r musxenv/site-packages/musx/demos ./demos
+
+(musxenv) $ cp -r musxenv/site-packages/musx/tutorials ./tutorials
+  ```
+
+9. Finally, test that musx is working by starting up python, importing the musx package, and calling a function:
+
+  ```
+  (musxenv) $ python
+  Python 3.10.6 (v3.10.6:9c7b4bd164, Aug  1 2022, 17:13:48) [Clang 13.0.0 (clang-1300.0.29.30)] on darwin
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> import musx
+  >>> musx.keynum('C4')
+  60
+  >>> exit()
+  (musxenv) $
+  ```
 ___
 
-That's it! 🤗  The best way to learn about the musx system is to run the scripts in demos/ and read the documentation in the docs/ folder.  To run a demo, you can use the jupyter notebook version or remain in this directory and specify a demo module path like this:
+That's it! 🤗  The best way to learn about the musx system is to read the documentation in the docs/ folder and run the scripts in demos/ and tutorials/.  To run a demo, you can use the jupyter notebook version or the python script version:
 
-```
-(venv) $ python -m demos.gamelan
-```
+Run a Jupyter notebook demo:
 
-When you are done with your musx session you can deactivate the virtural environment by typing 'deactivate' in your terminal:
+  ```
+  (musxenv) $ jupyter notebook demos/gamelan.ipynb
+  ```
 
-```
-(venv) $ deactivate
-$ 
-```
+Run a Python script demo:
+
+  ```
+  (musxenv) $ python -m demos.gamelan
+  ```
+
+When you are done with your musx session you can type 'deactivate' to shut down your virtural environment. Once deactivated your terminal prompt will no longer display the virtual envronment name:
+
+  ```
+  (musxenv) $ deactivate
+  $ 
+  ```
 
 ## Additional support and customizations
 
@@ -94,7 +107,7 @@ $
   - [Visual Studio Code](https://code.visualstudio.com/) with the [python extension](https://code.visualstudio.com/docs/languages/python)
   - [Pycharm](https://www.jetbrains.com/pycharm/) with the [free student license](https://www.jetbrains.com/community/education/#students).
 
-* You will probably want to be able to play midi files direectly from the terminal.  [fluidsynth](http://www.fluidsynth.org/) is a good choice, you can use [Homebrew](https://brew.sh/) to install it on mac, linux, and windows:
+* You will probably want to be able to play midi files directly from the terminal.  [fluidsynth](http://www.fluidsynth.org/) is a good choice, you can use [Homebrew](https://brew.sh/) to install it on mac, linux, and windows:
 
   ```
   $ brew install fluid-synth
@@ -121,12 +134,9 @@ $
   $ fs mymidifile.mid
   ```
 
-  
-
 ​	—Rick Taube
 
-​		Emeritus Professor, Composition/Theory/CS+Music
-​		School of Music
-​		University of Illinois Urbana-Champaign
+​		Emeritus Professor, Composition/Theory/CS+Music  
+​		School of Music  
+​		University of Illinois Urbana-Champaign  
 ​		Email: taube@illinois.edu
-
