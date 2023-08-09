@@ -22,7 +22,7 @@ jupyter notebook demos/gamelan.ipynb
 # version number when the software is released.
 
 version="N.N.N"
-
+#from fractions import Fraction
 from .rhythm import *
 from .midi import gm
 from .midi.midimsg import *
@@ -43,3 +43,6 @@ from .spectral import *
 from .pc import *
 from .csound import *
 from .mxml.notation import *
+# importing the frac module adds musx methods to python's Fraction class,
+# there are no symbols to import from the module itself.
+from .frac import *

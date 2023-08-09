@@ -54,6 +54,8 @@ class Measure:
         &#34;&#34;&#34;The measure&#39;s elements, in MusicXml file order.&#34;&#34;&#34;
         self.partial = False
         &#34;&#34;&#34;If true the measure is an incomplete (pickup) measure.&#34;&#34;&#34;
+        self.onset = False
+        &#34;&#34;&#34;The onset time of the measure expressed as a fraction.&#34;&#34;&#34;
 
     def add_element(self, element):
         &#34;&#34;&#34;
@@ -137,6 +139,8 @@ well as notational objects such as <code><a title="musx.mxml.key.Key" href="key.
         &#34;&#34;&#34;The measure&#39;s elements, in MusicXml file order.&#34;&#34;&#34;
         self.partial = False
         &#34;&#34;&#34;If true the measure is an incomplete (pickup) measure.&#34;&#34;&#34;
+        self.onset = False
+        &#34;&#34;&#34;The onset time of the measure expressed as a fraction.&#34;&#34;&#34;
 
     def add_element(self, element):
         &#34;&#34;&#34;
@@ -180,6 +184,10 @@ well as notational objects such as <code><a title="musx.mxml.key.Key" href="key.
 <dt id="musx.mxml.measure.Measure.id"><code class="name">var <span class="ident">id</span></code></dt>
 <dd>
 <div class="desc"><p>The measure's integer identifier in its owning Part.</p></div>
+</dd>
+<dt id="musx.mxml.measure.Measure.onset"><code class="name">var <span class="ident">onset</span></code></dt>
+<dd>
+<div class="desc"><p>The onset time of the measure expressed as a fraction.</p></div>
 </dd>
 <dt id="musx.mxml.measure.Measure.partial"><code class="name">var <span class="ident">partial</span></code></dt>
 <dd>
@@ -254,10 +262,11 @@ values are the time ordered notes that belong to that voice.</p></div>
 <ul>
 <li>
 <h4><code><a title="musx.mxml.measure.Measure" href="#musx.mxml.measure.Measure">Measure</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="musx.mxml.measure.Measure.add_element" href="#musx.mxml.measure.Measure.add_element">add_element</a></code></li>
 <li><code><a title="musx.mxml.measure.Measure.elements" href="#musx.mxml.measure.Measure.elements">elements</a></code></li>
 <li><code><a title="musx.mxml.measure.Measure.id" href="#musx.mxml.measure.Measure.id">id</a></code></li>
+<li><code><a title="musx.mxml.measure.Measure.onset" href="#musx.mxml.measure.Measure.onset">onset</a></code></li>
 <li><code><a title="musx.mxml.measure.Measure.partial" href="#musx.mxml.measure.Measure.partial">partial</a></code></li>
 <li><code><a title="musx.mxml.measure.Measure.voices" href="#musx.mxml.measure.Measure.voices">voices</a></code></li>
 </ul>

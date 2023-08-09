@@ -924,7 +924,7 @@ def parse_pitch_sequence(string):
 
 
 def parse_number_sequence(string):
-    seq = tools._sequence(string)
+    seq = tools.parse_string_sequence(string)
     for i,p in enumerate(seq):
         if not p[0] in &#39;0123456789+-.&#39;:
             raise ValueError(f&#34;invalid numeric: &#39;{p}&#39;.&#34;)

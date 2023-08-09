@@ -1,0 +1,1825 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>musx.patterns API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>musx.patterns</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import types
+from collections.abc import Iterator
+import random
+import matplotlib.pyplot as plt
+
+class Pattern(Iterator):
+
+    def __init__(self, items, mini, period=None):
+        if not isinstance(items, list) or len(items) &lt; mini:
+            raise TypeError(f&#34;{self.__class__.__name__} input {items} is not a list of {mini} or more elements.&#34;)
+        self.items = items
+        if period == None:
+            period = len(items)
+        self.period = period
+        #print(&#34;***period is:&#34;, period)
+        # length of items list
+        self.ilen = len(self.items)
+        # current index into items list
+        self.i = 0 
+        # length of current period
+        self.plen = self.read(self.period) if isinstance(self.period, Iterator) else self.period
+        #print(&#34;***plen is:&#34;, self.plen)
+        # period counter
+        self.p = 0
+        # &#39;EOP&#39; if the pattern just returned the last value of the current period
+        self.eop = None
+
+    def __iter__(self):
+        return self
+
+    def _pname(self):
+        return self.__class__.__name__
+    
+    @staticmethod
+    def read(pat, tup=False):
+        #print(f&#34;read input: ({pat},tup={tup})&#34;)
+        if isinstance(pat, Pattern):
+            x = next(pat)
+            return x if tup else x[0]
+        else:
+            return [pat, &#34;EOP&#34;] if tup else pat
+
+    def next(self, more=False):
+        &#34;&#34;&#34;
+        A pattern savvy version of Python&#39;s next() function.
+        
+        Parameters
+        ----------
+        more : False | True | int 
+            If more is False then the just th enext item in the pattern
+            is returned. If more is True then the (remaining) items in
+            the current period are returned in a list. If more is an
+            integer greater than 0 then that many items will be returned
+            from the pattern.
+
+        Returns
+        -------
+        One or more items in the pattern.
+
+        Examples
+        --------
+        ```python
+        &gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+        &gt;&gt;&gt; c.next()
+        1
+        &gt;&gt;&gt; c.next(True)
+        [2, 3, 4] 
+        &gt;&gt;&gt; c.next(6)
+        [1, 2, 3, 4, 1, 2]
+        ```
+        &#34;&#34;&#34;
+        if more is False:
+            return self.__next__()[0]
+        items = []
+        if more is True:
+            # collect items until end of period            
+            while True:
+                i = self.__next__()
+                items.append(i[0])
+                if i[1] == &#39;EOP&#39;:
+                    return items
+        for i in range(0, more):
+            items.append(self.__next__()[0])
+        return items
+
+
+class Cycle(Pattern):
+
+    def __init__(self, items, period=None):
+        super().__init__(items, 1, period)
+    
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        #print(f&#34;after read: item is {item}&#34;)
+        if item[1] == &#39;EOP&#39;:
+            # (sub)item is at the end of its period
+            # so increment this pattern&#39;s index to the next item 
+            if self.i == self.ilen - 1:
+                self.i = 0
+            else:
+                self.i += 1
+            # if p is now the last index in the current period
+            # signal eop and read the next period length
+            #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+                #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
+            else:
+                self.p += 1 
+                item[1] = None
+        return item
+
+
+class Palindrome(Pattern):
+
+    def __init__(self, items, period=None,  wrap=&#39;++&#39;):
+        match wrap:
+            case &#39;++&#39;: items = items + items[::-1]    # repeat first and last
+            case &#39;+-&#39;: items = items + items[-2::-1]  # repeat first not last
+            case &#39;-+&#39;: items = items + items[-1:0:-1] # repeat last not first
+            case &#39;--&#39;: items = items + items[-2:0:-1] # dont repeat first or last
+            case _:
+                raise ValueError(f&#34;Wrap value {wrap} is not &#39;++&#39;, &#39;+-&#39;, &#39;-+&#39;, or &#39;--&#39;.&#34;)
+        super().__init__(items, 3, period)
+
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        if item[1] == &#39;EOP&#39;:
+            if self.i == self.ilen - 1:
+                self.i = 0
+            else:
+                self.i += 1
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item 
+ 
+
+class Shuffle(Pattern):
+    &#34;&#34;&#34;
+    Returns a pattern that yields its items by random permutation.
+
+    Parameters
+    ----------
+    items : list  
+        The list of items to generate. Each item in the list
+        can be a python object or a sub-pattern.
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        shuffle period will be equal to the number of items
+        in the list.
+    norep : bool
+        If true then items cannot repeat after a shuffle.
+
+    Returns
+    -------
+    The next item in the pattern.
+
+    Raises
+    ------
+    * TypeError if items is not a list of one or more items.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; p = jumble([1,2,3])
+    &gt;&gt;&gt; [read(p) for _ in range(10)]
+    [1, 3, 2, 3, 2, 1] 
+    ```
+    &#34;&#34;&#34;
+
+    def __init__(self, items, period=None, norep=False):
+        super().__init__(items.copy(), 1, period)
+        # initialize for first period
+        random.shuffle(self.items)
+        self.norep = norep
+
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        if item[1] == &#39;EOP&#39;:
+            # at end of items, reshuffle
+            if self.i == self.ilen - 1:
+                self.i = 0
+                last = self.items[-1]
+                random.shuffle(self.items)
+                # continue to shuffle if user specified no repeat
+                # and the next item is the same as the last
+                while (self.norep and self.items[0] == last and self.ilen &gt; 1):
+                    random.shuffle(self.items)             
+            else:
+                self.i += 1
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item 
+
+
+class Choose(Pattern):
+    &#34;&#34;&#34;
+    Yields its items by weighted random selection.
+    By default all items have an equal probability of being returned.
+
+    Parameters
+    ----------
+    items : list
+        The list of items to generate.  Each item in the list can
+        be an item or a list: [item weight] where the first value is
+        the item to return and weight is the probability of the item
+        being selected relative to the other items in the list. If
+        no weight is provided for an item it receives a default 
+        weight of 1.0. If no weights are provided then all the items
+        are chosen with equal probability.
+
+    Returns
+    -------
+    The next item in the pattern.
+    
+    Raises
+    ------
+    * TypeError: if items is not a list
+    * ValueError: if a probability is not a float or int greater than 0        
+    
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; p = choose([&#39;A&#39;,[&#39;B&#39;, 2] &#39;C&#39;])]
+    [p.next() for _ in range(8)]
+    ```
+    &#34;&#34;&#34;
+    def __init__(self, items, period=None):
+        super().__init__(items, 1, period)
+        weights, self.items = [],[]
+        for i in items:
+            if isinstance(i, list):
+                if len(i) != 2 or not isinstance(i[1], (int, float)):
+                    raise TypeError(f&#34;{self._pname()}: {i} is not a two element list [item, probability]&#34;)
+                elif i[1] &lt;= 0:
+                    raise ValueError(f&#34;{self._pname()}: item {i} probability value {i[1]} is not greater than 0.0.&#34;)    
+                else: 
+                    self.items.append(i[0])
+                    weights.append(i[1])
+            else: 
+                self.items.append(i)
+                weights.append(1)
+        #print(&#34;raw weights:&#34;, weights)
+        # normalize weights to values summing to 1.0
+        total = sum(weights)
+        normalized = [weights[i] / total for i in range(len(weights))]
+        #print(&#34;normalized weights:&#34;, normalized)
+        # Convert normalized weights into a monotonically increasing 
+        # probability map between 0.0 and 1.0
+        # Example
+        #     items:      [     &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;]
+        #     normalized: [     0.1, 0.2, 0.3, 0.1, 0.3]
+        #     probmap:    [0.0, 0.1, 0.3, 0.6, 0.7, 1.0]
+        self.probmap = [0.0] + [sum([normalized[i] for i in range(0, w)]) 
+                                for w in range(1, len(normalized))] + [1.0]
+        #print(&#34;probmap:&#34;, self.probmap)
+        self._chooseactiveitem()
+        #print(&#34;activeitem:&#34;, self.activeitem)
+    
+    def _chooseactiveitem(self):
+        &#34;&#34;&#34;
+        Selects a random number N between 0 and 1 and iterates 
+        adjacent values in the probmap to find the pair with
+        a left value &lt;= N and a right value &gt; N. 
+        The index of the left value is the index of the next 
+        item to select.
+        &#34;&#34;&#34;
+        N = random.random()
+        I = None
+        for i in range(1, len(self.probmap)):
+            #print(self.probmap[i-1], self.probmap[i])
+            if (N &gt;= self.probmap[i-1]) and N &lt; self.probmap[i]:
+                I = i-1
+                #print(&#34;index:&#34;, I, &#34;, value:&#34;,  self.items[I])
+                break
+        assert I != None, f&#34;Probability {N} not [0.0-1.0)&#34;
+        self.activeitem = self.items[I]
+    
+    def __next__(self):
+        item = Pattern.read(self.activeitem, tup=True)
+        if item[1] == &#39;EOP&#39;:
+            # at end of period, choose the next item
+            self._chooseactiveitem()            
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item 
+
+
+class Rotation(Pattern):
+    &#34;&#34;&#34;
+    Permutes its items using one or more swapping rules.
+    
+    Parameters
+    ----------
+    items : list
+        The list of items to generate
+    swaps : list | Pattern
+        A list of or more swapping rules or a generator that
+        produces swapping rules. A swapping rule is a list of (up to) four 
+        integers that control the iterative process applied to 
+        all the items in order to produce the next generation of items:
+        ```[start, step, width=1, end=len]```
+        Start is the location (zero based index) in the pattern&#39;s data to begin
+        swapping from, step is the rightward increment to move to the next swap
+        start, width is the distance between the elements swapped.  End is the
+        position in the item list to stop the swapping at, and defaults to the
+        length of the item list.
+    &#34;&#34;&#34;
+    def __init__(self, items, swaps, period=None):
+        super().__init__(items.copy(), 1, period)
+        isseq = lambda a: isinstance(a, (list, tuple))
+        isint = lambda a: isinstance(a, int)
+        if isseq(swaps): # swaprules is a list or tuple
+            if all(map(lambda x: isseq(x), swaps)):   # a list of rules
+                self.source = Cycle(swaps)
+            elif all(map(lambda x: isint(x), swaps)): # the list is one rule
+                self.source = Cycle([swaps])
+        if not isinstance(self.source, Pattern):
+            raise ValueError(f&#34;Swap rules {swaps} is not a list or Pattern.&#34;)
+        self.size = len(items)
+
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        #print(f&#34;after read: item is {item}&#34;)
+        if item[1] == &#39;EOP&#39;:
+            # (sub)item is at the end of its period
+            # so increment this pattern&#39;s index to the next item 
+            if self.i == self.ilen - 1:
+                self.i = 0
+                # we&#39;ve yielded all items in the current generation
+                # so do the rotations to create the next generation.
+                rule = Pattern.read(self.source, tup=False)  #next(self.source)
+                rlen = len(rule)
+                start = rule[0]
+                step = rule[1]
+                width = rule[2] if rlen &gt; 2 else 1
+                end = rule[3] if rlen &gt; 3 else self.ilen 
+                #print(&#34;rule:&#34;, rule, &#34;rlen:&#34;, rlen, &#34;start:&#34;, start, &#34;step:&#34;, step, &#34;width:&#34;, width, &#34;end:&#34;, end)
+                # iterate left to right swapping items according to rule 
+                for a,b in zip(range(start, end, step), range(start+width, end, step)):
+                    self.items[a], self.items[b] = self.items[b], self.items[a]
+            else:
+                self.i += 1
+            # if p is now the last index in the current period
+            # signal eop and read the next period length
+            #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+                #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
+            else:
+                self.p += 1 
+                item[1] = None
+        return item
+    
+    def all(self, grouped=False, wrapped=False):
+        &#34;&#34;&#34;
+        Return a list of all rotations and stops when the first rotation occurs again.
+        Warning: rules that do not produce the original generation will produce
+        an infinite loop.
+
+        Parameters
+        ----------
+        grouped : bool
+            If grouped is True then each generation is collected as a sublist,
+            otherwise the rotated items are returned in one flat list.
+        wrapped : bool
+            If wrapped is True then the first generation will also be appended
+            to the end of list returned.
+        &#34;&#34;&#34;
+        size = self.ilen
+        data = []
+        conc = data.append if grouped else data.extend
+        init = [self.__next__()[0] for _ in range(size)]
+        conc(init)
+        while (True):
+            more = [self.__next__()[0] for _ in range(size)]
+            if init == more:
+                break
+            conc(more)
+        if wrapped:
+            conc(init)
+        return data
+    
+
+# class Markov(Pattern):
+#     def __init__(self, items, period=None, preset=None):
+#         # init accepts a list, not a dict to initialize the pattern
+#         super().__init__(items, 1, period)
+#     def __next__(self):
+#         item = Pattern.read(self.items[self.i], tup=True)
+    
+class Markov(Pattern):
+    &#34;&#34;&#34;
+    Yields items in a Markov chain. The chain is expressed as a dictionary of 
+    rules, each rule associates a tuple of one or more past outcomes with a 
+    list of weighted potential outcomes:
+
+    `{(past,...): [[outcome, weight], [outcome, weight], ...],  ...}`
+    
+    There are two shortcuts available when specifying rules: 
+    * If the rules use only one past value (markov order 1) then you can provide
+    values as keys instead of tuples.
+    * If an outcome has a probability weight of 1 then you can specify just the
+    value instead of a two element list containing the value and 1.
+ 
+    Parameters
+    ----------
+    rules : list
+        A dictionary of rules that generate the Markov chain. Each rule is a
+        key and value pair, where the key is a tuple of 1 or more past outcomes
+        and the value is a list of pairs [[outcome, weight1], [outcome2, weight2],...]
+        representing each possible next outcome together with its weight (probability).
+        The length of the tuples determines the markov order of the generator
+        and all rules must ha be the same and it .
+        The &lt;next&gt; columns in the rule contain the potential next outcomes 
+        with their probability weights. Each column can contain just an outcome,
+        in which case it will be assigned a probability weight of 1, or it can 
+        be expressed as a list [next, weight].
+    stop : int | None
+        The number of times to read from the pattern before stopping.
+        If None then the generator is unbounded. The default is None.
+    preset : past
+        If specified it is the initial &#39;past&#39; the markov chain uses to generate
+        the first outcome.
+    Returns
+    -------
+    The next item in the pattern.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; markov({&#39;a&#39;: [&#39;b&#39;, [&#39;c&#39;, 3]], 
+                &#39;b&#39;: [&#39;a&#39;],
+                &#39;c&#39;: [[&#39;a&#39;, 5], &#39;c&#39;, [&#39;b&#39;, 2.5]]})
+    ```
+    This is a 1st order markov process with three rules:
+
+    1) if the last outcome was &#39;a&#39; then the next outcome is either &#39;b&#39; or &#39;c&#39;,
+    with &#39;c&#39; three times as likely as &#39;b&#39;.
+    2) if the last outcome was &#39;b&#39; then the next outcome is &#39;a&#39;.
+    3) if the last outcome was &#39;c&#39; then the next outcome is either &#39;a&#39;, &#39;c&#39; or &#39;b&#39;,
+    with &#39;c&#39; being the least likely and &#39;a&#39; being the most likely outcome.
+    &#34;&#34;&#34;
+    
+    def __init__(self, items, period=None, preset=None):
+        # init accepts a list, not a dict to initialize the pattern
+        super().__init__(list(items.keys()), 1, period)
+        # after init call set items to the actual dictionary
+        self.items = items
+        if preset and not isinstance(preset, tuple):
+                preset = (preset,)
+        data = {}
+        order = 0  # the order of the markov process is the number of past events
+        for key, value in self.items.items():
+            # key holds previous outputs to match
+            if not isinstance(key, tuple):
+                key = (key,)
+                #print(&#34;converted key to tuple -&gt;&#34;, key)
+            elif not len(key) &gt; 0:
+                raise TypeError(&#39;Rule key {key} is empty.&#39;)
+            # value holds a list [[n1, w1], [n2, w2],...]
+            if not isinstance(value, list):
+                raise TypeError(&#39;Dictionary value {value} is not a list.&#39;)
+            if not order:
+                order = len(key)
+                #print(&#34;initialized order to &#34;, order)
+            elif order != len(key):
+                raise IndexError(f&#34;Rule matches of differnt lengths: {order} and {len(key)}.&#34;)
+            weight = 0  # calculated total weight of all the outcomes in the rule
+            outcomes = []
+            for col in value:
+                # col is either an outcome or a list: [outcome, weight]
+                # normalize to a list and sum their weights
+                if isinstance(col, list):
+                    if len(col) == 2:
+                        if isinstance(col[1], (int, float)):
+                            weight += col[1]
+                            outcomes.append(list(col)) # copy the user&#39;s list
+                        else:
+                            raise ValueError(f&#34;Outcome weight {col} is not an int or float.&#34;)
+                    else:
+                        raise IndexError(&#34;Outcome {col} is not a two element list [outcome, weight].&#34;)
+                else:
+                    weight += 1
+                    outcomes.append([col, 1])
+            # convert weights into probabilities 0.0 &lt; p... &lt; 1.0
+            # convert first outcome&#39;s weight into a probability.
+            outcomes[0][1] = outcomes[0][1] / weight
+            # now convert the weights above it into probabilities and  
+            # add to the previous probability. the result will be the
+            # total probabilty 0-1 sectioned proportionally according
+            # to the weights of the outputs
+            for i in range(1, len(outcomes)):
+                outcomes[i][1] = outcomes[i-1][1] + (outcomes[i][1]/weight)
+            # assign outcomes to the key
+            data[key] = outcomes
+        # use the user&#39;s preset or the first past in the dictionary.
+        if not preset:
+            preset = next(iter(data)) # use first rule&#39;s past
+        else:
+            if order == len(preset):
+                preset = list(preset) # copy users preset
+            else:
+                raise IndexError(f&#39;Preset value {preset} is not a list of {order} \
+                    {&#34;elements&#34; if order &gt; 1 else &#34;element&#34;}.&#39;)
+        # initialize the history to the preset. older values are to the left
+        self.items = data
+        self.history = preset
+        
+    def __next__(self):
+        #item = Pattern.read(self.items[self.i], tup=True)
+        # find the rule that matches current history
+        outcomes = self.items.get(self.history)
+        if not outcomes:
+            raise ValueError(f&#39;No rule match for {self.history}.&#39;)
+        # find the next outcome
+        randnum = random.random()
+        outcome = None
+        # find the outcome for the random number
+        for out in outcomes:
+            if randnum &lt; out[1]:
+                outcome = out[0] # next outcome
+                break       
+        # outcome is a tuple to left-shift history with current 
+        # choice appended, and as a return value to Pattern.next()
+        outcome = (outcome,)
+        self.history = self.history[1:] + outcome
+        return outcome
+
+    @staticmethod
+    def analyze(data, order=1):
+        &#34;&#34;&#34;
+        Performs a markov analysis of a list of data and returns a 
+        Markov pattern of the given order to generate the data.
+        
+        Parameters
+        ----------
+        data : list
+            The list of data to analyse.
+        order : int
+            The markov order of the analysis.
+
+        Returns
+        -------
+        A Markov pattern that generates results from the data.
+
+        Examples
+        --------
+        ```
+        &gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+        {(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+        ```
+        &#34;&#34;&#34;
+        # each window is a list of one or more past values followed
+        # by the subsequent value: (past+, next)
+        windows = []
+        end = len(data)
+        for i in range(end):
+            windows.append(tuple(data[(i+j) % end] for j in range(order+1)) )
+        histogram = {}
+        for w in windows:
+            if histogram.get(w):
+                histogram[w] += 1
+            else:
+                histogram[w] = 1
+        #print(histogram)
+        rules = {}
+        for item in histogram.items():
+            # tuple of one or more past outcomes
+            past_outcome = item[0][:-1] 
+            future_outcome = item[0][-1]
+            future_weight = histogram[item[0]]
+            if rules.get(past_outcome):
+                rules[past_outcome].append([future_outcome, future_weight])
+            else:
+                rules[past_outcome] = [[future_outcome, future_weight]]
+        return Markov(rules)
+    
+
+if __name__ == &#39;__main__&#39;:
+
+    #p = Cycle([&#39;A&#39;, Cycle([100,200, 300], 4),&#39;C&#39;])
+    p = Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;], period=4),300])
+    p = Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;], period=Cycle([2,5,4])), 300])
+    p = Cycle([&#39;A&#39;, &#39;B&#39;], period=Cycle([2,5,4]))
+    #p = Shuffle([&#39;A&#39;], period=Cycle([2,5,4]), norep=True)
+    #p = Choose([[&#39;A&#39;, 1], [&#39;B&#39;, 2],[&#39;C&#39;, 3], [&#39;D&#39;, 1], [&#39;E&#39;, 3]])
+    p = Choose([[Cycle([2,5,4]), 1], [&#39;B&#39;, 2],[&#39;C&#39;, 3]])
+
+    #p = Cycle([&#39;x&#39;, &#39;y&#39;, Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], 4),300]), &#39;z&#39;])
+    #p = Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], 4),300])
+    #p = Cycle([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;], Cycle([1,2,3]))
+    #p = Cycle([100, Cycle([&#39;A&#39;, Cycle([&#39;x&#39;,&#39;y&#39;], 4), &#39;C&#39;]), 300])
+    #p = Cycle([100, 200, 300, 400, 500, 600,], period=Cycle([1,2,3,4]))
+        
+    # def plot(data):
+    #     plt.plot(data)
+    #     plt.show()
+        
+    # def histo(data):
+    #     plt.hist(data, bins=30, facecolor=&#34;blue&#34;, alpha=0.5) 
+    #     plt.show()
+
+    # data = [next(p)[0] for _ in range(2000)]
+    # histo(data)
+
+    data = [&#39;a&#39;, Cycle([&#39;b1&#39;, &#39;b2&#39;, &#39;b3&#39;]),&#39;c&#39;]
+    #data = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+    rule = [0, 1, 1]
+    #rule = [[0, 1, 1, 2], [1, 1, 1, 3]]
+    rgen = Rotation(data, rule, period=5)
+    #for g in range(8):
+    #    print(f&#34;gen{g+1}: {[next(rgen)[0] for _ in range(len(data))]}&#34;)
+    print(rgen.all())
+
+
+
+#    data = [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+#    rule = [[0, 1, 1, 2], [1, 1, 1, 3]]
+#    for g, gen in enumerate(musx.all_rotations(data, rule, True, True)):
+#        print(f&#34;gen{g+1}: {gen}&#34;)
+#        #print(musx.all_rotations(data, rule, False, False))
+
+# for _ in range(25):
+#     z=next(p)
+#     print(f&#34;pattern output {_ + 1:02}: {z}&#34;)
+#     histo[z[0]] += 1
+# print(&#34;histo:&#34;, histo)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="musx.patterns.Choose"><code class="flex name class">
+<span>class <span class="ident">Choose</span></span>
+<span>(</span><span>items, period=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Yields its items by weighted random selection.
+By default all items have an equal probability of being returned.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>items</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of items to generate.
+Each item in the list can
+be an item or a list: [item weight] where the first value is
+the item to return and weight is the probability of the item
+being selected relative to the other items in the list. If
+no weight is provided for an item it receives a default
+weight of 1.0. If no weights are provided then all the items
+are chosen with equal probability.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The next item in the pattern.</p>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>TypeError: if items is not a list</li>
+<li>ValueError: if a probability is not a float or int greater than 0
+</li>
+</ul>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python">&gt;&gt;&gt; p = choose(['A',['B', 2] 'C'])]
+[p.next() for _ in range(8)]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Choose(Pattern):
+    &#34;&#34;&#34;
+    Yields its items by weighted random selection.
+    By default all items have an equal probability of being returned.
+
+    Parameters
+    ----------
+    items : list
+        The list of items to generate.  Each item in the list can
+        be an item or a list: [item weight] where the first value is
+        the item to return and weight is the probability of the item
+        being selected relative to the other items in the list. If
+        no weight is provided for an item it receives a default 
+        weight of 1.0. If no weights are provided then all the items
+        are chosen with equal probability.
+
+    Returns
+    -------
+    The next item in the pattern.
+    
+    Raises
+    ------
+    * TypeError: if items is not a list
+    * ValueError: if a probability is not a float or int greater than 0        
+    
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; p = choose([&#39;A&#39;,[&#39;B&#39;, 2] &#39;C&#39;])]
+    [p.next() for _ in range(8)]
+    ```
+    &#34;&#34;&#34;
+    def __init__(self, items, period=None):
+        super().__init__(items, 1, period)
+        weights, self.items = [],[]
+        for i in items:
+            if isinstance(i, list):
+                if len(i) != 2 or not isinstance(i[1], (int, float)):
+                    raise TypeError(f&#34;{self._pname()}: {i} is not a two element list [item, probability]&#34;)
+                elif i[1] &lt;= 0:
+                    raise ValueError(f&#34;{self._pname()}: item {i} probability value {i[1]} is not greater than 0.0.&#34;)    
+                else: 
+                    self.items.append(i[0])
+                    weights.append(i[1])
+            else: 
+                self.items.append(i)
+                weights.append(1)
+        #print(&#34;raw weights:&#34;, weights)
+        # normalize weights to values summing to 1.0
+        total = sum(weights)
+        normalized = [weights[i] / total for i in range(len(weights))]
+        #print(&#34;normalized weights:&#34;, normalized)
+        # Convert normalized weights into a monotonically increasing 
+        # probability map between 0.0 and 1.0
+        # Example
+        #     items:      [     &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;]
+        #     normalized: [     0.1, 0.2, 0.3, 0.1, 0.3]
+        #     probmap:    [0.0, 0.1, 0.3, 0.6, 0.7, 1.0]
+        self.probmap = [0.0] + [sum([normalized[i] for i in range(0, w)]) 
+                                for w in range(1, len(normalized))] + [1.0]
+        #print(&#34;probmap:&#34;, self.probmap)
+        self._chooseactiveitem()
+        #print(&#34;activeitem:&#34;, self.activeitem)
+    
+    def _chooseactiveitem(self):
+        &#34;&#34;&#34;
+        Selects a random number N between 0 and 1 and iterates 
+        adjacent values in the probmap to find the pair with
+        a left value &lt;= N and a right value &gt; N. 
+        The index of the left value is the index of the next 
+        item to select.
+        &#34;&#34;&#34;
+        N = random.random()
+        I = None
+        for i in range(1, len(self.probmap)):
+            #print(self.probmap[i-1], self.probmap[i])
+            if (N &gt;= self.probmap[i-1]) and N &lt; self.probmap[i]:
+                I = i-1
+                #print(&#34;index:&#34;, I, &#34;, value:&#34;,  self.items[I])
+                break
+        assert I != None, f&#34;Probability {N} not [0.0-1.0)&#34;
+        self.activeitem = self.items[I]
+    
+    def __next__(self):
+        item = Pattern.read(self.activeitem, tup=True)
+        if item[1] == &#39;EOP&#39;:
+            # at end of period, choose the next item
+            self._chooseactiveitem()            
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item </code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="musx.patterns.Cycle"><code class="flex name class">
+<span>class <span class="ident">Cycle</span></span>
+<span>(</span><span>items, period=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cycle(Pattern):
+
+    def __init__(self, items, period=None):
+        super().__init__(items, 1, period)
+    
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        #print(f&#34;after read: item is {item}&#34;)
+        if item[1] == &#39;EOP&#39;:
+            # (sub)item is at the end of its period
+            # so increment this pattern&#39;s index to the next item 
+            if self.i == self.ilen - 1:
+                self.i = 0
+            else:
+                self.i += 1
+            # if p is now the last index in the current period
+            # signal eop and read the next period length
+            #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+                #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
+            else:
+                self.p += 1 
+                item[1] = None
+        return item</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="musx.patterns.Markov"><code class="flex name class">
+<span>class <span class="ident">Markov</span></span>
+<span>(</span><span>items, period=None, preset=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Yields items in a Markov chain. The chain is expressed as a dictionary of
+rules, each rule associates a tuple of one or more past outcomes with a
+list of weighted potential outcomes:</p>
+<p><code>{(past,...): [[outcome, weight], [outcome, weight], ...],
+...}</code></p>
+<p>There are two shortcuts available when specifying rules:
+* If the rules use only one past value (markov order 1) then you can provide
+values as keys instead of tuples.
+* If an outcome has a probability weight of 1 then you can specify just the
+value instead of a two element list containing the value and 1.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>rules</code></strong> :&ensp;<code>list</code></dt>
+<dd>A dictionary of rules that generate the Markov chain. Each rule is a
+key and value pair, where the key is a tuple of 1 or more past outcomes
+and the value is a list of pairs [[outcome, weight1], [outcome2, weight2],&hellip;]
+representing each possible next outcome together with its weight (probability).
+The length of the tuples determines the markov order of the generator
+and all rules must ha be the same and it .
+The <next> columns in the rule contain the potential next outcomes
+with their probability weights. Each column can contain just an outcome,
+in which case it will be assigned a probability weight of 1, or it can
+be expressed as a list [next, weight].</dd>
+<dt><strong><code>stop</code></strong> :&ensp;<code>int | None</code></dt>
+<dd>The number of times to read from the pattern before stopping.
+If None then the generator is unbounded. The default is None.</dd>
+<dt><strong><code>preset</code></strong> :&ensp;<code>past</code></dt>
+<dd>If specified it is the initial 'past' the markov chain uses to generate
+the first outcome.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The next item in the pattern.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python">&gt;&gt;&gt; markov({'a': ['b', ['c', 3]], 
+            'b': ['a'],
+            'c': [['a', 5], 'c', ['b', 2.5]]})
+</code></pre>
+<p>This is a 1st order markov process with three rules:</p>
+<p>1) if the last outcome was 'a' then the next outcome is either 'b' or 'c',
+with 'c' three times as likely as 'b'.
+2) if the last outcome was 'b' then the next outcome is 'a'.
+3) if the last outcome was 'c' then the next outcome is either 'a', 'c' or 'b',
+with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Markov(Pattern):
+    &#34;&#34;&#34;
+    Yields items in a Markov chain. The chain is expressed as a dictionary of 
+    rules, each rule associates a tuple of one or more past outcomes with a 
+    list of weighted potential outcomes:
+
+    `{(past,...): [[outcome, weight], [outcome, weight], ...],  ...}`
+    
+    There are two shortcuts available when specifying rules: 
+    * If the rules use only one past value (markov order 1) then you can provide
+    values as keys instead of tuples.
+    * If an outcome has a probability weight of 1 then you can specify just the
+    value instead of a two element list containing the value and 1.
+ 
+    Parameters
+    ----------
+    rules : list
+        A dictionary of rules that generate the Markov chain. Each rule is a
+        key and value pair, where the key is a tuple of 1 or more past outcomes
+        and the value is a list of pairs [[outcome, weight1], [outcome2, weight2],...]
+        representing each possible next outcome together with its weight (probability).
+        The length of the tuples determines the markov order of the generator
+        and all rules must ha be the same and it .
+        The &lt;next&gt; columns in the rule contain the potential next outcomes 
+        with their probability weights. Each column can contain just an outcome,
+        in which case it will be assigned a probability weight of 1, or it can 
+        be expressed as a list [next, weight].
+    stop : int | None
+        The number of times to read from the pattern before stopping.
+        If None then the generator is unbounded. The default is None.
+    preset : past
+        If specified it is the initial &#39;past&#39; the markov chain uses to generate
+        the first outcome.
+    Returns
+    -------
+    The next item in the pattern.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; markov({&#39;a&#39;: [&#39;b&#39;, [&#39;c&#39;, 3]], 
+                &#39;b&#39;: [&#39;a&#39;],
+                &#39;c&#39;: [[&#39;a&#39;, 5], &#39;c&#39;, [&#39;b&#39;, 2.5]]})
+    ```
+    This is a 1st order markov process with three rules:
+
+    1) if the last outcome was &#39;a&#39; then the next outcome is either &#39;b&#39; or &#39;c&#39;,
+    with &#39;c&#39; three times as likely as &#39;b&#39;.
+    2) if the last outcome was &#39;b&#39; then the next outcome is &#39;a&#39;.
+    3) if the last outcome was &#39;c&#39; then the next outcome is either &#39;a&#39;, &#39;c&#39; or &#39;b&#39;,
+    with &#39;c&#39; being the least likely and &#39;a&#39; being the most likely outcome.
+    &#34;&#34;&#34;
+    
+    def __init__(self, items, period=None, preset=None):
+        # init accepts a list, not a dict to initialize the pattern
+        super().__init__(list(items.keys()), 1, period)
+        # after init call set items to the actual dictionary
+        self.items = items
+        if preset and not isinstance(preset, tuple):
+                preset = (preset,)
+        data = {}
+        order = 0  # the order of the markov process is the number of past events
+        for key, value in self.items.items():
+            # key holds previous outputs to match
+            if not isinstance(key, tuple):
+                key = (key,)
+                #print(&#34;converted key to tuple -&gt;&#34;, key)
+            elif not len(key) &gt; 0:
+                raise TypeError(&#39;Rule key {key} is empty.&#39;)
+            # value holds a list [[n1, w1], [n2, w2],...]
+            if not isinstance(value, list):
+                raise TypeError(&#39;Dictionary value {value} is not a list.&#39;)
+            if not order:
+                order = len(key)
+                #print(&#34;initialized order to &#34;, order)
+            elif order != len(key):
+                raise IndexError(f&#34;Rule matches of differnt lengths: {order} and {len(key)}.&#34;)
+            weight = 0  # calculated total weight of all the outcomes in the rule
+            outcomes = []
+            for col in value:
+                # col is either an outcome or a list: [outcome, weight]
+                # normalize to a list and sum their weights
+                if isinstance(col, list):
+                    if len(col) == 2:
+                        if isinstance(col[1], (int, float)):
+                            weight += col[1]
+                            outcomes.append(list(col)) # copy the user&#39;s list
+                        else:
+                            raise ValueError(f&#34;Outcome weight {col} is not an int or float.&#34;)
+                    else:
+                        raise IndexError(&#34;Outcome {col} is not a two element list [outcome, weight].&#34;)
+                else:
+                    weight += 1
+                    outcomes.append([col, 1])
+            # convert weights into probabilities 0.0 &lt; p... &lt; 1.0
+            # convert first outcome&#39;s weight into a probability.
+            outcomes[0][1] = outcomes[0][1] / weight
+            # now convert the weights above it into probabilities and  
+            # add to the previous probability. the result will be the
+            # total probabilty 0-1 sectioned proportionally according
+            # to the weights of the outputs
+            for i in range(1, len(outcomes)):
+                outcomes[i][1] = outcomes[i-1][1] + (outcomes[i][1]/weight)
+            # assign outcomes to the key
+            data[key] = outcomes
+        # use the user&#39;s preset or the first past in the dictionary.
+        if not preset:
+            preset = next(iter(data)) # use first rule&#39;s past
+        else:
+            if order == len(preset):
+                preset = list(preset) # copy users preset
+            else:
+                raise IndexError(f&#39;Preset value {preset} is not a list of {order} \
+                    {&#34;elements&#34; if order &gt; 1 else &#34;element&#34;}.&#39;)
+        # initialize the history to the preset. older values are to the left
+        self.items = data
+        self.history = preset
+        
+    def __next__(self):
+        #item = Pattern.read(self.items[self.i], tup=True)
+        # find the rule that matches current history
+        outcomes = self.items.get(self.history)
+        if not outcomes:
+            raise ValueError(f&#39;No rule match for {self.history}.&#39;)
+        # find the next outcome
+        randnum = random.random()
+        outcome = None
+        # find the outcome for the random number
+        for out in outcomes:
+            if randnum &lt; out[1]:
+                outcome = out[0] # next outcome
+                break       
+        # outcome is a tuple to left-shift history with current 
+        # choice appended, and as a return value to Pattern.next()
+        outcome = (outcome,)
+        self.history = self.history[1:] + outcome
+        return outcome
+
+    @staticmethod
+    def analyze(data, order=1):
+        &#34;&#34;&#34;
+        Performs a markov analysis of a list of data and returns a 
+        Markov pattern of the given order to generate the data.
+        
+        Parameters
+        ----------
+        data : list
+            The list of data to analyse.
+        order : int
+            The markov order of the analysis.
+
+        Returns
+        -------
+        A Markov pattern that generates results from the data.
+
+        Examples
+        --------
+        ```
+        &gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+        {(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+        ```
+        &#34;&#34;&#34;
+        # each window is a list of one or more past values followed
+        # by the subsequent value: (past+, next)
+        windows = []
+        end = len(data)
+        for i in range(end):
+            windows.append(tuple(data[(i+j) % end] for j in range(order+1)) )
+        histogram = {}
+        for w in windows:
+            if histogram.get(w):
+                histogram[w] += 1
+            else:
+                histogram[w] = 1
+        #print(histogram)
+        rules = {}
+        for item in histogram.items():
+            # tuple of one or more past outcomes
+            past_outcome = item[0][:-1] 
+            future_outcome = item[0][-1]
+            future_weight = histogram[item[0]]
+            if rules.get(past_outcome):
+                rules[past_outcome].append([future_outcome, future_weight])
+            else:
+                rules[past_outcome] = [[future_outcome, future_weight]]
+        return Markov(rules)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="musx.patterns.Markov.analyze"><code class="name flex">
+<span>def <span class="ident">analyze</span></span>(<span>data, order=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Performs a markov analysis of a list of data and returns a
+Markov pattern of the given order to generate the data.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of data to analyse.</dd>
+<dt><strong><code>order</code></strong> :&ensp;<code>int</code></dt>
+<dd>The markov order of the analysis.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A Markov pattern that generates results from the data.</p>
+<h2 id="examples">Examples</h2>
+<pre><code>&gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+{(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def analyze(data, order=1):
+    &#34;&#34;&#34;
+    Performs a markov analysis of a list of data and returns a 
+    Markov pattern of the given order to generate the data.
+    
+    Parameters
+    ----------
+    data : list
+        The list of data to analyse.
+    order : int
+        The markov order of the analysis.
+
+    Returns
+    -------
+    A Markov pattern that generates results from the data.
+
+    Examples
+    --------
+    ```
+    &gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+    {(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+    ```
+    &#34;&#34;&#34;
+    # each window is a list of one or more past values followed
+    # by the subsequent value: (past+, next)
+    windows = []
+    end = len(data)
+    for i in range(end):
+        windows.append(tuple(data[(i+j) % end] for j in range(order+1)) )
+    histogram = {}
+    for w in windows:
+        if histogram.get(w):
+            histogram[w] += 1
+        else:
+            histogram[w] = 1
+    #print(histogram)
+    rules = {}
+    for item in histogram.items():
+        # tuple of one or more past outcomes
+        past_outcome = item[0][:-1] 
+        future_outcome = item[0][-1]
+        future_weight = histogram[item[0]]
+        if rules.get(past_outcome):
+            rules[past_outcome].append([future_outcome, future_weight])
+        else:
+            rules[past_outcome] = [[future_outcome, future_weight]]
+    return Markov(rules)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="musx.patterns.Palindrome"><code class="flex name class">
+<span>class <span class="ident">Palindrome</span></span>
+<span>(</span><span>items, period=None, wrap='++')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Palindrome(Pattern):
+
+    def __init__(self, items, period=None,  wrap=&#39;++&#39;):
+        match wrap:
+            case &#39;++&#39;: items = items + items[::-1]    # repeat first and last
+            case &#39;+-&#39;: items = items + items[-2::-1]  # repeat first not last
+            case &#39;-+&#39;: items = items + items[-1:0:-1] # repeat last not first
+            case &#39;--&#39;: items = items + items[-2:0:-1] # dont repeat first or last
+            case _:
+                raise ValueError(f&#34;Wrap value {wrap} is not &#39;++&#39;, &#39;+-&#39;, &#39;-+&#39;, or &#39;--&#39;.&#34;)
+        super().__init__(items, 3, period)
+
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        if item[1] == &#39;EOP&#39;:
+            if self.i == self.ilen - 1:
+                self.i = 0
+            else:
+                self.i += 1
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item </code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="musx.patterns.Pattern"><code class="flex name class">
+<span>class <span class="ident">Pattern</span></span>
+<span>(</span><span>items, mini, period=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Pattern(Iterator):
+
+    def __init__(self, items, mini, period=None):
+        if not isinstance(items, list) or len(items) &lt; mini:
+            raise TypeError(f&#34;{self.__class__.__name__} input {items} is not a list of {mini} or more elements.&#34;)
+        self.items = items
+        if period == None:
+            period = len(items)
+        self.period = period
+        #print(&#34;***period is:&#34;, period)
+        # length of items list
+        self.ilen = len(self.items)
+        # current index into items list
+        self.i = 0 
+        # length of current period
+        self.plen = self.read(self.period) if isinstance(self.period, Iterator) else self.period
+        #print(&#34;***plen is:&#34;, self.plen)
+        # period counter
+        self.p = 0
+        # &#39;EOP&#39; if the pattern just returned the last value of the current period
+        self.eop = None
+
+    def __iter__(self):
+        return self
+
+    def _pname(self):
+        return self.__class__.__name__
+    
+    @staticmethod
+    def read(pat, tup=False):
+        #print(f&#34;read input: ({pat},tup={tup})&#34;)
+        if isinstance(pat, Pattern):
+            x = next(pat)
+            return x if tup else x[0]
+        else:
+            return [pat, &#34;EOP&#34;] if tup else pat
+
+    def next(self, more=False):
+        &#34;&#34;&#34;
+        A pattern savvy version of Python&#39;s next() function.
+        
+        Parameters
+        ----------
+        more : False | True | int 
+            If more is False then the just th enext item in the pattern
+            is returned. If more is True then the (remaining) items in
+            the current period are returned in a list. If more is an
+            integer greater than 0 then that many items will be returned
+            from the pattern.
+
+        Returns
+        -------
+        One or more items in the pattern.
+
+        Examples
+        --------
+        ```python
+        &gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+        &gt;&gt;&gt; c.next()
+        1
+        &gt;&gt;&gt; c.next(True)
+        [2, 3, 4] 
+        &gt;&gt;&gt; c.next(6)
+        [1, 2, 3, 4, 1, 2]
+        ```
+        &#34;&#34;&#34;
+        if more is False:
+            return self.__next__()[0]
+        items = []
+        if more is True:
+            # collect items until end of period            
+            while True:
+                i = self.__next__()
+                items.append(i[0])
+                if i[1] == &#39;EOP&#39;:
+                    return items
+        for i in range(0, more):
+            items.append(self.__next__()[0])
+        return items</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Choose" href="#musx.patterns.Choose">Choose</a></li>
+<li><a title="musx.patterns.Cycle" href="#musx.patterns.Cycle">Cycle</a></li>
+<li><a title="musx.patterns.Markov" href="#musx.patterns.Markov">Markov</a></li>
+<li><a title="musx.patterns.Palindrome" href="#musx.patterns.Palindrome">Palindrome</a></li>
+<li><a title="musx.patterns.Rotation" href="#musx.patterns.Rotation">Rotation</a></li>
+<li><a title="musx.patterns.Shuffle" href="#musx.patterns.Shuffle">Shuffle</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="musx.patterns.Pattern.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>pat, tup=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def read(pat, tup=False):
+    #print(f&#34;read input: ({pat},tup={tup})&#34;)
+    if isinstance(pat, Pattern):
+        x = next(pat)
+        return x if tup else x[0]
+    else:
+        return [pat, &#34;EOP&#34;] if tup else pat</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.patterns.Pattern.next"><code class="name flex">
+<span>def <span class="ident">next</span></span>(<span>self, more=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A pattern savvy version of Python's next() function.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>more</code></strong> :&ensp;<code>False | True | int</code></dt>
+<dd>If more is False then the just th enext item in the pattern
+is returned. If more is True then the (remaining) items in
+the current period are returned in a list. If more is an
+integer greater than 0 then that many items will be returned
+from the pattern.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>One or more items in the pattern.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python">&gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+&gt;&gt;&gt; c.next()
+1
+&gt;&gt;&gt; c.next(True)
+[2, 3, 4] 
+&gt;&gt;&gt; c.next(6)
+[1, 2, 3, 4, 1, 2]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def next(self, more=False):
+    &#34;&#34;&#34;
+    A pattern savvy version of Python&#39;s next() function.
+    
+    Parameters
+    ----------
+    more : False | True | int 
+        If more is False then the just th enext item in the pattern
+        is returned. If more is True then the (remaining) items in
+        the current period are returned in a list. If more is an
+        integer greater than 0 then that many items will be returned
+        from the pattern.
+
+    Returns
+    -------
+    One or more items in the pattern.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+    &gt;&gt;&gt; c.next()
+    1
+    &gt;&gt;&gt; c.next(True)
+    [2, 3, 4] 
+    &gt;&gt;&gt; c.next(6)
+    [1, 2, 3, 4, 1, 2]
+    ```
+    &#34;&#34;&#34;
+    if more is False:
+        return self.__next__()[0]
+    items = []
+    if more is True:
+        # collect items until end of period            
+        while True:
+            i = self.__next__()
+            items.append(i[0])
+            if i[1] == &#39;EOP&#39;:
+                return items
+    for i in range(0, more):
+        items.append(self.__next__()[0])
+    return items</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="musx.patterns.Rotation"><code class="flex name class">
+<span>class <span class="ident">Rotation</span></span>
+<span>(</span><span>items, swaps, period=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Permutes its items using one or more swapping rules.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>items</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of items to generate</dd>
+<dt><strong><code>swaps</code></strong> :&ensp;<code>list | Pattern</code></dt>
+<dd>A list of or more swapping rules or a generator that
+produces swapping rules. A swapping rule is a list of (up to) four
+integers that control the iterative process applied to
+all the items in order to produce the next generation of items:
+<code>[start, step, width=1, end=len]</code>
+Start is the location (zero based index) in the pattern's data to begin
+swapping from, step is the rightward increment to move to the next swap
+start, width is the distance between the elements swapped.
+End is the
+position in the item list to stop the swapping at, and defaults to the
+length of the item list.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Rotation(Pattern):
+    &#34;&#34;&#34;
+    Permutes its items using one or more swapping rules.
+    
+    Parameters
+    ----------
+    items : list
+        The list of items to generate
+    swaps : list | Pattern
+        A list of or more swapping rules or a generator that
+        produces swapping rules. A swapping rule is a list of (up to) four 
+        integers that control the iterative process applied to 
+        all the items in order to produce the next generation of items:
+        ```[start, step, width=1, end=len]```
+        Start is the location (zero based index) in the pattern&#39;s data to begin
+        swapping from, step is the rightward increment to move to the next swap
+        start, width is the distance between the elements swapped.  End is the
+        position in the item list to stop the swapping at, and defaults to the
+        length of the item list.
+    &#34;&#34;&#34;
+    def __init__(self, items, swaps, period=None):
+        super().__init__(items.copy(), 1, period)
+        isseq = lambda a: isinstance(a, (list, tuple))
+        isint = lambda a: isinstance(a, int)
+        if isseq(swaps): # swaprules is a list or tuple
+            if all(map(lambda x: isseq(x), swaps)):   # a list of rules
+                self.source = Cycle(swaps)
+            elif all(map(lambda x: isint(x), swaps)): # the list is one rule
+                self.source = Cycle([swaps])
+        if not isinstance(self.source, Pattern):
+            raise ValueError(f&#34;Swap rules {swaps} is not a list or Pattern.&#34;)
+        self.size = len(items)
+
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        #print(f&#34;after read: item is {item}&#34;)
+        if item[1] == &#39;EOP&#39;:
+            # (sub)item is at the end of its period
+            # so increment this pattern&#39;s index to the next item 
+            if self.i == self.ilen - 1:
+                self.i = 0
+                # we&#39;ve yielded all items in the current generation
+                # so do the rotations to create the next generation.
+                rule = Pattern.read(self.source, tup=False)  #next(self.source)
+                rlen = len(rule)
+                start = rule[0]
+                step = rule[1]
+                width = rule[2] if rlen &gt; 2 else 1
+                end = rule[3] if rlen &gt; 3 else self.ilen 
+                #print(&#34;rule:&#34;, rule, &#34;rlen:&#34;, rlen, &#34;start:&#34;, start, &#34;step:&#34;, step, &#34;width:&#34;, width, &#34;end:&#34;, end)
+                # iterate left to right swapping items according to rule 
+                for a,b in zip(range(start, end, step), range(start+width, end, step)):
+                    self.items[a], self.items[b] = self.items[b], self.items[a]
+            else:
+                self.i += 1
+            # if p is now the last index in the current period
+            # signal eop and read the next period length
+            #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+                #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
+            else:
+                self.p += 1 
+                item[1] = None
+        return item
+    
+    def all(self, grouped=False, wrapped=False):
+        &#34;&#34;&#34;
+        Return a list of all rotations and stops when the first rotation occurs again.
+        Warning: rules that do not produce the original generation will produce
+        an infinite loop.
+
+        Parameters
+        ----------
+        grouped : bool
+            If grouped is True then each generation is collected as a sublist,
+            otherwise the rotated items are returned in one flat list.
+        wrapped : bool
+            If wrapped is True then the first generation will also be appended
+            to the end of list returned.
+        &#34;&#34;&#34;
+        size = self.ilen
+        data = []
+        conc = data.append if grouped else data.extend
+        init = [self.__next__()[0] for _ in range(size)]
+        conc(init)
+        while (True):
+            more = [self.__next__()[0] for _ in range(size)]
+            if init == more:
+                break
+            conc(more)
+        if wrapped:
+            conc(init)
+        return data</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.patterns.Rotation.all"><code class="name flex">
+<span>def <span class="ident">all</span></span>(<span>self, grouped=False, wrapped=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a list of all rotations and stops when the first rotation occurs again.
+Warning: rules that do not produce the original generation will produce
+an infinite loop.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>grouped</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If grouped is True then each generation is collected as a sublist,
+otherwise the rotated items are returned in one flat list.</dd>
+<dt><strong><code>wrapped</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If wrapped is True then the first generation will also be appended
+to the end of list returned.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def all(self, grouped=False, wrapped=False):
+    &#34;&#34;&#34;
+    Return a list of all rotations and stops when the first rotation occurs again.
+    Warning: rules that do not produce the original generation will produce
+    an infinite loop.
+
+    Parameters
+    ----------
+    grouped : bool
+        If grouped is True then each generation is collected as a sublist,
+        otherwise the rotated items are returned in one flat list.
+    wrapped : bool
+        If wrapped is True then the first generation will also be appended
+        to the end of list returned.
+    &#34;&#34;&#34;
+    size = self.ilen
+    data = []
+    conc = data.append if grouped else data.extend
+    init = [self.__next__()[0] for _ in range(size)]
+    conc(init)
+    while (True):
+        more = [self.__next__()[0] for _ in range(size)]
+        if init == more:
+            break
+        conc(more)
+    if wrapped:
+        conc(init)
+    return data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="musx.patterns.Shuffle"><code class="flex name class">
+<span>class <span class="ident">Shuffle</span></span>
+<span>(</span><span>items, period=None, norep=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a pattern that yields its items by random permutation.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>items</code></strong> :&ensp;<code>list
+</code></dt>
+<dd>The list of items to generate. Each item in the list
+can be a python object or a sub-pattern.</dd>
+<dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
+<dd>The period determines how many elements are read before
+an EOP (end-of-period) flag is returned. By default the
+shuffle period will be equal to the number of items
+in the list.</dd>
+<dt><strong><code>norep</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true then items cannot repeat after a shuffle.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The next item in the pattern.</p>
+<h2 id="raises">Raises</h2>
+<ul>
+<li>TypeError if items is not a list of one or more items.</li>
+</ul>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python">&gt;&gt;&gt; p = jumble([1,2,3])
+&gt;&gt;&gt; [read(p) for _ in range(10)]
+[1, 3, 2, 3, 2, 1] 
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Shuffle(Pattern):
+    &#34;&#34;&#34;
+    Returns a pattern that yields its items by random permutation.
+
+    Parameters
+    ----------
+    items : list  
+        The list of items to generate. Each item in the list
+        can be a python object or a sub-pattern.
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        shuffle period will be equal to the number of items
+        in the list.
+    norep : bool
+        If true then items cannot repeat after a shuffle.
+
+    Returns
+    -------
+    The next item in the pattern.
+
+    Raises
+    ------
+    * TypeError if items is not a list of one or more items.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; p = jumble([1,2,3])
+    &gt;&gt;&gt; [read(p) for _ in range(10)]
+    [1, 3, 2, 3, 2, 1] 
+    ```
+    &#34;&#34;&#34;
+
+    def __init__(self, items, period=None, norep=False):
+        super().__init__(items.copy(), 1, period)
+        # initialize for first period
+        random.shuffle(self.items)
+        self.norep = norep
+
+    def __next__(self):
+        item = Pattern.read(self.items[self.i], tup=True)
+        if item[1] == &#39;EOP&#39;:
+            # at end of items, reshuffle
+            if self.i == self.ilen - 1:
+                self.i = 0
+                last = self.items[-1]
+                random.shuffle(self.items)
+                # continue to shuffle if user specified no repeat
+                # and the next item is the same as the last
+                while (self.norep and self.items[0] == last and self.ilen &gt; 1):
+                    random.shuffle(self.items)             
+            else:
+                self.i += 1
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern.read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item </code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="musx.patterns.Choose" href="#musx.patterns.Choose">Choose</a></code></h4>
+</li>
+<li>
+<h4><code><a title="musx.patterns.Cycle" href="#musx.patterns.Cycle">Cycle</a></code></h4>
+</li>
+<li>
+<h4><code><a title="musx.patterns.Markov" href="#musx.patterns.Markov">Markov</a></code></h4>
+<ul class="">
+<li><code><a title="musx.patterns.Markov.analyze" href="#musx.patterns.Markov.analyze">analyze</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="musx.patterns.Palindrome" href="#musx.patterns.Palindrome">Palindrome</a></code></h4>
+</li>
+<li>
+<h4><code><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></code></h4>
+<ul class="">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+<li><code><a title="musx.patterns.Pattern.read" href="#musx.patterns.Pattern.read">read</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="musx.patterns.Rotation" href="#musx.patterns.Rotation">Rotation</a></code></h4>
+<ul class="">
+<li><code><a title="musx.patterns.Rotation.all" href="#musx.patterns.Rotation.all">all</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="musx.patterns.Shuffle" href="#musx.patterns.Shuffle">Shuffle</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,7 +1,7 @@
 """
-This script regenerates the documentation for musx. To run the script do:
+This script uses pdoc3 to generate musx documentation. To run the script do:
     $ cd /path/to/musx
-    $ python3 scripts/makedocs.py
+    $ python admin/makedocs.py
 """
 
 import sys, os, shutil
@@ -42,7 +42,7 @@ def make_docs():
     shutil.move(doc_dir, tmp_old)
     # move the root of the new doc tree back as musx/docs: /tmp/docs/musx -> musx/docs
     shutil.move(f"{tmp_doc}/musx", doc_dir)
-    # copy the .yml file back to musx/docs
-    shutil.copy(f"{tmp_old}/_config.yml", doc_dir)
+    # # copy the .yml file back to musx/docs
+    # shutil.copy(f"{tmp_old}/_config.yml", doc_dir)
 
 make_docs()

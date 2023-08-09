@@ -40,6 +40,49 @@ class Pattern(Iterator):
         else:
             return [pat, "EOP"] if tup else pat
 
+    def next(self, more=False):
+        """
+        A pattern savvy version of Python's next() function.
+        
+        Parameters
+        ----------
+        more : False | True | int 
+            If more is False then the just th enext item in the pattern
+            is returned. If more is True then the (remaining) items in
+            the current period are returned in a list. If more is an
+            integer greater than 0 then that many items will be returned
+            from the pattern.
+
+        Returns
+        -------
+        One or more items in the pattern.
+
+        Examples
+        --------
+        ```python
+        >>> c = Cycle([1, 2, 3, 4])
+        >>> c.next()
+        1
+        >>> c.next(True)
+        [2, 3, 4] 
+        >>> c.next(6)
+        [1, 2, 3, 4, 1, 2]
+        ```
+        """
+        if more is False:
+            return self.__next__()[0]
+        items = []
+        if more is True:
+            # collect items until end of period            
+            while True:
+                i = self.__next__()
+                items.append(i[0])
+                if i[1] == 'EOP':
+                    return items
+        for i in range(0, more):
+            items.append(self.__next__()[0])
+        return items
+
 
 class Cycle(Pattern):
 
@@ -132,7 +175,7 @@ class Shuffle(Pattern):
     """
 
     def __init__(self, items, period=None, norep=False):
-        super().__init__(items.copy(), 2, period)
+        super().__init__(items.copy(), 1, period)
         # initialize for first period
         random.shuffle(self.items)
         self.norep = norep
@@ -147,7 +190,7 @@ class Shuffle(Pattern):
                 random.shuffle(self.items)
                 # continue to shuffle if user specified no repeat
                 # and the next item is the same as the last
-                while (self.norep and self.items[0] == last):
+                while (self.norep and self.items[0] == last and self.ilen > 1):
                     random.shuffle(self.items)             
             else:
                 self.i += 1
@@ -352,7 +395,202 @@ class Rotation(Pattern):
         if wrapped:
             conc(init)
         return data
+    
 
+# class Markov(Pattern):
+#     def __init__(self, items, period=None, preset=None):
+#         # init accepts a list, not a dict to initialize the pattern
+#         super().__init__(items, 1, period)
+#     def __next__(self):
+#         item = Pattern.read(self.items[self.i], tup=True)
+    
+class Markov(Pattern):
+    """
+    Yields items in a Markov chain. The chain is expressed as a dictionary of 
+    rules, each rule associates a tuple of one or more past outcomes with a 
+    list of weighted potential outcomes:
+
+    `{(past,...): [[outcome, weight], [outcome, weight], ...],  ...}`
+    
+    There are two shortcuts available when specifying rules: 
+    * If the rules use only one past value (markov order 1) then you can provide
+    values as keys instead of tuples.
+    * If an outcome has a probability weight of 1 then you can specify just the
+    value instead of a two element list containing the value and 1.
+ 
+    Parameters
+    ----------
+    rules : list
+        A dictionary of rules that generate the Markov chain. Each rule is a
+        key and value pair, where the key is a tuple of 1 or more past outcomes
+        and the value is a list of pairs [[outcome, weight1], [outcome2, weight2],...]
+        representing each possible next outcome together with its weight (probability).
+        The length of the tuples determines the markov order of the generator
+        and all rules must ha be the same and it .
+        The <next> columns in the rule contain the potential next outcomes 
+        with their probability weights. Each column can contain just an outcome,
+        in which case it will be assigned a probability weight of 1, or it can 
+        be expressed as a list [next, weight].
+    stop : int | None
+        The number of times to read from the pattern before stopping.
+        If None then the generator is unbounded. The default is None.
+    preset : past
+        If specified it is the initial 'past' the markov chain uses to generate
+        the first outcome.
+    Returns
+    -------
+    The next item in the pattern.
+
+    Examples
+    --------
+    ```python
+    >>> markov({'a': ['b', ['c', 3]], 
+                'b': ['a'],
+                'c': [['a', 5], 'c', ['b', 2.5]]})
+    ```
+    This is a 1st order markov process with three rules:
+
+    1) if the last outcome was 'a' then the next outcome is either 'b' or 'c',
+    with 'c' three times as likely as 'b'.
+    2) if the last outcome was 'b' then the next outcome is 'a'.
+    3) if the last outcome was 'c' then the next outcome is either 'a', 'c' or 'b',
+    with 'c' being the least likely and 'a' being the most likely outcome.
+    """
+    
+    def __init__(self, items, period=None, preset=None):
+        # init accepts a list, not a dict to initialize the pattern
+        super().__init__(list(items.keys()), 1, period)
+        # after init call set items to the actual dictionary
+        self.items = items
+        if preset and not isinstance(preset, tuple):
+                preset = (preset,)
+        data = {}
+        order = 0  # the order of the markov process is the number of past events
+        for key, value in self.items.items():
+            # key holds previous outputs to match
+            if not isinstance(key, tuple):
+                key = (key,)
+                #print("converted key to tuple ->", key)
+            elif not len(key) > 0:
+                raise TypeError('Rule key {key} is empty.')
+            # value holds a list [[n1, w1], [n2, w2],...]
+            if not isinstance(value, list):
+                raise TypeError('Dictionary value {value} is not a list.')
+            if not order:
+                order = len(key)
+                #print("initialized order to ", order)
+            elif order != len(key):
+                raise IndexError(f"Rule matches of differnt lengths: {order} and {len(key)}.")
+            weight = 0  # calculated total weight of all the outcomes in the rule
+            outcomes = []
+            for col in value:
+                # col is either an outcome or a list: [outcome, weight]
+                # normalize to a list and sum their weights
+                if isinstance(col, list):
+                    if len(col) == 2:
+                        if isinstance(col[1], (int, float)):
+                            weight += col[1]
+                            outcomes.append(list(col)) # copy the user's list
+                        else:
+                            raise ValueError(f"Outcome weight {col} is not an int or float.")
+                    else:
+                        raise IndexError("Outcome {col} is not a two element list [outcome, weight].")
+                else:
+                    weight += 1
+                    outcomes.append([col, 1])
+            # convert weights into probabilities 0.0 < p... < 1.0
+            # convert first outcome's weight into a probability.
+            outcomes[0][1] = outcomes[0][1] / weight
+            # now convert the weights above it into probabilities and  
+            # add to the previous probability. the result will be the
+            # total probabilty 0-1 sectioned proportionally according
+            # to the weights of the outputs
+            for i in range(1, len(outcomes)):
+                outcomes[i][1] = outcomes[i-1][1] + (outcomes[i][1]/weight)
+            # assign outcomes to the key
+            data[key] = outcomes
+        # use the user's preset or the first past in the dictionary.
+        if not preset:
+            preset = next(iter(data)) # use first rule's past
+        else:
+            if order == len(preset):
+                preset = list(preset) # copy users preset
+            else:
+                raise IndexError(f'Preset value {preset} is not a list of {order} \
+                    {"elements" if order > 1 else "element"}.')
+        # initialize the history to the preset. older values are to the left
+        self.items = data
+        self.history = preset
+        
+    def __next__(self):
+        #item = Pattern.read(self.items[self.i], tup=True)
+        # find the rule that matches current history
+        outcomes = self.items.get(self.history)
+        if not outcomes:
+            raise ValueError(f'No rule match for {self.history}.')
+        # find the next outcome
+        randnum = random.random()
+        outcome = None
+        # find the outcome for the random number
+        for out in outcomes:
+            if randnum < out[1]:
+                outcome = out[0] # next outcome
+                break       
+        # outcome is a tuple to left-shift history with current 
+        # choice appended, and as a return value to Pattern.next()
+        outcome = (outcome,)
+        self.history = self.history[1:] + outcome
+        return outcome
+
+    @staticmethod
+    def analyze(data, order=1):
+        """
+        Performs a markov analysis of a list of data and returns a 
+        Markov pattern of the given order to generate the data.
+        
+        Parameters
+        ----------
+        data : list
+            The list of data to analyse.
+        order : int
+            The markov order of the analysis.
+
+        Returns
+        -------
+        A Markov pattern that generates results from the data.
+
+        Examples
+        --------
+        ```
+        >>> Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+        {(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+        ```
+        """
+        # each window is a list of one or more past values followed
+        # by the subsequent value: (past+, next)
+        windows = []
+        end = len(data)
+        for i in range(end):
+            windows.append(tuple(data[(i+j) % end] for j in range(order+1)) )
+        histogram = {}
+        for w in windows:
+            if histogram.get(w):
+                histogram[w] += 1
+            else:
+                histogram[w] = 1
+        #print(histogram)
+        rules = {}
+        for item in histogram.items():
+            # tuple of one or more past outcomes
+            past_outcome = item[0][:-1] 
+            future_outcome = item[0][-1]
+            future_weight = histogram[item[0]]
+            if rules.get(past_outcome):
+                rules[past_outcome].append([future_outcome, future_weight])
+            else:
+                rules[past_outcome] = [[future_outcome, future_weight]]
+        return Markov(rules)
+    
 
 if __name__ == '__main__':
 

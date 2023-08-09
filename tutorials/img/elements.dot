@@ -1,0 +1,29 @@
+digraph G {
+    fontname="Century Gothic" ;
+    rankdir = BT;
+    pitch 
+    onset
+    duration
+    intensity
+    timbre
+    note
+    melody
+    harmony
+    part
+    texture[label="texture\n(vertical)"]
+    form[label="form\n(horizonal)"]
+
+    pitch -> note
+    onset -> note
+    duration -> note
+    intensity -> note
+    timbre -> note
+    note -> melody
+    note -> harmony
+    //note -> texture
+    melody -> part
+    harmony -> part
+    part -> texture
+    part -> form
+    //texture -> form
+  }

@@ -4,7 +4,7 @@ This document explains how to install musx in a Python [virtual environment](htt
 
 0. The musx package requires Python 3.9 or higher.  You can download the most recent releases of Python from https://www.python.org/downloads/. Once downloaded, double-click the installation package to install Python on your computer.
 
-1. Open your computer's terminal application, create a directory dedicated to working with musx, then cd into your new workspace (note: the $ represents your terminal's prompt, do not type $ as part of your command!):
+1. Open your computer's terminal application, create a directory dedicated to working with musx, then cd into your new workspace. (Note: the `$` represents your terminal's prompt, do not include it as part of your command!):
 
   ``` 
   $ mkdir ~/projects/mymusx
@@ -53,7 +53,7 @@ This document explains how to install musx in a Python [virtual environment](htt
   Installed kernelspec musxvenv in /Users/taube/Library/Jupyter/kernels/musxenv
   ```
 
-8. Now install musx and (optionally) copy its documentation and demo directories into your mymusx working directory for easy access:
+8. Finally, install musx and (optionally) copy its support directories into your mymusx working directory for easy access:
 
   ```
 (musxenv) $ python -m pip install musx
@@ -63,9 +63,11 @@ This document explains how to install musx in a Python [virtual environment](htt
 (musxenv) $ cp -r musxenv/site-packages/musx/demos ./demos
 
 (musxenv) $ cp -r musxenv/site-packages/musx/tutorials ./tutorials
+
+
   ```
 
-9. Finally, test that musx is working by starting up python, importing the musx package, and calling a function:
+9. To test that musx is working, start up python, import the musx package, and call a function:
 
   ```
   (musxenv) $ python

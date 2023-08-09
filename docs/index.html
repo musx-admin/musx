@@ -25,16 +25,18 @@ music information. It contains a large set of compositional tools …" />
 <section id="section-intro">
 <p>musx (pronounced <em>muse ex</em>) is a package for composing and processing symbolic
 music information. It contains a large set of compositional tools adapted from
-my Common Music and Grace systems, including support for complex pattern
-generation, randomness, mapping, enveloping, spectral composition, and
-microtonality. The musx package currently provides back ends to read and write
-midi files and Csound (thank you Michael Gogins!) and it is straightforward
-to add other backends to connect to different systems, for example to send
-data to an app via portmidi or to SuperCollider via osc. If you are new to
-musx or Python the place to start is by reading this documentation and
-trying out the material in the demos directory. After restoring the demos,
-you can generate output by running them as scripts:</p>
-<pre><code class="language-bash">python3 -m demos.gamelan
+my Common Music and Grace systems, including support for complex pattern generation,
+randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
+scores. The musx package currently provides back ends to read and write midi files
+and Csound (thank you Michael Gogins!) and it is straightforward to add other
+backends to connect to different systems, for example to send data to an app via
+portmidi or to SuperCollider via osc. If you are new to musx or Python the place to
+start is by reading this documentation and trying out the material in the demos and
+tutorials directories. After restoring the demos, you can generate output by
+running them as scripts or using the jupyter notebook versions:</p>
+<pre><code class="language-bash">python -m demos.gamelan
+
+jupyter notebook demos/gamelan.ipynb
 </code></pre>
 <details class="source">
 <summary>
@@ -43,23 +45,28 @@ you can generate output by running them as scripts:</p>
 <pre><code class="python">&#34;&#34;&#34;
 musx (pronounced *muse ex*) is a package for composing and processing symbolic
 music information. It contains a large set of compositional tools adapted from
-my Common Music and Grace systems, including support for complex pattern
-generation, randomness, mapping, enveloping, spectral composition, and 
-microtonality. The musx package currently provides back ends to read and write
-midi files and Csound (thank you Michael Gogins!) and it is straightforward
-to add other backends to connect to different systems, for example to send
-data to an app via portmidi or to SuperCollider via osc. If you are new to
-musx or Python the place to start is by reading this documentation and
-trying out the material in the demos directory. After restoring the demos,
-you can generate output by running them as scripts:
+my Common Music and Grace systems, including support for complex pattern generation,
+randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
+scores. The musx package currently provides back ends to read and write midi files
+and Csound (thank you Michael Gogins!) and it is straightforward to add other
+backends to connect to different systems, for example to send data to an app via
+portmidi or to SuperCollider via osc. If you are new to musx or Python the place to
+start is by reading this documentation and trying out the material in the demos and
+tutorials directories. After restoring the demos, you can generate output by
+running them as scripts or using the jupyter notebook versions:
 
 ```bash
-python3 -m demos.gamelan
+python -m demos.gamelan
+
+jupyter notebook demos/gamelan.ipynb
 ```
 &#34;&#34;&#34;
 
-version=&#34;2.0.0&#34;
+# Do not alter this version line, it is automatically replaced by the correct
+# version number when the software is released.
 
+version=&#34;N.N.N&#34;
+#from fractions import Fraction
 from .rhythm import *
 from .midi import gm
 from .midi.midimsg import *
@@ -67,6 +74,7 @@ from .midi.midievent import *
 from .midi.midifile import *
 from .seq import *
 from .gens import *
+from .patterns import *
 from .paint import *
 from .pitch import *
 from .note import *
@@ -78,7 +86,10 @@ from .score import *
 from .spectral import *
 from .pc import *
 from .csound import *
-from .mxml.notation import *</code></pre>
+from .mxml.notation import *
+# importing the frac module adds musx methods to python&#39;s Fraction class,
+# there are no symbols to import from the module itself.
+from .frac import *</code></pre>
 </details>
 </section>
 <section>
@@ -92,6 +103,11 @@ from .mxml.notation import *</code></pre>
 <dd>
 <div class="desc"><p>Implements Env, a class for line (xy) envelopes and routines that operate
 on them.</p></div>
+</dd>
+<dt><code class="name"><a title="musx.frac" href="frac.html">musx.frac</a></code></dt>
+<dd>
+<div class="desc"><p>The fraction module adds some music-mensural methods to python's Fraction class.
+The methods are added during startup, you never need to import this …</p></div>
 </dd>
 <dt><code class="name"><a title="musx.gens" href="gens.html">musx.gens</a></code></dt>
 <dd>
@@ -121,6 +137,10 @@ represent time, duration, pitch, and amplitude. Notes can also represent …</p>
 <dd>
 <div class="desc"><p>The paint.py module provides two high-level composers that can produce a wide
 variety of interesting textures and music. The <code>brush()</code> composer …</p></div>
+</dd>
+<dt><code class="name"><a title="musx.patterns" href="patterns.html">musx.patterns</a></code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="musx.pc" href="pc.html">musx.pc</a></code></dt>
 <dd>
@@ -185,12 +205,14 @@ rescaling, arithmetic, etc.</p></div>
 <ul>
 <li><code><a title="musx.csound" href="csound.html">musx.csound</a></code></li>
 <li><code><a title="musx.envs" href="envs.html">musx.envs</a></code></li>
+<li><code><a title="musx.frac" href="frac.html">musx.frac</a></code></li>
 <li><code><a title="musx.gens" href="gens.html">musx.gens</a></code></li>
 <li><code><a title="musx.interval" href="interval.html">musx.interval</a></code></li>
 <li><code><a title="musx.midi" href="midi/index.html">musx.midi</a></code></li>
 <li><code><a title="musx.mxml" href="mxml/index.html">musx.mxml</a></code></li>
 <li><code><a title="musx.note" href="note.html">musx.note</a></code></li>
 <li><code><a title="musx.paint" href="paint.html">musx.paint</a></code></li>
+<li><code><a title="musx.patterns" href="patterns.html">musx.patterns</a></code></li>
 <li><code><a title="musx.pc" href="pc.html">musx.pc</a></code></li>
 <li><code><a title="musx.pitch" href="pitch.html">musx.pitch</a></code></li>
 <li><code><a title="musx.ran" href="ran.html">musx.ran</a></code></li>

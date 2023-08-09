@@ -47,6 +47,7 @@ pitch class sets, where each set contains all twelve pitch classes.
 __pdoc__ = {&#39;most_tightly_packed&#39;: False
 }
 
+import copy
 
 def pcset(keynums):
     &#34;&#34;&#34;
@@ -92,31 +93,36 @@ def most_tightly_packed(normal_forms):
     Returns the normal form that is most tightly packed to the left.
     See: Understanding Post-Tonal Theory, page 75.
     &#34;&#34;&#34;
-
+    NORMALS = [copy.copy(x) for x in normal_forms]
     # Convert normal_forms to start on 0 so they become intervals
     # above the lowest pc. (The first and last interval will be the
     # same so we could drop them.)
     intervals = [pctranspose(n, pcinterval(n[0], 12)) for n in normal_forms]
+    INTERVALS = [copy.copy(x) for x in intervals]
     # Flop the interval vectors to group intervals of the same index together:
     #   0 1 2  0 1 2      0    1    2
     # [[1 2 2][1 4 1] =&gt; [[1 1][2 4][2 1]]
     flopped = [[*c] for c in zip(*intervals)]  # [*c] converts tuple into list...
     # Reverse the flop because we process the intervals top-to-bottom
+    FLOPPED = [copy.copy(x) for x in flopped]
     flopped.reverse()
+    REVERSED = [copy.copy(x) for x in flopped]
     # Debugging:
-    # print(&#34;intervals=&#34;, intervals, &#34;flopped=&#34;, flopped)
+    #print(&#34;MTP: normals=&#34;, NORMALS, &#34;intervals=&#34;, INTERVALS, &#34;flopped=&#34;, FLOPPED, &#34;revflopped=&#34;, REVERSED)
     try:
         # Find the first (left-most) flop whose intervals differ from each other.
         # If no intervals differ a StopIteration exception is thrown by next().
         left = next(filter(lambda x: len(set(x)) &gt; 1, flopped))
         # Index of the smallest number in list is the index of the
         # most tightly packed normal form
+#        print(&#34;most_tightly_packed: normals=&#34;, NORMALS, &#34;intervals=&#34;, INTERVALS, &#34;flopped=&#34;, FLOPPED, &#34;reversed=&#34;, REVERSED, &#34;WINNER=&#34;, normal_forms[left.index(min(left))])
         return normal_forms[left.index(min(left))]
     except StopIteration:
         # All intervals are the same. The tie breaker is to return
         # the normal form with the lowest starting pitch class
         first_pitches = [n[0] for n in normal_forms]
         index_of_winner = first_pitches.index(min(first_pitches))
+#        print(&#34;most_tightly_packed: normals=&#34;, NORMALS, &#34;intervals=&#34;, INTERVALS, &#34;flopped=&#34;, FLOPPED, &#34;reversed=&#34;, REVERSED, &#34;TIE BREAKER=&#34;, normal_forms[index_of_winner])
         return normal_forms[index_of_winner]
 
 
@@ -175,6 +181,7 @@ def primeform(pcs):
     zero = pctranspose(norm, pcinterval(norm[0], 12))
     # invert with transposition of last pc so inversion starts on zero
     invr = pcinvert(zero, zero[-1])
+    #print(&#34;norm=&#34;, norm, &#34;, zero=&#34;, zero, &#34;, invert=&#34;, invr)
     return most_tightly_packed([zero, invr])
 
 
@@ -185,7 +192,9 @@ def pcivector(pcs):
     icvec = [0, 0, 0, 0, 0, 0]
     for i1 in range(0, len(prime) - 1):
         for i2 in range(i1 + 1, len(prime)):
-            ic = iclass(pcinterval(prime[i1], prime[i2]))
+            intr = pcinterval(prime[i1], prime[i2])
+            ic = iclass(intr)
+            print(f&#34;prime[{i1}]={prime[i1]}, prime[{i2}]={prime[i2]}, intr={intr}, iclass={ic}&#34;)            
             icvec[ic - 1] += 1
     return icvec
 
@@ -288,17 +297,17 @@ if __name__ == &#39;__main__&#39;:
         print(f&#39;{notes}: =&gt; {result} =&gt; {pitchclassnames(result)}&#39;)
         assert result == correct, f&#39;{result} does not match authority {correct}.&#39;
         
-    print(&#39;\n=== Normal Order ========================================&#39;)
-    testnormal(&#39;f4 bf g5&#39;, (5, 7, 10))
-    testnormal(&#39;ds4 cs5 g&#39;, (1, 3, 7))
-    testnormal(&#39;af3 f4 a5&#39;, (5, 8, 9))
-    testnormal(&#39;as2 b a3&#39;, (9, 10, 11))
-    testnormal(&#39;c4 af e5&#39;, (0, 4, 8))
-    testnormal(&#39;d4 b fs5&#39;, (11, 2, 6))
-    testnormal(&#39;e2 b fs3&#39;, (4, 6, 11))
-    testnormal(&#39;fs4 c5 gs&#39;, (6, 8, 0))
-    testnormal(&#39;a2 e3 g&#39;, (4, 7, 9))
-    testnormal(&#39;f2 d3 b&#39;, (11, 2, 5))
+    # print(&#39;\n=== Normal Order ========================================&#39;)
+    # testnormal(&#39;f4 bf g5&#39;, (5, 7, 10))
+    # testnormal(&#39;ds4 cs5 g&#39;, (1, 3, 7))
+    # testnormal(&#39;af3 f4 a5&#39;, (5, 8, 9))
+    # testnormal(&#39;as2 b a3&#39;, (9, 10, 11))
+    # testnormal(&#39;c4 af e5&#39;, (0, 4, 8))
+    # testnormal(&#39;d4 b fs5&#39;, (11, 2, 6))
+    # testnormal(&#39;e2 b fs3&#39;, (4, 6, 11))
+    # testnormal(&#39;fs4 c5 gs&#39;, (6, 8, 0))
+    # testnormal(&#39;a2 e3 g&#39;, (4, 7, 9))
+    # testnormal(&#39;f2 d3 b&#39;, (11, 2, 5))
 
     #==========================================================================
 
@@ -309,15 +318,15 @@ if __name__ == &#39;__main__&#39;:
         print(f&#39;{notes}: =&gt; T{t} =&gt; {result} =&gt; {pitchclassnames(result)}&#39;)
         assert result == correct, f&#39;{result} does not match authority {correct}.&#39;
         
-    print(&#39;\n=== Transposition ========================================&#39;)
-    testtranspose(&#39;g4 a bf&#39;, 3, (10, 0, 1))
-    testtranspose(&#39;b4 ds5 e&#39;, 2, (1, 5, 6))
-    testtranspose(&#39;g4 gs a&#39;, 4, (11, 0, 1))
-    testtranspose(&#39;f4 af a&#39;, 1, (6, 9, 10))
-    testtranspose(&#39;a4 b ds5&#39;, 5, (2, 4, 8))
-    testtranspose(&#39;c4 e f&#39;, 9, (9, 1, 2))
-    testtranspose(&#39;e4 gs b&#39;, 10, (2, 6, 9))
-    testtranspose(&#39;e4 f bf&#39;, 6, (10, 11, 4))
+    # print(&#39;\n=== Transposition ========================================&#39;)
+    # testtranspose(&#39;g4 a bf&#39;, 3, (10, 0, 1))
+    # testtranspose(&#39;b4 ds5 e&#39;, 2, (1, 5, 6))
+    # testtranspose(&#39;g4 gs a&#39;, 4, (11, 0, 1))
+    # testtranspose(&#39;f4 af a&#39;, 1, (6, 9, 10))
+    # testtranspose(&#39;a4 b ds5&#39;, 5, (2, 4, 8))
+    # testtranspose(&#39;c4 e f&#39;, 9, (9, 1, 2))
+    # testtranspose(&#39;e4 gs b&#39;, 10, (2, 6, 9))
+    # testtranspose(&#39;e4 f bf&#39;, 6, (10, 11, 4))
     
     #==========================================================================
 
@@ -325,21 +334,21 @@ if __name__ == &#39;__main__&#39;:
         keys = keynum(notes)
         pcs = pcset(keys)
         result = pcinvert(pcs, t)
-        print(f&#39;{notes}: =&gt; T{t}I =&gt; {result} =&gt; {pitchclassnames(result)}&#39;)
+        print(f&#39;{notes}: pcs={pcs}, T{t}I={result}&#39;) #=&gt; {pitchclassnames(result)}
         assert result == correct, f&#39;{result} does not match authority {correct}.&#39;
 
-    print(&#39;\n=== Inversion ========================================&#39;)
-    testinversion(&#39;g4 bf c5&#39;, 0, (0, 2, 5))
-    testinversion(&#39;f4 gs a&#39;, 0, (3, 4, 7))
-    testinversion(&#39;g4 af a&#39;, 0, (3, 4, 5))
-    testinversion(&#39;e4 fs b&#39;, 0, (1, 6, 8))
-    testinversion(&#39;a4 d5 ds5&#39;, 0, (9, 10, 3))
-    testinversion(&#39;a4 cs5 ds5&#39;, 0, (9, 11, 3))
-    testinversion(&#39;c4 d f&#39;, 5, (0, 3, 5))
-    testinversion(&#39;f#4 b c5&#39;, 3, (3, 4, 9))
-    testinversion(&#39;f4 af c5&#39;, 9, (9, 1, 4))
-    testinversion(&#39;g#4 b d5&#39;, 10, (8, 11, 2))
-    testinversion(&#39;e4 f5 g5&#39;, 6, (11, 1, 2))
+    # print(&#39;\n=== Inversion ========================================&#39;)
+    # testinversion(&#39;g4 bf c5&#39;, 0, (0, 2, 5))
+    # testinversion(&#39;f4 gs a&#39;, 0, (3, 4, 7))
+    # testinversion(&#39;g4 af a&#39;, 0, (3, 4, 5))
+    # testinversion(&#39;e4 fs b&#39;, 0, (1, 6, 8))
+    # testinversion(&#39;a4 d5 ds5&#39;, 0, (9, 10, 3))
+    # testinversion(&#39;a4 cs5 ds5&#39;, 0, (9, 11, 3))
+    # testinversion(&#39;c4 d f&#39;, 5, (0, 3, 5))
+    # testinversion(&#39;f#4 b c5&#39;, 3, (3, 4, 9))
+    # testinversion(&#39;f4 af c5&#39;, 9, (9, 1, 4))
+    # testinversion(&#39;g#4 b d5&#39;, 10, (8, 11, 2))
+    # testinversion(&#39;e4 f5 g5&#39;, 6, (11, 1, 2))
 
     #==========================================================================
 
@@ -350,21 +359,44 @@ if __name__ == &#39;__main__&#39;:
         print(f&#39;{notes}: normal =&gt; {normal} prime =&gt; {result} =&gt; {pitchclassnames(result)}&#39;)
         assert result == correct, f&#39;{result} does not match authority {correct}.&#39;
 
-    print(&#39;\n=== Prime Form ========================================&#39;)
-    testprimeform(&#39;g3 b1 d5&#39;, (0, 3, 7))
-    testprimeform(&#39;a6 c4 ef&#39;, (0, 3, 6))
-    testprimeform(&#39;fs3 b c#4&#39;, (0, 2, 7))
-    testprimeform(&#39;F4 Ab Bb7&#39;, (0, 2, 5))
-    testprimeform(&#39;df4 f3 a6&#39;, (0, 4, 8))
-    testprimeform(&#39;ef7 ff4 gf3&#39;, (0, 1, 3) )
-    testprimeform(&#39;g4 a3 cs5&#39;, (0, 2, 6))
-    testprimeform(&#39;af2 cs3 d1&#39;, (0, 1, 6))
-    testprimeform(&#39;cs4 e5 fs3&#39;, (0, 2, 5))
-    testprimeform(&#39;cs5 g4 a2&#39;, (0, 2, 6))
-    testprimeform(&#39;bf3 a4 f5&#39;, (0, 1, 5))
-    testprimeform(&#39;gs3 cs2 e6&#39;, (0, 3, 7))
-    testprimeform(&#39;f3 fs e2&#39;, (0, 1, 2))
-    testprimeform(&#39;g4 d4 a&#39;, (0, 2, 7))
+    # print(&#39;\n=== Prime Form ========================================&#39;)
+    # testprimeform(&#39;g3 b1 d5&#39;, (0, 3, 7))
+    # testprimeform(&#39;a6 c4 ef&#39;, (0, 3, 6))
+    # testprimeform(&#39;fs3 b c#4&#39;, (0, 2, 7))
+    # testprimeform(&#39;F4 Ab Bb7&#39;, (0, 2, 5))
+    # testprimeform(&#39;df4 f3 a6&#39;, (0, 4, 8))
+    # testprimeform(&#39;ef7 ff4 gf3&#39;, (0, 1, 3) )
+    # testprimeform(&#39;g4 a3 cs5&#39;, (0, 2, 6))
+    # testprimeform(&#39;af2 cs3 d1&#39;, (0, 1, 6))
+    # testprimeform(&#39;cs4 e5 fs3&#39;, (0, 2, 5))
+    # testprimeform(&#39;cs5 g4 a2&#39;, (0, 2, 6))
+    # testprimeform(&#39;bf3 a4 f5&#39;, (0, 1, 5))
+    # testprimeform(&#39;gs3 cs2 e6&#39;, (0, 3, 7))
+    # testprimeform(&#39;f3 fs e2&#39;, (0, 1, 2))
+    # testprimeform(&#39;g4 d4 a&#39;, (0, 2, 7))
+
+    #==========================================================================
+
+    def testintervalvector(pcs, correct):
+        prime  = primeform(pcs)
+        result = pcivector(pcs)
+        print(f&#39;{pcs}: primeform={prime}, icvector={result}&#39;)
+        assert result == correct, f&#39;{result} does not match authority {correct}.&#39;
+
+    print(&#39;\n=== Interval Vector ========================================&#39;)
+    testintervalvector([2,3,7,10], [1,0,1,2,2,0])
+    testintervalvector([2,3,8,9],  [2,0,0,0,2,2])
+    testintervalvector([1,4,8], [0,0,1,1,1,0])
+    testintervalvector([1,3,4,7], [1,1,2,1,0,1])
+    testintervalvector([0,2,4,6,9], [0,3,2,2,2,1])
+    testintervalvector([0,1,3,5,7,8], [2,3,2,3,4,1])
+    testintervalvector([9,10,11,0,1], [4,3,2,1,0,0])
+    testintervalvector([6,7,9,11,0], [2,2,2,1,2,1])
+    testintervalvector([4,5,6,7,8], [4,3,2,1,0,0])
+    testintervalvector([0,2,4,6,8], [0,4,0,4,0,2])
+    testintervalvector([11,1,2,4,6], [1,3,2,1,3,0])
+    testintervalvector([4,5,7,8,10], [2,2,3,1,1,1])
+    testintervalvector([9,11,1,2,5], [1,2,2,3,1,1])
 
     #==========================================================================
 
@@ -530,7 +562,9 @@ See: Understanding Post-Tonal Theory, page 75.</p>
     icvec = [0, 0, 0, 0, 0, 0]
     for i1 in range(0, len(prime) - 1):
         for i2 in range(i1 + 1, len(prime)):
-            ic = iclass(pcinterval(prime[i1], prime[i2]))
+            intr = pcinterval(prime[i1], prime[i2])
+            ic = iclass(intr)
+            print(f&#34;prime[{i1}]={prime[i1]}, prime[{i2}]={prime[i2]}, intr={intr}, iclass={ic}&#34;)            
             icvec[ic - 1] += 1
     return icvec</code></pre>
 </details>
@@ -742,6 +776,7 @@ transposed to 0.</p></div>
     zero = pctranspose(norm, pcinterval(norm[0], 12))
     # invert with transposition of last pc so inversion starts on zero
     invr = pcinvert(zero, zero[-1])
+    #print(&#34;norm=&#34;, norm, &#34;, zero=&#34;, zero, &#34;, invert=&#34;, invr)
     return most_tightly_packed([zero, invr])</code></pre>
 </details>
 </dd>

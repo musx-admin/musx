@@ -38,11 +38,12 @@ and rests according to their attribute values. A note&#39;s attribute values are
 automatically converted to whatever format is required by a specific backend.
 &#34;&#34;&#34;
 
+from fractions import Fraction
+from copy import copy, deepcopy
 from .midi import midievent as me
 from .midi import midimsg as mm
 from .tools import quantize
 from .pitch import Pitch
-from fractions import Fraction
 
 class Event:
     &#34;&#34;&#34;
@@ -112,6 +113,8 @@ class Note (Event):
         0 to 15, inclusive. 
     &#34;&#34;&#34;
     def __init__(self, time=0.0, duration=1.0, pitch=60, amplitude=.5, instrument=0):
+        # WARNING: if you add new attributes be sure to update copy() and
+        # copy_at_tempo() as needed.
         super().__init__(time)
         self.duration = duration
         self.amplitude = amplitude
@@ -295,7 +298,46 @@ class Note (Event):
     def _pitchtokey(self):
         if isinstance(self._pitch, Pitch):
             return self._pitch.keynum()
-        return self._pitch</code></pre>
+        return self._pitch
+
+    # def __deepcopy__(self, memo):
+    #     cls = self.__class__
+    #     result = cls.__new__(cls)
+    #     memo[id(self)] = result
+    #     for k, v in self.__dict__.items():
+    #         setattr(result, k, deepcopy(v, memo))
+    #     return result
+
+    def copy(self):
+        # ARRRG! Tried __deepcopy__ but gave up for now...
+        &#34;&#34;&#34;
+        Returns a deep copy of this Note and all its children.
+        &#34;&#34;&#34;
+        cpy = Note() 
+        cpy._time = self._time
+        cpy._duration = self._duration
+        cpy._amplitude = self._amplitude
+        cpy._pitch = self._pitch
+        cpy._instrument = self._instrument
+        cpy._children = [c.copy() for c in self._children]
+        cpy._mxml = self._mxml.copy()
+        return cpy
+
+    def copy_at_tempo(self, tempo_scalar):
+        &#34;&#34;&#34;
+        Returns a copy of this note with its time and duration adjusted by
+        tempo_scaler, a metronome value per quarter: 60.0 / (1/4 * tempo)
+        &#34;&#34;&#34;
+        cpy = Note() 
+        cpy._time = self._time * tempo_scalar
+        cpy._duration = self._duration * tempo_scalar
+        cpy._amplitude = self._amplitude
+        cpy._pitch = self._pitch
+        cpy._instrument = self._instrument
+        cpy._children = [c.copy_at_tempo(tempo_scalar) for c in self._children]
+        cpy._mxml = self._mxml.copy()     
+        return cpy
+        </code></pre>
 </details>
 </section>
 <section>
@@ -463,6 +505,8 @@ generating midi then this value should be a channel integer
         0 to 15, inclusive. 
     &#34;&#34;&#34;
     def __init__(self, time=0.0, duration=1.0, pitch=60, amplitude=.5, instrument=0):
+        # WARNING: if you add new attributes be sure to update copy() and
+        # copy_at_tempo() as needed.
         super().__init__(time)
         self.duration = duration
         self.amplitude = amplitude
@@ -646,7 +690,45 @@ generating midi then this value should be a channel integer
     def _pitchtokey(self):
         if isinstance(self._pitch, Pitch):
             return self._pitch.keynum()
-        return self._pitch</code></pre>
+        return self._pitch
+
+    # def __deepcopy__(self, memo):
+    #     cls = self.__class__
+    #     result = cls.__new__(cls)
+    #     memo[id(self)] = result
+    #     for k, v in self.__dict__.items():
+    #         setattr(result, k, deepcopy(v, memo))
+    #     return result
+
+    def copy(self):
+        # ARRRG! Tried __deepcopy__ but gave up for now...
+        &#34;&#34;&#34;
+        Returns a deep copy of this Note and all its children.
+        &#34;&#34;&#34;
+        cpy = Note() 
+        cpy._time = self._time
+        cpy._duration = self._duration
+        cpy._amplitude = self._amplitude
+        cpy._pitch = self._pitch
+        cpy._instrument = self._instrument
+        cpy._children = [c.copy() for c in self._children]
+        cpy._mxml = self._mxml.copy()
+        return cpy
+
+    def copy_at_tempo(self, tempo_scalar):
+        &#34;&#34;&#34;
+        Returns a copy of this note with its time and duration adjusted by
+        tempo_scaler, a metronome value per quarter: 60.0 / (1/4 * tempo)
+        &#34;&#34;&#34;
+        cpy = Note() 
+        cpy._time = self._time * tempo_scalar
+        cpy._duration = self._duration * tempo_scalar
+        cpy._amplitude = self._amplitude
+        cpy._pitch = self._pitch
+        cpy._instrument = self._instrument
+        cpy._children = [c.copy_at_tempo(tempo_scalar) for c in self._children]
+        cpy._mxml = self._mxml.copy()     
+        return cpy</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -814,6 +896,57 @@ def time(self):
     return notes</code></pre>
 </details>
 </dd>
+<dt id="musx.note.Note.copy"><code class="name flex">
+<span>def <span class="ident">copy</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a deep copy of this Note and all its children.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy(self):
+    # ARRRG! Tried __deepcopy__ but gave up for now...
+    &#34;&#34;&#34;
+    Returns a deep copy of this Note and all its children.
+    &#34;&#34;&#34;
+    cpy = Note() 
+    cpy._time = self._time
+    cpy._duration = self._duration
+    cpy._amplitude = self._amplitude
+    cpy._pitch = self._pitch
+    cpy._instrument = self._instrument
+    cpy._children = [c.copy() for c in self._children]
+    cpy._mxml = self._mxml.copy()
+    return cpy</code></pre>
+</details>
+</dd>
+<dt id="musx.note.Note.copy_at_tempo"><code class="name flex">
+<span>def <span class="ident">copy_at_tempo</span></span>(<span>self, tempo_scalar)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a copy of this note with its time and duration adjusted by
+tempo_scaler, a metronome value per quarter: 60.0 / (1/4 * tempo)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy_at_tempo(self, tempo_scalar):
+    &#34;&#34;&#34;
+    Returns a copy of this note with its time and duration adjusted by
+    tempo_scaler, a metronome value per quarter: 60.0 / (1/4 * tempo)
+    &#34;&#34;&#34;
+    cpy = Note() 
+    cpy._time = self._time * tempo_scalar
+    cpy._duration = self._duration * tempo_scalar
+    cpy._amplitude = self._amplitude
+    cpy._pitch = self._pitch
+    cpy._instrument = self._instrument
+    cpy._children = [c.copy_at_tempo(tempo_scalar) for c in self._children]
+    cpy._mxml = self._mxml.copy()     
+    return cpy</code></pre>
+</details>
+</dd>
 <dt id="musx.note.Note.get_mxml"><code class="name flex">
 <span>def <span class="ident">get_mxml</span></span>(<span>self, key, default=None)</span>
 </code></dt>
@@ -910,6 +1043,8 @@ the key is not in the note's mxml dictionary.</p></div>
 <li><code><a title="musx.note.Note.add_child" href="#musx.note.Note.add_child">add_child</a></code></li>
 <li><code><a title="musx.note.Note.amplitude" href="#musx.note.Note.amplitude">amplitude</a></code></li>
 <li><code><a title="musx.note.Note.chord" href="#musx.note.Note.chord">chord</a></code></li>
+<li><code><a title="musx.note.Note.copy" href="#musx.note.Note.copy">copy</a></code></li>
+<li><code><a title="musx.note.Note.copy_at_tempo" href="#musx.note.Note.copy_at_tempo">copy_at_tempo</a></code></li>
 <li><code><a title="musx.note.Note.duration" href="#musx.note.Note.duration">duration</a></code></li>
 <li><code><a title="musx.note.Note.get_mxml" href="#musx.note.Note.get_mxml">get_mxml</a></code></li>
 <li><code><a title="musx.note.Note.instrument" href="#musx.note.Note.instrument">instrument</a></code></li>
