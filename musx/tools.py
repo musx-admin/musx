@@ -476,3 +476,26 @@ def parse_string_sequence(string):
         else:
             raise SyntaxError(f"dangling repeat ',' in '{string}'.")
     return seq
+
+
+def histo(data):
+    """
+    Returns a dictionary containing a histogram of the input data.
+    
+    Parameters
+    ----------
+    data : list
+        The list of data to analyze.
+    
+    Example
+    -------
+    >>> histo([3,4,1,1,2,1,5,6,5])
+    {3: 1, 4: 1, 1: 3, 2: 1, 5: 2, 6: 1}
+    """
+    if isinstance(data, list):
+        hist = {}
+        for d in data:
+            try: hist[d] += 1
+            except: hist[d] = 1
+        return hist
+    raise TypeError ("Histogram data is not a list.")

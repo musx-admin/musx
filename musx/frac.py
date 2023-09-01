@@ -1,15 +1,15 @@
 ###############################################################################
 """
-The fraction module adds some music-mensural methods to python's Fraction class.
-The methods are added during startup, you never need to import this module.
+Adds methods to python's Fraction class for representing exact time, mensural tuples,  
+tuning ratios, etc. 
 """
 
 from fractions import Fraction
    
 def dotted(self, dots=1):
     """
-    Returns the 'dotted' value of the musical fraction, e.g. 1/4 with
-    one dot is 1/4 + 1/8 = 3/8, the time value of a dotted quarter.
+    Returns the 'dotted' value of the fraction, e.g. 1/4 with
+    one dot is 1/4 + 1/8 = 3/8, e.g. the time value of a dotted quarter.
 
     Parameters
     ----------
@@ -37,15 +37,14 @@ def tuplets(self, num, intimeof=1):
         The number of tuples to return.  
     intimeof : int
         A number that, when multiplied by the fraction itself,
-        represents the sum of all the tuplets returned.
+        represents the sum of all the tuplets in the list.
 
     Examples
     --------
-        >>> Fraction(1, 4).tuplets( 3)
-        [Fraction(1, 12), Fraction(1, 12), Fraction(1, 12)]
- 
-        >>> Fraction(1, 4).tuplets(3, 2)
-        [Fraction(1, 6), Fraction(1, 6), Fraction(1, 6)]
+    >>> Fraction(1, 4).tuplets( 3)
+    [Fraction(1, 12), Fraction(1, 12), Fraction(1, 12)]
+    >>> Fraction(1, 4).tuplets(3, 2)
+    [Fraction(1, 6), Fraction(1, 6), Fraction(1, 6)]
     """
     tup = Fraction(intimeof, num)
     one = self * tup
@@ -63,8 +62,8 @@ def tup(self, num):
 
     Examples
     --------
-        >>> Fraction(1, 4).tup(5)
-        Fraction(1, 20)
+    >>> Fraction(1, 4).tup(5)
+    Fraction(1, 20)
     """
     if isinstance(num, int) and num > 0:
         return Fraction(self._numerator, (self._denominator * num))
@@ -85,7 +84,6 @@ def seconds(self, tempo=60, beat=None):
 
     Examples
     --------
-    # returns the time in seconds of a quarter note tempo 120
     >>> Fraction(1,4).seconds(tempo=120)
     0.5
 

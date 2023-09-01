@@ -67,35 +67,6 @@ def harp(score, knum, rate):
         yield rate
 
 
-def ghosts(score):
-    """
-    Creates mid-range clarinet line and decorates it with
-    calls to the other instrument composers.
-    
-    Parameters
-    ----------
-    score : Score
-        The musical score to add events to.
-    """
-    for _ in range(12):
-        here = score.elapsed
-        ahead = (here + 1/2) * 2
-        melody = between(53, 77)
-        high = (melody >=  65)
-        amp = .2 if high else .4
-        rhy = pick(1/4, 1/2, 3/4)
-        # the clarinet line
-        note = Note(time=score.now, duration=rhy + .2, pitch=melody, amplitude=amp, instrument=1)
-        score.add(note)
-        # add decorations to the clarinet melody
-        if high:
-            score.compose([ahead, flute(score, melody, ahead)])
-            score.compose([ahead * 2, harp(score, melody, rhy / 4)])
-        elif (rhy == 3/4):
-            score.compose([1/2, cello(score, melody)])
-        yield rhy
-
-
 if __name__ == '__main__':
     # It's good practice to add any metadata such as tempo, midi instrument
     # assignments, micro tuning, etc. to track 0 in your midi file.

@@ -1,6 +1,6 @@
 """
-A package providing support for reading and writeing notation data from MusicXml files.
-The MusicXml schema is defined in the file musicxml.py, which was auto-generated
+Provides support for reading and writing data from MusicXml files.
+The complete MusicXml schema is defined in the file musicxml.py, which was auto-generated
 using the awesome [generateDS](https://pypi.org/project/generateDS/) package.
 """
 

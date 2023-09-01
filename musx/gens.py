@@ -3,6 +3,9 @@
 A collection of python generators that produce many different patterns in data,
 from simple looping and randomness to more complex processes such as markov
 chains, cellular automata and chaos.
+
+NOTE: this module has been replaced by patterns.py, which permit subpatterns
+to be embedded inside parent patterns.
 """
 
 import random as ran
@@ -564,9 +567,6 @@ def states(cells, stop=None, rule=None):
         current = [list(cells)]   # list(cells) is copy
         # future as values but set to 0's
         future = [[0 for _ in cells]] # init future to 0's.
-    
-    print('current:', current, 'future:', future, 'indexes:', indexes)
-
     # reverse the states so that when the loop starts and
     # flips with j == 0 the present states will be correct
     current, future = future, current
@@ -729,6 +729,8 @@ def all_rotations (items, rules, groups=False, repeatfirst=False):
 
 
 if __name__ == '__main__' :
+    # TO RUN: python -m musx.gens
+
     # LOOP --------------------------------------------------------------------
     def test_cycle():
         pat = cycle([1,2,3,4])
@@ -801,23 +803,25 @@ if __name__ == '__main__' :
 
     # STATES ------------------------------------------------------------------
     def test_states():
-
         def add_neighbors(cells, index):
             left = getstate(cells, index, -1)
             right = getstate(cells, index, 1)
             return (left + right) % 3
 
         # example
+        print("------------------------------\nadd-neighbors 1")
         foo = states([0,1,0,1,0], rule=add_neighbors)
         for _ in range(25):
             print( [next(foo) for _ in range(5)])
      
         # example
+        print("------------------------------\nadd-neighbors 2")
         foo = states([1,0,2,2,0,2,1,2], rule=add_neighbors)
         for _ in range(12):
             print([next(foo) for _ in range(8)])
  
        # example 8 states
+        print("------------------------------\n8states")
         def states8(cells, index):
             left = getstate(cells, index, -1)
             here = getstate(cells, index, 0)
@@ -829,6 +833,7 @@ if __name__ == '__main__' :
             print([next(foo) for _ in range(8)])
 
         # example hglass
+        print("------------------------------\nhglass")
         hglass_states = [0, 1, 1, 1, 0, 0, 0, 0,   0, 0, 0, 1, 0, 0, 0, 0,   
                         0, 0, 0, 0, 0, 1, 0, 0,   0, 1, 0, 0, 0, 1, 1, 1]
 
@@ -852,14 +857,15 @@ if __name__ == '__main__' :
             [1, 0, 0, 1, 1, 1, 1, 0]]
 
         foo = states(hglass_init, rule=hglass)
-        print(foo)
+
         for _ in range(4):
             sixtyfour = [next(foo) for _ in range(64)]
             print([sixtyfour[i] for i in range(32)])
 
     #=========================================================================
-    test_markov()
+    #test_markov()
     #test_markov_analyze()
+    test_states()
 
     
 

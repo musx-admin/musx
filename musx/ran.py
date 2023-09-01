@@ -362,6 +362,30 @@ def pink():
     return _pinking[_i]
 
 
+def drunk(val, width=1):
+    """
+    Returns a gnerator to produce numbers in a "drunken walk" where the next 
+    value returned is constrained to lie within the bounds of the previous 
+    value plus/minus width. If val and width are both integers then integer 
+    values are returned otherwise floating point values are returned.
+
+    Parameters
+    ----------
+    val : int | float
+        The initial value returned by the walk. Thereafter drunk internally
+        updates this value according to width.
+    width : int | float
+        Constrains the next value returned to be within the bounds of the
+        current value plus/minus width.
+    """
+    func = random.randint if isinstance(val, int) and isinstance(width, int) else random.uniform
+    i = 0
+    while True:
+        yield val 
+        val += func(-width, width)
+        i += 1
+
+
 if __name__ == '__main__':
     
     ransegs(num=5, mapto=10)
