@@ -7,11 +7,11 @@ a tuple containing pitch classes. A matrix is a 2D array of pitch class sets,
 that can be referenced by row type, e.g. "p3", "i9", "ri2" "r11".
 """
 
-__pdoc__ = {
-    '_most_tightly_packed': False,
-    '_MatrixBase': False,
-    '_PCSetBase': False
-}
+# __pdoc__ = {
+#     '_most_tightly_packed': False,
+#     '_MatrixBase': False,
+#     '_PCSetBase': False
+# }
 
 import copy
 from collections import namedtuple

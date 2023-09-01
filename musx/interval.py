@@ -8,6 +8,7 @@ or compound intervals.  Intervals can be numerically compared for their size
 (span+quality) and can be used to transpose Pitches while preserving correct
 accidental spelling."
 """
+__pdoc__ = {'IntervalBase': False}
 
 from .pitch import Pitch
 from collections import namedtuple

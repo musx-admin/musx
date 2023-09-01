@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>musx.frac API documentation</title>
-<meta name="description" content="The fraction module adds some music-mensural methods to python&#39;s Fraction class.
-The methods are added during startup, you never need to import this …" />
+<title>frac API documentation</title>
+<meta name="description" content="Adds methods to python&#39;s Fraction class for representing exact time, mensural tuples,
+tuning ratios, etc." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -20,27 +20,27 @@ The methods are added during startup, you never need to import this …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>musx.frac</code></h1>
+<h1 class="title">Module <code>frac</code></h1>
 </header>
 <section id="section-intro">
-<p>The fraction module adds some music-mensural methods to python's Fraction class.
-The methods are added during startup, you never need to import this module.</p>
+<p>Adds methods to python's Fraction class for representing exact time, mensural tuples,<br>
+tuning ratios, etc.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">###############################################################################
 &#34;&#34;&#34;
-The fraction module adds some music-mensural methods to python&#39;s Fraction class.
-The methods are added during startup, you never need to import this module.
+Adds methods to python&#39;s Fraction class for representing exact time, mensural tuples,  
+tuning ratios, etc. 
 &#34;&#34;&#34;
 
 from fractions import Fraction
    
 def dotted(self, dots=1):
     &#34;&#34;&#34;
-    Returns the &#39;dotted&#39; value of the musical fraction, e.g. 1/4 with
-    one dot is 1/4 + 1/8 = 3/8, the time value of a dotted quarter.
+    Returns the &#39;dotted&#39; value of the fraction, e.g. 1/4 with
+    one dot is 1/4 + 1/8 = 3/8, e.g. the time value of a dotted quarter.
 
     Parameters
     ----------
@@ -68,15 +68,14 @@ def tuplets(self, num, intimeof=1):
         The number of tuples to return.  
     intimeof : int
         A number that, when multiplied by the fraction itself,
-        represents the sum of all the tuplets returned.
+        represents the sum of all the tuplets in the list.
 
     Examples
     --------
-        &gt;&gt;&gt; Fraction(1, 4).tuplets( 3)
-        [Fraction(1, 12), Fraction(1, 12), Fraction(1, 12)]
- 
-        &gt;&gt;&gt; Fraction(1, 4).tuplets(3, 2)
-        [Fraction(1, 6), Fraction(1, 6), Fraction(1, 6)]
+    &gt;&gt;&gt; Fraction(1, 4).tuplets( 3)
+    [Fraction(1, 12), Fraction(1, 12), Fraction(1, 12)]
+    &gt;&gt;&gt; Fraction(1, 4).tuplets(3, 2)
+    [Fraction(1, 6), Fraction(1, 6), Fraction(1, 6)]
     &#34;&#34;&#34;
     tup = Fraction(intimeof, num)
     one = self * tup
@@ -94,8 +93,8 @@ def tup(self, num):
 
     Examples
     --------
-        &gt;&gt;&gt; Fraction(1, 4).tup(5)
-        Fraction(1, 20)
+    &gt;&gt;&gt; Fraction(1, 4).tup(5)
+    Fraction(1, 20)
     &#34;&#34;&#34;
     if isinstance(num, int) and num &gt; 0:
         return Fraction(self._numerator, (self._denominator * num))
@@ -116,7 +115,6 @@ def seconds(self, tempo=60, beat=None):
 
     Examples
     --------
-    # returns the time in seconds of a quarter note tempo 120
     &gt;&gt;&gt; Fraction(1,4).seconds(tempo=120)
     0.5
 
@@ -152,12 +150,12 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="musx.frac.dotted"><code class="name flex">
+<dt id="frac.dotted"><code class="name flex">
 <span>def <span class="ident">dotted</span></span>(<span>self, dots=1)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the 'dotted' value of the musical fraction, e.g. 1/4 with
-one dot is 1/4 + 1/8 = 3/8, the time value of a dotted quarter.</p>
+<div class="desc"><p>Returns the 'dotted' value of the fraction, e.g. 1/4 with
+one dot is 1/4 + 1/8 = 3/8, e.g. the time value of a dotted quarter.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>dots</code></strong> :&ensp;<code>int</code></dt>
@@ -172,8 +170,8 @@ value of the fraction.</dd>
 </summary>
 <pre><code class="python">def dotted(self, dots=1):
     &#34;&#34;&#34;
-    Returns the &#39;dotted&#39; value of the musical fraction, e.g. 1/4 with
-    one dot is 1/4 + 1/8 = 3/8, the time value of a dotted quarter.
+    Returns the &#39;dotted&#39; value of the fraction, e.g. 1/4 with
+    one dot is 1/4 + 1/8 = 3/8, e.g. the time value of a dotted quarter.
 
     Parameters
     ----------
@@ -190,7 +188,7 @@ value of the fraction.</dd>
     raise ValueError(f&#34;Dots value is not a positive integer: {dots}.&#34;)</code></pre>
 </details>
 </dd>
-<dt id="musx.frac.seconds"><code class="name flex">
+<dt id="frac.seconds"><code class="name flex">
 <span>def <span class="ident">seconds</span></span>(<span>self, tempo=60, beat=None)</span>
 </code></dt>
 <dd>
@@ -204,7 +202,6 @@ given tempo and beat.</p>
 <dd>A fraction representing the beat. Defaults to 1/4 (quarter note).</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<h1 id="returns-the-time-in-seconds-of-a-quarter-note-tempo-120">returns the time in seconds of a quarter note tempo 120</h1>
 <pre><code class="language-python-repl">&gt;&gt;&gt; Fraction(1,4).seconds(tempo=120)
 0.5
 </code></pre>
@@ -228,7 +225,6 @@ given tempo and beat.</p>
 
     Examples
     --------
-    # returns the time in seconds of a quarter note tempo 120
     &gt;&gt;&gt; Fraction(1,4).seconds(tempo=120)
     0.5
 
@@ -245,7 +241,7 @@ given tempo and beat.</p>
     raise TypeError(f&#39;Invalid beat: {beat}.&#39;)</code></pre>
 </details>
 </dd>
-<dt id="musx.frac.tup"><code class="name flex">
+<dt id="frac.tup"><code class="name flex">
 <span>def <span class="ident">tup</span></span>(<span>self, num)</span>
 </code></dt>
 <dd>
@@ -256,7 +252,7 @@ given tempo and beat.</p>
 <dd>The number to divide this fraction by.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; Fraction(1, 4).tup(5)
+<pre><code class="language-python-repl">&gt;&gt;&gt; Fraction(1, 4).tup(5)
 Fraction(1, 20)
 </code></pre></div>
 <details class="source">
@@ -274,15 +270,15 @@ Fraction(1, 20)
 
     Examples
     --------
-        &gt;&gt;&gt; Fraction(1, 4).tup(5)
-        Fraction(1, 20)
+    &gt;&gt;&gt; Fraction(1, 4).tup(5)
+    Fraction(1, 20)
     &#34;&#34;&#34;
     if isinstance(num, int) and num &gt; 0:
         return Fraction(self._numerator, (self._denominator * num))
     raise ValueError(f&#34;Invalid tup divisor: {num}.&#34;)</code></pre>
 </details>
 </dd>
-<dt id="musx.frac.tuplets"><code class="name flex">
+<dt id="frac.tuplets"><code class="name flex">
 <span>def <span class="ident">tuplets</span></span>(<span>self, num, intimeof=1)</span>
 </code></dt>
 <dd>
@@ -294,12 +290,11 @@ value of fraction * num.</p>
 <dd>The number of tuples to return.</dd>
 <dt><strong><code>intimeof</code></strong> :&ensp;<code>int</code></dt>
 <dd>A number that, when multiplied by the fraction itself,
-represents the sum of all the tuplets returned.</dd>
+represents the sum of all the tuplets in the list.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; Fraction(1, 4).tuplets( 3)
+<pre><code class="language-python-repl">&gt;&gt;&gt; Fraction(1, 4).tuplets( 3)
 [Fraction(1, 12), Fraction(1, 12), Fraction(1, 12)]
-
 &gt;&gt;&gt; Fraction(1, 4).tuplets(3, 2)
 [Fraction(1, 6), Fraction(1, 6), Fraction(1, 6)]
 </code></pre></div>
@@ -318,15 +313,14 @@ represents the sum of all the tuplets returned.</dd>
         The number of tuples to return.  
     intimeof : int
         A number that, when multiplied by the fraction itself,
-        represents the sum of all the tuplets returned.
+        represents the sum of all the tuplets in the list.
 
     Examples
     --------
-        &gt;&gt;&gt; Fraction(1, 4).tuplets( 3)
-        [Fraction(1, 12), Fraction(1, 12), Fraction(1, 12)]
- 
-        &gt;&gt;&gt; Fraction(1, 4).tuplets(3, 2)
-        [Fraction(1, 6), Fraction(1, 6), Fraction(1, 6)]
+    &gt;&gt;&gt; Fraction(1, 4).tuplets( 3)
+    [Fraction(1, 12), Fraction(1, 12), Fraction(1, 12)]
+    &gt;&gt;&gt; Fraction(1, 4).tuplets(3, 2)
+    [Fraction(1, 6), Fraction(1, 6), Fraction(1, 6)]
     &#34;&#34;&#34;
     tup = Fraction(intimeof, num)
     one = self * tup
@@ -344,17 +338,12 @@ represents the sum of all the tuplets returned.</dd>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3>Super-module</h3>
-<ul>
-<li><code><a title="musx" href="index.html">musx</a></code></li>
-</ul>
-</li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="musx.frac.dotted" href="#musx.frac.dotted">dotted</a></code></li>
-<li><code><a title="musx.frac.seconds" href="#musx.frac.seconds">seconds</a></code></li>
-<li><code><a title="musx.frac.tup" href="#musx.frac.tup">tup</a></code></li>
-<li><code><a title="musx.frac.tuplets" href="#musx.frac.tuplets">tuplets</a></code></li>
+<li><code><a title="frac.dotted" href="#frac.dotted">dotted</a></code></li>
+<li><code><a title="frac.seconds" href="#frac.seconds">seconds</a></code></li>
+<li><code><a title="frac.tup" href="#frac.tup">tup</a></code></li>
+<li><code><a title="frac.tuplets" href="#frac.tuplets">tuplets</a></code></li>
 </ul>
 </li>
 </ul>

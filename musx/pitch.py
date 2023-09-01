@@ -48,8 +48,8 @@ __pdoc__ = {
     'parse_number_sequence': False,
     'parse_pitch_sequence': False,
     'chromatic_scale': False,
-    'build_chromatic_scale': False
-}
+    'build_chromatic_scale': False,
+    'PitchBase': False}
 
 from enum import IntEnum
 from collections import namedtuple
