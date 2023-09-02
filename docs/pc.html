@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>pc API documentation</title>
+<title>musx.pc API documentation</title>
 <meta name="description" content="Implements operations on pitch classes, pitch class sets, and set matrices.
 A pitch class (pc) is an integer 0-11 representing one of twelve
 equal …" />
@@ -21,7 +21,7 @@ equal …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>pc</code></h1>
+<h1 class="title">Module <code>musx.pc</code></h1>
 </header>
 <section id="section-intro">
 <p>Implements operations on pitch classes, pitch class sets, and set matrices.
@@ -517,7 +517,7 @@ if __name__ == &#39;__main__&#39;:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="pc.Matrix"><code class="flex name class">
+<dt id="musx.pc.Matrix"><code class="flex name class">
 <span>class <span class="ident">Matrix</span></span>
 <span>(</span><span>sourceset)</span>
 </code></dt>
@@ -628,12 +628,12 @@ if __name__ == &#39;__main__&#39;:
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li>pc._MatrixBase</li>
+<li>musx.pc._MatrixBase</li>
 <li>builtins.tuple</li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pc.Matrix.print"><code class="name flex">
+<dt id="musx.pc.Matrix.print"><code class="name flex">
 <span>def <span class="ident">print</span></span>(<span>self, notes=False)</span>
 </code></dt>
 <dd>
@@ -668,7 +668,7 @@ if __name__ == &#39;__main__&#39;:
     print(&#39;)&#39;)</code></pre>
 </details>
 </dd>
-<dt id="pc.Matrix.row"><code class="name flex">
+<dt id="musx.pc.Matrix.row"><code class="name flex">
 <span>def <span class="ident">row</span></span>(<span>self, rowform)</span>
 </code></dt>
 <dd>
@@ -722,7 +722,7 @@ transposition level (0 &hellip; 11). Examples: "p9" "ri0" "i6" "r11".</dd>
 </dd>
 </dl>
 </dd>
-<dt id="pc.PCSet"><code class="flex name class">
+<dt id="musx.pc.PCSet"><code class="flex name class">
 <span>class <span class="ident">PCSet</span></span>
 <span>(</span><span>pcs)</span>
 </code></dt>
@@ -905,12 +905,12 @@ transposition level (0 &hellip; 11). Examples: "p9" "ri0" "i6" "r11".</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li>pc._PCSetBase</li>
+<li>musx.pc._PCSetBase</li>
 <li>builtins.tuple</li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pc.PCSet.intervalvector"><code class="name flex">
+<dt id="musx.pc.PCSet.intervalvector"><code class="name flex">
 <span>def <span class="ident">intervalvector</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -934,7 +934,7 @@ transposition level (0 &hellip; 11). Examples: "p9" "ri0" "i6" "r11".</dd>
     return icvec</code></pre>
 </details>
 </dd>
-<dt id="pc.PCSet.invert"><code class="name flex">
+<dt id="musx.pc.PCSet.invert"><code class="name flex">
 <span>def <span class="ident">invert</span></span>(<span>self, t=0)</span>
 </code></dt>
 <dd>
@@ -949,7 +949,7 @@ transposition level (0 &hellip; 11). Examples: "p9" "ri0" "i6" "r11".</dd>
     return t0 if t == 0 else t0.transpose(t)</code></pre>
 </details>
 </dd>
-<dt id="pc.PCSet.label"><code class="name flex">
+<dt id="musx.pc.PCSet.label"><code class="name flex">
 <span>def <span class="ident">label</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -969,7 +969,7 @@ and printing 10 and 11 as T and E.</p></div>
     return label</code></pre>
 </details>
 </dd>
-<dt id="pc.PCSet.matrix"><code class="name flex">
+<dt id="musx.pc.PCSet.matrix"><code class="name flex">
 <span>def <span class="ident">matrix</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -987,7 +987,7 @@ using rowform names such as 'p0', 'r11', 'i9', 'ri7', etc.</p></div>
     return Matrix(self.set)</code></pre>
 </details>
 </dd>
-<dt id="pc.PCSet.normalform"><code class="name flex">
+<dt id="musx.pc.PCSet.normalform"><code class="name flex">
 <span>def <span class="ident">normalform</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1038,7 +1038,7 @@ and with the intervals most tightly packed to the left.</p></div>
     return PCSet(self._most_tightly_packed(normal_forms))</code></pre>
 </details>
 </dd>
-<dt id="pc.PCSet.primeform"><code class="name flex">
+<dt id="musx.pc.PCSet.primeform"><code class="name flex">
 <span>def <span class="ident">primeform</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1063,7 +1063,7 @@ whichever is smaller, transposed to 0.</p></div>
     return PCSet(self._most_tightly_packed([zero.set, invr.set]))</code></pre>
 </details>
 </dd>
-<dt id="pc.PCSet.transpose"><code class="name flex">
+<dt id="musx.pc.PCSet.transpose"><code class="name flex">
 <span>def <span class="ident">transpose</span></span>(<span>self, steps)</span>
 </code></dt>
 <dd>
@@ -1089,25 +1089,30 @@ whichever is smaller, transposed to 0.</p></div>
 <ul></ul>
 </div>
 <ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="pc.Matrix" href="#pc.Matrix">Matrix</a></code></h4>
+<h4><code><a title="musx.pc.Matrix" href="#musx.pc.Matrix">Matrix</a></code></h4>
 <ul class="">
-<li><code><a title="pc.Matrix.print" href="#pc.Matrix.print">print</a></code></li>
-<li><code><a title="pc.Matrix.row" href="#pc.Matrix.row">row</a></code></li>
+<li><code><a title="musx.pc.Matrix.print" href="#musx.pc.Matrix.print">print</a></code></li>
+<li><code><a title="musx.pc.Matrix.row" href="#musx.pc.Matrix.row">row</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="pc.PCSet" href="#pc.PCSet">PCSet</a></code></h4>
+<h4><code><a title="musx.pc.PCSet" href="#musx.pc.PCSet">PCSet</a></code></h4>
 <ul class="two-column">
-<li><code><a title="pc.PCSet.intervalvector" href="#pc.PCSet.intervalvector">intervalvector</a></code></li>
-<li><code><a title="pc.PCSet.invert" href="#pc.PCSet.invert">invert</a></code></li>
-<li><code><a title="pc.PCSet.label" href="#pc.PCSet.label">label</a></code></li>
-<li><code><a title="pc.PCSet.matrix" href="#pc.PCSet.matrix">matrix</a></code></li>
-<li><code><a title="pc.PCSet.normalform" href="#pc.PCSet.normalform">normalform</a></code></li>
-<li><code><a title="pc.PCSet.primeform" href="#pc.PCSet.primeform">primeform</a></code></li>
-<li><code><a title="pc.PCSet.transpose" href="#pc.PCSet.transpose">transpose</a></code></li>
+<li><code><a title="musx.pc.PCSet.intervalvector" href="#musx.pc.PCSet.intervalvector">intervalvector</a></code></li>
+<li><code><a title="musx.pc.PCSet.invert" href="#musx.pc.PCSet.invert">invert</a></code></li>
+<li><code><a title="musx.pc.PCSet.label" href="#musx.pc.PCSet.label">label</a></code></li>
+<li><code><a title="musx.pc.PCSet.matrix" href="#musx.pc.PCSet.matrix">matrix</a></code></li>
+<li><code><a title="musx.pc.PCSet.normalform" href="#musx.pc.PCSet.normalform">normalform</a></code></li>
+<li><code><a title="musx.pc.PCSet.primeform" href="#musx.pc.PCSet.primeform">primeform</a></code></li>
+<li><code><a title="musx.pc.PCSet.transpose" href="#musx.pc.PCSet.transpose">transpose</a></code></li>
 </ul>
 </li>
 </ul>

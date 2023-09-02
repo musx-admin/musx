@@ -43,10 +43,21 @@ or compound intervals.  Intervals can be numerically compared for their size
 (span+quality) and can be used to transpose Pitches while preserving correct
 accidental spelling.&#34;
 &#34;&#34;&#34;
+__pdoc__ = {&#39;IntervalBase&#39;: False}
 
 from .pitch import Pitch
+from collections import namedtuple
 
-class Interval:
+IntervalBase = namedtuple(&#39;IntervalBase&#39;, [&#39;span&#39;, &#39;qual&#39;, &#39;xoct&#39;, &#39;sign&#39;])
+
+#_pdoc__ = {
+#    &#39;Interval.__new__&#39;: True, &#39;Interval._string_to_pitch&#39;: True, 
+#    &#39;Interval._values_to_pitch&#39;: True, &#39;Interval.__str__&#39;: True,
+#    &#39;Interval.__repr__&#39;: True, &#39;Interval.__lt__&#39;: True, &#39;Interval.__eq__&#39;: True, 
+#    &#39;Interval.__ne__&#39;: True, &#39;Interval.__ge__&#39;: True, &#39;Interval.__gt__&#39;: True
+#}
+
+class Interval (IntervalBase):
 
     ## Private class constants representing spans. There are eight interval
     #  spans ranging 0-7: _Uni=Unison, _2nd=Second, _3rd=Third, ... _8va=Octave
@@ -138,8 +149,7 @@ class Interval:
                1:  _aug,  2: _2aug,  3: _3aug,  4: _4aug,  5: _5aug}
      }
 
-
-    def __init__(self, arg, other=None):
+    def __new__(cls, arg, other=None):
         &#34;&#34;&#34;
         Creates an Interval from a string, list, or two Pitches.
 
@@ -193,24 +203,27 @@ class Interval:
         ------
         TypeError if the input is not a string, list of four integers, or two pitches.
         &#34;&#34;&#34;
-
         if other is None:
             if isinstance(arg, str):
-                self._init_from_string(arg)
+                span, qual, xoct, sign = cls._init_from_string(arg)
+                return super(Interval, cls).__new__(cls, span, qual, xoct, sign)
             elif isinstance(arg, list):
                 if len(arg) == 4 and all(isinstance(a, int) for a in arg):
-                    self._init_from_list(*arg)
+                    span, qual, xoct, sign = cls._init_from_list(*arg)
+                    return super(Interval, cls).__new__(cls, span, qual, xoct, sign)
                 else:
                     raise TypeError(f&#39;{arg} is an invalid interval list.&#39;)
             else:
                 raise TypeError(f&#39;{arg} is an invalid interval reference.&#39;)
         elif isinstance(arg, Pitch) and isinstance(other, Pitch):
-            self._init_from_pitches(arg, other)
+            span, qual, xoct, sign = cls._init_from_pitches(arg, other)
+            return super(Interval, cls).__new__(cls, span, qual, xoct, sign)
         else:
             raise TypeError(f&#34;Invalid interval specification: {arg} and {other}.&#34;)
 
 
-    def _init_from_list(self, span, qual, xoct, sign):
+    @classmethod
+    def _init_from_list(cls, span, qual, xoct, sign):
         &#34;&#34;&#34;
         A private method that checks four integer values (span, qual, xoct, sign) to make sure
         they are valid index values for the span, qual, xoct and sign attributes. Legal values
@@ -241,35 +254,36 @@ class Interval:
             if 0 &lt;= qual &lt;= 12:
                 if 0 &lt;= xoct:
                     if sign in (1, -1):
-                        if span in self._perf_spans:
-                            if qual in [self._min, self._maj]:
-                                qn = self._qual_full_names[qual]
-                                sn = self._span_full_names[span]
+                        if span in cls._perf_spans:
+                            if qual in [cls._min, cls._maj]:
+                                qn = cls._qual_full_names[qual]
+                                sn = cls._span_full_names[span]
                                 raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
                         else:
-                            if qual is self._perf:
-                                qn = self._qual_full_names[qual]
-                                sn = self._span_full_names[span]
+                            if qual is cls._perf:
+                                qn = cls._qual_full_names[qual]
+                                sn = cls._span_full_names[span]
                                 raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
                         # only 4ths and fifths can be quintuply diminished/augmented
-                        if qual == self._5dim and span != self._5th:
-                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply diminished.&#39;)
-                        if qual == self._5aug and span != self._4th:
-                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply augmented.&#39;)
+                        if qual == cls._5dim and span != cls._5th:
+                            raise ValueError(f&#39;{cls._span_full_names[span]}s cannot be quintuply diminished.&#39;)
+                        if qual == cls._5aug and span != cls._4th:
+                            raise ValueError(f&#39;{cls._span_full_names[span]}s cannot be quintuply augmented.&#39;)
                         # check semitones to make sure the interval will not be negative or greater than 127
-                        semi = self._semitones_map[qual][span] + (xoct*12)
+                        semi = cls._semitones_map[qual][span] + (xoct*12)
                         # print(&#39;init from list: span=&#39;, span, &#39;qual=&#39;, qual, &#39;semi=&#39;, semi, &#39;xoct=&#39;, xoct)
                         if semi &lt; 0:
-                            qn = self._qual_full_names[qual]
-                            sn = self._span_full_names[span]
+                            qn = cls._qual_full_names[qual]
+                            sn = cls._span_full_names[span]
                             raise ValueError(f&#34;A &#39;{qn}-{sn}&#39; would be negative&#34;
                                              &#34;, perhaps you want a descending interval?&#34;)
                         if semi &gt; 127:
                             raise ValueError(&#34;Intervals cannot span more than 127 semitones.&#34;)
                         # respell unisons with 1 extra octave as octaves.
                         if span == 0 and xoct &gt; 0:
-                            span, xoct = self._8va, xoct - 1
-                        self.span, self.qual, self.xoct, self.sign = span, qual, xoct, sign
+                            span, xoct = cls._8va, xoct - 1
+                        #self.span, self.qual, self.xoct, self.sign = span, qual, xoct, sign
+                        return span, qual, xoct, sign
                     else:
                         raise(ValueError(f&#34;&#39;{sign}&#39; is not an interval sign value 1 or -1.&#34;))
                 else:
@@ -279,8 +293,8 @@ class Interval:
         else:
             raise(ValueError(f&#34;&#39;{span}&#39; is not an interval span 0-7.&#34;))
 
-
-    def _init_from_string(self, name):
+    @classmethod
+    def _init_from_string(cls, name):
         &#34;&#34;&#34;
         A private method that accepts an interval string and parses it into four
         integer values: span, qual, xoct, sign. If all four values can be parsed
@@ -324,13 +338,14 @@ class Interval:
             span -= 7  # simplify span to 0-7
             xoct += 1  # sum number of extra octaves
         # Look up the quality value of the name.
-        qual = self._qual_map.get(qual, None)
+        qual = cls._qual_map.get(qual, None)
         if qual is None:
             raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
-        self._init_from_list(span, qual, xoct, sign)
+        return cls._init_from_list(span, qual, xoct, sign)
 
 
-    def _init_from_pitches(self, pitch1, pitch2):
+    @classmethod
+    def _init_from_pitches(cls, pitch1, pitch2):
         &#34;&#34;&#34;
         A private method that determines appropriate span, qual, xoct, sign
         values from two pitches. If pitch1 is lower than or equal to pitch2
@@ -365,7 +380,7 @@ class Interval:
         # because that won&#39;t work for
         semi = (pitch2.keynum() - pitch1.keynum()) * sign
         if pitch1.letter == pitch2.letter:
-            span = self._Uni if semi &lt; 8 else self._8va
+            span = cls._Uni if semi &lt; 8 else cls._8va
         # determine the number of extra octaves by subtracting
         # out octaves from semitones while semitones is greater
         # than an octave.
@@ -374,89 +389,28 @@ class Interval:
             xoct += 1
             semi -= 12
         ## determining quality. the remainder of semitones
-        qual = self._span_semi_qual_map[span].get(semi, None)
+        qual = cls._span_semi_qual_map[span].get(semi, None)
         if qual is None:
             raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
                              f&#34;, semitones {semi} and xoct {xoct}.&#34;)
         # xoct cleanup for spans whose semitonal content was clipped
         # because it is larger than 12 but should not increase xoct.
         # For example: +[+++]8va, +[+]7th, ++++6th.
-        if span == self._8va:
-            if qual &gt; self._perf:
+        if span == cls._8va:
+            if qual &gt; cls._perf:
                 xoct -= 1
                 semi += 12
-        elif span == self._7th:
-            if qual &gt; self._aug:
+        elif span == cls._7th:
+            if qual &gt; cls._aug:
                 xoct -= 1
                 semi += 12
-        elif span == self._6th:
-            if qual &gt; self._3aug:
+        elif span == cls._6th:
+            if qual &gt; cls._3aug:
                 xoct -= 1
                 semi += 12
         # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
-        self._init_from_list(span, qual, xoct, sign)
+        return cls._init_from_list(span, qual, xoct, sign)
 
-    # REFERENCE IMPLEMENTATION
-    # ## A private method that determines appropriate span, qual, xoct, sign
-    # # from two pitches. If pitch2 is lower than pitch1 then a descending
-    # # interval should be formed. The values should be passed to the
-    # # _init_from_list() method to initialize the interval&#39;s attributes.
-    # def _init_from_pitches(self, pitch1, pitch2):
-    #     # if the left pitch (self) is higher than the right (other)
-    #     # then its a descending interval.
-    #     if pitch1 &lt;= pitch2:  # EQUAL OR ASCENDING INTERVAL
-    #         sign = 1
-    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
-    #         if pitch1.letter &lt; pitch2.letter:
-    #             # letter1 is less than letter2 so the span will be
-    #             # the difference between them
-    #             span = (pitch2.letter - pitch1.letter)
-    #         elif pitch1.letter == pitch2.letter:
-    #             # letter1 and letter2 are some kind of unison or octave.
-    #             # the smallest possible octave is 8 semitones (e.g. C##4
-    #             # to Cbb5) so if semi is less than that it has to be a unison.
-    #             span = self._Uni if semi &lt; 8 else self._8va
-    #         else:
-    #             # letter1 is higher than letter2 so the span will be
-    #             # the complement of the distance between them
-    #             span = 7 - (pitch1.letter - pitch2.letter)
-    #     else:  # DESCENDING INTERVAL
-    #         sign = -1
-    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
-    #         if pitch1.letter &lt; pitch2.letter:
-    #             span = 7 - (pitch2.letter - pitch1.letter)
-    #         elif pitch1.letter == pitch2.letter:
-    #             # letter1 and letter2 are some kind of unison or octave.
-    #             # the smallest possible octave is 8 semitones (e.g. C##4
-    #             # to Cbb5) so if semi is less than that it has to be a unison.
-    #             span = self._Uni if semi &lt; 8 else self._8va
-    #         else:
-    #             span = pitch1.letter - pitch2.letter
-    #     xoct = 0
-    #     while semi &gt; 12:
-    #         xoct += 1
-    #         semi -= 12
-    #     qual = self._span_semi_qual_map[span].get(semi, None)
-    #     if qual is None:
-    #         raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
-    #                          f&#34;, semitones {semi} and xoct {xoct}.&#34;)
-    #     # xoct cleanup for spans whose semitonal content was clipped
-    #     # because it is larger than 12 but should not increase xoct.
-    #     # For example: +[+++]8va, +[+]7th, ++++6th.
-    #     if span == self._8va:
-    #         if qual &gt; self._perf:
-    #             xoct -= 1
-    #             semi += 12
-    #     elif span == self._7th:
-    #         if qual &gt; self._aug:
-    #             xoct -= 1
-    #             semi += 12
-    #     elif span == self._6th:
-    #         if qual &gt; self._3aug:
-    #             xoct -= 1
-    #             semi += 12
-    #     # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
-    #     self._init_from_list(span, qual, xoct, sign)
 
     def __str__(self):
         &#34;&#34;&#34;
@@ -1743,60 +1697,12 @@ for s in [2,3,6,7]:
 <span>(</span><span>arg, other=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates an Interval from a string, list, or two Pitches.</p>
-<p>Calling signatures:</p>
-<ul>
-<li>Interval(string) - creates an Interval from a pitch string.</li>
-<li>Interval([s, q, x, s]) - creates a Pitch from a list of four
-integers: a span, quality, extra octaves and sign. (see below).</li>
-<li>Interval(pitch1, pitch2) - creates an Interval from two Pitches.</li>
-</ul>
-<p>The format of a Interval string is:</p>
-<pre><code class="language-py">interval  = [&quot;-&quot;] , &lt;quality&gt; , &lt;span&gt;
-&lt;quality&gt; = &lt;diminished&gt; | &lt;minor&gt; | &lt;perfect&gt; | &lt;major&gt; | &lt;augmented&gt;
-&lt;diminished&gt; = &lt;5d&gt; , &lt;4d&gt; , &lt;3d&gt; , &lt;2d&gt; , &lt;1d&gt; ;
-&lt;5d&gt; = &quot;ooooo&quot; | &quot;ddddd&quot;
-&lt;4d&gt; = &quot;oooo&quot; | &quot;dddd&quot;
-&lt;3d&gt; = &quot;ooo&quot; | &quot;ddd&quot;
-&lt;2d&gt; = &quot;oo&quot; | &quot;dd&quot;
-&lt;1d&gt; = &quot;o&quot; | &quot;d&quot;
-&lt;minor&gt; = &quot;m&quot;
-&lt;perfect&gt; = &quot;P&quot;
-&lt;major&gt; = &quot;M&quot;
-&lt;augmented&gt; = &lt;5a&gt;, &lt;4a&gt;, &lt;3a&gt;, &lt;2a&gt;, &lt;1a&gt;
-&lt;5d&gt; = &quot;+++++&quot; | &quot;aaaaa&quot;
-&lt;4d&gt; = &quot;++++&quot; | &quot;aaaa&quot;
-&lt;3d&gt; = &quot;+++&quot; | &quot;aaa&quot;
-&lt;2d&gt; = &quot;++&quot; | &quot;aa&quot;
-&lt;1d&gt; = &quot;+&quot; | &quot;a&quot;
-&lt;span&gt; = &quot;1&quot; | &quot;2&quot; | &quot;3&quot; | &quot;4&quot; | &quot;5&quot; | &quot;6&quot; | &quot;7&quot; | &quot;8&quot; | &quot;9&quot; ...
-</code></pre>
-<p>The <strong>init</strong> function should check to make sure the arguments are either a string, a
-list of four integers, or two pitches.
-If the input is a string then <strong>init</strong> should
-pass the string to the the private _init_from_string() method (see below).
-If the
-input is a list of four ints, <strong>init</strong> will pass them to the private _init_from_list()
-method (see below). If the input is two pitches they will be passed to the private
-_init_from_pitches() method (see below).
-</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>arg</code></strong> :&ensp;<code>string | list</code></dt>
-<dd>If only arg is specified it should be either an
-interval string or a list of four interval indexes.
-If both
-arg and other are provided, both should be a Pitch.</dd>
-<dt><strong><code>other</code></strong> :&ensp;<code>Pitch</code></dt>
-<dd>A Pitch if arg is a Pitch, otherwise None.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<p>TypeError if the input is not a string, list of four integers, or two pitches.</p></div>
+<div class="desc"><p>IntervalBase(span, qual, xoct, sign)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Interval:
+<pre><code class="python">class Interval (IntervalBase):
 
     ## Private class constants representing spans. There are eight interval
     #  spans ranging 0-7: _Uni=Unison, _2nd=Second, _3rd=Third, ... _8va=Octave
@@ -1888,8 +1794,7 @@ arg and other are provided, both should be a Pitch.</dd>
                1:  _aug,  2: _2aug,  3: _3aug,  4: _4aug,  5: _5aug}
      }
 
-
-    def __init__(self, arg, other=None):
+    def __new__(cls, arg, other=None):
         &#34;&#34;&#34;
         Creates an Interval from a string, list, or two Pitches.
 
@@ -1943,24 +1848,27 @@ arg and other are provided, both should be a Pitch.</dd>
         ------
         TypeError if the input is not a string, list of four integers, or two pitches.
         &#34;&#34;&#34;
-
         if other is None:
             if isinstance(arg, str):
-                self._init_from_string(arg)
+                span, qual, xoct, sign = cls._init_from_string(arg)
+                return super(Interval, cls).__new__(cls, span, qual, xoct, sign)
             elif isinstance(arg, list):
                 if len(arg) == 4 and all(isinstance(a, int) for a in arg):
-                    self._init_from_list(*arg)
+                    span, qual, xoct, sign = cls._init_from_list(*arg)
+                    return super(Interval, cls).__new__(cls, span, qual, xoct, sign)
                 else:
                     raise TypeError(f&#39;{arg} is an invalid interval list.&#39;)
             else:
                 raise TypeError(f&#39;{arg} is an invalid interval reference.&#39;)
         elif isinstance(arg, Pitch) and isinstance(other, Pitch):
-            self._init_from_pitches(arg, other)
+            span, qual, xoct, sign = cls._init_from_pitches(arg, other)
+            return super(Interval, cls).__new__(cls, span, qual, xoct, sign)
         else:
             raise TypeError(f&#34;Invalid interval specification: {arg} and {other}.&#34;)
 
 
-    def _init_from_list(self, span, qual, xoct, sign):
+    @classmethod
+    def _init_from_list(cls, span, qual, xoct, sign):
         &#34;&#34;&#34;
         A private method that checks four integer values (span, qual, xoct, sign) to make sure
         they are valid index values for the span, qual, xoct and sign attributes. Legal values
@@ -1991,35 +1899,36 @@ arg and other are provided, both should be a Pitch.</dd>
             if 0 &lt;= qual &lt;= 12:
                 if 0 &lt;= xoct:
                     if sign in (1, -1):
-                        if span in self._perf_spans:
-                            if qual in [self._min, self._maj]:
-                                qn = self._qual_full_names[qual]
-                                sn = self._span_full_names[span]
+                        if span in cls._perf_spans:
+                            if qual in [cls._min, cls._maj]:
+                                qn = cls._qual_full_names[qual]
+                                sn = cls._span_full_names[span]
                                 raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
                         else:
-                            if qual is self._perf:
-                                qn = self._qual_full_names[qual]
-                                sn = self._span_full_names[span]
+                            if qual is cls._perf:
+                                qn = cls._qual_full_names[qual]
+                                sn = cls._span_full_names[span]
                                 raise ValueError(f&#34;Span &#39;{sn}&#39; is not compatible with quality &#39;{qn}&#39;.&#34;)
                         # only 4ths and fifths can be quintuply diminished/augmented
-                        if qual == self._5dim and span != self._5th:
-                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply diminished.&#39;)
-                        if qual == self._5aug and span != self._4th:
-                            raise ValueError(f&#39;{self._span_full_names[span]}s cannot be quintuply augmented.&#39;)
+                        if qual == cls._5dim and span != cls._5th:
+                            raise ValueError(f&#39;{cls._span_full_names[span]}s cannot be quintuply diminished.&#39;)
+                        if qual == cls._5aug and span != cls._4th:
+                            raise ValueError(f&#39;{cls._span_full_names[span]}s cannot be quintuply augmented.&#39;)
                         # check semitones to make sure the interval will not be negative or greater than 127
-                        semi = self._semitones_map[qual][span] + (xoct*12)
+                        semi = cls._semitones_map[qual][span] + (xoct*12)
                         # print(&#39;init from list: span=&#39;, span, &#39;qual=&#39;, qual, &#39;semi=&#39;, semi, &#39;xoct=&#39;, xoct)
                         if semi &lt; 0:
-                            qn = self._qual_full_names[qual]
-                            sn = self._span_full_names[span]
+                            qn = cls._qual_full_names[qual]
+                            sn = cls._span_full_names[span]
                             raise ValueError(f&#34;A &#39;{qn}-{sn}&#39; would be negative&#34;
                                              &#34;, perhaps you want a descending interval?&#34;)
                         if semi &gt; 127:
                             raise ValueError(&#34;Intervals cannot span more than 127 semitones.&#34;)
                         # respell unisons with 1 extra octave as octaves.
                         if span == 0 and xoct &gt; 0:
-                            span, xoct = self._8va, xoct - 1
-                        self.span, self.qual, self.xoct, self.sign = span, qual, xoct, sign
+                            span, xoct = cls._8va, xoct - 1
+                        #self.span, self.qual, self.xoct, self.sign = span, qual, xoct, sign
+                        return span, qual, xoct, sign
                     else:
                         raise(ValueError(f&#34;&#39;{sign}&#39; is not an interval sign value 1 or -1.&#34;))
                 else:
@@ -2029,8 +1938,8 @@ arg and other are provided, both should be a Pitch.</dd>
         else:
             raise(ValueError(f&#34;&#39;{span}&#39; is not an interval span 0-7.&#34;))
 
-
-    def _init_from_string(self, name):
+    @classmethod
+    def _init_from_string(cls, name):
         &#34;&#34;&#34;
         A private method that accepts an interval string and parses it into four
         integer values: span, qual, xoct, sign. If all four values can be parsed
@@ -2074,13 +1983,14 @@ arg and other are provided, both should be a Pitch.</dd>
             span -= 7  # simplify span to 0-7
             xoct += 1  # sum number of extra octaves
         # Look up the quality value of the name.
-        qual = self._qual_map.get(qual, None)
+        qual = cls._qual_map.get(qual, None)
         if qual is None:
             raise ValueError(f&#34;&#39;{name}&#39; is not a valid interval name.&#34;)
-        self._init_from_list(span, qual, xoct, sign)
+        return cls._init_from_list(span, qual, xoct, sign)
 
 
-    def _init_from_pitches(self, pitch1, pitch2):
+    @classmethod
+    def _init_from_pitches(cls, pitch1, pitch2):
         &#34;&#34;&#34;
         A private method that determines appropriate span, qual, xoct, sign
         values from two pitches. If pitch1 is lower than or equal to pitch2
@@ -2115,7 +2025,7 @@ arg and other are provided, both should be a Pitch.</dd>
         # because that won&#39;t work for
         semi = (pitch2.keynum() - pitch1.keynum()) * sign
         if pitch1.letter == pitch2.letter:
-            span = self._Uni if semi &lt; 8 else self._8va
+            span = cls._Uni if semi &lt; 8 else cls._8va
         # determine the number of extra octaves by subtracting
         # out octaves from semitones while semitones is greater
         # than an octave.
@@ -2124,89 +2034,28 @@ arg and other are provided, both should be a Pitch.</dd>
             xoct += 1
             semi -= 12
         ## determining quality. the remainder of semitones
-        qual = self._span_semi_qual_map[span].get(semi, None)
+        qual = cls._span_semi_qual_map[span].get(semi, None)
         if qual is None:
             raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
                              f&#34;, semitones {semi} and xoct {xoct}.&#34;)
         # xoct cleanup for spans whose semitonal content was clipped
         # because it is larger than 12 but should not increase xoct.
         # For example: +[+++]8va, +[+]7th, ++++6th.
-        if span == self._8va:
-            if qual &gt; self._perf:
+        if span == cls._8va:
+            if qual &gt; cls._perf:
                 xoct -= 1
                 semi += 12
-        elif span == self._7th:
-            if qual &gt; self._aug:
+        elif span == cls._7th:
+            if qual &gt; cls._aug:
                 xoct -= 1
                 semi += 12
-        elif span == self._6th:
-            if qual &gt; self._3aug:
+        elif span == cls._6th:
+            if qual &gt; cls._3aug:
                 xoct -= 1
                 semi += 12
         # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
-        self._init_from_list(span, qual, xoct, sign)
+        return cls._init_from_list(span, qual, xoct, sign)
 
-    # REFERENCE IMPLEMENTATION
-    # ## A private method that determines appropriate span, qual, xoct, sign
-    # # from two pitches. If pitch2 is lower than pitch1 then a descending
-    # # interval should be formed. The values should be passed to the
-    # # _init_from_list() method to initialize the interval&#39;s attributes.
-    # def _init_from_pitches(self, pitch1, pitch2):
-    #     # if the left pitch (self) is higher than the right (other)
-    #     # then its a descending interval.
-    #     if pitch1 &lt;= pitch2:  # EQUAL OR ASCENDING INTERVAL
-    #         sign = 1
-    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
-    #         if pitch1.letter &lt; pitch2.letter:
-    #             # letter1 is less than letter2 so the span will be
-    #             # the difference between them
-    #             span = (pitch2.letter - pitch1.letter)
-    #         elif pitch1.letter == pitch2.letter:
-    #             # letter1 and letter2 are some kind of unison or octave.
-    #             # the smallest possible octave is 8 semitones (e.g. C##4
-    #             # to Cbb5) so if semi is less than that it has to be a unison.
-    #             span = self._Uni if semi &lt; 8 else self._8va
-    #         else:
-    #             # letter1 is higher than letter2 so the span will be
-    #             # the complement of the distance between them
-    #             span = 7 - (pitch1.letter - pitch2.letter)
-    #     else:  # DESCENDING INTERVAL
-    #         sign = -1
-    #         semi = (pitch2.keynum() - pitch1.keynum()) * sign
-    #         if pitch1.letter &lt; pitch2.letter:
-    #             span = 7 - (pitch2.letter - pitch1.letter)
-    #         elif pitch1.letter == pitch2.letter:
-    #             # letter1 and letter2 are some kind of unison or octave.
-    #             # the smallest possible octave is 8 semitones (e.g. C##4
-    #             # to Cbb5) so if semi is less than that it has to be a unison.
-    #             span = self._Uni if semi &lt; 8 else self._8va
-    #         else:
-    #             span = pitch1.letter - pitch2.letter
-    #     xoct = 0
-    #     while semi &gt; 12:
-    #         xoct += 1
-    #         semi -= 12
-    #     qual = self._span_semi_qual_map[span].get(semi, None)
-    #     if qual is None:
-    #         raise ValueError(f&#34;{pitch1.string()} and {pitch2.string()}: no quality found for span {span}&#34;
-    #                          f&#34;, semitones {semi} and xoct {xoct}.&#34;)
-    #     # xoct cleanup for spans whose semitonal content was clipped
-    #     # because it is larger than 12 but should not increase xoct.
-    #     # For example: +[+++]8va, +[+]7th, ++++6th.
-    #     if span == self._8va:
-    #         if qual &gt; self._perf:
-    #             xoct -= 1
-    #             semi += 12
-    #     elif span == self._7th:
-    #         if qual &gt; self._aug:
-    #             xoct -= 1
-    #             semi += 12
-    #     elif span == self._6th:
-    #         if qual &gt; self._3aug:
-    #             xoct -= 1
-    #             semi += 12
-    #     # print(&#39;init from pitch: sign=&#39;, sign, &#39;, span=&#39;, span, &#39;, semi=&#39;, semi, &#39;, xoct=&#39;, xoct)
-    #     self._init_from_list(span, qual, xoct, sign)
 
     def __str__(self):
         &#34;&#34;&#34;
@@ -2929,6 +2778,11 @@ arg and other are provided, both should be a Pitch.</dd>
             trans_oct += 1
         return Pitch([trans_let, trans_acc, trans_oct])</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>musx.interval.IntervalBase</li>
+<li>builtins.tuple</li>
+</ul>
 <h3>Methods</h3>
 <dl>
 <dt id="musx.interval.Interval.add"><code class="name flex">

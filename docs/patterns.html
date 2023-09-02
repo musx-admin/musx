@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.patterns API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="An object-orientated implemention of python iterators that yield patterns in data,
+from simple looping and randomness to more complex processes such …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,17 +23,77 @@
 <h1 class="title">Module <code>musx.patterns</code></h1>
 </header>
 <section id="section-intro">
+<p>An object-orientated implemention of python iterators that yield patterns in data,
+from simple looping and randomness to more complex processes such as markov
+chains, cellular automata and chaos.
+Many of these patterns allow subpatterns to
+be embedded inside parent patterns to be processed seamlessly by the parent's <code>next()</code>
+method.
+Patterns that support embedding have a 'period' argument that regulate
+how many items are read from it before a parent pattern can move to its next item.
+The period value can be expressed as a constant value or a pattern of values.</p>
+<h2 id="examples">Examples</h2>
+<p>In this example an outer pattern rotates through four items: [10, <em>subpattern</em>, 20, 30],
+and the subpattern cycles through two items: [-1, -2].
+Each time the subpattern is
+encountered it randomly yields one, two or three of its items before the outer
+pattern can move on to its next item.</p>
+<pre><code class="language-python">&gt;&gt;&gt; pat = Cycle([10, Cycle([-1, -2], period=Choose([1,2,3])), 20, 30])
+&gt;&gt;&gt; pat.next(20)
+[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
+</code></pre>
+<p>The resulting pattern is a merge of two cyclic streams of data, each stream's
+cycle is highlighted by the 'xx' markers in the image.</p>
+<pre><code>outer:
+ xx              xx  xx  xx              xx  xx  xx          xx  xx  xx      xx
+[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
+     xx  xx  xx              xx  xx  xx              xx  xx              xx
+inner:
+</code></pre>
+<p>See the demos folder for many examples of how to use musx patterns to generate music.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import types
+<pre><code class="python">&#34;&#34;&#34;
+An object-orientated implemention of python iterators that yield patterns in data,
+from simple looping and randomness to more complex processes such as markov
+chains, cellular automata and chaos.  Many of these patterns allow subpatterns to
+be embedded inside parent patterns to be processed seamlessly by the parent&#39;s `next()`
+method.  Patterns that support embedding have a &#39;period&#39; argument that regulate 
+how many items are read from it before a parent pattern can move to its next item.
+The period value can be expressed as a constant value or a pattern of values.
+
+Examples
+---------
+In this example an outer pattern rotates through four items: [10, *subpattern*, 20, 30], 
+and the subpattern cycles through two items: [-1, -2].  Each time the subpattern is
+encountered it randomly yields one, two or three of its items before the outer 
+pattern can move on to its next item.
+
+```python
+&gt;&gt;&gt; pat = Cycle([10, Cycle([-1, -2], period=Choose([1,2,3])), 20, 30])
+&gt;&gt;&gt; pat.next(20)
+[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
+```
+The resulting pattern is a merge of two cyclic streams of data, each stream&#39;s
+cycle is highlighted by the &#39;xx&#39; markers in the image.
+```
+outer:
+ xx              xx  xx  xx              xx  xx  xx          xx  xx  xx      xx
+[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
+     xx  xx  xx              xx  xx  xx              xx  xx              xx
+inner:
+```
+
+See the demos folder for many examples of how to use musx patterns to generate music.
+&#34;&#34;&#34;
+
 from collections.abc import Iterator
 import random
-import matplotlib.pyplot as plt
 
 class Pattern(Iterator):
-
+    &#39;&#39;&#39;The base class for all patterns provides a specialized `next()` function.&#39;&#39;&#39;
     def __init__(self, items, mini, period=None):
         if not isinstance(items, list) or len(items) &lt; mini:
             raise TypeError(f&#34;{self.__class__.__name__} input {items} is not a list of {mini} or more elements.&#34;)
@@ -46,7 +107,7 @@ class Pattern(Iterator):
         # current index into items list
         self.i = 0 
         # length of current period
-        self.plen = self.read(self.period) if isinstance(self.period, Iterator) else self.period
+        self.plen = self._read(self.period) if isinstance(self.period, Iterator) else self.period
         #print(&#34;***plen is:&#34;, self.plen)
         # period counter
         self.p = 0
@@ -60,7 +121,12 @@ class Pattern(Iterator):
         return self.__class__.__name__
     
     @staticmethod
-    def read(pat, tup=False):
+    def _read(pat, tup=False):
+        &#34;&#34;&#34;
+        Internal function that checks if the next item is a pattern or basic data. 
+        Do not call this method directly, use Pattern&#39;s next() function to return
+        the next element(s) in a pattern.
+        &#34;&#34;&#34;
         #print(f&#34;read input: ({pat},tup={tup})&#34;)
         if isinstance(pat, Pattern):
             x = next(pat)
@@ -70,16 +136,18 @@ class Pattern(Iterator):
 
     def next(self, more=False):
         &#34;&#34;&#34;
-        A pattern savvy version of Python&#39;s next() function.
+        A pattern savvy version of Python&#39;s builtin `next()` function. Use this
+        method in place of Python&#39;s next() to access pattern elements in
+        flexible ways.
         
         Parameters
         ----------
         more : False | True | int 
-            If more is False then the just th enext item in the pattern
-            is returned. If more is True then the (remaining) items in
-            the current period are returned in a list. If more is an
-            integer greater than 0 then that many items will be returned
-            from the pattern.
+            If more is False (the default) then Pattern&#39;s next() function
+            will return the next item in the pattern. If more is True then
+            the (remaining) items in the current period are returned as a list. 
+            Otherwises, if more is an integer greater than 0 then that many
+            items will be returned as a list.
 
         Returns
         -------
@@ -95,6 +163,21 @@ class Pattern(Iterator):
         [2, 3, 4] 
         &gt;&gt;&gt; c.next(6)
         [1, 2, 3, 4, 1, 2]
+        ```
+
+        It is possible to use Python&#39;s builtin `next()` function to read a pattern, in this
+        case you will receive a two element list holding the item from the pattern and an
+        &#39;end of period&#39; marker (EOP).  In contrast, Pattern&#39;s `next()` handles 
+        end of periods invisibly and provides more flexibility for accessing the data.
+
+        ```python
+        &gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+        # python&#39;s next():
+        &gt;&gt;&gt; [next(c) for _ in range(4)]
+        [[1, None], [2, None], [3, None], [4, &#39;EOP&#39;]]
+        # pattern&#39;s next():
+        &gt;&gt;&gt;  c.next(4)
+        [1, 2, 3, 4]
         ```
         &#34;&#34;&#34;
         if more is False:
@@ -113,12 +196,32 @@ class Pattern(Iterator):
 
 
 class Cycle(Pattern):
+    &#34;&#34;&#34;
+    Returns a pattern that yields its items in a continuous cycle.
 
+    Parameters
+    ----------
+    items : list
+        The list of values to generate.
+    
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. The default value
+        is None, which allows the pattern to use its default length, 
+        usually equal to the number of items in its data.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; Cycle([1,2,3]).next(5)
+    [1, 2, 3, 1, 2]
+    ```
+    &#34;&#34;&#34;
     def __init__(self, items, period=None):
         super().__init__(items, 1, period)
     
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         #print(f&#34;after read: item is {item}&#34;)
         if item[1] == &#39;EOP&#39;:
             # (sub)item is at the end of its period
@@ -132,7 +235,7 @@ class Cycle(Pattern):
             #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
                 #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
             else:
                 self.p += 1 
@@ -141,7 +244,41 @@ class Cycle(Pattern):
 
 
 class Palindrome(Pattern):
+    &#34;&#34;&#34;
+    Returns a generator that yields its items in a palindrome.
 
+    Parameters
+    ----------
+    items : list
+        The list of values to generate.
+
+    wrap : &#39;++&#39; | &#39;+-&#39; | &#39;-+&#39; | &#39;--&#39;
+        Determines how first and last elements are treated when the pattern reverses.
+        If the items are [1, 2, 3] then wrap will produce:
+
+        * &#39;++&#39; Both first and last items are repeated: 1,2,3,3,2,1,1,2,3 ...
+        * &#39;+-&#39; Only the first item is repeated: 1,2,3,2,1,1,2,3 ...
+        * &#39;-+&#39; Only the last item is repeated: 1,2,3,3,2,1,2,3 ...
+        * &#39;--&#39; Neither is repeated: 1,2,3,2,1,2,3 ...
+    
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        period length will be equal to the number of items in the list.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; palindrome([1,2,3]).next(10)
+    [1, 2, 3, 3, 2, 1, 1, 2, 3, 3]
+    &gt;&gt;&gt; Palindrome([1,2,3], wrap=&#39;+-&#39;).next(10)
+    [1, 2, 3, 3, 2, 1, 2, 3, 3, 2]
+    print(Palindrome([1,2,3], wrap=&#39;-+&#39;).next(10)
+    [1, 2, 3, 2, 1, 1, 2, 3, 2, 1]
+    &gt;&gt;&gt; Palindrome([1,2,3], wrap=&#39;--&#39;).next(10)
+    [1, 2, 3, 2, 1, 2, 3, 2, 1, 2]
+    ```
+    &#34;&#34;&#34;
     def __init__(self, items, period=None,  wrap=&#39;++&#39;):
         match wrap:
             case &#39;++&#39;: items = items + items[::-1]    # repeat first and last
@@ -153,7 +290,7 @@ class Palindrome(Pattern):
         super().__init__(items, 3, period)
 
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         if item[1] == &#39;EOP&#39;:
             if self.i == self.ilen - 1:
                 self.i = 0
@@ -161,7 +298,7 @@ class Palindrome(Pattern):
                 self.i += 1
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
             else:
                 self.p += 1 
                 item[1] = None
@@ -177,31 +314,27 @@ class Shuffle(Pattern):
     items : list  
         The list of items to generate. Each item in the list
         can be a python object or a sub-pattern.
+
     period : None | int | subpattern
         The period determines how many elements are read before
-        an EOP (end-of-period) flag is returned. By default the
-        shuffle period will be equal to the number of items
-        in the list.
+        an EOP (end-of-period) flag is returned. The defaule value
+        is none, which means the shuffle&#39;a period length will be
+        equal to the number of items in the pattern.
+
     norep : bool
-        If true then items cannot repeat after a shuffle.
-
-    Returns
-    -------
-    The next item in the pattern.
-
-    Raises
-    ------
-    * TypeError if items is not a list of one or more items.
+        If true then after shuffles the next item cannot repeat
+        the last item produced.
 
     Examples
     --------
+    The first example permits direct repetition between shuffles, the second forbids it.
     ```python
-    &gt;&gt;&gt; p = jumble([1,2,3])
-    &gt;&gt;&gt; [read(p) for _ in range(10)]
-    [1, 3, 2, 3, 2, 1] 
+    &gt;&gt;&gt; Shuffle([&#34;a&#34;,&#34;b&#34;,&#34;c&#34;]).next(12)
+    [&#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;b&#39;, &#39;a&#39;, &#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;]
+    &gt;&gt;&gt; Shuffle([&#34;a&#34;,&#34;b&#34;,&#34;c&#34;], norep=True).next(12)
+    [&#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;, &#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;a&#39;, &#39;b&#39;]
     ```
     &#34;&#34;&#34;
-
     def __init__(self, items, period=None, norep=False):
         super().__init__(items.copy(), 1, period)
         # initialize for first period
@@ -209,7 +342,7 @@ class Shuffle(Pattern):
         self.norep = norep
 
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         if item[1] == &#39;EOP&#39;:
             # at end of items, reshuffle
             if self.i == self.ilen - 1:
@@ -224,7 +357,7 @@ class Shuffle(Pattern):
                 self.i += 1
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
             else:
                 self.p += 1 
                 item[1] = None
@@ -247,37 +380,50 @@ class Choose(Pattern):
         weight of 1.0. If no weights are provided then all the items
         are chosen with equal probability.
 
-    Returns
-    -------
-    The next item in the pattern.
+    weights : list | None
+        A list of probablity weights for selecting the corresponding items.
+        Weights do not have to sum to 1 as the generator automatically 
+        converts them to probabilities. If no weights are provided then
+        items are chosen with equal probability.
     
-    Raises
-    ------
-    * TypeError: if items is not a list
-    * ValueError: if a probability is not a float or int greater than 0        
-    
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        shuffle period will be equal to the number of items in the list.
+
     Examples
     --------
+    In this example the value 3 likely appears half the time.
     ```python
-    &gt;&gt;&gt; p = choose([&#39;A&#39;,[&#39;B&#39;, 2] &#39;C&#39;])]
-    [p.next() for _ in range(8)]
+    &gt;&gt;&gt; Choose([1,2,3], [1,1,2]).next(10)
+    [3, 2, 1, 3, 1, 3, 3, 3, 1, 3]
     ```
     &#34;&#34;&#34;
-    def __init__(self, items, period=None):
+    def __init__(self, items, weights=None, period=None):
         super().__init__(items, 1, period)
-        weights, self.items = [],[]
-        for i in items:
-            if isinstance(i, list):
-                if len(i) != 2 or not isinstance(i[1], (int, float)):
-                    raise TypeError(f&#34;{self._pname()}: {i} is not a two element list [item, probability]&#34;)
-                elif i[1] &lt;= 0:
-                    raise ValueError(f&#34;{self._pname()}: item {i} probability value {i[1]} is not greater than 0.0.&#34;)    
-                else: 
-                    self.items.append(i[0])
-                    weights.append(i[1])
-            else: 
-                self.items.append(i)
-                weights.append(1)
+        end = len(items)
+        if not weights:
+            # convert proportion to monotonically increasing values to 1.0
+            weights = [(i+1)/end for i in range(end)]
+        else:
+          if not isinstance(weights, list):
+              raise TypeError(f&#39;Weights value {weights} is not a list.&#39;)
+          for w in weights:
+              if not isinstance(w, (int, float)):
+                  raise IndexError(&#34;Weight {w} is not an int or float.&#34;)
+          if end == len(weights):
+              # convert weights so they sum to 1.0
+              total = sum(weights)
+              #print(&#34;total=&#34;, total, &#34; weights&#34;, weights)
+              weights = [w/total for w in weights]
+              # convert weights to monotonically increasing values to 1.0
+              for i in range(1, end):
+                  weights[i] += weights[i-1]
+          elif self.ilen &lt; len(weights):
+              raise IndexError(&#39;Too many weights provided.&#39;)
+          else:
+              raise IndexError(&#39;Too few weights provided.&#39;)
+       
         #print(&#34;raw weights:&#34;, weights)
         # normalize weights to values summing to 1.0
         total = sum(weights)
@@ -315,13 +461,13 @@ class Choose(Pattern):
         self.activeitem = self.items[I]
     
     def __next__(self):
-        item = Pattern.read(self.activeitem, tup=True)
+        item = Pattern._read(self.activeitem, tup=True)
         if item[1] == &#39;EOP&#39;:
             # at end of period, choose the next item
             self._chooseactiveitem()            
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
             else:
                 self.p += 1 
                 item[1] = None
@@ -336,8 +482,9 @@ class Rotation(Pattern):
     ----------
     items : list
         The list of items to generate
+
     swaps : list | Pattern
-        A list of or more swapping rules or a generator that
+        A list of one or more swapping rules or a pattern that
         produces swapping rules. A swapping rule is a list of (up to) four 
         integers that control the iterative process applied to 
         all the items in order to produce the next generation of items:
@@ -347,6 +494,23 @@ class Rotation(Pattern):
         start, width is the distance between the elements swapped.  End is the
         position in the item list to stop the swapping at, and defaults to the
         length of the item list.
+        
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        shuffle period will be equal to the number of items in the list.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; r = Rotation([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;], swaps=[0, 2, 1, 3])
+    &gt;&gt;&gt; r.next(True)
+    [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]
+    &gt;&gt;&gt; r.next(True)
+    [&#39;b&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;]
+    &gt;&gt;&gt; r.next(True)
+    [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]
+    ```
     &#34;&#34;&#34;
     def __init__(self, items, swaps, period=None):
         super().__init__(items.copy(), 1, period)
@@ -362,7 +526,7 @@ class Rotation(Pattern):
         self.size = len(items)
 
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         #print(f&#34;after read: item is {item}&#34;)
         if item[1] == &#39;EOP&#39;:
             # (sub)item is at the end of its period
@@ -371,7 +535,7 @@ class Rotation(Pattern):
                 self.i = 0
                 # we&#39;ve yielded all items in the current generation
                 # so do the rotations to create the next generation.
-                rule = Pattern.read(self.source, tup=False)  #next(self.source)
+                rule = Pattern._read(self.source, tup=False)  #next(self.source)
                 rlen = len(rule)
                 start = rule[0]
                 step = rule[1]
@@ -388,7 +552,7 @@ class Rotation(Pattern):
             #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
                 #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
             else:
                 self.p += 1 
@@ -398,8 +562,8 @@ class Rotation(Pattern):
     def all(self, grouped=False, wrapped=False):
         &#34;&#34;&#34;
         Return a list of all rotations and stops when the first rotation occurs again.
-        Warning: rules that do not produce the original generation will produce
-        an infinite loop.
+        Warning: rules that do not produce the original generation will trigger
+        an infinite loop!
 
         Parameters
         ----------
@@ -424,13 +588,6 @@ class Rotation(Pattern):
             conc(init)
         return data
     
-
-# class Markov(Pattern):
-#     def __init__(self, items, period=None, preset=None):
-#         # init accepts a list, not a dict to initialize the pattern
-#         super().__init__(items, 1, period)
-#     def __next__(self):
-#         item = Pattern.read(self.items[self.i], tup=True)
     
 class Markov(Pattern):
     &#34;&#34;&#34;
@@ -471,20 +628,20 @@ class Markov(Pattern):
 
     Examples
     --------
-    ```python
-    &gt;&gt;&gt; markov({&#39;a&#39;: [&#39;b&#39;, [&#39;c&#39;, 3]], 
-                &#39;b&#39;: [&#39;a&#39;],
-                &#39;c&#39;: [[&#39;a&#39;, 5], &#39;c&#39;, [&#39;b&#39;, 2.5]]})
-    ```
-    This is a 1st order markov process with three rules:
+    A 1st order markov process with three rules:
 
-    1) if the last outcome was &#39;a&#39; then the next outcome is either &#39;b&#39; or &#39;c&#39;,
-    with &#39;c&#39; three times as likely as &#39;b&#39;.
-    2) if the last outcome was &#39;b&#39; then the next outcome is &#39;a&#39;.
-    3) if the last outcome was &#39;c&#39; then the next outcome is either &#39;a&#39;, &#39;c&#39; or &#39;b&#39;,
-    with &#39;c&#39; being the least likely and &#39;a&#39; being the most likely outcome.
-    &#34;&#34;&#34;
+    1. If the last outcome was &#39;a&#39; then the next outcome is either &#39;b&#39; or &#39;c&#39;, with &#39;c&#39; three times as likely as &#39;b&#39;.
+    2. If the last outcome was &#39;b&#39; then the next outcome is &#39;a&#39;.
+    3. If the last outcome was &#39;c&#39; then the next outcome is either &#39;a&#39;, &#39;c&#39; or &#39;b&#39;, with &#39;c&#39; being the least likely and &#39;a&#39; being the most likely outcome.
     
+    ```python
+    &gt;&gt;&gt; m = Markov({&#39;a&#39;: [&#39;b&#39;, [&#39;c&#39;, 3]], 
+                    &#39;b&#39;: [&#39;a&#39;],
+                    &#39;c&#39;: [[&#39;a&#39;, 5], &#39;c&#39;, [&#39;b&#39;, 2.5]]})
+    &gt;&gt;&gt; &#34;&#34;.join( m.next(20)) )
+    cabacbabaccbabaccaca                
+    ```
+    &#34;&#34;&#34;
     def __init__(self, items, period=None, preset=None):
         # init accepts a list, not a dict to initialize the pattern
         super().__init__(list(items.keys()), 1, period)
@@ -549,9 +706,9 @@ class Markov(Pattern):
         # initialize the history to the preset. older values are to the left
         self.items = data
         self.history = preset
-        
+
     def __next__(self):
-        #item = Pattern.read(self.items[self.i], tup=True)
+        #item = Pattern._read(self.items[self.i], tup=True)
         # find the rule that matches current history
         outcomes = self.items.get(self.history)
         if not outcomes:
@@ -573,25 +730,28 @@ class Markov(Pattern):
     @staticmethod
     def analyze(data, order=1):
         &#34;&#34;&#34;
-        Performs a markov analysis of a list of data and returns a 
-        Markov pattern of the given order to generate the data.
+        A factory method that returns a new Markov pattern whose characteristics
+        reflect the input data&#39;s structure at the given markov order. 
         
         Parameters
         ----------
         data : list
-            The list of data to analyse.
+            The list of data to analyze.
         order : int
-            The markov order of the analysis.
+            The markov order for the analysis.
 
         Returns
         -------
-        A Markov pattern that generates results from the data.
+        A Markov pattern that generates results based on the data and markov order.
 
         Examples
         --------
-        ```
-        &gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
-        {(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+        ```python
+        &gt;&gt;&gt; m = Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+        &gt;&gt;&gt; m.rules
+        {(2,): [[2, 0.6666666666666666], [1, 1.0]], (1,): [[3, 0.5], [2, 1.0]], (3,): [[4, 1.0]], (4,): [[4, 0.5], [1, 1.0]]}
+        &gt;&gt;&gt; m.next(20)
+        [1, 2, 2, 2, 1, 3, 4, 4, 1, 3, 4, 1, 2, 2, 1, 3, 4, 4, 4, 4]
         ```
         &#34;&#34;&#34;
         # each window is a list of one or more past values followed
@@ -618,57 +778,127 @@ class Markov(Pattern):
             else:
                 rules[past_outcome] = [[future_outcome, future_weight]]
         return Markov(rules)
-    
+
+
+class States(Pattern):
+    &#34;&#34;&#34;
+    Returns values from a state machine (cellular automata) and applies
+    a transition function to update states to their next value.
+
+    Parameters
+    ----------
+    states : list    
+        A list containing the initial states of the cellular automata. A
+        flat list of states produces a one dimensional automata and a row
+        major list of lists will create a two dimensional automata.
+
+    transitions : function
+        The transitions function implements the automata&#39;s state 
+        transitions. The function is automatically called and passed 
+        two arguments, the pattern&#39;s state array and the index of the
+        current cell in the states.  Your transition function should
+        call `getstate()` to access one or more neighbor states of 
+        the current cell in order to calculate its next state.
+
+    Examples
+    --------
+    A transition function recives the pattern&#39;s array of states and
+    the index to the current state. This function calls `getstate()`
+    to accesses the cells to the left and right of the current cell
+    and returns their sum mod 4, which then becomes the next value
+    of the cell at the current state index.
+    ```python
+    def add_neighbors(cells, index):
+        left = States.getstate(cells, index, -1)
+        right = States.getstate(cells, index, 1)
+        return (left + right) % 4
+
+    &gt;&gt;&gt; cells = States([0,1,0,1,0], transitions=add_neighbors)
+    &gt;&gt;&gt; for _ in range(5): print(cells.next(5))
+    [0, 1, 0, 1, 0]
+    [1, 0, 2, 0, 1]
+    [1, 3, 0, 3, 1]
+    [0, 1, 2, 1, 0]
+    [1, 2, 2, 2, 1]
+    ```
+    &#34;&#34;&#34;
+
+    def __init__(self, cells, transitions):
+        super().__init__(cells, 1)
+        if not callable(transitions):
+            raise TypeError(f&#34;transitions {transitions} is not a function.&#34;)
+        if isinstance(cells[0], list):
+            # cells is a 2D automata (a list of lists)
+            self.indexes = [(row, col) for row in range(len(cells)) for col in range(len(cells[0]))]
+            self.period = len(self.indexes)
+            # current is a 2D copy of cells with at least 1 row and col
+            self.current = [list(r) for r in cells] # list(r) is copy
+            # future same as values but set to 0&#39;s
+            self.future = [[0 for _ in r] for r in cells]
+        else:
+            # cells is a 1D automata but see below.
+            self.indexes = [(0, col) for col in range(len(cells))]
+            self.period = len(self.indexes)
+            # current is a 2D copy of cells with at least 1 row and col
+            self.current = [list(cells)]   # list(cells) is copy
+            # future as values but set to 0&#39;s
+            self.future = [[0 for _ in cells]] # init future to 0&#39;s.
+        self.transitions = transitions
+        # reverse the states so that when the loop starts and
+        # flips with j == 0 the present states will be correct
+        self.current, self.future = self.future, self.current
+        #print(&#39;current:&#39;, self.current, &#39;future:&#39;, self.future, &#39;indexes:&#39;, self.indexes)
+
+    def __next__(self):
+        j = self.i % self.period
+        if j == 0:
+            #print(&#34;flipping present and future i=&#34;, self.i)
+            self.current, self.future = self.future, self.current
+        pos = self.indexes[j]
+        val = self.current[pos[0]][pos[1]]
+        nxt = self.transitions(self.current, pos)
+        #print(&#34;transitions value:&#34;, val)
+        self.future[pos[0]][pos[1]] = nxt
+        self.i += 1
+        return (val,)
+
+    @staticmethod
+    def getstate(cells, pos, inc):
+        &#34;&#34;&#34;
+        Call getstate() inside your States&#39;s transitions function to
+        return the value (state) of the cell at position pos+inc.
+        The new position pos+inc will automatically wrap mod the size of the cells
+        array so cell access will never be out of bounds.
+
+        Parameters
+        ----------
+        cells : list
+            An array of cells holding the cellular automata&#39;s current states.
+
+        pos : tuple
+            The (*row*, *col*) index of the current cell in the cells array.
+            Your rule function will receive this position in its pos argument.
+            To access a neighbor cell, pass the pos value to getstate() along
+            with a positional increment *inc*.
+        
+        inc : int | tuple
+            A positive or negative offset to add to pos to calculate the position of the
+            neighbor cell. This must be a tuple (*row*, *col*) for 2D automata. For 1D
+            cases you can specify a positive or negative integer, or a tuple (0, *col*).
+
+        Returns
+        -------
+        The value of the neighbor cell at pos+inc.
+        &#34;&#34;&#34;
+        if not isinstance(inc, tuple):
+            inc = (0, inc)
+        row = (pos[0] + inc[0]) % len(cells)
+        col = (pos[1] + inc[1]) % len(cells[0])
+        #print(&#34;CELLS:&#34;, cells)
+        return cells[row][col]
 
 if __name__ == &#39;__main__&#39;:
-
-    #p = Cycle([&#39;A&#39;, Cycle([100,200, 300], 4),&#39;C&#39;])
-    p = Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;], period=4),300])
-    p = Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;], period=Cycle([2,5,4])), 300])
-    p = Cycle([&#39;A&#39;, &#39;B&#39;], period=Cycle([2,5,4]))
-    #p = Shuffle([&#39;A&#39;], period=Cycle([2,5,4]), norep=True)
-    #p = Choose([[&#39;A&#39;, 1], [&#39;B&#39;, 2],[&#39;C&#39;, 3], [&#39;D&#39;, 1], [&#39;E&#39;, 3]])
-    p = Choose([[Cycle([2,5,4]), 1], [&#39;B&#39;, 2],[&#39;C&#39;, 3]])
-
-    #p = Cycle([&#39;x&#39;, &#39;y&#39;, Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], 4),300]), &#39;z&#39;])
-    #p = Cycle([100, Cycle([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], 4),300])
-    #p = Cycle([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;], Cycle([1,2,3]))
-    #p = Cycle([100, Cycle([&#39;A&#39;, Cycle([&#39;x&#39;,&#39;y&#39;], 4), &#39;C&#39;]), 300])
-    #p = Cycle([100, 200, 300, 400, 500, 600,], period=Cycle([1,2,3,4]))
-        
-    # def plot(data):
-    #     plt.plot(data)
-    #     plt.show()
-        
-    # def histo(data):
-    #     plt.hist(data, bins=30, facecolor=&#34;blue&#34;, alpha=0.5) 
-    #     plt.show()
-
-    # data = [next(p)[0] for _ in range(2000)]
-    # histo(data)
-
-    data = [&#39;a&#39;, Cycle([&#39;b1&#39;, &#39;b2&#39;, &#39;b3&#39;]),&#39;c&#39;]
-    #data = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
-    rule = [0, 1, 1]
-    #rule = [[0, 1, 1, 2], [1, 1, 1, 3]]
-    rgen = Rotation(data, rule, period=5)
-    #for g in range(8):
-    #    print(f&#34;gen{g+1}: {[next(rgen)[0] for _ in range(len(data))]}&#34;)
-    print(rgen.all())
-
-
-
-#    data = [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
-#    rule = [[0, 1, 1, 2], [1, 1, 1, 3]]
-#    for g, gen in enumerate(musx.all_rotations(data, rule, True, True)):
-#        print(f&#34;gen{g+1}: {gen}&#34;)
-#        #print(musx.all_rotations(data, rule, False, False))
-
-# for _ in range(25):
-#     z=next(p)
-#     print(f&#34;pattern output {_ + 1:02}: {z}&#34;)
-#     histo[z[0]] += 1
-# print(&#34;histo:&#34;, histo)</code></pre>
+    pass</code></pre>
 </details>
 </section>
 <section>
@@ -682,7 +912,7 @@ if __name__ == &#39;__main__&#39;:
 <dl>
 <dt id="musx.patterns.Choose"><code class="flex name class">
 <span>class <span class="ident">Choose</span></span>
-<span>(</span><span>items, period=None)</span>
+<span>(</span><span>items, weights=None, period=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Yields its items by weighted random selection.
@@ -698,18 +928,20 @@ being selected relative to the other items in the list. If
 no weight is provided for an item it receives a default
 weight of 1.0. If no weights are provided then all the items
 are chosen with equal probability.</dd>
+<dt><strong><code>weights</code></strong> :&ensp;<code>list | None</code></dt>
+<dd>A list of probablity weights for selecting the corresponding items.
+Weights do not have to sum to 1 as the generator automatically
+converts them to probabilities. If no weights are provided then
+items are chosen with equal probability.</dd>
+<dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
+<dd>The period determines how many elements are read before
+an EOP (end-of-period) flag is returned. By default the
+shuffle period will be equal to the number of items in the list.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>The next item in the pattern.</p>
-<h2 id="raises">Raises</h2>
-<ul>
-<li>TypeError: if items is not a list</li>
-<li>ValueError: if a probability is not a float or int greater than 0
-</li>
-</ul>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-python">&gt;&gt;&gt; p = choose(['A',['B', 2] 'C'])]
-[p.next() for _ in range(8)]
+<p>In this example the value 3 likely appears half the time.</p>
+<pre><code class="language-python">&gt;&gt;&gt; Choose([1,2,3], [1,1,2]).next(10)
+[3, 2, 1, 3, 1, 3, 3, 3, 1, 3]
 </code></pre></div>
 <details class="source">
 <summary>
@@ -731,37 +963,50 @@ are chosen with equal probability.</dd>
         weight of 1.0. If no weights are provided then all the items
         are chosen with equal probability.
 
-    Returns
-    -------
-    The next item in the pattern.
+    weights : list | None
+        A list of probablity weights for selecting the corresponding items.
+        Weights do not have to sum to 1 as the generator automatically 
+        converts them to probabilities. If no weights are provided then
+        items are chosen with equal probability.
     
-    Raises
-    ------
-    * TypeError: if items is not a list
-    * ValueError: if a probability is not a float or int greater than 0        
-    
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        shuffle period will be equal to the number of items in the list.
+
     Examples
     --------
+    In this example the value 3 likely appears half the time.
     ```python
-    &gt;&gt;&gt; p = choose([&#39;A&#39;,[&#39;B&#39;, 2] &#39;C&#39;])]
-    [p.next() for _ in range(8)]
+    &gt;&gt;&gt; Choose([1,2,3], [1,1,2]).next(10)
+    [3, 2, 1, 3, 1, 3, 3, 3, 1, 3]
     ```
     &#34;&#34;&#34;
-    def __init__(self, items, period=None):
+    def __init__(self, items, weights=None, period=None):
         super().__init__(items, 1, period)
-        weights, self.items = [],[]
-        for i in items:
-            if isinstance(i, list):
-                if len(i) != 2 or not isinstance(i[1], (int, float)):
-                    raise TypeError(f&#34;{self._pname()}: {i} is not a two element list [item, probability]&#34;)
-                elif i[1] &lt;= 0:
-                    raise ValueError(f&#34;{self._pname()}: item {i} probability value {i[1]} is not greater than 0.0.&#34;)    
-                else: 
-                    self.items.append(i[0])
-                    weights.append(i[1])
-            else: 
-                self.items.append(i)
-                weights.append(1)
+        end = len(items)
+        if not weights:
+            # convert proportion to monotonically increasing values to 1.0
+            weights = [(i+1)/end for i in range(end)]
+        else:
+          if not isinstance(weights, list):
+              raise TypeError(f&#39;Weights value {weights} is not a list.&#39;)
+          for w in weights:
+              if not isinstance(w, (int, float)):
+                  raise IndexError(&#34;Weight {w} is not an int or float.&#34;)
+          if end == len(weights):
+              # convert weights so they sum to 1.0
+              total = sum(weights)
+              #print(&#34;total=&#34;, total, &#34; weights&#34;, weights)
+              weights = [w/total for w in weights]
+              # convert weights to monotonically increasing values to 1.0
+              for i in range(1, end):
+                  weights[i] += weights[i-1]
+          elif self.ilen &lt; len(weights):
+              raise IndexError(&#39;Too many weights provided.&#39;)
+          else:
+              raise IndexError(&#39;Too few weights provided.&#39;)
+       
         #print(&#34;raw weights:&#34;, weights)
         # normalize weights to values summing to 1.0
         total = sum(weights)
@@ -799,13 +1044,13 @@ are chosen with equal probability.</dd>
         self.activeitem = self.items[I]
     
     def __next__(self):
-        item = Pattern.read(self.activeitem, tup=True)
+        item = Pattern._read(self.activeitem, tup=True)
         if item[1] == &#39;EOP&#39;:
             # at end of period, choose the next item
             self._chooseactiveitem()            
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
             else:
                 self.p += 1 
                 item[1] = None
@@ -831,18 +1076,52 @@ are chosen with equal probability.</dd>
 <span>(</span><span>items, period=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns a pattern that yields its items in a continuous cycle.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>items</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of values to generate.</dd>
+<dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
+<dd>The period determines how many elements are read before
+an EOP (end-of-period) flag is returned. The default value
+is None, which allows the pattern to use its default length,
+usually equal to the number of items in its data.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python">&gt;&gt;&gt; Cycle([1,2,3]).next(5)
+[1, 2, 3, 1, 2]
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Cycle(Pattern):
+    &#34;&#34;&#34;
+    Returns a pattern that yields its items in a continuous cycle.
 
+    Parameters
+    ----------
+    items : list
+        The list of values to generate.
+    
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. The default value
+        is None, which allows the pattern to use its default length, 
+        usually equal to the number of items in its data.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; Cycle([1,2,3]).next(5)
+    [1, 2, 3, 1, 2]
+    ```
+    &#34;&#34;&#34;
     def __init__(self, items, period=None):
         super().__init__(items, 1, period)
     
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         #print(f&#34;after read: item is {item}&#34;)
         if item[1] == &#39;EOP&#39;:
             # (sub)item is at the end of its period
@@ -856,7 +1135,7 @@ are chosen with equal probability.</dd>
             #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
                 #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
             else:
                 self.p += 1 
@@ -916,16 +1195,18 @@ the first outcome.</dd>
 <h2 id="returns">Returns</h2>
 <p>The next item in the pattern.</p>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-python">&gt;&gt;&gt; markov({'a': ['b', ['c', 3]], 
-            'b': ['a'],
-            'c': [['a', 5], 'c', ['b', 2.5]]})
-</code></pre>
-<p>This is a 1st order markov process with three rules:</p>
-<p>1) if the last outcome was 'a' then the next outcome is either 'b' or 'c',
-with 'c' three times as likely as 'b'.
-2) if the last outcome was 'b' then the next outcome is 'a'.
-3) if the last outcome was 'c' then the next outcome is either 'a', 'c' or 'b',
-with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
+<p>A 1st order markov process with three rules:</p>
+<ol>
+<li>If the last outcome was 'a' then the next outcome is either 'b' or 'c', with 'c' three times as likely as 'b'.</li>
+<li>If the last outcome was 'b' then the next outcome is 'a'.</li>
+<li>If the last outcome was 'c' then the next outcome is either 'a', 'c' or 'b', with 'c' being the least likely and 'a' being the most likely outcome.</li>
+</ol>
+<pre><code class="language-python">&gt;&gt;&gt; m = Markov({'a': ['b', ['c', 3]], 
+                'b': ['a'],
+                'c': [['a', 5], 'c', ['b', 2.5]]})
+&gt;&gt;&gt; &quot;&quot;.join( m.next(20)) )
+cabacbabaccbabaccaca                
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -969,20 +1250,20 @@ with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
 
     Examples
     --------
-    ```python
-    &gt;&gt;&gt; markov({&#39;a&#39;: [&#39;b&#39;, [&#39;c&#39;, 3]], 
-                &#39;b&#39;: [&#39;a&#39;],
-                &#39;c&#39;: [[&#39;a&#39;, 5], &#39;c&#39;, [&#39;b&#39;, 2.5]]})
-    ```
-    This is a 1st order markov process with three rules:
+    A 1st order markov process with three rules:
 
-    1) if the last outcome was &#39;a&#39; then the next outcome is either &#39;b&#39; or &#39;c&#39;,
-    with &#39;c&#39; three times as likely as &#39;b&#39;.
-    2) if the last outcome was &#39;b&#39; then the next outcome is &#39;a&#39;.
-    3) if the last outcome was &#39;c&#39; then the next outcome is either &#39;a&#39;, &#39;c&#39; or &#39;b&#39;,
-    with &#39;c&#39; being the least likely and &#39;a&#39; being the most likely outcome.
-    &#34;&#34;&#34;
+    1. If the last outcome was &#39;a&#39; then the next outcome is either &#39;b&#39; or &#39;c&#39;, with &#39;c&#39; three times as likely as &#39;b&#39;.
+    2. If the last outcome was &#39;b&#39; then the next outcome is &#39;a&#39;.
+    3. If the last outcome was &#39;c&#39; then the next outcome is either &#39;a&#39;, &#39;c&#39; or &#39;b&#39;, with &#39;c&#39; being the least likely and &#39;a&#39; being the most likely outcome.
     
+    ```python
+    &gt;&gt;&gt; m = Markov({&#39;a&#39;: [&#39;b&#39;, [&#39;c&#39;, 3]], 
+                    &#39;b&#39;: [&#39;a&#39;],
+                    &#39;c&#39;: [[&#39;a&#39;, 5], &#39;c&#39;, [&#39;b&#39;, 2.5]]})
+    &gt;&gt;&gt; &#34;&#34;.join( m.next(20)) )
+    cabacbabaccbabaccaca                
+    ```
+    &#34;&#34;&#34;
     def __init__(self, items, period=None, preset=None):
         # init accepts a list, not a dict to initialize the pattern
         super().__init__(list(items.keys()), 1, period)
@@ -1047,9 +1328,9 @@ with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
         # initialize the history to the preset. older values are to the left
         self.items = data
         self.history = preset
-        
+
     def __next__(self):
-        #item = Pattern.read(self.items[self.i], tup=True)
+        #item = Pattern._read(self.items[self.i], tup=True)
         # find the rule that matches current history
         outcomes = self.items.get(self.history)
         if not outcomes:
@@ -1071,25 +1352,28 @@ with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
     @staticmethod
     def analyze(data, order=1):
         &#34;&#34;&#34;
-        Performs a markov analysis of a list of data and returns a 
-        Markov pattern of the given order to generate the data.
+        A factory method that returns a new Markov pattern whose characteristics
+        reflect the input data&#39;s structure at the given markov order. 
         
         Parameters
         ----------
         data : list
-            The list of data to analyse.
+            The list of data to analyze.
         order : int
-            The markov order of the analysis.
+            The markov order for the analysis.
 
         Returns
         -------
-        A Markov pattern that generates results from the data.
+        A Markov pattern that generates results based on the data and markov order.
 
         Examples
         --------
-        ```
-        &gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
-        {(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+        ```python
+        &gt;&gt;&gt; m = Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+        &gt;&gt;&gt; m.rules
+        {(2,): [[2, 0.6666666666666666], [1, 1.0]], (1,): [[3, 0.5], [2, 1.0]], (3,): [[4, 1.0]], (4,): [[4, 0.5], [1, 1.0]]}
+        &gt;&gt;&gt; m.next(20)
+        [1, 2, 2, 2, 1, 3, 4, 4, 1, 3, 4, 1, 2, 2, 1, 3, 4, 4, 4, 4]
         ```
         &#34;&#34;&#34;
         # each window is a list of one or more past values followed
@@ -1129,20 +1413,23 @@ with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
 <span>def <span class="ident">analyze</span></span>(<span>data, order=1)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Performs a markov analysis of a list of data and returns a
-Markov pattern of the given order to generate the data.</p>
+<div class="desc"><p>A factory method that returns a new Markov pattern whose characteristics
+reflect the input data's structure at the given markov order. </p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
-<dd>The list of data to analyse.</dd>
+<dd>The list of data to analyze.</dd>
 <dt><strong><code>order</code></strong> :&ensp;<code>int</code></dt>
-<dd>The markov order of the analysis.</dd>
+<dd>The markov order for the analysis.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>A Markov pattern that generates results from the data.</p>
+<p>A Markov pattern that generates results based on the data and markov order.</p>
 <h2 id="examples">Examples</h2>
-<pre><code>&gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
-{(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+<pre><code class="language-python">&gt;&gt;&gt; m = Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+&gt;&gt;&gt; m.rules
+{(2,): [[2, 0.6666666666666666], [1, 1.0]], (1,): [[3, 0.5], [2, 1.0]], (3,): [[4, 1.0]], (4,): [[4, 0.5], [1, 1.0]]}
+&gt;&gt;&gt; m.next(20)
+[1, 2, 2, 2, 1, 3, 4, 4, 1, 3, 4, 1, 2, 2, 1, 3, 4, 4, 4, 4]
 </code></pre></div>
 <details class="source">
 <summary>
@@ -1151,25 +1438,28 @@ Markov pattern of the given order to generate the data.</p>
 <pre><code class="python">@staticmethod
 def analyze(data, order=1):
     &#34;&#34;&#34;
-    Performs a markov analysis of a list of data and returns a 
-    Markov pattern of the given order to generate the data.
+    A factory method that returns a new Markov pattern whose characteristics
+    reflect the input data&#39;s structure at the given markov order. 
     
     Parameters
     ----------
     data : list
-        The list of data to analyse.
+        The list of data to analyze.
     order : int
-        The markov order of the analysis.
+        The markov order for the analysis.
 
     Returns
     -------
-    A Markov pattern that generates results from the data.
+    A Markov pattern that generates results based on the data and markov order.
 
     Examples
     --------
-    ```
-    &gt;&gt;&gt; Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
-    {(2,): [[2, 2], [1, 1]], (1,): [[3, 1], [2, 1]], (3,): [[4, 1]], (4,): [[4, 1], [1, 1]]}
+    ```python
+    &gt;&gt;&gt; m = Markov.analyze([2, 2, 1, 3, 4, 4, 1, 2], 1)
+    &gt;&gt;&gt; m.rules
+    {(2,): [[2, 0.6666666666666666], [1, 1.0]], (1,): [[3, 0.5], [2, 1.0]], (3,): [[4, 1.0]], (4,): [[4, 0.5], [1, 1.0]]}
+    &gt;&gt;&gt; m.next(20)
+    [1, 2, 2, 2, 1, 3, 4, 4, 1, 3, 4, 1, 2, 2, 1, 3, 4, 4, 4, 4]
     ```
     &#34;&#34;&#34;
     # each window is a list of one or more past values followed
@@ -1213,13 +1503,77 @@ def analyze(data, order=1):
 <span>(</span><span>items, period=None, wrap='++')</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns a generator that yields its items in a palindrome.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>items</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of values to generate.</dd>
+<dt><strong><code>wrap</code></strong> :&ensp;<code>'++' | '+-' | '-+' | '--'</code></dt>
+<dd>
+<p>Determines how first and last elements are treated when the pattern reverses.
+If the items are [1, 2, 3] then wrap will produce:</p>
+<ul>
+<li>'++' Both first and last items are repeated: 1,2,3,3,2,1,1,2,3 &hellip;</li>
+<li>'+-' Only the first item is repeated: 1,2,3,2,1,1,2,3 &hellip;</li>
+<li>'-+' Only the last item is repeated: 1,2,3,3,2,1,2,3 &hellip;</li>
+<li>'&ndash;' Neither is repeated: 1,2,3,2,1,2,3 &hellip;</li>
+</ul>
+</dd>
+<dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
+<dd>The period determines how many elements are read before
+an EOP (end-of-period) flag is returned. By default the
+period length will be equal to the number of items in the list.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python">&gt;&gt;&gt; palindrome([1,2,3]).next(10)
+[1, 2, 3, 3, 2, 1, 1, 2, 3, 3]
+&gt;&gt;&gt; Palindrome([1,2,3], wrap='+-').next(10)
+[1, 2, 3, 3, 2, 1, 2, 3, 3, 2]
+print(Palindrome([1,2,3], wrap='-+').next(10)
+[1, 2, 3, 2, 1, 1, 2, 3, 2, 1]
+&gt;&gt;&gt; Palindrome([1,2,3], wrap='--').next(10)
+[1, 2, 3, 2, 1, 2, 3, 2, 1, 2]
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Palindrome(Pattern):
+    &#34;&#34;&#34;
+    Returns a generator that yields its items in a palindrome.
 
+    Parameters
+    ----------
+    items : list
+        The list of values to generate.
+
+    wrap : &#39;++&#39; | &#39;+-&#39; | &#39;-+&#39; | &#39;--&#39;
+        Determines how first and last elements are treated when the pattern reverses.
+        If the items are [1, 2, 3] then wrap will produce:
+
+        * &#39;++&#39; Both first and last items are repeated: 1,2,3,3,2,1,1,2,3 ...
+        * &#39;+-&#39; Only the first item is repeated: 1,2,3,2,1,1,2,3 ...
+        * &#39;-+&#39; Only the last item is repeated: 1,2,3,3,2,1,2,3 ...
+        * &#39;--&#39; Neither is repeated: 1,2,3,2,1,2,3 ...
+    
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        period length will be equal to the number of items in the list.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; palindrome([1,2,3]).next(10)
+    [1, 2, 3, 3, 2, 1, 1, 2, 3, 3]
+    &gt;&gt;&gt; Palindrome([1,2,3], wrap=&#39;+-&#39;).next(10)
+    [1, 2, 3, 3, 2, 1, 2, 3, 3, 2]
+    print(Palindrome([1,2,3], wrap=&#39;-+&#39;).next(10)
+    [1, 2, 3, 2, 1, 1, 2, 3, 2, 1]
+    &gt;&gt;&gt; Palindrome([1,2,3], wrap=&#39;--&#39;).next(10)
+    [1, 2, 3, 2, 1, 2, 3, 2, 1, 2]
+    ```
+    &#34;&#34;&#34;
     def __init__(self, items, period=None,  wrap=&#39;++&#39;):
         match wrap:
             case &#39;++&#39;: items = items + items[::-1]    # repeat first and last
@@ -1231,7 +1585,7 @@ def analyze(data, order=1):
         super().__init__(items, 3, period)
 
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         if item[1] == &#39;EOP&#39;:
             if self.i == self.ilen - 1:
                 self.i = 0
@@ -1239,7 +1593,7 @@ def analyze(data, order=1):
                 self.i += 1
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
             else:
                 self.p += 1 
                 item[1] = None
@@ -1265,13 +1619,13 @@ def analyze(data, order=1):
 <span>(</span><span>items, mini, period=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The base class for all patterns provides a specialized <code>next()</code> function.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Pattern(Iterator):
-
+    &#39;&#39;&#39;The base class for all patterns provides a specialized `next()` function.&#39;&#39;&#39;
     def __init__(self, items, mini, period=None):
         if not isinstance(items, list) or len(items) &lt; mini:
             raise TypeError(f&#34;{self.__class__.__name__} input {items} is not a list of {mini} or more elements.&#34;)
@@ -1285,7 +1639,7 @@ def analyze(data, order=1):
         # current index into items list
         self.i = 0 
         # length of current period
-        self.plen = self.read(self.period) if isinstance(self.period, Iterator) else self.period
+        self.plen = self._read(self.period) if isinstance(self.period, Iterator) else self.period
         #print(&#34;***plen is:&#34;, self.plen)
         # period counter
         self.p = 0
@@ -1299,7 +1653,12 @@ def analyze(data, order=1):
         return self.__class__.__name__
     
     @staticmethod
-    def read(pat, tup=False):
+    def _read(pat, tup=False):
+        &#34;&#34;&#34;
+        Internal function that checks if the next item is a pattern or basic data. 
+        Do not call this method directly, use Pattern&#39;s next() function to return
+        the next element(s) in a pattern.
+        &#34;&#34;&#34;
         #print(f&#34;read input: ({pat},tup={tup})&#34;)
         if isinstance(pat, Pattern):
             x = next(pat)
@@ -1309,16 +1668,18 @@ def analyze(data, order=1):
 
     def next(self, more=False):
         &#34;&#34;&#34;
-        A pattern savvy version of Python&#39;s next() function.
+        A pattern savvy version of Python&#39;s builtin `next()` function. Use this
+        method in place of Python&#39;s next() to access pattern elements in
+        flexible ways.
         
         Parameters
         ----------
         more : False | True | int 
-            If more is False then the just th enext item in the pattern
-            is returned. If more is True then the (remaining) items in
-            the current period are returned in a list. If more is an
-            integer greater than 0 then that many items will be returned
-            from the pattern.
+            If more is False (the default) then Pattern&#39;s next() function
+            will return the next item in the pattern. If more is True then
+            the (remaining) items in the current period are returned as a list. 
+            Otherwises, if more is an integer greater than 0 then that many
+            items will be returned as a list.
 
         Returns
         -------
@@ -1334,6 +1695,21 @@ def analyze(data, order=1):
         [2, 3, 4] 
         &gt;&gt;&gt; c.next(6)
         [1, 2, 3, 4, 1, 2]
+        ```
+
+        It is possible to use Python&#39;s builtin `next()` function to read a pattern, in this
+        case you will receive a two element list holding the item from the pattern and an
+        &#39;end of period&#39; marker (EOP).  In contrast, Pattern&#39;s `next()` handles 
+        end of periods invisibly and provides more flexibility for accessing the data.
+
+        ```python
+        &gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+        # python&#39;s next():
+        &gt;&gt;&gt; [next(c) for _ in range(4)]
+        [[1, None], [2, None], [3, None], [4, &#39;EOP&#39;]]
+        # pattern&#39;s next():
+        &gt;&gt;&gt;  c.next(4)
+        [1, 2, 3, 4]
         ```
         &#34;&#34;&#34;
         if more is False:
@@ -1363,44 +1739,25 @@ def analyze(data, order=1):
 <li><a title="musx.patterns.Palindrome" href="#musx.patterns.Palindrome">Palindrome</a></li>
 <li><a title="musx.patterns.Rotation" href="#musx.patterns.Rotation">Rotation</a></li>
 <li><a title="musx.patterns.Shuffle" href="#musx.patterns.Shuffle">Shuffle</a></li>
+<li><a title="musx.patterns.States" href="#musx.patterns.States">States</a></li>
 </ul>
-<h3>Static methods</h3>
-<dl>
-<dt id="musx.patterns.Pattern.read"><code class="name flex">
-<span>def <span class="ident">read</span></span>(<span>pat, tup=False)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def read(pat, tup=False):
-    #print(f&#34;read input: ({pat},tup={tup})&#34;)
-    if isinstance(pat, Pattern):
-        x = next(pat)
-        return x if tup else x[0]
-    else:
-        return [pat, &#34;EOP&#34;] if tup else pat</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="musx.patterns.Pattern.next"><code class="name flex">
 <span>def <span class="ident">next</span></span>(<span>self, more=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A pattern savvy version of Python's next() function.</p>
+<div class="desc"><p>A pattern savvy version of Python's builtin <code>next()</code> function. Use this
+method in place of Python's next() to access pattern elements in
+flexible ways.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>more</code></strong> :&ensp;<code>False | True | int</code></dt>
-<dd>If more is False then the just th enext item in the pattern
-is returned. If more is True then the (remaining) items in
-the current period are returned in a list. If more is an
-integer greater than 0 then that many items will be returned
-from the pattern.</dd>
+<dd>If more is False (the default) then Pattern's next() function
+will return the next item in the pattern. If more is True then
+the (remaining) items in the current period are returned as a list.
+Otherwises, if more is an integer greater than 0 then that many
+items will be returned as a list.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>One or more items in the pattern.</p>
@@ -1412,6 +1769,19 @@ from the pattern.</dd>
 [2, 3, 4] 
 &gt;&gt;&gt; c.next(6)
 [1, 2, 3, 4, 1, 2]
+</code></pre>
+<p>It is possible to use Python's builtin <code>next()</code> function to read a pattern, in this
+case you will receive a two element list holding the item from the pattern and an
+'end of period' marker (EOP).
+In contrast, Pattern's <code>next()</code> handles
+end of periods invisibly and provides more flexibility for accessing the data.</p>
+<pre><code class="language-python">&gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+# python's next():
+&gt;&gt;&gt; [next(c) for _ in range(4)]
+[[1, None], [2, None], [3, None], [4, 'EOP']]
+# pattern's next():
+&gt;&gt;&gt;  c.next(4)
+[1, 2, 3, 4]
 </code></pre></div>
 <details class="source">
 <summary>
@@ -1419,16 +1789,18 @@ from the pattern.</dd>
 </summary>
 <pre><code class="python">def next(self, more=False):
     &#34;&#34;&#34;
-    A pattern savvy version of Python&#39;s next() function.
+    A pattern savvy version of Python&#39;s builtin `next()` function. Use this
+    method in place of Python&#39;s next() to access pattern elements in
+    flexible ways.
     
     Parameters
     ----------
     more : False | True | int 
-        If more is False then the just th enext item in the pattern
-        is returned. If more is True then the (remaining) items in
-        the current period are returned in a list. If more is an
-        integer greater than 0 then that many items will be returned
-        from the pattern.
+        If more is False (the default) then Pattern&#39;s next() function
+        will return the next item in the pattern. If more is True then
+        the (remaining) items in the current period are returned as a list. 
+        Otherwises, if more is an integer greater than 0 then that many
+        items will be returned as a list.
 
     Returns
     -------
@@ -1444,6 +1816,21 @@ from the pattern.</dd>
     [2, 3, 4] 
     &gt;&gt;&gt; c.next(6)
     [1, 2, 3, 4, 1, 2]
+    ```
+
+    It is possible to use Python&#39;s builtin `next()` function to read a pattern, in this
+    case you will receive a two element list holding the item from the pattern and an
+    &#39;end of period&#39; marker (EOP).  In contrast, Pattern&#39;s `next()` handles 
+    end of periods invisibly and provides more flexibility for accessing the data.
+
+    ```python
+    &gt;&gt;&gt; c = Cycle([1, 2, 3, 4])
+    # python&#39;s next():
+    &gt;&gt;&gt; [next(c) for _ in range(4)]
+    [[1, None], [2, None], [3, None], [4, &#39;EOP&#39;]]
+    # pattern&#39;s next():
+    &gt;&gt;&gt;  c.next(4)
+    [1, 2, 3, 4]
     ```
     &#34;&#34;&#34;
     if more is False:
@@ -1474,7 +1861,7 @@ from the pattern.</dd>
 <dt><strong><code>items</code></strong> :&ensp;<code>list</code></dt>
 <dd>The list of items to generate</dd>
 <dt><strong><code>swaps</code></strong> :&ensp;<code>list | Pattern</code></dt>
-<dd>A list of or more swapping rules or a generator that
+<dd>A list of one or more swapping rules or a pattern that
 produces swapping rules. A swapping rule is a list of (up to) four
 integers that control the iterative process applied to
 all the items in order to produce the next generation of items:
@@ -1485,7 +1872,20 @@ start, width is the distance between the elements swapped.
 End is the
 position in the item list to stop the swapping at, and defaults to the
 length of the item list.</dd>
-</dl></div>
+<dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
+<dd>The period determines how many elements are read before
+an EOP (end-of-period) flag is returned. By default the
+shuffle period will be equal to the number of items in the list.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python">&gt;&gt;&gt; r = Rotation(['a', 'b', 'c', 'd'], swaps=[0, 2, 1, 3])
+&gt;&gt;&gt; r.next(True)
+['a', 'b', 'c', 'd']
+&gt;&gt;&gt; r.next(True)
+['b', 'a', 'c', 'd']
+&gt;&gt;&gt; r.next(True)
+['a', 'b', 'c', 'd']
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1498,8 +1898,9 @@ length of the item list.</dd>
     ----------
     items : list
         The list of items to generate
+
     swaps : list | Pattern
-        A list of or more swapping rules or a generator that
+        A list of one or more swapping rules or a pattern that
         produces swapping rules. A swapping rule is a list of (up to) four 
         integers that control the iterative process applied to 
         all the items in order to produce the next generation of items:
@@ -1509,6 +1910,23 @@ length of the item list.</dd>
         start, width is the distance between the elements swapped.  End is the
         position in the item list to stop the swapping at, and defaults to the
         length of the item list.
+        
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        shuffle period will be equal to the number of items in the list.
+
+    Examples
+    --------
+    ```python
+    &gt;&gt;&gt; r = Rotation([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;], swaps=[0, 2, 1, 3])
+    &gt;&gt;&gt; r.next(True)
+    [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]
+    &gt;&gt;&gt; r.next(True)
+    [&#39;b&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;]
+    &gt;&gt;&gt; r.next(True)
+    [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]
+    ```
     &#34;&#34;&#34;
     def __init__(self, items, swaps, period=None):
         super().__init__(items.copy(), 1, period)
@@ -1524,7 +1942,7 @@ length of the item list.</dd>
         self.size = len(items)
 
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         #print(f&#34;after read: item is {item}&#34;)
         if item[1] == &#39;EOP&#39;:
             # (sub)item is at the end of its period
@@ -1533,7 +1951,7 @@ length of the item list.</dd>
                 self.i = 0
                 # we&#39;ve yielded all items in the current generation
                 # so do the rotations to create the next generation.
-                rule = Pattern.read(self.source, tup=False)  #next(self.source)
+                rule = Pattern._read(self.source, tup=False)  #next(self.source)
                 rlen = len(rule)
                 start = rule[0]
                 step = rule[1]
@@ -1550,7 +1968,7 @@ length of the item list.</dd>
             #print(&#34;self.p:&#34;, self.p, &#34;self.plen:&#34;, self.plen)
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
                 #print(f&#34;after xxx read: plen is {self.plen}&#34;)                
             else:
                 self.p += 1 
@@ -1560,8 +1978,8 @@ length of the item list.</dd>
     def all(self, grouped=False, wrapped=False):
         &#34;&#34;&#34;
         Return a list of all rotations and stops when the first rotation occurs again.
-        Warning: rules that do not produce the original generation will produce
-        an infinite loop.
+        Warning: rules that do not produce the original generation will trigger
+        an infinite loop!
 
         Parameters
         ----------
@@ -1599,8 +2017,8 @@ length of the item list.</dd>
 </code></dt>
 <dd>
 <div class="desc"><p>Return a list of all rotations and stops when the first rotation occurs again.
-Warning: rules that do not produce the original generation will produce
-an infinite loop.</p>
+Warning: rules that do not produce the original generation will trigger
+an infinite loop!</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>grouped</code></strong> :&ensp;<code>bool</code></dt>
@@ -1617,8 +2035,8 @@ to the end of list returned.</dd>
 <pre><code class="python">def all(self, grouped=False, wrapped=False):
     &#34;&#34;&#34;
     Return a list of all rotations and stops when the first rotation occurs again.
-    Warning: rules that do not produce the original generation will produce
-    an infinite loop.
+    Warning: rules that do not produce the original generation will trigger
+    an infinite loop!
 
     Parameters
     ----------
@@ -1668,22 +2086,19 @@ to the end of list returned.</dd>
 can be a python object or a sub-pattern.</dd>
 <dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
 <dd>The period determines how many elements are read before
-an EOP (end-of-period) flag is returned. By default the
-shuffle period will be equal to the number of items
-in the list.</dd>
+an EOP (end-of-period) flag is returned. The defaule value
+is none, which means the shuffle'a period length will be
+equal to the number of items in the pattern.</dd>
 <dt><strong><code>norep</code></strong> :&ensp;<code>bool</code></dt>
-<dd>If true then items cannot repeat after a shuffle.</dd>
+<dd>If true then after shuffles the next item cannot repeat
+the last item produced.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>The next item in the pattern.</p>
-<h2 id="raises">Raises</h2>
-<ul>
-<li>TypeError if items is not a list of one or more items.</li>
-</ul>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-python">&gt;&gt;&gt; p = jumble([1,2,3])
-&gt;&gt;&gt; [read(p) for _ in range(10)]
-[1, 3, 2, 3, 2, 1] 
+<p>The first example permits direct repetition between shuffles, the second forbids it.</p>
+<pre><code class="language-python">&gt;&gt;&gt; Shuffle([&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]).next(12)
+['c', 'a', 'b', 'b', 'a', 'c', 'a', 'b', 'c', 'c', 'b', 'a']
+&gt;&gt;&gt; Shuffle([&quot;a&quot;,&quot;b&quot;,&quot;c&quot;], norep=True).next(12)
+['a', 'c', 'b', 'c', 'b', 'a', 'c', 'a', 'b', 'c', 'a', 'b']
 </code></pre></div>
 <details class="source">
 <summary>
@@ -1698,31 +2113,27 @@ in the list.</dd>
     items : list  
         The list of items to generate. Each item in the list
         can be a python object or a sub-pattern.
+
     period : None | int | subpattern
         The period determines how many elements are read before
-        an EOP (end-of-period) flag is returned. By default the
-        shuffle period will be equal to the number of items
-        in the list.
+        an EOP (end-of-period) flag is returned. The defaule value
+        is none, which means the shuffle&#39;a period length will be
+        equal to the number of items in the pattern.
+
     norep : bool
-        If true then items cannot repeat after a shuffle.
-
-    Returns
-    -------
-    The next item in the pattern.
-
-    Raises
-    ------
-    * TypeError if items is not a list of one or more items.
+        If true then after shuffles the next item cannot repeat
+        the last item produced.
 
     Examples
     --------
+    The first example permits direct repetition between shuffles, the second forbids it.
     ```python
-    &gt;&gt;&gt; p = jumble([1,2,3])
-    &gt;&gt;&gt; [read(p) for _ in range(10)]
-    [1, 3, 2, 3, 2, 1] 
+    &gt;&gt;&gt; Shuffle([&#34;a&#34;,&#34;b&#34;,&#34;c&#34;]).next(12)
+    [&#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;b&#39;, &#39;a&#39;, &#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;]
+    &gt;&gt;&gt; Shuffle([&#34;a&#34;,&#34;b&#34;,&#34;c&#34;], norep=True).next(12)
+    [&#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;c&#39;, &#39;b&#39;, &#39;a&#39;, &#39;c&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;a&#39;, &#39;b&#39;]
     ```
     &#34;&#34;&#34;
-
     def __init__(self, items, period=None, norep=False):
         super().__init__(items.copy(), 1, period)
         # initialize for first period
@@ -1730,7 +2141,7 @@ in the list.</dd>
         self.norep = norep
 
     def __next__(self):
-        item = Pattern.read(self.items[self.i], tup=True)
+        item = Pattern._read(self.items[self.i], tup=True)
         if item[1] == &#39;EOP&#39;:
             # at end of items, reshuffle
             if self.i == self.ilen - 1:
@@ -1745,7 +2156,7 @@ in the list.</dd>
                 self.i += 1
             if self.p == self.plen - 1:
                 self.p = 0
-                self.plen = Pattern.read(self.period)  # get next period length
+                self.plen = Pattern._read(self.period)  # get next period length
             else:
                 self.p += 1 
                 item[1] = None
@@ -1766,13 +2177,260 @@ in the list.</dd>
 </li>
 </ul>
 </dd>
+<dt id="musx.patterns.States"><code class="flex name class">
+<span>class <span class="ident">States</span></span>
+<span>(</span><span>cells, transitions)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns values from a state machine (cellular automata) and applies
+a transition function to update states to their next value.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>states</code></strong> :&ensp;<code>list
+</code></dt>
+<dd>A list containing the initial states of the cellular automata. A
+flat list of states produces a one dimensional automata and a row
+major list of lists will create a two dimensional automata.</dd>
+<dt><strong><code>transitions</code></strong> :&ensp;<code>function</code></dt>
+<dd>The transitions function implements the automata's state
+transitions. The function is automatically called and passed
+two arguments, the pattern's state array and the index of the
+current cell in the states.
+Your transition function should
+call <code>getstate()</code> to access one or more neighbor states of
+the current cell in order to calculate its next state.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<p>A transition function recives the pattern's array of states and
+the index to the current state. This function calls <code>getstate()</code>
+to accesses the cells to the left and right of the current cell
+and returns their sum mod 4, which then becomes the next value
+of the cell at the current state index.</p>
+<pre><code class="language-python">def add_neighbors(cells, index):
+    left = States.getstate(cells, index, -1)
+    right = States.getstate(cells, index, 1)
+    return (left + right) % 4
+
+&gt;&gt;&gt; cells = States([0,1,0,1,0], transitions=add_neighbors)
+&gt;&gt;&gt; for _ in range(5): print(cells.next(5))
+[0, 1, 0, 1, 0]
+[1, 0, 2, 0, 1]
+[1, 3, 0, 3, 1]
+[0, 1, 2, 1, 0]
+[1, 2, 2, 2, 1]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class States(Pattern):
+    &#34;&#34;&#34;
+    Returns values from a state machine (cellular automata) and applies
+    a transition function to update states to their next value.
+
+    Parameters
+    ----------
+    states : list    
+        A list containing the initial states of the cellular automata. A
+        flat list of states produces a one dimensional automata and a row
+        major list of lists will create a two dimensional automata.
+
+    transitions : function
+        The transitions function implements the automata&#39;s state 
+        transitions. The function is automatically called and passed 
+        two arguments, the pattern&#39;s state array and the index of the
+        current cell in the states.  Your transition function should
+        call `getstate()` to access one or more neighbor states of 
+        the current cell in order to calculate its next state.
+
+    Examples
+    --------
+    A transition function recives the pattern&#39;s array of states and
+    the index to the current state. This function calls `getstate()`
+    to accesses the cells to the left and right of the current cell
+    and returns their sum mod 4, which then becomes the next value
+    of the cell at the current state index.
+    ```python
+    def add_neighbors(cells, index):
+        left = States.getstate(cells, index, -1)
+        right = States.getstate(cells, index, 1)
+        return (left + right) % 4
+
+    &gt;&gt;&gt; cells = States([0,1,0,1,0], transitions=add_neighbors)
+    &gt;&gt;&gt; for _ in range(5): print(cells.next(5))
+    [0, 1, 0, 1, 0]
+    [1, 0, 2, 0, 1]
+    [1, 3, 0, 3, 1]
+    [0, 1, 2, 1, 0]
+    [1, 2, 2, 2, 1]
+    ```
+    &#34;&#34;&#34;
+
+    def __init__(self, cells, transitions):
+        super().__init__(cells, 1)
+        if not callable(transitions):
+            raise TypeError(f&#34;transitions {transitions} is not a function.&#34;)
+        if isinstance(cells[0], list):
+            # cells is a 2D automata (a list of lists)
+            self.indexes = [(row, col) for row in range(len(cells)) for col in range(len(cells[0]))]
+            self.period = len(self.indexes)
+            # current is a 2D copy of cells with at least 1 row and col
+            self.current = [list(r) for r in cells] # list(r) is copy
+            # future same as values but set to 0&#39;s
+            self.future = [[0 for _ in r] for r in cells]
+        else:
+            # cells is a 1D automata but see below.
+            self.indexes = [(0, col) for col in range(len(cells))]
+            self.period = len(self.indexes)
+            # current is a 2D copy of cells with at least 1 row and col
+            self.current = [list(cells)]   # list(cells) is copy
+            # future as values but set to 0&#39;s
+            self.future = [[0 for _ in cells]] # init future to 0&#39;s.
+        self.transitions = transitions
+        # reverse the states so that when the loop starts and
+        # flips with j == 0 the present states will be correct
+        self.current, self.future = self.future, self.current
+        #print(&#39;current:&#39;, self.current, &#39;future:&#39;, self.future, &#39;indexes:&#39;, self.indexes)
+
+    def __next__(self):
+        j = self.i % self.period
+        if j == 0:
+            #print(&#34;flipping present and future i=&#34;, self.i)
+            self.current, self.future = self.future, self.current
+        pos = self.indexes[j]
+        val = self.current[pos[0]][pos[1]]
+        nxt = self.transitions(self.current, pos)
+        #print(&#34;transitions value:&#34;, val)
+        self.future[pos[0]][pos[1]] = nxt
+        self.i += 1
+        return (val,)
+
+    @staticmethod
+    def getstate(cells, pos, inc):
+        &#34;&#34;&#34;
+        Call getstate() inside your States&#39;s transitions function to
+        return the value (state) of the cell at position pos+inc.
+        The new position pos+inc will automatically wrap mod the size of the cells
+        array so cell access will never be out of bounds.
+
+        Parameters
+        ----------
+        cells : list
+            An array of cells holding the cellular automata&#39;s current states.
+
+        pos : tuple
+            The (*row*, *col*) index of the current cell in the cells array.
+            Your rule function will receive this position in its pos argument.
+            To access a neighbor cell, pass the pos value to getstate() along
+            with a positional increment *inc*.
+        
+        inc : int | tuple
+            A positive or negative offset to add to pos to calculate the position of the
+            neighbor cell. This must be a tuple (*row*, *col*) for 2D automata. For 1D
+            cases you can specify a positive or negative integer, or a tuple (0, *col*).
+
+        Returns
+        -------
+        The value of the neighbor cell at pos+inc.
+        &#34;&#34;&#34;
+        if not isinstance(inc, tuple):
+            inc = (0, inc)
+        row = (pos[0] + inc[0]) % len(cells)
+        col = (pos[1] + inc[1]) % len(cells[0])
+        #print(&#34;CELLS:&#34;, cells)
+        return cells[row][col]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="musx.patterns.States.getstate"><code class="name flex">
+<span>def <span class="ident">getstate</span></span>(<span>cells, pos, inc)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Call getstate() inside your States's transitions function to
+return the value (state) of the cell at position pos+inc.
+The new position pos+inc will automatically wrap mod the size of the cells
+array so cell access will never be out of bounds.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>cells</code></strong> :&ensp;<code>list</code></dt>
+<dd>An array of cells holding the cellular automata's current states.</dd>
+<dt><strong><code>pos</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>The (<em>row</em>, <em>col</em>) index of the current cell in the cells array.
+Your rule function will receive this position in its pos argument.
+To access a neighbor cell, pass the pos value to getstate() along
+with a positional increment <em>inc</em>.</dd>
+<dt><strong><code>inc</code></strong> :&ensp;<code>int | tuple</code></dt>
+<dd>A positive or negative offset to add to pos to calculate the position of the
+neighbor cell. This must be a tuple (<em>row</em>, <em>col</em>) for 2D automata. For 1D
+cases you can specify a positive or negative integer, or a tuple (0, <em>col</em>).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The value of the neighbor cell at pos+inc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def getstate(cells, pos, inc):
+    &#34;&#34;&#34;
+    Call getstate() inside your States&#39;s transitions function to
+    return the value (state) of the cell at position pos+inc.
+    The new position pos+inc will automatically wrap mod the size of the cells
+    array so cell access will never be out of bounds.
+
+    Parameters
+    ----------
+    cells : list
+        An array of cells holding the cellular automata&#39;s current states.
+
+    pos : tuple
+        The (*row*, *col*) index of the current cell in the cells array.
+        Your rule function will receive this position in its pos argument.
+        To access a neighbor cell, pass the pos value to getstate() along
+        with a positional increment *inc*.
+    
+    inc : int | tuple
+        A positive or negative offset to add to pos to calculate the position of the
+        neighbor cell. This must be a tuple (*row*, *col*) for 2D automata. For 1D
+        cases you can specify a positive or negative integer, or a tuple (0, *col*).
+
+    Returns
+    -------
+    The value of the neighbor cell at pos+inc.
+    &#34;&#34;&#34;
+    if not isinstance(inc, tuple):
+        inc = (0, inc)
+    row = (pos[0] + inc[0]) % len(cells)
+    col = (pos[1] + inc[1]) % len(cells[0])
+    #print(&#34;CELLS:&#34;, cells)
+    return cells[row][col]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
 </dl>
 </section>
 </article>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#examples">Examples</a></li>
+</ul>
 </div>
 <ul id="index">
 <li><h3>Super-module</h3>
@@ -1801,7 +2459,6 @@ in the list.</dd>
 <h4><code><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></code></h4>
 <ul class="">
 <li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
-<li><code><a title="musx.patterns.Pattern.read" href="#musx.patterns.Pattern.read">read</a></code></li>
 </ul>
 </li>
 <li>
@@ -1812,6 +2469,12 @@ in the list.</dd>
 </li>
 <li>
 <h4><code><a title="musx.patterns.Shuffle" href="#musx.patterns.Shuffle">Shuffle</a></code></h4>
+</li>
+<li>
+<h4><code><a title="musx.patterns.States" href="#musx.patterns.States">States</a></code></h4>
+<ul class="">
+<li><code><a title="musx.patterns.States.getstate" href="#musx.patterns.States.getstate">getstate</a></code></li>
+</ul>
 </li>
 </ul>
 </li>

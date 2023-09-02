@@ -115,8 +115,8 @@ __pdoc__ = {
     &#39;parse_number_sequence&#39;: False,
     &#39;parse_pitch_sequence&#39;: False,
     &#39;chromatic_scale&#39;: False,
-    &#39;build_chromatic_scale&#39;: False
-}
+    &#39;build_chromatic_scale&#39;: False,
+    &#39;PitchBase&#39;: False}
 
 from enum import IntEnum
 from collections import namedtuple
@@ -2173,7 +2173,7 @@ pitch list containing a letter, accidental and octave index
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="musx.pitch.PitchBase" href="#musx.pitch.PitchBase">PitchBase</a></li>
+<li>musx.pitch.PitchBase</li>
 <li>builtins.tuple</li>
 </ul>
 <h3>Class variables</h3>
@@ -2392,46 +2392,6 @@ return 'C#7'.</p></div>
 </details>
 </dd>
 </dl>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="musx.pitch.PitchBase" href="#musx.pitch.PitchBase">PitchBase</a></b></code>:
-<ul class="hlist">
-<li><code><a title="musx.pitch.PitchBase.accidental" href="#musx.pitch.PitchBase.accidental">accidental</a></code></li>
-<li><code><a title="musx.pitch.PitchBase.letter" href="#musx.pitch.PitchBase.letter">letter</a></code></li>
-<li><code><a title="musx.pitch.PitchBase.octave" href="#musx.pitch.PitchBase.octave">octave</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="musx.pitch.PitchBase"><code class="flex name class">
-<span>class <span class="ident">PitchBase</span></span>
-<span>(</span><span>letter, accidental, octave)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>PitchBase(letter, accidental, octave)</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>builtins.tuple</li>
-</ul>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="musx.pitch.Pitch" href="#musx.pitch.Pitch">Pitch</a></li>
-</ul>
-<h3>Instance variables</h3>
-<dl>
-<dt id="musx.pitch.PitchBase.accidental"><code class="name">var <span class="ident">accidental</span></code></dt>
-<dd>
-<div class="desc"><p>Alias for field number 1</p></div>
-</dd>
-<dt id="musx.pitch.PitchBase.letter"><code class="name">var <span class="ident">letter</span></code></dt>
-<dd>
-<div class="desc"><p>Alias for field number 0</p></div>
-</dd>
-<dt id="musx.pitch.PitchBase.octave"><code class="name">var <span class="ident">octave</span></code></dt>
-<dd>
-<div class="desc"><p>Alias for field number 2</p></div>
-</dd>
-</dl>
 </dd>
 </dl>
 </section>
@@ -2469,14 +2429,6 @@ return 'C#7'.</p></div>
 <li><code><a title="musx.pitch.Pitch.pnums" href="#musx.pitch.Pitch.pnums">pnums</a></code></li>
 <li><code><a title="musx.pitch.Pitch.pos" href="#musx.pitch.Pitch.pos">pos</a></code></li>
 <li><code><a title="musx.pitch.Pitch.string" href="#musx.pitch.Pitch.string">string</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="musx.pitch.PitchBase" href="#musx.pitch.PitchBase">PitchBase</a></code></h4>
-<ul class="">
-<li><code><a title="musx.pitch.PitchBase.accidental" href="#musx.pitch.PitchBase.accidental">accidental</a></code></li>
-<li><code><a title="musx.pitch.PitchBase.letter" href="#musx.pitch.PitchBase.letter">letter</a></code></li>
-<li><code><a title="musx.pitch.PitchBase.octave" href="#musx.pitch.PitchBase.octave">octave</a></code></li>
 </ul>
 </li>
 </ul>

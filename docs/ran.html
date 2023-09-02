@@ -390,6 +390,30 @@ def pink():
     return _pinking[_i]
 
 
+def drunk(val, width=1):
+    &#34;&#34;&#34;
+    Returns a gnerator to produce numbers in a &#34;drunken walk&#34; where the next 
+    value returned is constrained to lie within the bounds of the previous 
+    value plus/minus width. If val and width are both integers then integer 
+    values are returned otherwise floating point values are returned.
+
+    Parameters
+    ----------
+    val : int | float
+        The initial value returned by the walk. Thereafter drunk internally
+        updates this value according to width.
+    width : int | float
+        Constrains the next value returned to be within the bounds of the
+        current value plus/minus width.
+    &#34;&#34;&#34;
+    func = random.randint if isinstance(val, int) and isinstance(width, int) else random.uniform
+    i = 0
+    while True:
+        yield val 
+        val += func(-width, width)
+        i += 1
+
+
 if __name__ == &#39;__main__&#39;:
     
     ransegs(num=5, mapto=10)
@@ -616,6 +640,51 @@ alpha is True then only positive values are returned. Density is f(x)=1/(pi(1 + 
     #return math.tan( math.pi * 2 * (random.random() - 0.5))
     r = (1.5707964 if alpha else math.pi) * random.random()
     return sin(r) / cos(r)</code></pre>
+</details>
+</dd>
+<dt id="musx.ran.drunk"><code class="name flex">
+<span>def <span class="ident">drunk</span></span>(<span>val, width=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a gnerator to produce numbers in a "drunken walk" where the next
+value returned is constrained to lie within the bounds of the previous
+value plus/minus width. If val and width are both integers then integer
+values are returned otherwise floating point values are returned.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>val</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The initial value returned by the walk. Thereafter drunk internally
+updates this value according to width.</dd>
+<dt><strong><code>width</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>Constrains the next value returned to be within the bounds of the
+current value plus/minus width.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def drunk(val, width=1):
+    &#34;&#34;&#34;
+    Returns a gnerator to produce numbers in a &#34;drunken walk&#34; where the next 
+    value returned is constrained to lie within the bounds of the previous 
+    value plus/minus width. If val and width are both integers then integer 
+    values are returned otherwise floating point values are returned.
+
+    Parameters
+    ----------
+    val : int | float
+        The initial value returned by the walk. Thereafter drunk internally
+        updates this value according to width.
+    width : int | float
+        Constrains the next value returned to be within the bounds of the
+        current value plus/minus width.
+    &#34;&#34;&#34;
+    func = random.randint if isinstance(val, int) and isinstance(width, int) else random.uniform
+    i = 0
+    while True:
+        yield val 
+        val += func(-width, width)
+        i += 1</code></pre>
 </details>
 </dd>
 <dt id="musx.ran.expran"><code class="name flex">
@@ -1076,6 +1145,7 @@ value returned.</dd>
 <li><code><a title="musx.ran.between" href="#musx.ran.between">between</a></code></li>
 <li><code><a title="musx.ran.brown" href="#musx.ran.brown">brown</a></code></li>
 <li><code><a title="musx.ran.cauchy" href="#musx.ran.cauchy">cauchy</a></code></li>
+<li><code><a title="musx.ran.drunk" href="#musx.ran.drunk">drunk</a></code></li>
 <li><code><a title="musx.ran.expran" href="#musx.ran.expran">expran</a></code></li>
 <li><code><a title="musx.ran.gamma" href="#musx.ran.gamma">gamma</a></code></li>
 <li><code><a title="musx.ran.gauss" href="#musx.ran.gauss">gauss</a></code></li>

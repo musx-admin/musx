@@ -1,26 +1,26 @@
 """
-An object-orientated implemention of various python iterators that yield patterns in data,
+An object-orientated implemention of python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such as markov
 chains, cellular automata and chaos.  Many of these patterns allow subpatterns to
-be embedded inside parent patterns to be processed seamlessly by the pattern.next() method.
-Patterns that support subpatterns have a 'period' argument that regulate how many items
-are read from the subpattern before moving on to the next item in the parent pattern.
-The period value, in turn, can be expressed as a constant value or a pattern of values.
+be embedded inside parent patterns to be processed seamlessly by the parent's `next()`
+method.  Patterns that support embedding have a 'period' argument that regulate 
+how many items are read from it before a parent pattern can move to its next item.
+The period value can be expressed as a constant value or a pattern of values.
 
 Examples
 ---------
-A outer cyclic pattern contains an embedded cyclic pattern. The outer pattern cycles
-through four items: [10, *subpattern*, 20, 30], the subpattern cycles through two
-items: [-1, -2].  Each time the subpattern is encountered it randomly yields
-one, two or three of its items before the outer pattern can move on to its next item.
+In this example an outer pattern rotates through four items: [10, *subpattern*, 20, 30], 
+and the subpattern cycles through two items: [-1, -2].  Each time the subpattern is
+encountered it randomly yields one, two or three of its items before the outer 
+pattern can move on to its next item.
 
 ```python
 >>> pat = Cycle([10, Cycle([-1, -2], period=Choose([1,2,3])), 20, 30])
 >>> pat.next(20)
 [10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
 ```
-The overall pattern is therefore a merge of two streams of cyclic data: 10, 20, 30...
-and -1, -2... The yields from each pattern are marked by 'xx'.
+The resulting pattern is a merge of two cyclic streams of data, each stream's
+cycle is highlighted by the 'xx' markers in the image.
 ```
 outer:
  xx              xx  xx  xx              xx  xx  xx          xx  xx  xx      xx
@@ -36,6 +36,7 @@ from collections.abc import Iterator
 import random
 
 class Pattern(Iterator):
+    '''The base class for all patterns provides a specialized `next()` function.'''
     def __init__(self, items, mini, period=None):
         if not isinstance(items, list) or len(items) < mini:
             raise TypeError(f"{self.__class__.__name__} input {items} is not a list of {mini} or more elements.")
@@ -194,14 +195,14 @@ class Palindrome(Pattern):
     items : list
         The list of values to generate.
 
-    wrap : str
-        Determines if first and last elements are repeated when the pattern reverses. 
-        For example if the items are [1, 2, 3] then wrap will produce:
+    wrap : '++' | '+-' | '-+' | '--'
+        Determines how first and last elements are treated when the pattern reverses.
+        If the items are [1, 2, 3] then wrap will produce:
 
-        * '++' : both first and last items are repeated: 1,2,3,3,2,1,1,2,3 ...
-        * '+-' : Only the first item is repeated: 1,2,3,2,1,1,2,3 ...
-        * '-+' : Only the last item is repeated: 1,2,3,3,2,1,2,3 ...
-        * '--' : Neither is repeated: 1,2,3,2,1,2,3 ...
+        * '++' Both first and last items are repeated: 1,2,3,3,2,1,1,2,3 ...
+        * '+-' Only the first item is repeated: 1,2,3,2,1,1,2,3 ...
+        * '-+' Only the last item is repeated: 1,2,3,3,2,1,2,3 ...
+        * '--' Neither is repeated: 1,2,3,2,1,2,3 ...
     
     period : None | int | subpattern
         The period determines how many elements are read before
@@ -335,9 +336,10 @@ class Choose(Pattern):
 
     Examples
     --------
+    In this example the value 3 likely appears half the time.
     ```python
-    >>> p = choose(['A', 'B' 'C'], [1, 2, 1])
-    [p.next() for _ in range(8)]
+    >>> Choose([1,2,3], [1,1,2]).next(10)
+    [3, 2, 1, 3, 1, 3, 3, 3, 1, 3]
     ```
     """
     def __init__(self, items, weights=None, period=None):
@@ -415,8 +417,6 @@ class Choose(Pattern):
         return item 
 
 
-
-
 class Rotation(Pattern):
     """
     Permutes its items using one or more swapping rules.
@@ -427,7 +427,7 @@ class Rotation(Pattern):
         The list of items to generate
 
     swaps : list | Pattern
-        A list of or more swapping rules or a generator that
+        A list of one or more swapping rules or a pattern that
         produces swapping rules. A swapping rule is a list of (up to) four 
         integers that control the iterative process applied to 
         all the items in order to produce the next generation of items:
@@ -442,6 +442,18 @@ class Rotation(Pattern):
         The period determines how many elements are read before
         an EOP (end-of-period) flag is returned. By default the
         shuffle period will be equal to the number of items in the list.
+
+    Examples
+    --------
+    ```python
+    >>> r = Rotation(['a', 'b', 'c', 'd'], swaps=[0, 2, 1, 3])
+    >>> r.next(True)
+    ['a', 'b', 'c', 'd']
+    >>> r.next(True)
+    ['b', 'a', 'c', 'd']
+    >>> r.next(True)
+    ['a', 'b', 'c', 'd']
+    ```
     """
     def __init__(self, items, swaps, period=None):
         super().__init__(items.copy(), 1, period)
@@ -493,8 +505,8 @@ class Rotation(Pattern):
     def all(self, grouped=False, wrapped=False):
         """
         Return a list of all rotations and stops when the first rotation occurs again.
-        Warning: rules that do not produce the original generation will produce
-        an infinite loop.
+        Warning: rules that do not produce the original generation will trigger
+        an infinite loop!
 
         Parameters
         ----------
@@ -662,7 +674,7 @@ class Markov(Pattern):
     def analyze(data, order=1):
         """
         A factory method that returns a new Markov pattern whose characteristics
-        reflect the input data's organization at the given markov order. 
+        reflect the input data's structure at the given markov order. 
         
         Parameters
         ----------
@@ -713,9 +725,8 @@ class Markov(Pattern):
 
 class States(Pattern):
     """
-    Returns a state machine (cellular automata) that maintains an array 
-    of states (values) and applies a transitions function to update the
-    states to their next state.
+    Returns values from a state machine (cellular automata) and applies
+    a transition function to update states to their next value.
 
     Parameters
     ----------
@@ -727,22 +738,20 @@ class States(Pattern):
     transitions : function
         The transitions function implements the automata's state 
         transitions. The function is automatically called and passed 
-        two arguments, the states and the index of the current cell in the states.
-        The function can use `getstate()` to access one or more neighbor states
-        in order to calculate the next state of the current cell.
-
-    Returns
-    -------
-    The next item in the pattern.
+        two arguments, the pattern's state array and the index of the
+        current cell in the states.  Your transition function should
+        call `getstate()` to access one or more neighbor states of 
+        the current cell in order to calculate its next state.
 
     Examples
     --------
+    A transition function recives the pattern's array of states and
+    the index to the current state. This function calls `getstate()`
+    to accesses the cells to the left and right of the current cell
+    and returns their sum mod 4, which then becomes the next value
+    of the cell at the current state index.
     ```python
     def add_neighbors(cells, index):
-        '''
-        Transition function sets the current cell's value to the
-        sum of its left and right neighbor cells modulo 4.
-        '''
         left = States.getstate(cells, index, -1)
         right = States.getstate(cells, index, 1)
         return (left + right) % 4

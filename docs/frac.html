@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>frac API documentation</title>
+<title>musx.frac API documentation</title>
 <meta name="description" content="Adds methods to python&#39;s Fraction class for representing exact time, mensural tuples,
 tuning ratios, etc." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -20,7 +20,7 @@ tuning ratios, etc." />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>frac</code></h1>
+<h1 class="title">Module <code>musx.frac</code></h1>
 </header>
 <section id="section-intro">
 <p>Adds methods to python's Fraction class for representing exact time, mensural tuples,<br>
@@ -150,7 +150,7 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="frac.dotted"><code class="name flex">
+<dt id="musx.frac.dotted"><code class="name flex">
 <span>def <span class="ident">dotted</span></span>(<span>self, dots=1)</span>
 </code></dt>
 <dd>
@@ -188,7 +188,7 @@ value of the fraction.</dd>
     raise ValueError(f&#34;Dots value is not a positive integer: {dots}.&#34;)</code></pre>
 </details>
 </dd>
-<dt id="frac.seconds"><code class="name flex">
+<dt id="musx.frac.seconds"><code class="name flex">
 <span>def <span class="ident">seconds</span></span>(<span>self, tempo=60, beat=None)</span>
 </code></dt>
 <dd>
@@ -241,7 +241,7 @@ given tempo and beat.</p>
     raise TypeError(f&#39;Invalid beat: {beat}.&#39;)</code></pre>
 </details>
 </dd>
-<dt id="frac.tup"><code class="name flex">
+<dt id="musx.frac.tup"><code class="name flex">
 <span>def <span class="ident">tup</span></span>(<span>self, num)</span>
 </code></dt>
 <dd>
@@ -278,7 +278,7 @@ Fraction(1, 20)
     raise ValueError(f&#34;Invalid tup divisor: {num}.&#34;)</code></pre>
 </details>
 </dd>
-<dt id="frac.tuplets"><code class="name flex">
+<dt id="musx.frac.tuplets"><code class="name flex">
 <span>def <span class="ident">tuplets</span></span>(<span>self, num, intimeof=1)</span>
 </code></dt>
 <dd>
@@ -338,12 +338,17 @@ represents the sum of all the tuplets in the list.</dd>
 <ul></ul>
 </div>
 <ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="musx" href="index.html">musx</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="frac.dotted" href="#frac.dotted">dotted</a></code></li>
-<li><code><a title="frac.seconds" href="#frac.seconds">seconds</a></code></li>
-<li><code><a title="frac.tup" href="#frac.tup">tup</a></code></li>
-<li><code><a title="frac.tuplets" href="#frac.tuplets">tuplets</a></code></li>
+<li><code><a title="musx.frac.dotted" href="#musx.frac.dotted">dotted</a></code></li>
+<li><code><a title="musx.frac.seconds" href="#musx.frac.seconds">seconds</a></code></li>
+<li><code><a title="musx.frac.tup" href="#musx.frac.tup">tup</a></code></li>
+<li><code><a title="musx.frac.tuplets" href="#musx.frac.tuplets">tuplets</a></code></li>
 </ul>
 </li>
 </ul>
