@@ -51,6 +51,7 @@ __pdoc__ = {
     'build_chromatic_scale': False,
     'PitchBase': False}
 
+from random import randint
 from enum import IntEnum
 from collections import namedtuple
 import math
@@ -564,6 +565,28 @@ class Pitch (PitchBase):
         elif s in ['Cb', 'Cbb']:
             o += 1
         return Pitch(s + cls._octave_names[o])
+
+    @classmethod
+    def random(cls):
+        '''Returns a random Pitch spelling.'''
+        while True:
+            # Note: randint's range includes upper bound
+            let = randint(cls._let_C,  cls._let_B)
+            acc = randint(cls._acc_2f, cls._acc_2s)
+            oct = randint(cls._oct_00, cls._oct_9)
+            # continue if pitch is below C00 (e.g. Cb00 or Cbb00)
+            if oct == cls._oct_00 and let == cls._let_C and acc < cls._acc_n:
+                continue
+            # continue if pitch is above G9 or Abb9
+            if oct == cls._oct_9:
+                if let == cls._let_G and acc > cls._acc_n:
+                    continue
+                if let == cls._let_A and acc > cls._acc_2f:
+                    continue
+                if let == cls._let_B:
+                    continue
+            return Pitch([let, acc, oct])
+
 
 #  The chromatic scale and the functions pitch(), keynum() and hertz()
 

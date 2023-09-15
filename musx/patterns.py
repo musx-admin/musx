@@ -1,35 +1,11 @@
 """
 An object-orientated implemention of python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such as markov
-chains, cellular automata and chaos.  Many of these patterns allow subpatterns to
-be embedded inside parent patterns to be processed seamlessly by the parent's `next()`
-method.  Patterns that support embedding have a 'period' argument that regulate 
-how many items are read from it before a parent pattern can move to its next item.
-The period value can be expressed as a constant value or a pattern of values.
-
-Examples
----------
-In this example an outer pattern rotates through four items: [10, *subpattern*, 20, 30], 
-and the subpattern cycles through two items: [-1, -2].  Each time the subpattern is
-encountered it randomly yields one, two or three of its items before the outer 
-pattern can move on to its next item.
-
-```python
->>> pat = Cycle([10, Cycle([-1, -2], period=Choose([1,2,3])), 20, 30])
->>> pat.next(20)
-[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
-```
-The resulting pattern is a merge of two cyclic streams of data, each stream's
-cycle is highlighted by the 'xx' markers in the image.
-```
-outer:
- xx              xx  xx  xx              xx  xx  xx          xx  xx  xx      xx
-[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
-     xx  xx  xx              xx  xx  xx              xx  xx              xx
-inner:
-```
-
-See the demos folder for many examples of how to use musx patterns to generate music.
+chains, cellular automata and chaos.  Many of these patterns allow subpatterns and
+expressions to be embedded inside parent patterns and processed seamlessly by the 
+parent's `next()` method.  For more information see pattern documentation,
+the patterns.ipynb tutorial and the demos folder for many examples of using musx
+patterns to generate music.
 """
 
 from collections.abc import Iterator
@@ -66,15 +42,18 @@ class Pattern(Iterator):
     @staticmethod
     def _read(pat, tup=False):
         """
-        Internal function that checks if the next item is a pattern or basic data. 
-        Do not call this method directly, use Pattern's next() function to return
-        the next element(s) in a pattern.
+        Internal function that checks if the next item is a pattern, expression,
+        or basic data. Do not call this method directly, use Pattern's next() 
+        function to return the next element(s) in a pattern.
         """
         #print(f"read input: ({pat},tup={tup})")
         if isinstance(pat, Pattern):
             x = next(pat)
             return x if tup else x[0]
         else:
+            # if pat is a zero-arg lambda or function, call it to produce the return value
+            if callable(pat):
+                pat = pat()
             return [pat, "EOP"] if tup else pat
 
     def next(self, more=False):
@@ -346,18 +325,19 @@ class Choose(Pattern):
         super().__init__(items, 1, period)
         end = len(items)
         if not weights:
-            # convert proportion to monotonically increasing values to 1.0
+            # equal probablity for each item. weights will hold monotonically
+            # increasing, equally proportioned, exclusive upper bounds upto
+            # and including 1.0. example: end=5 => [0.2, 0.4, 0.6, 0.8, 1.0]
             weights = [(i+1)/end for i in range(end)]
         else:
           if not isinstance(weights, list):
               raise TypeError(f'Weights value {weights} is not a list.')
           for w in weights:
               if not isinstance(w, (int, float)):
-                  raise IndexError("Weight {w} is not an int or float.")
+                  raise IndexError(f"Weight {w} is not an int or float.")
           if end == len(weights):
               # convert weights so they sum to 1.0
               total = sum(weights)
-              #print("total=", total, " weights", weights)
               weights = [w/total for w in weights]
               # convert weights to monotonically increasing values to 1.0
               for i in range(1, end):
@@ -366,42 +346,30 @@ class Choose(Pattern):
               raise IndexError('Too many weights provided.')
           else:
               raise IndexError('Too few weights provided.')
-       
-        #print("raw weights:", weights)
+        #print("weights:", weights)
+        self.weights = weights
         # normalize weights to values summing to 1.0
-        total = sum(weights)
-        normalized = [weights[i] / total for i in range(len(weights))]
-        #print("normalized weights:", normalized)
-        # Convert normalized weights into a monotonically increasing 
-        # probability map between 0.0 and 1.0
-        # Example
-        #     items:      [     'A', 'B', 'C', 'D', 'E']
-        #     normalized: [     0.1, 0.2, 0.3, 0.1, 0.3]
-        #     probmap:    [0.0, 0.1, 0.3, 0.6, 0.7, 1.0]
-        self.probmap = [0.0] + [sum([normalized[i] for i in range(0, w)]) 
-                                for w in range(1, len(normalized))] + [1.0]
+        # total = sum(weights)
+        # normalized = [weights[i] / total for i in range(len(weights))]
+        # #print("normalized weights:", normalized)
+        # # Convert normalized weights into a monotonically increasing 
+        # # probability map between 0.0 and 1.0
+        # # Example
+        # #     items:      [     'A', 'B', 'C', 'D', 'E']
+        # #     normalized: [     0.1, 0.2, 0.3, 0.1, 0.3]
+        # #     probmap:    [0.0, 0.1, 0.3, 0.6, 0.7, 1.0]
+        # self.probmap = [0.0] + [sum([normalized[i] for i in range(0, w)]) 
+        #                         for w in range(1, len(normalized))] + [1.0]
         #print("probmap:", self.probmap)
         self._chooseactiveitem()
         #print("activeitem:", self.activeitem)
     
     def _chooseactiveitem(self):
-        """
-        Selects a random number N between 0 and 1 and iterates 
-        adjacent values in the probmap to find the pair with
-        a left value <= N and a right value > N. 
-        The index of the left value is the index of the next 
-        item to select.
-        """
-        N = random.random()
-        I = None
-        for i in range(1, len(self.probmap)):
-            #print(self.probmap[i-1], self.probmap[i])
-            if (N >= self.probmap[i-1]) and N < self.probmap[i]:
-                I = i-1
-                #print("index:", I, ", value:",  self.items[I])
+        val = random.random()
+        for i in range(self.ilen):
+            if val < self.weights[i]:
+                self.activeitem = self.items[i]
                 break
-        assert I != None, f"Probability {N} not [0.0-1.0)"
-        self.activeitem = self.items[I]
     
     def __next__(self):
         item = Pattern._read(self.activeitem, tup=True)
@@ -841,4 +809,18 @@ class States(Pattern):
         return cells[row][col]
 
 if __name__ == '__main__':
-    pass
+    from musx.gens import markov, markov_analyze
+    from musx.patterns import Markov
+
+    melody = [60, 60, 62, 60, 65, 64, 60, 60, 62, 60, 67, 65,
+          60, 60, 72, 69, 65, 64, 62, 70, 70, 69, 65, 67, 65]
+    
+    rules = {(): [[60, 0.32], [62, 0.44], [65, 0.64], [64, 0.72], 
+                [67, 0.7999999999999999], [72, 0.84], [69, 0.9199999999999999], 
+                [70, 0.9999999999999999]]}
+    print(f"rules: {rules}")
+    m = markov(rules)
+    print( [next(m) for _ in range(10)])
+
+    #print(Markov.analyze(melody, order=0).items)
+
