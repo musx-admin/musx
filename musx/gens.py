@@ -268,7 +268,7 @@ def choose(items, weights=[], stop=None):
             raise IndexError('Too many weights provided.')
         else:
             raise IndexError('Too few weights provided.')
-    #print('weights=', weights)
+    print('weights=', weights)
     count = 0
     while count < stop:
         val = ran.random() #ran.uniform(0.0,1.0)

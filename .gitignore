@@ -5,6 +5,8 @@
 ignore/
 musx/mxml/schema/
 scores/
+tutorials/ignore
+tutorials/todo
 
 ### Emacs ###
 # -*- mode: gitignore; -*-

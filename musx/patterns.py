@@ -10,6 +10,7 @@ patterns to generate music.
 
 from collections.abc import Iterator
 import random
+from math import ceil, floor
 
 class Pattern(Iterator):
     '''The base class for all patterns provides a specialized `next()` function.'''
@@ -31,7 +32,7 @@ class Pattern(Iterator):
         # period counter
         self.p = 0
         # 'EOP' if the pattern just returned the last value of the current period
-        self.eop = None
+        #self.eop = None
 
     def __iter__(self):
         return self
@@ -225,8 +226,107 @@ class Palindrome(Pattern):
                 self.p += 1 
                 item[1] = None
         return item 
- 
 
+
+class Range(Pattern):
+    """
+    Range is similar in syntax to python's range() generator, but its start,
+    stop and step parameters will accept integers, patterns, or thunks 
+    (lambda expressions or functions of zero arguments). Unlike python's 
+    range() the Range pattern does not terminate: once the step is out-of-bounds 
+    the pattern will reset itself to its next start, stop and step values
+    as determined by the range values passed in.  Another difference is that
+    pythons range will return Since patterns always return 
+    something, an incompatible start, stop and step specifications will raise
+    an error rather than return nothing.
+
+    Parameters
+    ----------
+    start : int | pattern | thunk
+        The initial value to generate.
+    stop : int | pattern | thunk
+        The limit on the range. This must be strictly larger or smaller 
+        than the start.
+    step : int | pattern | thunk
+        A non-zero increment amount, defaults to 1.
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        period length will be the distance between start and stop.
+    """
+    def __init__(self, start, stop=None, step=None, period=None):
+        if stop is None:
+            stop = start
+            start = 0
+        if step is None:
+            step = 1
+        # class init only handles the period value.
+        super().__init__([], 0, period)
+        # the items field will hold the user's start stop and step values.
+        self.items = [start, stop, step]
+        # if no period specified then zero out the counters. If a period was
+        # specified then uptate
+        if not period:
+            self.period, self.p, self.plen = None, None, None
+        #print("self.period=", self.period, "self.plen=", self.plen, "self.p=", self.p)
+        self._setrange()
+
+    def __next__(self):
+        # self.range is [start, stop, step, span]
+        # start is incremented by step and span is decremented by 1.
+        # get current value
+        next = [self.range[0], None]
+        # increment start by step
+        self.range[0] += self.range[2]
+        # decrement range count by 1
+        self.range[3] -= 1
+        # if current range is complete call _setrange() to make a new range
+        if self.range[3] == 0:
+            self._setrange()
+            # if no explict period then signal end of period.
+            if not self.period:
+                next[1] = 'EOP'
+        # if user set an explict period return EOP if at the end.
+        if self.period:
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern._read(self.period)  # get next period length
+                next[1] = 'EOP'
+            else:
+                self.p += 1 
+        # return current value
+        return next
+     
+    def _setrange(self):
+        names = ["start", "stop", "step"]
+        # assign self.range the numeric values [start, stop, step, span]
+        # start is the value that ranges, stop is the boundary of 
+        # the range, step is the increment, and span is the distance
+        # between start and stop. 
+        self.range = []
+        # self.items could hold constants, patterns or thunks.
+        for i,v in enumerate(self.items):
+            v = Pattern._read(v)
+            # allow only ints.
+            if not isinstance(v, int):
+                raise TypeError(f"{names[i]} value {v} is not an integer.")
+            self.range.append(v)
+        start, stop, step = self.range
+        # step cannot be zero, if step is positive then start must be
+        # strictly less than stop, if step is negative then start must
+        # be strictly larger than stop.
+        if not ((start < stop and step > 0) or (start > stop and step < 0)):
+            raise ValueError(f"Step {step} not in range for start={start} stop={stop}.")
+        # set the span of the pattern to the initial distance between
+        # start and stop as a positive integer. so if its a descending 
+        # range swap start and stop and insure step is positive.
+        if step < 0:
+            start, stop = stop, start
+            step = abs(step)
+        self.range.append(ceil((stop - start) / step))
+        #print(f"Range: start={start}, stop={stop}, step={step} period={self.period}")        
+
+        
 class Shuffle(Pattern):
     """
     Returns a pattern that yields its items by random permutation.
@@ -303,15 +403,20 @@ class Choose(Pattern):
         are chosen with equal probability.
 
     weights : list | None
-        A list of probablity weights for selecting the corresponding items.
-        Weights do not have to sum to 1 as the generator automatically 
-        converts them to probabilities. If no weights are provided then
-        items are chosen with equal probability.
+        A list of relative probablity weights that determine the likelyhood
+        of its corresponding pattern item being returned. If no weights are
+        provided then items are chosen with equal probability. Relative
+        weights do not have to sum to 1 because the pattern automatically 
+        converts them to probabilities. In addtion to numerical weifhts,
+        dynamic weight *expressions* consisting of lambda expressions or
+        functions of 0 arguments can also be specified. Dynamic weight
+        expressions are reevaluated each time the pattern begins a new
+        period to allow the pattern choices to evolve over time.
     
     period : None | int | subpattern
         The period determines how many elements are read before
         an EOP (end-of-period) flag is returned. By default the
-        shuffle period will be equal to the number of items in the list.
+        the period will be equal to the number of items in the list.
 
     Examples
     --------
@@ -321,55 +426,92 @@ class Choose(Pattern):
     [3, 2, 1, 3, 1, 3, 3, 3, 1, 3]
     ```
     """
-    def __init__(self, items, weights=None, period=None):
+    def __init__(self, items, weights=[], period=None):
         super().__init__(items, 1, period)
-        end = len(items)
-        if not weights:
+        self.weights = weights.copy()
+        if not self.weights:
             # equal probablity for each item. weights will hold monotonically
             # increasing, equally proportioned, exclusive upper bounds upto
             # and including 1.0. example: end=5 => [0.2, 0.4, 0.6, 0.8, 1.0]
-            weights = [(i+1)/end for i in range(end)]
-        else:
-          if not isinstance(weights, list):
-              raise TypeError(f'Weights value {weights} is not a list.')
-          for w in weights:
-              if not isinstance(w, (int, float)):
-                  raise IndexError(f"Weight {w} is not an int or float.")
-          if end == len(weights):
-              # convert weights so they sum to 1.0
-              total = sum(weights)
-              weights = [w/total for w in weights]
-              # convert weights to monotonically increasing values to 1.0
-              for i in range(1, end):
-                  weights[i] += weights[i-1]
-          elif self.ilen < len(weights):
-              raise IndexError('Too many weights provided.')
-          else:
-              raise IndexError('Too few weights provided.')
-        #print("weights:", weights)
-        self.weights = weights
-        # normalize weights to values summing to 1.0
-        # total = sum(weights)
-        # normalized = [weights[i] / total for i in range(len(weights))]
-        # #print("normalized weights:", normalized)
-        # # Convert normalized weights into a monotonically increasing 
-        # # probability map between 0.0 and 1.0
-        # # Example
-        # #     items:      [     'A', 'B', 'C', 'D', 'E']
-        # #     normalized: [     0.1, 0.2, 0.3, 0.1, 0.3]
-        # #     probmap:    [0.0, 0.1, 0.3, 0.6, 0.7, 1.0]
-        # self.probmap = [0.0] + [sum([normalized[i] for i in range(0, w)]) 
-        #                         for w in range(1, len(normalized))] + [1.0]
-        #print("probmap:", self.probmap)
+            #self.weights = [(i+1)/self.ilen for i in range(self.ilen)]
+            self.weights = [1 for _ in range(self.ilen)]
+        elif not isinstance(self.weights, list):
+            raise TypeError(f'Weights {self.weights} is not a list.')
+        elif self.ilen < len(self.weights):
+            raise IndexError('Too many weights provided.')
+        elif self.ilen > len(self.weights):
+            raise IndexError('Too few weights provided.')
+        ####print('raw weights:', self.weights)       
+        # evalindexes will hold the index(es) of weight
+        # expressions that have to be dynamically evaluated.
+        self.evalindexes = []
+        for i,w in enumerate(weights):
+            if isinstance(w, (int, float)):
+                pass
+            elif callable(w):
+                self.evalindexes.append(i)
+            else:
+                raise IndexError(f"Weight {w} is not an int, float or thunk.")
+        self._calcprobabilities()
         self._chooseactiveitem()
-        #print("activeitem:", self.activeitem)
     
+    def _calcprobabilities(self):
+        '''
+        Calculates a probability map from the user specified list
+        of probability weights, any of which may be dynamic. Example:
+            user weights: [1, 2, 3, 4]
+            normalize to 1.0: [0.1, 0.2, 0.3, 0.4]
+            probability map: [0.1, 0.3, 0.6, 1.0]
+        the probability map splits the range [0-1) into proportional
+        distribution indexes:
+            indexes:   0        | 1         | 2         | 3
+            segments:  0->.1=.1 | .1->.3=.2 | .3->.6=.3 | .6->1.0=.4
+        Therefore, a uniform random number [0-1) will land in index 3 cell
+        four times more often than in the index 0 cell, so the pattern's 
+        item at index 3 will be returned four times as often as the 
+        item at index 0.
+        '''
+        total = 0
+        # copy user's weights to probabilities.
+        self.probabilities = self.weights.copy()
+        # calc total weight, for thunks eval them 
+        # to get their current weight.
+        for i,w in enumerate(self.probabilities):
+            if i in self.evalindexes:
+                w = w()  # evalute the thunk
+                self.probabilities[i] = w
+            total += w
+        ####print("probabilities 1:", self.probabilities)
+        # total weight is known and probablities list contains
+        # only numeric weight values. rescale each weight so it
+        # is now a fractional proportion of the total.
+        for i,w in enumerate(self.probabilities):
+            self.probabilities[i] = w/total
+        ####print("probabilities 2:", self.probabilities)
+        # convert values to monotonically increasing points from
+        # 0 upto 1. the distance between points will be proportional
+        # to their weight. 
+        for i in range(1, self.ilen):
+            self.probabilities[i] += self.probabilities[i-1]
+        ####print("probabilities 3:", self.probabilities)
+
     def _chooseactiveitem(self):
+        """
+        pick the next item by generating a random value beween
+        zero and one and then finding the first index in 
+        self.probabilities whose value is greater than the random
+        value. the item at the corresponding index in self.items
+        is the next item to return.
+        """
         val = random.random()
         for i in range(self.ilen):
-            if val < self.weights[i]:
+            if val < self.probabilities[i]:
                 self.activeitem = self.items[i]
                 break
+
+    def _hasdynamicweights(self):
+        '''Returns true if pattern contains one or more dynamic weights.'''
+        return True if self.evalindexes else False
     
     def __next__(self):
         item = Pattern._read(self.activeitem, tup=True)
@@ -379,10 +521,80 @@ class Choose(Pattern):
             if self.p == self.plen - 1:
                 self.p = 0
                 self.plen = Pattern._read(self.period)  # get next period length
+                # if dynamic weight expressions recalculate probabiliies
+                if self._hasdynamicweights():
+                    ####print("recalculating weights")
+                    self._calcprobabilities()
             else:
                 self.p += 1 
                 item[1] = None
         return item 
+
+
+class Graph (Pattern):
+    """
+    The Graph pattern is a network of nodes, each node is a 2- or 3-tuple
+    containing a *item*, *link*, and optional *id*.  The *item* is
+    value to return from the node, and can be a pyton object, a subpattern,
+    or thunk. The node's *link* is the identifier for the next node to 
+    visit, and *id* is this node's unique id in the graph. If no id is given
+    it will be set to the 1-based position of the node in the node list.
+    
+    Example
+    -------
+    a cycle of A B C as a graph (the first node is
+    always followed by node 2, the second node by node 3, and node 3
+    returns to node 1:
+    ```python
+    Graph( [('a', 2), ('b', 3), ('c', Cycle([1, 2])])
+    ```
+    """
+    def __init__(self, items, period=None):
+        super().__init__(items.copy(), 1, period)
+        for i,n in enumerate(self.items):
+            if isinstance(n, tuple):
+                # if node id not provided set it to node's one-based index i+1.
+                if len(n) == 2:
+                    self.items[i] = n + (i+1,)
+                elif len(n) < 2:
+                    raise TypeError(f'Graph node {n} missing link value.')
+                elif len(n) > 3:
+                    raise TypeError(f'Too many elements in graph node {n}.')
+            else:
+                raise TypeError(f'Graph node {n} is not a tuple.')
+        # set first node to be active node
+        self.activenode = self.items[0]
+        #print(f'nodes: {self.items}')
+        #print(f'active node: {self.activenode}')
+            
+    def __next__(self):
+        item = Pattern._read(self.activenode[0], True)
+        #print(f"after read: item is {item}")
+        if item[1] == 'EOP':
+            # current node at end of period, choose the next node.
+            self._nextactivenode()
+            # check if this pattern is at EOP           
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern._read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item
+    
+    def _nextactivenode(self):
+        """
+        Evaluate this node's link (identifier), find that
+        node in the graph and make it the active node.
+        """
+        nextid = Pattern._read(self.activenode[1], False)
+        #print(f"nextid: {nextid}")
+        for i in range(self.ilen):
+            if self.items[i][2] == nextid:
+                self.activenode = self.items[i]
+                #print(f"new active node: {self.activenode}")
+                return
+        raise ValueError(f"No node found for node id {nextid}.")
 
 
 class Rotation(Pattern):
