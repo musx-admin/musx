@@ -268,7 +268,7 @@ def choose(items, weights=[], stop=None):
             raise IndexError('Too many weights provided.')
         else:
             raise IndexError('Too few weights provided.')
-    print('weights=', weights)
+    #print('weights=', weights)
     count = 0
     while count < stop:
         val = ran.random() #ran.uniform(0.0,1.0)
@@ -441,7 +441,7 @@ def markov(rules, stop=None, preset=None):
                 {"elements" if order > 1 else "element"}.')
     # initialize the history to the preset. older values are to the left
     history = preset
-    print("data=", data, ", history=", history)
+    #print("data=", data, ", history=", history)
     # yield loop
     for _ in range(stop):
         # find the rule that matches current history
@@ -458,7 +458,7 @@ def markov(rules, stop=None, preset=None):
                 break       
         # left-shift history with current choice appended
         history = history[1:] + (outcome,)
-        print("outcome=", outcome, ", shifted history=", history)
+        #print("outcome=", outcome, ", shifted history=", history)
         yield outcome
 
 
