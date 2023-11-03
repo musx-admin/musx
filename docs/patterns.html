@@ -26,31 +26,12 @@ from simple looping and randomness to more complex processes such …" />
 <p>An object-orientated implemention of python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such as markov
 chains, cellular automata and chaos.
-Many of these patterns allow subpatterns to
-be embedded inside parent patterns to be processed seamlessly by the parent's <code>next()</code>
-method.
-Patterns that support embedding have a 'period' argument that regulate
-how many items are read from it before a parent pattern can move to its next item.
-The period value can be expressed as a constant value or a pattern of values.</p>
-<h2 id="examples">Examples</h2>
-<p>In this example an outer pattern rotates through four items: [10, <em>subpattern</em>, 20, 30],
-and the subpattern cycles through two items: [-1, -2].
-Each time the subpattern is
-encountered it randomly yields one, two or three of its items before the outer
-pattern can move on to its next item.</p>
-<pre><code class="language-python">&gt;&gt;&gt; pat = Cycle([10, Cycle([-1, -2], period=Choose([1,2,3])), 20, 30])
-&gt;&gt;&gt; pat.next(20)
-[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
-</code></pre>
-<p>The resulting pattern is a merge of two cyclic streams of data, each stream's
-cycle is highlighted by the 'xx' markers in the image.</p>
-<pre><code>outer:
- xx              xx  xx  xx              xx  xx  xx          xx  xx  xx      xx
-[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
-     xx  xx  xx              xx  xx  xx              xx  xx              xx
-inner:
-</code></pre>
-<p>See the demos folder for many examples of how to use musx patterns to generate music.</p>
+Many of these patterns allow subpatterns and
+expressions to be embedded inside parent patterns and processed seamlessly by the
+parent's <code>next()</code> method.
+For more information see pattern documentation,
+the patterns.ipynb tutorial and the demos folder for many examples of using musx
+patterns to generate music.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -58,39 +39,16 @@ inner:
 <pre><code class="python">&#34;&#34;&#34;
 An object-orientated implemention of python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such as markov
-chains, cellular automata and chaos.  Many of these patterns allow subpatterns to
-be embedded inside parent patterns to be processed seamlessly by the parent&#39;s `next()`
-method.  Patterns that support embedding have a &#39;period&#39; argument that regulate 
-how many items are read from it before a parent pattern can move to its next item.
-The period value can be expressed as a constant value or a pattern of values.
-
-Examples
----------
-In this example an outer pattern rotates through four items: [10, *subpattern*, 20, 30], 
-and the subpattern cycles through two items: [-1, -2].  Each time the subpattern is
-encountered it randomly yields one, two or three of its items before the outer 
-pattern can move on to its next item.
-
-```python
-&gt;&gt;&gt; pat = Cycle([10, Cycle([-1, -2], period=Choose([1,2,3])), 20, 30])
-&gt;&gt;&gt; pat.next(20)
-[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
-```
-The resulting pattern is a merge of two cyclic streams of data, each stream&#39;s
-cycle is highlighted by the &#39;xx&#39; markers in the image.
-```
-outer:
- xx              xx  xx  xx              xx  xx  xx          xx  xx  xx      xx
-[10, -1, -2, -1, 20, 30, 10, -2, -1, -2, 20, 30, 10, -1, -2, 20, 30, 10, -1, 20]
-     xx  xx  xx              xx  xx  xx              xx  xx              xx
-inner:
-```
-
-See the demos folder for many examples of how to use musx patterns to generate music.
+chains, cellular automata and chaos.  Many of these patterns allow subpatterns and
+expressions to be embedded inside parent patterns and processed seamlessly by the 
+parent&#39;s `next()` method.  For more information see pattern documentation,
+the patterns.ipynb tutorial and the demos folder for many examples of using musx
+patterns to generate music.
 &#34;&#34;&#34;
 
 from collections.abc import Iterator
 import random
+from math import ceil, floor
 
 class Pattern(Iterator):
     &#39;&#39;&#39;The base class for all patterns provides a specialized `next()` function.&#39;&#39;&#39;
@@ -112,7 +70,7 @@ class Pattern(Iterator):
         # period counter
         self.p = 0
         # &#39;EOP&#39; if the pattern just returned the last value of the current period
-        self.eop = None
+        #self.eop = None
 
     def __iter__(self):
         return self
@@ -123,15 +81,18 @@ class Pattern(Iterator):
     @staticmethod
     def _read(pat, tup=False):
         &#34;&#34;&#34;
-        Internal function that checks if the next item is a pattern or basic data. 
-        Do not call this method directly, use Pattern&#39;s next() function to return
-        the next element(s) in a pattern.
+        Internal function that checks if the next item is a pattern, expression,
+        or basic data. Do not call this method directly, use Pattern&#39;s next() 
+        function to return the next element(s) in a pattern.
         &#34;&#34;&#34;
         #print(f&#34;read input: ({pat},tup={tup})&#34;)
         if isinstance(pat, Pattern):
             x = next(pat)
             return x if tup else x[0]
         else:
+            # if pat is a zero-arg lambda or function, call it to produce the return value
+            if callable(pat):
+                pat = pat()
             return [pat, &#34;EOP&#34;] if tup else pat
 
     def next(self, more=False):
@@ -303,8 +264,107 @@ class Palindrome(Pattern):
                 self.p += 1 
                 item[1] = None
         return item 
- 
 
+
+class Range(Pattern):
+    &#34;&#34;&#34;
+    Range is similar in syntax to python&#39;s range() generator, but its start,
+    stop and step parameters will accept integers, patterns, or thunks 
+    (lambda expressions or functions of zero arguments). Unlike python&#39;s 
+    range() the Range pattern does not terminate: once the step is out-of-bounds 
+    the pattern will reset itself to its next start, stop and step values
+    as determined by the range values passed in.  Another difference is that
+    pythons range will return Since patterns always return 
+    something, an incompatible start, stop and step specifications will raise
+    an error rather than return nothing.
+
+    Parameters
+    ----------
+    start : int | pattern | thunk
+        The initial value to generate.
+    stop : int | pattern | thunk
+        The limit on the range. This must be strictly larger or smaller 
+        than the start.
+    step : int | pattern | thunk
+        A non-zero increment amount, defaults to 1.
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        period length will be the distance between start and stop.
+    &#34;&#34;&#34;
+    def __init__(self, start, stop=None, step=None, period=None):
+        if stop is None:
+            stop = start
+            start = 0
+        if step is None:
+            step = 1
+        # class init only handles the period value.
+        super().__init__([], 0, period)
+        # the items field will hold the user&#39;s start stop and step values.
+        self.items = [start, stop, step]
+        # if no period specified then zero out the counters. If a period was
+        # specified then uptate
+        if not period:
+            self.period, self.p, self.plen = None, None, None
+        #print(&#34;self.period=&#34;, self.period, &#34;self.plen=&#34;, self.plen, &#34;self.p=&#34;, self.p)
+        self._setrange()
+
+    def __next__(self):
+        # self.range is [start, stop, step, span]
+        # start is incremented by step and span is decremented by 1.
+        # get current value
+        next = [self.range[0], None]
+        # increment start by step
+        self.range[0] += self.range[2]
+        # decrement range count by 1
+        self.range[3] -= 1
+        # if current range is complete call _setrange() to make a new range
+        if self.range[3] == 0:
+            self._setrange()
+            # if no explict period then signal end of period.
+            if not self.period:
+                next[1] = &#39;EOP&#39;
+        # if user set an explict period return EOP if at the end.
+        if self.period:
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern._read(self.period)  # get next period length
+                next[1] = &#39;EOP&#39;
+            else:
+                self.p += 1 
+        # return current value
+        return next
+     
+    def _setrange(self):
+        names = [&#34;start&#34;, &#34;stop&#34;, &#34;step&#34;]
+        # assign self.range the numeric values [start, stop, step, span]
+        # start is the value that ranges, stop is the boundary of 
+        # the range, step is the increment, and span is the distance
+        # between start and stop. 
+        self.range = []
+        # self.items could hold constants, patterns or thunks.
+        for i,v in enumerate(self.items):
+            v = Pattern._read(v)
+            # allow only ints.
+            if not isinstance(v, int):
+                raise TypeError(f&#34;{names[i]} value {v} is not an integer.&#34;)
+            self.range.append(v)
+        start, stop, step = self.range
+        # step cannot be zero, if step is positive then start must be
+        # strictly less than stop, if step is negative then start must
+        # be strictly larger than stop.
+        if not ((start &lt; stop and step &gt; 0) or (start &gt; stop and step &lt; 0)):
+            raise ValueError(f&#34;Step {step} not in range for start={start} stop={stop}.&#34;)
+        # set the span of the pattern to the initial distance between
+        # start and stop as a positive integer. so if its a descending 
+        # range swap start and stop and insure step is positive.
+        if step &lt; 0:
+            start, stop = stop, start
+            step = abs(step)
+        self.range.append(ceil((stop - start) / step))
+        #print(f&#34;Range: start={start}, stop={stop}, step={step} period={self.period}&#34;)        
+
+        
 class Shuffle(Pattern):
     &#34;&#34;&#34;
     Returns a pattern that yields its items by random permutation.
@@ -381,15 +441,20 @@ class Choose(Pattern):
         are chosen with equal probability.
 
     weights : list | None
-        A list of probablity weights for selecting the corresponding items.
-        Weights do not have to sum to 1 as the generator automatically 
-        converts them to probabilities. If no weights are provided then
-        items are chosen with equal probability.
+        A list of relative probablity weights that determine the likelyhood
+        of its corresponding pattern item being returned. If no weights are
+        provided then items are chosen with equal probability. Relative
+        weights do not have to sum to 1 because the pattern automatically 
+        converts them to probabilities. In addtion to numerical weifhts,
+        dynamic weight *expressions* consisting of lambda expressions or
+        functions of 0 arguments can also be specified. Dynamic weight
+        expressions are reevaluated each time the pattern begins a new
+        period to allow the pattern choices to evolve over time.
     
     period : None | int | subpattern
         The period determines how many elements are read before
         an EOP (end-of-period) flag is returned. By default the
-        shuffle period will be equal to the number of items in the list.
+        the period will be equal to the number of items in the list.
 
     Examples
     --------
@@ -399,66 +464,92 @@ class Choose(Pattern):
     [3, 2, 1, 3, 1, 3, 3, 3, 1, 3]
     ```
     &#34;&#34;&#34;
-    def __init__(self, items, weights=None, period=None):
+    def __init__(self, items, weights=[], period=None):
         super().__init__(items, 1, period)
-        end = len(items)
-        if not weights:
-            # convert proportion to monotonically increasing values to 1.0
-            weights = [(i+1)/end for i in range(end)]
-        else:
-          if not isinstance(weights, list):
-              raise TypeError(f&#39;Weights value {weights} is not a list.&#39;)
-          for w in weights:
-              if not isinstance(w, (int, float)):
-                  raise IndexError(&#34;Weight {w} is not an int or float.&#34;)
-          if end == len(weights):
-              # convert weights so they sum to 1.0
-              total = sum(weights)
-              #print(&#34;total=&#34;, total, &#34; weights&#34;, weights)
-              weights = [w/total for w in weights]
-              # convert weights to monotonically increasing values to 1.0
-              for i in range(1, end):
-                  weights[i] += weights[i-1]
-          elif self.ilen &lt; len(weights):
-              raise IndexError(&#39;Too many weights provided.&#39;)
-          else:
-              raise IndexError(&#39;Too few weights provided.&#39;)
-       
-        #print(&#34;raw weights:&#34;, weights)
-        # normalize weights to values summing to 1.0
-        total = sum(weights)
-        normalized = [weights[i] / total for i in range(len(weights))]
-        #print(&#34;normalized weights:&#34;, normalized)
-        # Convert normalized weights into a monotonically increasing 
-        # probability map between 0.0 and 1.0
-        # Example
-        #     items:      [     &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;]
-        #     normalized: [     0.1, 0.2, 0.3, 0.1, 0.3]
-        #     probmap:    [0.0, 0.1, 0.3, 0.6, 0.7, 1.0]
-        self.probmap = [0.0] + [sum([normalized[i] for i in range(0, w)]) 
-                                for w in range(1, len(normalized))] + [1.0]
-        #print(&#34;probmap:&#34;, self.probmap)
+        self.weights = weights.copy()
+        if not self.weights:
+            # equal probablity for each item. weights will hold monotonically
+            # increasing, equally proportioned, exclusive upper bounds upto
+            # and including 1.0. example: end=5 =&gt; [0.2, 0.4, 0.6, 0.8, 1.0]
+            #self.weights = [(i+1)/self.ilen for i in range(self.ilen)]
+            self.weights = [1 for _ in range(self.ilen)]
+        elif not isinstance(self.weights, list):
+            raise TypeError(f&#39;Weights {self.weights} is not a list.&#39;)
+        elif self.ilen &lt; len(self.weights):
+            raise IndexError(&#39;Too many weights provided.&#39;)
+        elif self.ilen &gt; len(self.weights):
+            raise IndexError(&#39;Too few weights provided.&#39;)
+        ####print(&#39;raw weights:&#39;, self.weights)       
+        # evalindexes will hold the index(es) of weight
+        # expressions that have to be dynamically evaluated.
+        self.evalindexes = []
+        for i,w in enumerate(weights):
+            if isinstance(w, (int, float)):
+                pass
+            elif callable(w):
+                self.evalindexes.append(i)
+            else:
+                raise IndexError(f&#34;Weight {w} is not an int, float or thunk.&#34;)
+        self._calcprobabilities()
         self._chooseactiveitem()
-        #print(&#34;activeitem:&#34;, self.activeitem)
     
+    def _calcprobabilities(self):
+        &#39;&#39;&#39;
+        Calculates a probability map from the user specified list
+        of probability weights, any of which may be dynamic. Example:
+            user weights: [1, 2, 3, 4]
+            normalize to 1.0: [0.1, 0.2, 0.3, 0.4]
+            probability map: [0.1, 0.3, 0.6, 1.0]
+        the probability map splits the range [0-1) into proportional
+        distribution indexes:
+            indexes:   0        | 1         | 2         | 3
+            segments:  0-&gt;.1=.1 | .1-&gt;.3=.2 | .3-&gt;.6=.3 | .6-&gt;1.0=.4
+        Therefore, a uniform random number [0-1) will land in index 3 cell
+        four times more often than in the index 0 cell, so the pattern&#39;s 
+        item at index 3 will be returned four times as often as the 
+        item at index 0.
+        &#39;&#39;&#39;
+        total = 0
+        # copy user&#39;s weights to probabilities.
+        self.probabilities = self.weights.copy()
+        # calc total weight, for thunks eval them 
+        # to get their current weight.
+        for i,w in enumerate(self.probabilities):
+            if i in self.evalindexes:
+                w = w()  # evalute the thunk
+                self.probabilities[i] = w
+            total += w
+        ####print(&#34;probabilities 1:&#34;, self.probabilities)
+        # total weight is known and probablities list contains
+        # only numeric weight values. rescale each weight so it
+        # is now a fractional proportion of the total.
+        for i,w in enumerate(self.probabilities):
+            self.probabilities[i] = w/total
+        ####print(&#34;probabilities 2:&#34;, self.probabilities)
+        # convert values to monotonically increasing points from
+        # 0 upto 1. the distance between points will be proportional
+        # to their weight. 
+        for i in range(1, self.ilen):
+            self.probabilities[i] += self.probabilities[i-1]
+        ####print(&#34;probabilities 3:&#34;, self.probabilities)
+
     def _chooseactiveitem(self):
         &#34;&#34;&#34;
-        Selects a random number N between 0 and 1 and iterates 
-        adjacent values in the probmap to find the pair with
-        a left value &lt;= N and a right value &gt; N. 
-        The index of the left value is the index of the next 
-        item to select.
+        pick the next item by generating a random value beween
+        zero and one and then finding the first index in 
+        self.probabilities whose value is greater than the random
+        value. the item at the corresponding index in self.items
+        is the next item to return.
         &#34;&#34;&#34;
-        N = random.random()
-        I = None
-        for i in range(1, len(self.probmap)):
-            #print(self.probmap[i-1], self.probmap[i])
-            if (N &gt;= self.probmap[i-1]) and N &lt; self.probmap[i]:
-                I = i-1
-                #print(&#34;index:&#34;, I, &#34;, value:&#34;,  self.items[I])
+        val = random.random()
+        for i in range(self.ilen):
+            if val &lt; self.probabilities[i]:
+                self.activeitem = self.items[i]
                 break
-        assert I != None, f&#34;Probability {N} not [0.0-1.0)&#34;
-        self.activeitem = self.items[I]
+
+    def _hasdynamicweights(self):
+        &#39;&#39;&#39;Returns true if pattern contains one or more dynamic weights.&#39;&#39;&#39;
+        return True if self.evalindexes else False
     
     def __next__(self):
         item = Pattern._read(self.activeitem, tup=True)
@@ -468,10 +559,80 @@ class Choose(Pattern):
             if self.p == self.plen - 1:
                 self.p = 0
                 self.plen = Pattern._read(self.period)  # get next period length
+                # if dynamic weight expressions recalculate probabiliies
+                if self._hasdynamicweights():
+                    ####print(&#34;recalculating weights&#34;)
+                    self._calcprobabilities()
             else:
                 self.p += 1 
                 item[1] = None
         return item 
+
+
+class Graph (Pattern):
+    &#34;&#34;&#34;
+    The Graph pattern is a network of nodes, each node is a 2- or 3-tuple
+    containing a *item*, *link*, and optional *id*.  The *item* is
+    value to return from the node, and can be a pyton object, a subpattern,
+    or thunk. The node&#39;s *link* is the identifier for the next node to 
+    visit, and *id* is this node&#39;s unique id in the graph. If no id is given
+    it will be set to the 1-based position of the node in the node list.
+    
+    Example
+    -------
+    a cycle of A B C as a graph (the first node is
+    always followed by node 2, the second node by node 3, and node 3
+    returns to node 1:
+    ```python
+    Graph( [(&#39;a&#39;, 2), (&#39;b&#39;, 3), (&#39;c&#39;, Cycle([1, 2])])
+    ```
+    &#34;&#34;&#34;
+    def __init__(self, items, period=None):
+        super().__init__(items.copy(), 1, period)
+        for i,n in enumerate(self.items):
+            if isinstance(n, tuple):
+                # if node id not provided set it to node&#39;s one-based index i+1.
+                if len(n) == 2:
+                    self.items[i] = n + (i+1,)
+                elif len(n) &lt; 2:
+                    raise TypeError(f&#39;Graph node {n} missing link value.&#39;)
+                elif len(n) &gt; 3:
+                    raise TypeError(f&#39;Too many elements in graph node {n}.&#39;)
+            else:
+                raise TypeError(f&#39;Graph node {n} is not a tuple.&#39;)
+        # set first node to be active node
+        self.activenode = self.items[0]
+        #print(f&#39;nodes: {self.items}&#39;)
+        #print(f&#39;active node: {self.activenode}&#39;)
+            
+    def __next__(self):
+        item = Pattern._read(self.activenode[0], True)
+        #print(f&#34;after read: item is {item}&#34;)
+        if item[1] == &#39;EOP&#39;:
+            # current node at end of period, choose the next node.
+            self._nextactivenode()
+            # check if this pattern is at EOP           
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern._read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item
+    
+    def _nextactivenode(self):
+        &#34;&#34;&#34;
+        Evaluate this node&#39;s link (identifier), find that
+        node in the graph and make it the active node.
+        &#34;&#34;&#34;
+        nextid = Pattern._read(self.activenode[1], False)
+        #print(f&#34;nextid: {nextid}&#34;)
+        for i in range(self.ilen):
+            if self.items[i][2] == nextid:
+                self.activenode = self.items[i]
+                #print(f&#34;new active node: {self.activenode}&#34;)
+                return
+        raise ValueError(f&#34;No node found for node id {nextid}.&#34;)
 
 
 class Rotation(Pattern):
@@ -898,7 +1059,20 @@ class States(Pattern):
         return cells[row][col]
 
 if __name__ == &#39;__main__&#39;:
-    pass</code></pre>
+    from musx.gens import markov, markov_analyze
+    from musx.patterns import Markov
+
+    melody = [60, 60, 62, 60, 65, 64, 60, 60, 62, 60, 67, 65,
+          60, 60, 72, 69, 65, 64, 62, 70, 70, 69, 65, 67, 65]
+    
+    rules = {(): [[60, 0.32], [62, 0.44], [65, 0.64], [64, 0.72], 
+                [67, 0.7999999999999999], [72, 0.84], [69, 0.9199999999999999], 
+                [70, 0.9999999999999999]]}
+    print(f&#34;rules: {rules}&#34;)
+    m = markov(rules)
+    print( [next(m) for _ in range(10)])
+
+    #print(Markov.analyze(melody, order=0).items)</code></pre>
 </details>
 </section>
 <section>
@@ -912,7 +1086,7 @@ if __name__ == &#39;__main__&#39;:
 <dl>
 <dt id="musx.patterns.Choose"><code class="flex name class">
 <span>class <span class="ident">Choose</span></span>
-<span>(</span><span>items, weights=None, period=None)</span>
+<span>(</span><span>items, weights=[], period=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Yields its items by weighted random selection.
@@ -929,14 +1103,19 @@ no weight is provided for an item it receives a default
 weight of 1.0. If no weights are provided then all the items
 are chosen with equal probability.</dd>
 <dt><strong><code>weights</code></strong> :&ensp;<code>list | None</code></dt>
-<dd>A list of probablity weights for selecting the corresponding items.
-Weights do not have to sum to 1 as the generator automatically
-converts them to probabilities. If no weights are provided then
-items are chosen with equal probability.</dd>
+<dd>A list of relative probablity weights that determine the likelyhood
+of its corresponding pattern item being returned. If no weights are
+provided then items are chosen with equal probability. Relative
+weights do not have to sum to 1 because the pattern automatically
+converts them to probabilities. In addtion to numerical weifhts,
+dynamic weight <em>expressions</em> consisting of lambda expressions or
+functions of 0 arguments can also be specified. Dynamic weight
+expressions are reevaluated each time the pattern begins a new
+period to allow the pattern choices to evolve over time.</dd>
 <dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
 <dd>The period determines how many elements are read before
 an EOP (end-of-period) flag is returned. By default the
-shuffle period will be equal to the number of items in the list.</dd>
+the period will be equal to the number of items in the list.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <p>In this example the value 3 likely appears half the time.</p>
@@ -964,15 +1143,20 @@ shuffle period will be equal to the number of items in the list.</dd>
         are chosen with equal probability.
 
     weights : list | None
-        A list of probablity weights for selecting the corresponding items.
-        Weights do not have to sum to 1 as the generator automatically 
-        converts them to probabilities. If no weights are provided then
-        items are chosen with equal probability.
+        A list of relative probablity weights that determine the likelyhood
+        of its corresponding pattern item being returned. If no weights are
+        provided then items are chosen with equal probability. Relative
+        weights do not have to sum to 1 because the pattern automatically 
+        converts them to probabilities. In addtion to numerical weifhts,
+        dynamic weight *expressions* consisting of lambda expressions or
+        functions of 0 arguments can also be specified. Dynamic weight
+        expressions are reevaluated each time the pattern begins a new
+        period to allow the pattern choices to evolve over time.
     
     period : None | int | subpattern
         The period determines how many elements are read before
         an EOP (end-of-period) flag is returned. By default the
-        shuffle period will be equal to the number of items in the list.
+        the period will be equal to the number of items in the list.
 
     Examples
     --------
@@ -982,66 +1166,92 @@ shuffle period will be equal to the number of items in the list.</dd>
     [3, 2, 1, 3, 1, 3, 3, 3, 1, 3]
     ```
     &#34;&#34;&#34;
-    def __init__(self, items, weights=None, period=None):
+    def __init__(self, items, weights=[], period=None):
         super().__init__(items, 1, period)
-        end = len(items)
-        if not weights:
-            # convert proportion to monotonically increasing values to 1.0
-            weights = [(i+1)/end for i in range(end)]
-        else:
-          if not isinstance(weights, list):
-              raise TypeError(f&#39;Weights value {weights} is not a list.&#39;)
-          for w in weights:
-              if not isinstance(w, (int, float)):
-                  raise IndexError(&#34;Weight {w} is not an int or float.&#34;)
-          if end == len(weights):
-              # convert weights so they sum to 1.0
-              total = sum(weights)
-              #print(&#34;total=&#34;, total, &#34; weights&#34;, weights)
-              weights = [w/total for w in weights]
-              # convert weights to monotonically increasing values to 1.0
-              for i in range(1, end):
-                  weights[i] += weights[i-1]
-          elif self.ilen &lt; len(weights):
-              raise IndexError(&#39;Too many weights provided.&#39;)
-          else:
-              raise IndexError(&#39;Too few weights provided.&#39;)
-       
-        #print(&#34;raw weights:&#34;, weights)
-        # normalize weights to values summing to 1.0
-        total = sum(weights)
-        normalized = [weights[i] / total for i in range(len(weights))]
-        #print(&#34;normalized weights:&#34;, normalized)
-        # Convert normalized weights into a monotonically increasing 
-        # probability map between 0.0 and 1.0
-        # Example
-        #     items:      [     &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;]
-        #     normalized: [     0.1, 0.2, 0.3, 0.1, 0.3]
-        #     probmap:    [0.0, 0.1, 0.3, 0.6, 0.7, 1.0]
-        self.probmap = [0.0] + [sum([normalized[i] for i in range(0, w)]) 
-                                for w in range(1, len(normalized))] + [1.0]
-        #print(&#34;probmap:&#34;, self.probmap)
+        self.weights = weights.copy()
+        if not self.weights:
+            # equal probablity for each item. weights will hold monotonically
+            # increasing, equally proportioned, exclusive upper bounds upto
+            # and including 1.0. example: end=5 =&gt; [0.2, 0.4, 0.6, 0.8, 1.0]
+            #self.weights = [(i+1)/self.ilen for i in range(self.ilen)]
+            self.weights = [1 for _ in range(self.ilen)]
+        elif not isinstance(self.weights, list):
+            raise TypeError(f&#39;Weights {self.weights} is not a list.&#39;)
+        elif self.ilen &lt; len(self.weights):
+            raise IndexError(&#39;Too many weights provided.&#39;)
+        elif self.ilen &gt; len(self.weights):
+            raise IndexError(&#39;Too few weights provided.&#39;)
+        ####print(&#39;raw weights:&#39;, self.weights)       
+        # evalindexes will hold the index(es) of weight
+        # expressions that have to be dynamically evaluated.
+        self.evalindexes = []
+        for i,w in enumerate(weights):
+            if isinstance(w, (int, float)):
+                pass
+            elif callable(w):
+                self.evalindexes.append(i)
+            else:
+                raise IndexError(f&#34;Weight {w} is not an int, float or thunk.&#34;)
+        self._calcprobabilities()
         self._chooseactiveitem()
-        #print(&#34;activeitem:&#34;, self.activeitem)
     
+    def _calcprobabilities(self):
+        &#39;&#39;&#39;
+        Calculates a probability map from the user specified list
+        of probability weights, any of which may be dynamic. Example:
+            user weights: [1, 2, 3, 4]
+            normalize to 1.0: [0.1, 0.2, 0.3, 0.4]
+            probability map: [0.1, 0.3, 0.6, 1.0]
+        the probability map splits the range [0-1) into proportional
+        distribution indexes:
+            indexes:   0        | 1         | 2         | 3
+            segments:  0-&gt;.1=.1 | .1-&gt;.3=.2 | .3-&gt;.6=.3 | .6-&gt;1.0=.4
+        Therefore, a uniform random number [0-1) will land in index 3 cell
+        four times more often than in the index 0 cell, so the pattern&#39;s 
+        item at index 3 will be returned four times as often as the 
+        item at index 0.
+        &#39;&#39;&#39;
+        total = 0
+        # copy user&#39;s weights to probabilities.
+        self.probabilities = self.weights.copy()
+        # calc total weight, for thunks eval them 
+        # to get their current weight.
+        for i,w in enumerate(self.probabilities):
+            if i in self.evalindexes:
+                w = w()  # evalute the thunk
+                self.probabilities[i] = w
+            total += w
+        ####print(&#34;probabilities 1:&#34;, self.probabilities)
+        # total weight is known and probablities list contains
+        # only numeric weight values. rescale each weight so it
+        # is now a fractional proportion of the total.
+        for i,w in enumerate(self.probabilities):
+            self.probabilities[i] = w/total
+        ####print(&#34;probabilities 2:&#34;, self.probabilities)
+        # convert values to monotonically increasing points from
+        # 0 upto 1. the distance between points will be proportional
+        # to their weight. 
+        for i in range(1, self.ilen):
+            self.probabilities[i] += self.probabilities[i-1]
+        ####print(&#34;probabilities 3:&#34;, self.probabilities)
+
     def _chooseactiveitem(self):
         &#34;&#34;&#34;
-        Selects a random number N between 0 and 1 and iterates 
-        adjacent values in the probmap to find the pair with
-        a left value &lt;= N and a right value &gt; N. 
-        The index of the left value is the index of the next 
-        item to select.
+        pick the next item by generating a random value beween
+        zero and one and then finding the first index in 
+        self.probabilities whose value is greater than the random
+        value. the item at the corresponding index in self.items
+        is the next item to return.
         &#34;&#34;&#34;
-        N = random.random()
-        I = None
-        for i in range(1, len(self.probmap)):
-            #print(self.probmap[i-1], self.probmap[i])
-            if (N &gt;= self.probmap[i-1]) and N &lt; self.probmap[i]:
-                I = i-1
-                #print(&#34;index:&#34;, I, &#34;, value:&#34;,  self.items[I])
+        val = random.random()
+        for i in range(self.ilen):
+            if val &lt; self.probabilities[i]:
+                self.activeitem = self.items[i]
                 break
-        assert I != None, f&#34;Probability {N} not [0.0-1.0)&#34;
-        self.activeitem = self.items[I]
+
+    def _hasdynamicweights(self):
+        &#39;&#39;&#39;Returns true if pattern contains one or more dynamic weights.&#39;&#39;&#39;
+        return True if self.evalindexes else False
     
     def __next__(self):
         item = Pattern._read(self.activeitem, tup=True)
@@ -1051,6 +1261,10 @@ shuffle period will be equal to the number of items in the list.</dd>
             if self.p == self.plen - 1:
                 self.p = 0
                 self.plen = Pattern._read(self.period)  # get next period length
+                # if dynamic weight expressions recalculate probabiliies
+                if self._hasdynamicweights():
+                    ####print(&#34;recalculating weights&#34;)
+                    self._calcprobabilities()
             else:
                 self.p += 1 
                 item[1] = None
@@ -1141,6 +1355,108 @@ usually equal to the number of items in its data.</dd>
                 self.p += 1 
                 item[1] = None
         return item</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="musx.patterns.Graph"><code class="flex name class">
+<span>class <span class="ident">Graph</span></span>
+<span>(</span><span>items, period=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The Graph pattern is a network of nodes, each node is a 2- or 3-tuple
+containing a <em>item</em>, <em>link</em>, and optional <em>id</em>.
+The <em>item</em> is
+value to return from the node, and can be a pyton object, a subpattern,
+or thunk. The node's <em>link</em> is the identifier for the next node to
+visit, and <em>id</em> is this node's unique id in the graph. If no id is given
+it will be set to the 1-based position of the node in the node list.</p>
+<h2 id="example">Example</h2>
+<p>a cycle of A B C as a graph (the first node is
+always followed by node 2, the second node by node 3, and node 3
+returns to node 1:</p>
+<pre><code class="language-python">Graph( [('a', 2), ('b', 3), ('c', Cycle([1, 2])])
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Graph (Pattern):
+    &#34;&#34;&#34;
+    The Graph pattern is a network of nodes, each node is a 2- or 3-tuple
+    containing a *item*, *link*, and optional *id*.  The *item* is
+    value to return from the node, and can be a pyton object, a subpattern,
+    or thunk. The node&#39;s *link* is the identifier for the next node to 
+    visit, and *id* is this node&#39;s unique id in the graph. If no id is given
+    it will be set to the 1-based position of the node in the node list.
+    
+    Example
+    -------
+    a cycle of A B C as a graph (the first node is
+    always followed by node 2, the second node by node 3, and node 3
+    returns to node 1:
+    ```python
+    Graph( [(&#39;a&#39;, 2), (&#39;b&#39;, 3), (&#39;c&#39;, Cycle([1, 2])])
+    ```
+    &#34;&#34;&#34;
+    def __init__(self, items, period=None):
+        super().__init__(items.copy(), 1, period)
+        for i,n in enumerate(self.items):
+            if isinstance(n, tuple):
+                # if node id not provided set it to node&#39;s one-based index i+1.
+                if len(n) == 2:
+                    self.items[i] = n + (i+1,)
+                elif len(n) &lt; 2:
+                    raise TypeError(f&#39;Graph node {n} missing link value.&#39;)
+                elif len(n) &gt; 3:
+                    raise TypeError(f&#39;Too many elements in graph node {n}.&#39;)
+            else:
+                raise TypeError(f&#39;Graph node {n} is not a tuple.&#39;)
+        # set first node to be active node
+        self.activenode = self.items[0]
+        #print(f&#39;nodes: {self.items}&#39;)
+        #print(f&#39;active node: {self.activenode}&#39;)
+            
+    def __next__(self):
+        item = Pattern._read(self.activenode[0], True)
+        #print(f&#34;after read: item is {item}&#34;)
+        if item[1] == &#39;EOP&#39;:
+            # current node at end of period, choose the next node.
+            self._nextactivenode()
+            # check if this pattern is at EOP           
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern._read(self.period)  # get next period length
+            else:
+                self.p += 1 
+                item[1] = None
+        return item
+    
+    def _nextactivenode(self):
+        &#34;&#34;&#34;
+        Evaluate this node&#39;s link (identifier), find that
+        node in the graph and make it the active node.
+        &#34;&#34;&#34;
+        nextid = Pattern._read(self.activenode[1], False)
+        #print(f&#34;nextid: {nextid}&#34;)
+        for i in range(self.ilen):
+            if self.items[i][2] == nextid:
+                self.activenode = self.items[i]
+                #print(f&#34;new active node: {self.activenode}&#34;)
+                return
+        raise ValueError(f&#34;No node found for node id {nextid}.&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1644,7 +1960,7 @@ print(Palindrome([1,2,3], wrap='-+').next(10)
         # period counter
         self.p = 0
         # &#39;EOP&#39; if the pattern just returned the last value of the current period
-        self.eop = None
+        #self.eop = None
 
     def __iter__(self):
         return self
@@ -1655,15 +1971,18 @@ print(Palindrome([1,2,3], wrap='-+').next(10)
     @staticmethod
     def _read(pat, tup=False):
         &#34;&#34;&#34;
-        Internal function that checks if the next item is a pattern or basic data. 
-        Do not call this method directly, use Pattern&#39;s next() function to return
-        the next element(s) in a pattern.
+        Internal function that checks if the next item is a pattern, expression,
+        or basic data. Do not call this method directly, use Pattern&#39;s next() 
+        function to return the next element(s) in a pattern.
         &#34;&#34;&#34;
         #print(f&#34;read input: ({pat},tup={tup})&#34;)
         if isinstance(pat, Pattern):
             x = next(pat)
             return x if tup else x[0]
         else:
+            # if pat is a zero-arg lambda or function, call it to produce the return value
+            if callable(pat):
+                pat = pat()
             return [pat, &#34;EOP&#34;] if tup else pat
 
     def next(self, more=False):
@@ -1735,8 +2054,10 @@ print(Palindrome([1,2,3], wrap='-+').next(10)
 <ul class="hlist">
 <li><a title="musx.patterns.Choose" href="#musx.patterns.Choose">Choose</a></li>
 <li><a title="musx.patterns.Cycle" href="#musx.patterns.Cycle">Cycle</a></li>
+<li><a title="musx.patterns.Graph" href="#musx.patterns.Graph">Graph</a></li>
 <li><a title="musx.patterns.Markov" href="#musx.patterns.Markov">Markov</a></li>
 <li><a title="musx.patterns.Palindrome" href="#musx.patterns.Palindrome">Palindrome</a></li>
+<li><a title="musx.patterns.Range" href="#musx.patterns.Range">Range</a></li>
 <li><a title="musx.patterns.Rotation" href="#musx.patterns.Rotation">Rotation</a></li>
 <li><a title="musx.patterns.Shuffle" href="#musx.patterns.Shuffle">Shuffle</a></li>
 <li><a title="musx.patterns.States" href="#musx.patterns.States">States</a></li>
@@ -1849,6 +2170,152 @@ end of periods invisibly and provides more flexibility for accessing the data.</
 </details>
 </dd>
 </dl>
+</dd>
+<dt id="musx.patterns.Range"><code class="flex name class">
+<span>class <span class="ident">Range</span></span>
+<span>(</span><span>start, stop=None, step=None, period=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Range is similar in syntax to python's range() generator, but its start,
+stop and step parameters will accept integers, patterns, or thunks
+(lambda expressions or functions of zero arguments). Unlike python's
+range() the Range pattern does not terminate: once the step is out-of-bounds
+the pattern will reset itself to its next start, stop and step values
+as determined by the range values passed in.
+Another difference is that
+pythons range will return Since patterns always return
+something, an incompatible start, stop and step specifications will raise
+an error rather than return nothing.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>start</code></strong> :&ensp;<code>int | pattern | thunk</code></dt>
+<dd>The initial value to generate.</dd>
+<dt><strong><code>stop</code></strong> :&ensp;<code>int | pattern | thunk</code></dt>
+<dd>The limit on the range. This must be strictly larger or smaller
+than the start.</dd>
+<dt><strong><code>step</code></strong> :&ensp;<code>int | pattern | thunk</code></dt>
+<dd>A non-zero increment amount, defaults to 1.</dd>
+<dt><strong><code>period</code></strong> :&ensp;<code>None | int | subpattern</code></dt>
+<dd>The period determines how many elements are read before
+an EOP (end-of-period) flag is returned. By default the
+period length will be the distance between start and stop.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Range(Pattern):
+    &#34;&#34;&#34;
+    Range is similar in syntax to python&#39;s range() generator, but its start,
+    stop and step parameters will accept integers, patterns, or thunks 
+    (lambda expressions or functions of zero arguments). Unlike python&#39;s 
+    range() the Range pattern does not terminate: once the step is out-of-bounds 
+    the pattern will reset itself to its next start, stop and step values
+    as determined by the range values passed in.  Another difference is that
+    pythons range will return Since patterns always return 
+    something, an incompatible start, stop and step specifications will raise
+    an error rather than return nothing.
+
+    Parameters
+    ----------
+    start : int | pattern | thunk
+        The initial value to generate.
+    stop : int | pattern | thunk
+        The limit on the range. This must be strictly larger or smaller 
+        than the start.
+    step : int | pattern | thunk
+        A non-zero increment amount, defaults to 1.
+    period : None | int | subpattern
+        The period determines how many elements are read before
+        an EOP (end-of-period) flag is returned. By default the
+        period length will be the distance between start and stop.
+    &#34;&#34;&#34;
+    def __init__(self, start, stop=None, step=None, period=None):
+        if stop is None:
+            stop = start
+            start = 0
+        if step is None:
+            step = 1
+        # class init only handles the period value.
+        super().__init__([], 0, period)
+        # the items field will hold the user&#39;s start stop and step values.
+        self.items = [start, stop, step]
+        # if no period specified then zero out the counters. If a period was
+        # specified then uptate
+        if not period:
+            self.period, self.p, self.plen = None, None, None
+        #print(&#34;self.period=&#34;, self.period, &#34;self.plen=&#34;, self.plen, &#34;self.p=&#34;, self.p)
+        self._setrange()
+
+    def __next__(self):
+        # self.range is [start, stop, step, span]
+        # start is incremented by step and span is decremented by 1.
+        # get current value
+        next = [self.range[0], None]
+        # increment start by step
+        self.range[0] += self.range[2]
+        # decrement range count by 1
+        self.range[3] -= 1
+        # if current range is complete call _setrange() to make a new range
+        if self.range[3] == 0:
+            self._setrange()
+            # if no explict period then signal end of period.
+            if not self.period:
+                next[1] = &#39;EOP&#39;
+        # if user set an explict period return EOP if at the end.
+        if self.period:
+            if self.p == self.plen - 1:
+                self.p = 0
+                self.plen = Pattern._read(self.period)  # get next period length
+                next[1] = &#39;EOP&#39;
+            else:
+                self.p += 1 
+        # return current value
+        return next
+     
+    def _setrange(self):
+        names = [&#34;start&#34;, &#34;stop&#34;, &#34;step&#34;]
+        # assign self.range the numeric values [start, stop, step, span]
+        # start is the value that ranges, stop is the boundary of 
+        # the range, step is the increment, and span is the distance
+        # between start and stop. 
+        self.range = []
+        # self.items could hold constants, patterns or thunks.
+        for i,v in enumerate(self.items):
+            v = Pattern._read(v)
+            # allow only ints.
+            if not isinstance(v, int):
+                raise TypeError(f&#34;{names[i]} value {v} is not an integer.&#34;)
+            self.range.append(v)
+        start, stop, step = self.range
+        # step cannot be zero, if step is positive then start must be
+        # strictly less than stop, if step is negative then start must
+        # be strictly larger than stop.
+        if not ((start &lt; stop and step &gt; 0) or (start &gt; stop and step &lt; 0)):
+            raise ValueError(f&#34;Step {step} not in range for start={start} stop={stop}.&#34;)
+        # set the span of the pattern to the initial distance between
+        # start and stop as a positive integer. so if its a descending 
+        # range swap start and stop and insure step is positive.
+        if step &lt; 0:
+            start, stop = stop, start
+            step = abs(step)
+        self.range.append(ceil((stop - start) / step))
+        #print(f&#34;Range: start={start}, stop={stop}, step={step} period={self.period}&#34;)        </code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></li>
+<li>collections.abc.Iterator</li>
+<li>collections.abc.Iterable</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="musx.patterns.Pattern" href="#musx.patterns.Pattern">Pattern</a></b></code>:
+<ul class="hlist">
+<li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="musx.patterns.Rotation"><code class="flex name class">
 <span>class <span class="ident">Rotation</span></span>
@@ -2428,9 +2895,7 @@ def getstate(cells, pos, inc):
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul>
-<li><a href="#examples">Examples</a></li>
-</ul>
+<ul></ul>
 </div>
 <ul id="index">
 <li><h3>Super-module</h3>
@@ -2447,6 +2912,9 @@ def getstate(cells, pos, inc):
 <h4><code><a title="musx.patterns.Cycle" href="#musx.patterns.Cycle">Cycle</a></code></h4>
 </li>
 <li>
+<h4><code><a title="musx.patterns.Graph" href="#musx.patterns.Graph">Graph</a></code></h4>
+</li>
+<li>
 <h4><code><a title="musx.patterns.Markov" href="#musx.patterns.Markov">Markov</a></code></h4>
 <ul class="">
 <li><code><a title="musx.patterns.Markov.analyze" href="#musx.patterns.Markov.analyze">analyze</a></code></li>
@@ -2460,6 +2928,9 @@ def getstate(cells, pos, inc):
 <ul class="">
 <li><code><a title="musx.patterns.Pattern.next" href="#musx.patterns.Pattern.next">next</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="musx.patterns.Range" href="#musx.patterns.Range">Range</a></code></h4>
 </li>
 <li>
 <h4><code><a title="musx.patterns.Rotation" href="#musx.patterns.Rotation">Rotation</a></code></h4>

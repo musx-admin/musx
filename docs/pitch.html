@@ -118,6 +118,7 @@ __pdoc__ = {
     &#39;build_chromatic_scale&#39;: False,
     &#39;PitchBase&#39;: False}
 
+from random import randint
 from enum import IntEnum
 from collections import namedtuple
 import math
@@ -631,6 +632,28 @@ class Pitch (PitchBase):
         elif s in [&#39;Cb&#39;, &#39;Cbb&#39;]:
             o += 1
         return Pitch(s + cls._octave_names[o])
+
+    @classmethod
+    def random(cls):
+        &#39;&#39;&#39;Returns a random Pitch spelling.&#39;&#39;&#39;
+        while True:
+            # Note: randint&#39;s range includes upper bound
+            let = randint(cls._let_C,  cls._let_B)
+            acc = randint(cls._acc_2f, cls._acc_2s)
+            oct = randint(cls._oct_00, cls._oct_9)
+            # continue if pitch is below C00 (e.g. Cb00 or Cbb00)
+            if oct == cls._oct_00 and let == cls._let_C and acc &lt; cls._acc_n:
+                continue
+            # continue if pitch is above G9 or Abb9
+            if oct == cls._oct_9:
+                if let == cls._let_G and acc &gt; cls._acc_n:
+                    continue
+                if let == cls._let_A and acc &gt; cls._acc_2f:
+                    continue
+                if let == cls._let_B:
+                    continue
+            return Pitch([let, acc, oct])
+
 
 #  The chromatic scale and the functions pitch(), keynum() and hertz()
 
@@ -2169,7 +2192,28 @@ pitch list containing a letter, accidental and octave index
             o -= 1
         elif s in [&#39;Cb&#39;, &#39;Cbb&#39;]:
             o += 1
-        return Pitch(s + cls._octave_names[o])</code></pre>
+        return Pitch(s + cls._octave_names[o])
+
+    @classmethod
+    def random(cls):
+        &#39;&#39;&#39;Returns a random Pitch spelling.&#39;&#39;&#39;
+        while True:
+            # Note: randint&#39;s range includes upper bound
+            let = randint(cls._let_C,  cls._let_B)
+            acc = randint(cls._acc_2f, cls._acc_2s)
+            oct = randint(cls._oct_00, cls._oct_9)
+            # continue if pitch is below C00 (e.g. Cb00 or Cbb00)
+            if oct == cls._oct_00 and let == cls._let_C and acc &lt; cls._acc_n:
+                continue
+            # continue if pitch is above G9 or Abb9
+            if oct == cls._oct_9:
+                if let == cls._let_G and acc &gt; cls._acc_n:
+                    continue
+                if let == cls._let_A and acc &gt; cls._acc_2f:
+                    continue
+                if let == cls._let_B:
+                    continue
+            return Pitch([let, acc, oct])</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2251,6 +2295,37 @@ def from_keynum(cls, keynum, acci=None):
     elif s in [&#39;Cb&#39;, &#39;Cbb&#39;]:
         o += 1
     return Pitch(s + cls._octave_names[o])</code></pre>
+</details>
+</dd>
+<dt id="musx.pitch.Pitch.random"><code class="name flex">
+<span>def <span class="ident">random</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a random Pitch spelling.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def random(cls):
+    &#39;&#39;&#39;Returns a random Pitch spelling.&#39;&#39;&#39;
+    while True:
+        # Note: randint&#39;s range includes upper bound
+        let = randint(cls._let_C,  cls._let_B)
+        acc = randint(cls._acc_2f, cls._acc_2s)
+        oct = randint(cls._oct_00, cls._oct_9)
+        # continue if pitch is below C00 (e.g. Cb00 or Cbb00)
+        if oct == cls._oct_00 and let == cls._let_C and acc &lt; cls._acc_n:
+            continue
+        # continue if pitch is above G9 or Abb9
+        if oct == cls._oct_9:
+            if let == cls._let_G and acc &gt; cls._acc_n:
+                continue
+            if let == cls._let_A and acc &gt; cls._acc_2f:
+                continue
+            if let == cls._let_B:
+                continue
+        return Pitch([let, acc, oct])</code></pre>
 </details>
 </dd>
 </dl>
@@ -2428,6 +2503,7 @@ return 'C#7'.</p></div>
 <li><code><a title="musx.pitch.Pitch.pnum" href="#musx.pitch.Pitch.pnum">pnum</a></code></li>
 <li><code><a title="musx.pitch.Pitch.pnums" href="#musx.pitch.Pitch.pnums">pnums</a></code></li>
 <li><code><a title="musx.pitch.Pitch.pos" href="#musx.pitch.Pitch.pos">pos</a></code></li>
+<li><code><a title="musx.pitch.Pitch.random" href="#musx.pitch.Pitch.random">random</a></code></li>
 <li><code><a title="musx.pitch.Pitch.string" href="#musx.pitch.Pitch.string">string</a></code></li>
 </ul>
 </li>

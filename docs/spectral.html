@@ -156,20 +156,21 @@ def untemper(interval, div=12):
 
 
 class Spectrum (list):
+    &#34;&#34;&#34;
+    A structured list of frequency and amplitude pairs with methods for compositional purposes.
+    Spectrums are produced by the fmspectum() and rmspectum() functions, or by loading datafiles created by
+    the &lt;a href=&#34;https://www.klingbeil.com/spear/&#34;&gt;SPEAR&lt;/a&gt; application.
 
+    Parameters
+    ----------
+    pairs : list
+        A sorted list of [frequency, amplitude] pairs with lower
+        frequency pairs to the left.
+
+    Returns:
+    A Spectrum.
+    &#34;&#34;&#34;
     def __new__(cls, pairs):
-        &#34;&#34;&#34;
-        Creates a Spectrum out of a list of frequency/amplitude pairs.
-
-        Parameters
-        ----------
-        pairs : list
-            A sorted list of [frequency, amplitude] pairs with lower
-            frequency pairs to the left.
-
-        Returns:
-        A Spectrum.
-        &#34;&#34;&#34;
         z = 0
         for t in pairs:
             if not isinstance(t, list) or len(t) != 2: 
@@ -265,7 +266,9 @@ class Spectrum (list):
             func = lambda x: quantize(x, quant)
         else:
             raise TypeError(&#34;quant value not a callable, number, or None: {quant}.&#34;)
-        keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh]
+        # drop freqs less than C00 or greater than G9
+        inbounds = lambda x: 8.175798915643707 &lt;= x &lt;= 12543.853951415975
+        keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh and inbounds(x[0])]
         for i in range(len(keys)):
             while keys[i] &lt; minkey: keys[i] += 12
             while keys[i] &gt; maxkey: keys[i] -= 12
@@ -833,28 +836,37 @@ semitones and 1200 will convert from cents.</dd>
 <span>(</span><span>*args, **kwargs)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Built-in mutable sequence.</p>
-<p>If no argument is given, the constructor creates a new empty list.
-The argument must be an iterable if specified.</p></div>
+<div class="desc"><p>A structured list of frequency and amplitude pairs with methods for compositional purposes.
+Spectrums are produced by the fmspectum() and rmspectum() functions, or by loading datafiles created by
+the <a href="https://www.klingbeil.com/spear/">SPEAR</a> application.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>pairs</code></strong> :&ensp;<code>list</code></dt>
+<dd>A sorted list of [frequency, amplitude] pairs with lower
+frequency pairs to the left.</dd>
+</dl>
+<p>Returns:
+A Spectrum.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Spectrum (list):
+    &#34;&#34;&#34;
+    A structured list of frequency and amplitude pairs with methods for compositional purposes.
+    Spectrums are produced by the fmspectum() and rmspectum() functions, or by loading datafiles created by
+    the &lt;a href=&#34;https://www.klingbeil.com/spear/&#34;&gt;SPEAR&lt;/a&gt; application.
 
+    Parameters
+    ----------
+    pairs : list
+        A sorted list of [frequency, amplitude] pairs with lower
+        frequency pairs to the left.
+
+    Returns:
+    A Spectrum.
+    &#34;&#34;&#34;
     def __new__(cls, pairs):
-        &#34;&#34;&#34;
-        Creates a Spectrum out of a list of frequency/amplitude pairs.
-
-        Parameters
-        ----------
-        pairs : list
-            A sorted list of [frequency, amplitude] pairs with lower
-            frequency pairs to the left.
-
-        Returns:
-        A Spectrum.
-        &#34;&#34;&#34;
         z = 0
         for t in pairs:
             if not isinstance(t, list) or len(t) != 2: 
@@ -950,7 +962,9 @@ The argument must be an iterable if specified.</p></div>
             func = lambda x: quantize(x, quant)
         else:
             raise TypeError(&#34;quant value not a callable, number, or None: {quant}.&#34;)
-        keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh]
+        # drop freqs less than C00 or greater than G9
+        inbounds = lambda x: 8.175798915643707 &lt;= x &lt;= 12543.853951415975
+        keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh and inbounds(x[0])]
         for i in range(len(keys)):
             while keys[i] &lt; minkey: keys[i] += 12
             while keys[i] &gt; maxkey: keys[i] -= 12
@@ -1138,7 +1152,9 @@ returned as keys.</dd>
         func = lambda x: quantize(x, quant)
     else:
         raise TypeError(&#34;quant value not a callable, number, or None: {quant}.&#34;)
-    keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh]
+    # drop freqs less than C00 or greater than G9
+    inbounds = lambda x: 8.175798915643707 &lt;= x &lt;= 12543.853951415975
+    keys = [keynum(x[0], func) for x in self if x[1] &gt;= thresh and inbounds(x[0])]
     for i in range(len(keys)):
         while keys[i] &lt; minkey: keys[i] += 12
         while keys[i] &gt; maxkey: keys[i] -= 12

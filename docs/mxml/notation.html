@@ -68,6 +68,7 @@ from .meter import Meter
 from .part import Part
 from ..pitch import Pitch
 from ..note import Note
+from collections import OrderedDict
 
 # A template dictionary defining the &#39;running status&#39; of MusicXml parsing. The
 # load() method copies the template for each score it parses and passes it to
@@ -144,11 +145,20 @@ class Notation():
         part.score = self  # back link from part to its score
         self.parts.append(part)
     
-    def print(self):
+    def print(self, metadata=False):
         &#34;&#34;&#34;
-        Recursively prints the contents of the Notation.
+        Recursively prints the contents of the Notation. If metadata is True
+        then only the contents of the metadata dictionary is printed.
         &#34;&#34;&#34;
         pad = &#34;  &#34;
+
+        if metadata:
+            if self.metadata:
+                print(&#34;{&#34;)
+                for i in list(self.metadata):
+                    print(f&#34;{pad}{repr(i)}: {repr(self.metadata[i])}&#34;)
+                print(&#34;}&#34;)
+            return
         print(pad*0, self, sep=None)
         for p in self:
             print(pad*1, p, sep=None)
@@ -157,12 +167,48 @@ class Notation():
                 for e in m:
                     print(pad*3, e)
     
-    def timepoints(self, trace=False):
+    def timepoints(self, trace=False, spanners=False, flatten=False):
         &#34;&#34;&#34;
         Returns a list of Timepoint objects grouped in measures. See: Timepoint.
+        Parameters
+        ----------
+        trace : bool
+            If true then the time points are displayed.
+        spanners : bool
+            If true then notes that began earlier than the current timepoint
+            but are still sounding during the timepoint are added to the
+            timepoint. A spanner is  disinguishable from other notes in
+            the timepoint by virtue of its earlier start time than the timepoint
+            and its inclusion in the Timepoint.spanners list. A spanners will
+            appear as a &#39;repeat sign&#39; :: in the trace output.
+        flatten : bool
+            If flatten is true then the timepoint list is flat , i.e. it does 
+            not organizes measures as sublists in the list.
         &#34;&#34;&#34;
+
+        def _addspans(measure):
+            # measure is a list of timepoints sorted by time.
+            if len(measure) &lt; 2: # need at least 2 timepoints to span...
+                return
+            for tp1,tp2 in zip(measure, measure[1:]):
+                #print(f&#34;beat: {tp1.onset} {tp1.notemap}&#34;)
+                #print(f&#34;beat: {tp2.onset} {tp2.notemap}&#34;)
+                added = False
+                for (pid, note) in tp1.notemap.items():
+                    if note.time + note.duration &gt; tp2.onset:
+                        # add note from left timepoint into the right timepoint.
+                        tp2.notemap[pid] = note
+                        # register note as a spanner in this timepoint.
+                        tp2.spanners.append(note )
+                        added = True
+                # if spanners were added (re)sort the notemap by part id.
+                if added:
+                    tp2.notemap = {id:tp2.notemap[id] for id in sorted(tp2.notemap)}
+
         # Flop the part measures so all measures with the same id are grouped
-        # together, e.g.: [[1,2,3],[1,2,3]] =&gt; [[1,1],[2,2],[3,3]]
+        #                   p1        p2            m1     m2     m3
+        #                   m1 m2 m3  m1 m2 m3      p1  p2 p1 p2  p1 p2
+        # together, e.g.: [[1, 2, 3],[1, 2, 3]] =&gt; [[1, 1],[2, 2],[3, 3]]
         groups = [measures for measures in zip(*[part.measures for part in self])]
         # iterate each group of measures
         timepoints = []
@@ -172,7 +218,8 @@ class Notation():
             for measure in group:
                 for element in measure:
                     if isinstance(element, Note):
-                        ident = f&#34;{measure.part.id}.{measure.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
+#                        ident = f&#34;{measure.part.id}.{measure.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
+                        ident = f&#34;{measure.part.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
                         onset = element.time
                         try: 
                             have = next((x for x in measurepoints if x.onset == onset))
@@ -184,28 +231,32 @@ class Notation():
                 
             # sort the measure timepoints by their onsets
             measurepoints.sort()
+            if spanners:
+                _addspans(measurepoints)
             if trace:
                 for tp in measurepoints:
                     print(str(tp))
-                    print(&#39;----------------------------------------------------------------&#39;)
-            timepoints.append(measurepoints)
+                print()
+            if flatten:
+                timepoints.extend(measurepoints)
+            else:
+                timepoints.append(measurepoints)
         return timepoints
 
-    def seq(self, applytempo=True):
-        &#34;&#34;&#34;
-        Returns a sequence of copied notes for playback or writing to midi files.
-        Parameters
-        ----------
-        tempocurve : bool
-            If true the timepoints 
-        &#34;&#34;&#34;
-        pass
-        # tpoints = self.timepoints()
-        # tempomap = self.metadata[&#39;tempo-map&#39;]
-        # for measlist in tpoints:
-        #     for point in measlist:
+    # def seq(self, applytempo=True):
+    #     &#34;&#34;&#34;
+    #     Returns a sequence of copied notes for playback or writing to midi files.
+    #     Parameters
+    #     ----------
+    #     tempocurve : bool
+    #         If true the timepoints 
+    #     &#34;&#34;&#34;
+    #     pass
+    #     # tpoints = self.timepoints()
+    #     # tempomap = self.metadata[&#39;tempo-map&#39;]
+    #     # for measlist in tpoints:
+    #     #     for point in measlist:
 
- 
 class Timepoint():
     &#34;&#34;&#34;
     A Timepoint is an analytical structure containing an onset beat in a
@@ -220,12 +271,42 @@ class Timepoint():
     onset : Fraction
         The metric onset of the timepoint in the measure.
     &#34;&#34;&#34;
+
+    def partids(self):
+        &#34;&#34;&#34;
+        Returns the (sorted) list of part.measure.voice identifiers 
+        active in this timepoint.
+        &#34;&#34;&#34;
+        return self.notemap.keys()
+    
+    def notes(self, spanners=True):
+        &#34;&#34;&#34;
+        Returns the notes in the timepoint sorted by voice id.
+        If spanners is true then notes currently sounding
+        from previous timepoints (if any) are included.
+        &#34;&#34;&#34;
+        if spanners:
+            return [self.notemap[id] for id in sorted(self.notemap)]
+        return [self.notemap[id] for id in sorted(self.notemap) 
+                if self.notemap[id] not in self.spanners]
+        
+    # def spanners(self):
+    #     &#34;&#34;&#34;
+    #     Returns any notes that are currently sounding from previous timepoints.
+    #     See: `timepoints(spanners=True)`
+    #     &#34;&#34;&#34;
+    #     return self.spanners
+    
     def __init__(self, onset):
         self.onset = onset
         &#34;&#34;&#34;The ratio start time of the timepoint in its measure.&#34;&#34;&#34;
         self.notemap = {}
         &#34;&#34;&#34;The note map dictionary. Its keys are part.measure.voice identifiers
-        and its values are `musx.note.Note` objects tagged as either notes, chords or rests.&#34;&#34;&#34;
+        and its values are `musx.note.Note` objects. Notes may be further tagged
+        as being either pitches, chords or rests.&#34;&#34;&#34;
+        self.spanners = []
+        &#34;&#34;&#34;A list of notes that began in earlier timepoints but are still
+            sounding during this timepoint.&#34;&#34;&#34;
 
     def __lt__(self, other):
         &#34;&#34;&#34;
@@ -239,8 +320,21 @@ class Timepoint():
         and a hexidecimal id.
         &#34;&#34;&#34;
         #return f&#34;&lt;Timepoint {str(self.onset)} {len(self.notemap)}&gt;&#34;
-        pstr = &#34;, &#34;.join([n._tagged_pitch_str() for n in self.notemap.values()])
-        return f&#34;&lt;Timepoint: {str(self.onset)} ({pstr})&gt;&#34;
+        #pstr = &#34;, &#34;.join([n._tagged_pitch_str() for n in self.notemap.values()])
+        #return f&#34;&lt;Timepoint: {str(self.onset)} ({pstr})&gt;&#34;
+        #return f&#34;&lt;Timepoint: {str(self.onset)}&gt;&#34;
+        strs = []
+        for id in self.notemap:
+            note = self.notemap[id]
+            info = f&#39;{note._tagged_pitch_str()}, {note.duration}&#39;
+            if note.time &lt; self.onset:
+                info = &#34;!&#34; + info + &#34;!&#34;
+            else:
+                info = &#34;(&#34; + info + &#34;)&#34;
+            info = id + &#34;: &#34; + info
+            strs.append(info)
+        text = &#39;, &#39;.join(strs)
+        return f&#34;&lt;Timepoint: {str(self.onset):&lt;5} {text}&gt;&#34;
 
     __repr__ = __str__
 
@@ -748,11 +842,20 @@ score's timepoints like this:</p>
         part.score = self  # back link from part to its score
         self.parts.append(part)
     
-    def print(self):
+    def print(self, metadata=False):
         &#34;&#34;&#34;
-        Recursively prints the contents of the Notation.
+        Recursively prints the contents of the Notation. If metadata is True
+        then only the contents of the metadata dictionary is printed.
         &#34;&#34;&#34;
         pad = &#34;  &#34;
+
+        if metadata:
+            if self.metadata:
+                print(&#34;{&#34;)
+                for i in list(self.metadata):
+                    print(f&#34;{pad}{repr(i)}: {repr(self.metadata[i])}&#34;)
+                print(&#34;}&#34;)
+            return
         print(pad*0, self, sep=None)
         for p in self:
             print(pad*1, p, sep=None)
@@ -761,12 +864,48 @@ score's timepoints like this:</p>
                 for e in m:
                     print(pad*3, e)
     
-    def timepoints(self, trace=False):
+    def timepoints(self, trace=False, spanners=False, flatten=False):
         &#34;&#34;&#34;
         Returns a list of Timepoint objects grouped in measures. See: Timepoint.
+        Parameters
+        ----------
+        trace : bool
+            If true then the time points are displayed.
+        spanners : bool
+            If true then notes that began earlier than the current timepoint
+            but are still sounding during the timepoint are added to the
+            timepoint. A spanner is  disinguishable from other notes in
+            the timepoint by virtue of its earlier start time than the timepoint
+            and its inclusion in the Timepoint.spanners list. A spanners will
+            appear as a &#39;repeat sign&#39; :: in the trace output.
+        flatten : bool
+            If flatten is true then the timepoint list is flat , i.e. it does 
+            not organizes measures as sublists in the list.
         &#34;&#34;&#34;
+
+        def _addspans(measure):
+            # measure is a list of timepoints sorted by time.
+            if len(measure) &lt; 2: # need at least 2 timepoints to span...
+                return
+            for tp1,tp2 in zip(measure, measure[1:]):
+                #print(f&#34;beat: {tp1.onset} {tp1.notemap}&#34;)
+                #print(f&#34;beat: {tp2.onset} {tp2.notemap}&#34;)
+                added = False
+                for (pid, note) in tp1.notemap.items():
+                    if note.time + note.duration &gt; tp2.onset:
+                        # add note from left timepoint into the right timepoint.
+                        tp2.notemap[pid] = note
+                        # register note as a spanner in this timepoint.
+                        tp2.spanners.append(note )
+                        added = True
+                # if spanners were added (re)sort the notemap by part id.
+                if added:
+                    tp2.notemap = {id:tp2.notemap[id] for id in sorted(tp2.notemap)}
+
         # Flop the part measures so all measures with the same id are grouped
-        # together, e.g.: [[1,2,3],[1,2,3]] =&gt; [[1,1],[2,2],[3,3]]
+        #                   p1        p2            m1     m2     m3
+        #                   m1 m2 m3  m1 m2 m3      p1  p2 p1 p2  p1 p2
+        # together, e.g.: [[1, 2, 3],[1, 2, 3]] =&gt; [[1, 1],[2, 2],[3, 3]]
         groups = [measures for measures in zip(*[part.measures for part in self])]
         # iterate each group of measures
         timepoints = []
@@ -776,7 +915,8 @@ score's timepoints like this:</p>
             for measure in group:
                 for element in measure:
                     if isinstance(element, Note):
-                        ident = f&#34;{measure.part.id}.{measure.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
+#                        ident = f&#34;{measure.part.id}.{measure.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
+                        ident = f&#34;{measure.part.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
                         onset = element.time
                         try: 
                             have = next((x for x in measurepoints if x.onset == onset))
@@ -788,26 +928,31 @@ score's timepoints like this:</p>
                 
             # sort the measure timepoints by their onsets
             measurepoints.sort()
+            if spanners:
+                _addspans(measurepoints)
             if trace:
                 for tp in measurepoints:
                     print(str(tp))
-                    print(&#39;----------------------------------------------------------------&#39;)
-            timepoints.append(measurepoints)
+                print()
+            if flatten:
+                timepoints.extend(measurepoints)
+            else:
+                timepoints.append(measurepoints)
         return timepoints
 
-    def seq(self, applytempo=True):
-        &#34;&#34;&#34;
-        Returns a sequence of copied notes for playback or writing to midi files.
-        Parameters
-        ----------
-        tempocurve : bool
-            If true the timepoints 
-        &#34;&#34;&#34;
-        pass
-        # tpoints = self.timepoints()
-        # tempomap = self.metadata[&#39;tempo-map&#39;]
-        # for measlist in tpoints:
-        #     for point in measlist:</code></pre>
+    # def seq(self, applytempo=True):
+    #     &#34;&#34;&#34;
+    #     Returns a sequence of copied notes for playback or writing to midi files.
+    #     Parameters
+    #     ----------
+    #     tempocurve : bool
+    #         If true the timepoints 
+    #     &#34;&#34;&#34;
+    #     pass
+    #     # tpoints = self.timepoints()
+    #     # tempomap = self.metadata[&#39;tempo-map&#39;]
+    #     # for measlist in tpoints:
+    #     #     for point in measlist:</code></pre>
 </details>
 <h3>Instance variables</h3>
 <dl>
@@ -840,19 +985,29 @@ score's timepoints like this:</p>
 </details>
 </dd>
 <dt id="musx.mxml.notation.Notation.print"><code class="name flex">
-<span>def <span class="ident">print</span></span>(<span>self)</span>
+<span>def <span class="ident">print</span></span>(<span>self, metadata=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Recursively prints the contents of the Notation.</p></div>
+<div class="desc"><p>Recursively prints the contents of the Notation. If metadata is True
+then only the contents of the metadata dictionary is printed.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def print(self):
+<pre><code class="python">def print(self, metadata=False):
     &#34;&#34;&#34;
-    Recursively prints the contents of the Notation.
+    Recursively prints the contents of the Notation. If metadata is True
+    then only the contents of the metadata dictionary is printed.
     &#34;&#34;&#34;
     pad = &#34;  &#34;
+
+    if metadata:
+        if self.metadata:
+            print(&#34;{&#34;)
+            for i in list(self.metadata):
+                print(f&#34;{pad}{repr(i)}: {repr(self.metadata[i])}&#34;)
+            print(&#34;}&#34;)
+        return
     print(pad*0, self, sep=None)
     for p in self:
         print(pad*1, p, sep=None)
@@ -862,78 +1017,107 @@ score's timepoints like this:</p>
                 print(pad*3, e)</code></pre>
 </details>
 </dd>
-<dt id="musx.mxml.notation.Notation.seq"><code class="name flex">
-<span>def <span class="ident">seq</span></span>(<span>self, applytempo=True)</span>
+<dt id="musx.mxml.notation.Notation.timepoints"><code class="name flex">
+<span>def <span class="ident">timepoints</span></span>(<span>self, trace=False, spanners=False, flatten=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a sequence of copied notes for playback or writing to midi files.
+<div class="desc"><p>Returns a list of Timepoint objects grouped in measures. See: Timepoint.
 Parameters</p>
 <hr>
 <dl>
-<dt><strong><code>tempocurve</code></strong> :&ensp;<code>bool</code></dt>
-<dd>If true the timepoints</dd>
+<dt><strong><code>trace</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true then the time points are displayed.</dd>
+<dt><strong><code>spanners</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If true then notes that began earlier than the current timepoint
+but are still sounding during the timepoint are added to the
+timepoint. A spanner is
+disinguishable from other notes in
+the timepoint by virtue of its earlier start time than the timepoint
+and its inclusion in the Timepoint.spanners list. A spanners will
+appear as a 'repeat sign' :: in the trace output.</dd>
+<dt><strong><code>flatten</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If flatten is true then the timepoint list is flat , i.e. it does
+not organizes measures as sublists in the list.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def seq(self, applytempo=True):
-    &#34;&#34;&#34;
-    Returns a sequence of copied notes for playback or writing to midi files.
-    Parameters
-    ----------
-    tempocurve : bool
-        If true the timepoints 
-    &#34;&#34;&#34;
-    pass
-    # tpoints = self.timepoints()
-    # tempomap = self.metadata[&#39;tempo-map&#39;]
-    # for measlist in tpoints:
-    #     for point in measlist:</code></pre>
-</details>
-</dd>
-<dt id="musx.mxml.notation.Notation.timepoints"><code class="name flex">
-<span>def <span class="ident">timepoints</span></span>(<span>self, trace=False)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Returns a list of Timepoint objects grouped in measures. See: Timepoint.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def timepoints(self, trace=False):
-    &#34;&#34;&#34;
-    Returns a list of Timepoint objects grouped in measures. See: Timepoint.
-    &#34;&#34;&#34;
-    # Flop the part measures so all measures with the same id are grouped
-    # together, e.g.: [[1,2,3],[1,2,3]] =&gt; [[1,1],[2,2],[3,3]]
-    groups = [measures for measures in zip(*[part.measures for part in self])]
-    # iterate each group of measures
-    timepoints = []
-    for group in groups:
-        # iterate each measure in the group combining their timepoints
-        measurepoints = []
-        for measure in group:
-            for element in measure:
-                if isinstance(element, Note):
-                    ident = f&#34;{measure.part.id}.{measure.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
-                    onset = element.time
-                    try: 
-                        have = next((x for x in measurepoints if x.onset == onset))
-                        have.notemap[ident] = element
-                    except StopIteration:
-                        tp = Timepoint(onset)
-                        tp.notemap[ident] = element
-                        measurepoints.append(tp)
-            
-        # sort the measure timepoints by their onsets
-        measurepoints.sort()
-        if trace:
-            for tp in measurepoints:
-                print(str(tp))
-                print(&#39;----------------------------------------------------------------&#39;)
-        timepoints.append(measurepoints)
-    return timepoints</code></pre>
+<pre><code class="python">    def timepoints(self, trace=False, spanners=False, flatten=False):
+        &#34;&#34;&#34;
+        Returns a list of Timepoint objects grouped in measures. See: Timepoint.
+        Parameters
+        ----------
+        trace : bool
+            If true then the time points are displayed.
+        spanners : bool
+            If true then notes that began earlier than the current timepoint
+            but are still sounding during the timepoint are added to the
+            timepoint. A spanner is  disinguishable from other notes in
+            the timepoint by virtue of its earlier start time than the timepoint
+            and its inclusion in the Timepoint.spanners list. A spanners will
+            appear as a &#39;repeat sign&#39; :: in the trace output.
+        flatten : bool
+            If flatten is true then the timepoint list is flat , i.e. it does 
+            not organizes measures as sublists in the list.
+        &#34;&#34;&#34;
+
+        def _addspans(measure):
+            # measure is a list of timepoints sorted by time.
+            if len(measure) &lt; 2: # need at least 2 timepoints to span...
+                return
+            for tp1,tp2 in zip(measure, measure[1:]):
+                #print(f&#34;beat: {tp1.onset} {tp1.notemap}&#34;)
+                #print(f&#34;beat: {tp2.onset} {tp2.notemap}&#34;)
+                added = False
+                for (pid, note) in tp1.notemap.items():
+                    if note.time + note.duration &gt; tp2.onset:
+                        # add note from left timepoint into the right timepoint.
+                        tp2.notemap[pid] = note
+                        # register note as a spanner in this timepoint.
+                        tp2.spanners.append(note )
+                        added = True
+                # if spanners were added (re)sort the notemap by part id.
+                if added:
+                    tp2.notemap = {id:tp2.notemap[id] for id in sorted(tp2.notemap)}
+
+        # Flop the part measures so all measures with the same id are grouped
+        #                   p1        p2            m1     m2     m3
+        #                   m1 m2 m3  m1 m2 m3      p1  p2 p1 p2  p1 p2
+        # together, e.g.: [[1, 2, 3],[1, 2, 3]] =&gt; [[1, 1],[2, 2],[3, 3]]
+        groups = [measures for measures in zip(*[part.measures for part in self])]
+        # iterate each group of measures
+        timepoints = []
+        for group in groups:
+            # iterate each measure in the group combining their timepoints
+            measurepoints = []
+            for measure in group:
+                for element in measure:
+                    if isinstance(element, Note):
+#                        ident = f&#34;{measure.part.id}.{measure.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
+                        ident = f&#34;{measure.part.id}.{element.get_mxml(&#39;voice&#39;)}&#34;
+                        onset = element.time
+                        try: 
+                            have = next((x for x in measurepoints if x.onset == onset))
+                            have.notemap[ident] = element
+                        except StopIteration:
+                            tp = Timepoint(onset)
+                            tp.notemap[ident] = element
+                            measurepoints.append(tp)
+                
+            # sort the measure timepoints by their onsets
+            measurepoints.sort()
+            if spanners:
+                _addspans(measurepoints)
+            if trace:
+                for tp in measurepoints:
+                    print(str(tp))
+                print()
+            if flatten:
+                timepoints.extend(measurepoints)
+            else:
+                timepoints.append(measurepoints)
+        return timepoints</code></pre>
 </details>
 </dd>
 </dl>
@@ -1030,12 +1214,42 @@ begin at the Timepoint's beat.</p>
     onset : Fraction
         The metric onset of the timepoint in the measure.
     &#34;&#34;&#34;
+
+    def partids(self):
+        &#34;&#34;&#34;
+        Returns the (sorted) list of part.measure.voice identifiers 
+        active in this timepoint.
+        &#34;&#34;&#34;
+        return self.notemap.keys()
+    
+    def notes(self, spanners=True):
+        &#34;&#34;&#34;
+        Returns the notes in the timepoint sorted by voice id.
+        If spanners is true then notes currently sounding
+        from previous timepoints (if any) are included.
+        &#34;&#34;&#34;
+        if spanners:
+            return [self.notemap[id] for id in sorted(self.notemap)]
+        return [self.notemap[id] for id in sorted(self.notemap) 
+                if self.notemap[id] not in self.spanners]
+        
+    # def spanners(self):
+    #     &#34;&#34;&#34;
+    #     Returns any notes that are currently sounding from previous timepoints.
+    #     See: `timepoints(spanners=True)`
+    #     &#34;&#34;&#34;
+    #     return self.spanners
+    
     def __init__(self, onset):
         self.onset = onset
         &#34;&#34;&#34;The ratio start time of the timepoint in its measure.&#34;&#34;&#34;
         self.notemap = {}
         &#34;&#34;&#34;The note map dictionary. Its keys are part.measure.voice identifiers
-        and its values are `musx.note.Note` objects tagged as either notes, chords or rests.&#34;&#34;&#34;
+        and its values are `musx.note.Note` objects. Notes may be further tagged
+        as being either pitches, chords or rests.&#34;&#34;&#34;
+        self.spanners = []
+        &#34;&#34;&#34;A list of notes that began in earlier timepoints but are still
+            sounding during this timepoint.&#34;&#34;&#34;
 
     def __lt__(self, other):
         &#34;&#34;&#34;
@@ -1049,8 +1263,21 @@ begin at the Timepoint's beat.</p>
         and a hexidecimal id.
         &#34;&#34;&#34;
         #return f&#34;&lt;Timepoint {str(self.onset)} {len(self.notemap)}&gt;&#34;
-        pstr = &#34;, &#34;.join([n._tagged_pitch_str() for n in self.notemap.values()])
-        return f&#34;&lt;Timepoint: {str(self.onset)} ({pstr})&gt;&#34;
+        #pstr = &#34;, &#34;.join([n._tagged_pitch_str() for n in self.notemap.values()])
+        #return f&#34;&lt;Timepoint: {str(self.onset)} ({pstr})&gt;&#34;
+        #return f&#34;&lt;Timepoint: {str(self.onset)}&gt;&#34;
+        strs = []
+        for id in self.notemap:
+            note = self.notemap[id]
+            info = f&#39;{note._tagged_pitch_str()}, {note.duration}&#39;
+            if note.time &lt; self.onset:
+                info = &#34;!&#34; + info + &#34;!&#34;
+            else:
+                info = &#34;(&#34; + info + &#34;)&#34;
+            info = id + &#34;: &#34; + info
+            strs.append(info)
+        text = &#39;, &#39;.join(strs)
+        return f&#34;&lt;Timepoint: {str(self.onset):&lt;5} {text}&gt;&#34;
 
     __repr__ = __str__</code></pre>
 </details>
@@ -1059,11 +1286,61 @@ begin at the Timepoint's beat.</p>
 <dt id="musx.mxml.notation.Timepoint.notemap"><code class="name">var <span class="ident">notemap</span></code></dt>
 <dd>
 <div class="desc"><p>The note map dictionary. Its keys are part.measure.voice identifiers
-and its values are <code><a title="musx.note.Note" href="../note.html#musx.note.Note">Note</a></code> objects tagged as either notes, chords or rests.</p></div>
+and its values are <code><a title="musx.note.Note" href="../note.html#musx.note.Note">Note</a></code> objects. Notes may be further tagged
+as being either pitches, chords or rests.</p></div>
 </dd>
 <dt id="musx.mxml.notation.Timepoint.onset"><code class="name">var <span class="ident">onset</span></code></dt>
 <dd>
 <div class="desc"><p>The ratio start time of the timepoint in its measure.</p></div>
+</dd>
+<dt id="musx.mxml.notation.Timepoint.spanners"><code class="name">var <span class="ident">spanners</span></code></dt>
+<dd>
+<div class="desc"><p>A list of notes that began in earlier timepoints but are still
+sounding during this timepoint.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="musx.mxml.notation.Timepoint.notes"><code class="name flex">
+<span>def <span class="ident">notes</span></span>(<span>self, spanners=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the notes in the timepoint sorted by voice id.
+If spanners is true then notes currently sounding
+from previous timepoints (if any) are included.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def notes(self, spanners=True):
+    &#34;&#34;&#34;
+    Returns the notes in the timepoint sorted by voice id.
+    If spanners is true then notes currently sounding
+    from previous timepoints (if any) are included.
+    &#34;&#34;&#34;
+    if spanners:
+        return [self.notemap[id] for id in sorted(self.notemap)]
+    return [self.notemap[id] for id in sorted(self.notemap) 
+            if self.notemap[id] not in self.spanners]</code></pre>
+</details>
+</dd>
+<dt id="musx.mxml.notation.Timepoint.partids"><code class="name flex">
+<span>def <span class="ident">partids</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the (sorted) list of part.measure.voice identifiers
+active in this timepoint.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def partids(self):
+    &#34;&#34;&#34;
+    Returns the (sorted) list of part.measure.voice identifiers 
+    active in this timepoint.
+    &#34;&#34;&#34;
+    return self.notemap.keys()</code></pre>
+</details>
 </dd>
 </dl>
 </dd>
@@ -1090,12 +1367,11 @@ and its values are <code><a title="musx.note.Note" href="../note.html#musx.note.
 <ul>
 <li>
 <h4><code><a title="musx.mxml.notation.Notation" href="#musx.mxml.notation.Notation">Notation</a></code></h4>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="musx.mxml.notation.Notation.add_part" href="#musx.mxml.notation.Notation.add_part">add_part</a></code></li>
 <li><code><a title="musx.mxml.notation.Notation.metadata" href="#musx.mxml.notation.Notation.metadata">metadata</a></code></li>
 <li><code><a title="musx.mxml.notation.Notation.parts" href="#musx.mxml.notation.Notation.parts">parts</a></code></li>
 <li><code><a title="musx.mxml.notation.Notation.print" href="#musx.mxml.notation.Notation.print">print</a></code></li>
-<li><code><a title="musx.mxml.notation.Notation.seq" href="#musx.mxml.notation.Notation.seq">seq</a></code></li>
 <li><code><a title="musx.mxml.notation.Notation.timepoints" href="#musx.mxml.notation.Notation.timepoints">timepoints</a></code></li>
 </ul>
 </li>
@@ -1109,7 +1385,10 @@ and its values are <code><a title="musx.note.Note" href="../note.html#musx.note.
 <h4><code><a title="musx.mxml.notation.Timepoint" href="#musx.mxml.notation.Timepoint">Timepoint</a></code></h4>
 <ul class="">
 <li><code><a title="musx.mxml.notation.Timepoint.notemap" href="#musx.mxml.notation.Timepoint.notemap">notemap</a></code></li>
+<li><code><a title="musx.mxml.notation.Timepoint.notes" href="#musx.mxml.notation.Timepoint.notes">notes</a></code></li>
 <li><code><a title="musx.mxml.notation.Timepoint.onset" href="#musx.mxml.notation.Timepoint.onset">onset</a></code></li>
+<li><code><a title="musx.mxml.notation.Timepoint.partids" href="#musx.mxml.notation.Timepoint.partids">partids</a></code></li>
+<li><code><a title="musx.mxml.notation.Timepoint.spanners" href="#musx.mxml.notation.Timepoint.spanners">spanners</a></code></li>
 </ul>
 </li>
 </ul>

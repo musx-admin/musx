@@ -18,7 +18,7 @@ tmp_old = "/tmp/docs_old"
 
 def exclude():
     """Returns the list of files to ignore."""
-    patterns = set([".*", "*.md", "__pycache__", "musicxml.py"])
+    patterns = set([".*", "*.md", "__pycache__", "musicxml.py", "gens.py"])
     return shutil.ignore_patterns(*patterns) 
 
 # The documentation for the stub musicxml.py file.
@@ -34,7 +34,7 @@ def make_docs():
     for d in [tmp_src, tmp_doc, tmp_old]:
         if os.path.isdir(d):
             shutil.rmtree(d)
-    shutil.copytree(src_dir, tmp_src, ignore=shutil.ignore_patterns(".*", "*.md", "__pycache__", "musicxml.py"))
+    shutil.copytree(src_dir, tmp_src, ignore=shutil.ignore_patterns(".*", "*.md", "__pycache__", "musicxml.py", "gens.py"))
     with open(tmp_src + '/mxml/musicxml.py', 'w') as f:
         f.write(contents)
     os.system(f"pdoc --html -o {tmp_doc} {tmp_src}")

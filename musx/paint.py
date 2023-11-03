@@ -1,12 +1,12 @@
 ###############################################################################
 """
 The paint.py module provides two high-level composers that can produce a wide
-variety of interesting textures and music. The `brush()` composer outputs Notes
+variety of interesting textures and music. The `brush()` composer outputs notes
 in sequential order, similar to how a paint brush makes lines on a canvas. In
-contrast, the `spray()` composer generates Notes by applying random selection
+contrast, the `spray()` composer generates notes by applying random selection
 to its input parameters.
 
-For examples of using paint.py see gamelan.py, blues.py and messiaen.py in
+For examples of using paint.py see gamelan.ipynb, blues.ipynb and messiaen.ipynb in
 the demos directory.
 """
 

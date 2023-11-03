@@ -1,7 +1,7 @@
 ###############################################################################
 """
 This module implements a scheduling queue for generating musical scores.
-The Score runs 'composers' (python generators) that output musical events
+The Score runs 'part composers' (Python generators) that output musical events
 to sequences and score files.
 
 Example
@@ -9,15 +9,15 @@ Example
 ```py
 seq = Seq()
 sco = Score(out=seq)
-def bach(sco, num):
+def bach(score, num):
     for i in range(num):
-        n = Note(time=queue.now, key=60+i)
-        sco.add(n)
+        n = Note(time=score.now, key=60+i)
+        score.add(n)
         yield .125
 sco.compose(bach(sco, 10))
 ```
 
-See the examples directory for many examples of composing!
+See the demos directory for many examples of part composers!
 """
 
 import types
@@ -25,13 +25,12 @@ import types
 
 class Score:
     """
-    Runs composers in time sorted order. A composer is a python generator
-    that is evaluated by the Score. When a composer executes it
-    can add musical events or new composers to the score. To continue
-    running a composer yields back a delta time indicating the next time
-    point that the composer should compose 
-    something. A composer stops running when it stops yielding delta
-    times or it yields a negative delta time.
+    Runs part composers in time sorted order. A part composer is a Python generator
+    that is evaluated by the Score. When a part composer executes it
+    can add musical events or new part composers to the score. To continue
+    running a part composer must yield back a delta time that specifies the next time
+    point at which the composer should run again. A part composer stops 
+    running when it stops yielding delta times or it yields a negative delta time.
     """
 
     _queue = []
@@ -192,8 +191,8 @@ class Score:
 
     def compose(self, composer):
         """
-        Starts running one or more composer generators. This function can be
-        called at the top level and also by composers that are already running.
+        Starts running one or more part composers. This function can be
+        called at the top level and also by composers that are running.
 
         Parameters
         ----------
@@ -201,7 +200,7 @@ class Score:
             If composer is a generator it is added to the queue at the current
             time. Otherwise composer can be a list [*ahead*, *composer*]
             or a list of the same [[*ahead*, *composer*], ...]  where
-            *ahead* is a future time and *composer* is a composer generator.
+            *ahead* is a future start time and *composer* is a part composer.
 
         Example
         -------

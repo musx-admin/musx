@@ -11,7 +11,7 @@ This document explains how to install musx in a Python [virtual environment](htt
   $ cd ~/projects/mymusx
   ```
 
-2. Call Python 3.9 or higher and create a virtual environment (musxenv) for musx:
+2. Call Python 3.10 or higher and create a virtual environment for  musx. You can use any name, this document calls it *musxenv* :
 
   ``` 
   $ python3.10 -m venv musxenv

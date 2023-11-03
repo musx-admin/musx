@@ -475,7 +475,7 @@ def markov(rules, stop=None, preset=None):
                 {&#34;elements&#34; if order &gt; 1 else &#34;element&#34;}.&#39;)
     # initialize the history to the preset. older values are to the left
     history = preset
-    print(&#34;data=&#34;, data, &#34;, history=&#34;, history)
+    #print(&#34;data=&#34;, data, &#34;, history=&#34;, history)
     # yield loop
     for _ in range(stop):
         # find the rule that matches current history
@@ -492,7 +492,7 @@ def markov(rules, stop=None, preset=None):
                 break       
         # left-shift history with current choice appended
         history = history[1:] + (outcome,)
-        print(&#34;outcome=&#34;, outcome, &#34;, shifted history=&#34;, history)
+        #print(&#34;outcome=&#34;, outcome, &#34;, shifted history=&#34;, history)
         yield outcome
 
 
@@ -1567,7 +1567,7 @@ with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
                 {&#34;elements&#34; if order &gt; 1 else &#34;element&#34;}.&#39;)
     # initialize the history to the preset. older values are to the left
     history = preset
-    print(&#34;data=&#34;, data, &#34;, history=&#34;, history)
+    #print(&#34;data=&#34;, data, &#34;, history=&#34;, history)
     # yield loop
     for _ in range(stop):
         # find the rule that matches current history
@@ -1584,7 +1584,7 @@ with 'c' being the least likely and 'a' being the most likely outcome.</p></div>
                 break       
         # left-shift history with current choice appended
         history = history[1:] + (outcome,)
-        print(&#34;outcome=&#34;, outcome, &#34;, shifted history=&#34;, history)
+        #print(&#34;outcome=&#34;, outcome, &#34;, shifted history=&#34;, history)
         yield outcome</code></pre>
 </details>
 </dd>

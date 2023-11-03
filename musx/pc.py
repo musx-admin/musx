@@ -4,7 +4,7 @@ Implements operations on pitch classes, pitch class sets, and set matrices.
 A pitch class (pc) is an integer 0-11 representing one of twelve
 equal steps in the chromatic octave from C=0 to B=11. A pitch class set is
 a tuple containing pitch classes. A matrix is a 2D array of pitch class sets,
-that can be referenced by row type, e.g. "p3", "i9", "ri2" "r11".
+that can be referenced by row type, e.g. 'p3', 'i9', 'ri2' 'r11'.
 """
 
 # __pdoc__ = {
@@ -225,7 +225,7 @@ class Matrix (_MatrixBase):
         ----------
         rowform : string
             A string concatentation of a row type (p, i, r, ri) and a
-            transposition level (0 ... 11). Examples: "p9" "ri0" "i6" "r11".   
+            transposition level (0 ... 11). Examples: 'p9' 'ri0' 'i6' 'r11'.   
         """
         try:
             # splits a rowform label like "I5" into a tuple of two values: ("i", 5)

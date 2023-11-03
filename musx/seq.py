@@ -72,7 +72,7 @@ class Seq:
         """
         return [func(x) for x in self]
 
-    def print(self, start=0, end=None, hints=True):
+    def print(self, start=0, end=None):
         """
         Prints the contents of the sequence to the standard output.
         
@@ -87,9 +87,23 @@ class Seq:
         """
         if end is None:
             end = len(self.events)
+        _printer = self._midiprinter if isinstance(self.events[0], me.MidiEvent) else self._defaultprinter
         for i in range(start, end):
             e = self.events[i]
-            print(i, e.time, e, sep='\t')
+            _printer(i, e)
+
+    @staticmethod
+    def _defaultprinter(index, event):
+        print(index, event.time, event, sep='\t')
+
+    @staticmethod
+    def _midiprinter(index, event):
+        time = event.time
+        str1 = f'{index:4}'    # index position of event in seq
+        str2 = f'{time:7.3f}'  # seconds rounded to 3 places in a 7 character pad
+        str3 = event.tostring(hint=True) # hint
+        print(str1 + "  " + str2 + "  " + str3)
+
 
     def append(self, ev):
         """

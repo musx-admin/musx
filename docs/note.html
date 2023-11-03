@@ -76,6 +76,12 @@ class Event:
         else:
             raise ValueError(f&#34;Invalid Note time: {val}.&#34;)
 
+    def __str__(self):
+        return f&#39;&lt;Event: {self.time} {hex(id(self))}&gt;)&#39;
+    
+    def __repr__(self):
+        return f&#39;Event({self.time})&#39;
+
 
 class Note (Event):
     &#34;&#34;&#34;
@@ -285,7 +291,7 @@ class Note (Event):
         return &#34;:&#34;.join([str(c.pitch) for c in self.chord()]) if self.is_chord() else str(self.pitch)
 
     def __str__(self):
-        name = &#34;Chord&#34; if self.is_chord() else &#34;Note&#34;
+        name = &#34;Note&#34; #&#34;Chord&#34; if self.is_chord() else &#34;Note&#34;
         pstr = self._tagged_pitch_str()
         mxml = &#34;, &#34;.join(f&#34;{str(k)}={v}&#34; for k,v in self._mxml.items())
         if mxml:
@@ -397,7 +403,13 @@ time and duration metrically, see <code><a title="musx.rhythm.rhythm" href="rhyt
         if isinstance(val, (int, float, Fraction)) and val &gt;= 0:
             self._time = val
         else:
-            raise ValueError(f&#34;Invalid Note time: {val}.&#34;)</code></pre>
+            raise ValueError(f&#34;Invalid Note time: {val}.&#34;)
+
+    def __str__(self):
+        return f&#39;&lt;Event: {self.time} {hex(id(self))}&gt;)&#39;
+    
+    def __repr__(self):
+        return f&#39;Event({self.time})&#39;</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -677,7 +689,7 @@ generating midi then this value should be a channel integer
         return &#34;:&#34;.join([str(c.pitch) for c in self.chord()]) if self.is_chord() else str(self.pitch)
 
     def __str__(self):
-        name = &#34;Chord&#34; if self.is_chord() else &#34;Note&#34;
+        name = &#34;Note&#34; #&#34;Chord&#34; if self.is_chord() else &#34;Note&#34;
         pstr = self._tagged_pitch_str()
         mxml = &#34;, &#34;.join(f&#34;{str(k)}={v}&#34; for k,v in self._mxml.items())
         if mxml:

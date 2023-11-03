@@ -1,11 +1,10 @@
 """
-An object-orientated implemention of python iterators that yield patterns in data,
+An object-orientated implemention of Python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such as markov
 chains, cellular automata and chaos.  Many of these patterns allow subpatterns and
 expressions to be embedded inside parent patterns and processed seamlessly by the 
-parent's `next()` method.  For more information see pattern documentation,
-the patterns.ipynb tutorial and the demos folder for many examples of using musx
-patterns to generate music.
+Pattern's `next()` method.  For more information see the patterns.ipynb tutorial 
+and the demos folder for many examples of using musx patterns to generate music.
 """
 
 from collections.abc import Iterator
@@ -230,14 +229,13 @@ class Palindrome(Pattern):
 
 class Range(Pattern):
     """
-    Range is similar in syntax to python's range() generator, but its start,
-    stop and step parameters will accept integers, patterns, or thunks 
-    (lambda expressions or functions of zero arguments). Unlike python's 
+    Range is similar in syntax to Python's range() generator, but its *start*,
+    *stop* and *step* parameters will accept integers, patterns, or thunks 
+    (lambda expressions or functions of zero arguments). Unlike Python's 
     range() the Range pattern does not terminate: once the step is out-of-bounds 
     the pattern will reset itself to its next start, stop and step values
     as determined by the range values passed in.  Another difference is that
-    pythons range will return Since patterns always return 
-    something, an incompatible start, stop and step specifications will raise
+    patterns always return   something, so incompatible start, stop and step specifications will raise
     an error rather than return nothing.
 
     Parameters
@@ -542,7 +540,7 @@ class Graph (Pattern):
     
     Example
     -------
-    a cycle of A B C as a graph (the first node is
+    A cycle of A B C as a graph (the first node is
     always followed by node 2, the second node by node 3, and node 3
     returns to node 1:
     ```python
@@ -720,7 +718,8 @@ class Markov(Pattern):
 
     `{(past,...): [[outcome, weight], [outcome, weight], ...],  ...}`
     
-    There are two shortcuts available when specifying rules: 
+    There are two shortcuts available when specifying rules:
+
     * If the rules use only one past value (markov order 1) then you can provide
     values as keys instead of tuples.
     * If an outcome has a probability weight of 1 then you can specify just the

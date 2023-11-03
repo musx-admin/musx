@@ -103,7 +103,7 @@ class Seq:
         &#34;&#34;&#34;
         return [func(x) for x in self]
 
-    def print(self, start=0, end=None, hints=True):
+    def print(self, start=0, end=None):
         &#34;&#34;&#34;
         Prints the contents of the sequence to the standard output.
         
@@ -118,9 +118,23 @@ class Seq:
         &#34;&#34;&#34;
         if end is None:
             end = len(self.events)
+        _printer = self._midiprinter if isinstance(self.events[0], me.MidiEvent) else self._defaultprinter
         for i in range(start, end):
             e = self.events[i]
-            print(i, e.time, e, sep=&#39;\t&#39;)
+            _printer(i, e)
+
+    @staticmethod
+    def _defaultprinter(index, event):
+        print(index, event.time, event, sep=&#39;\t&#39;)
+
+    @staticmethod
+    def _midiprinter(index, event):
+        time = event.time
+        str1 = f&#39;{index:4}&#39;    # index position of event in seq
+        str2 = f&#39;{time:7.3f}&#39;  # seconds rounded to 3 places in a 7 character pad
+        str3 = event.tostring(hint=True) # hint
+        print(str1 + &#34;  &#34; + str2 + &#34;  &#34; + str3)
+
 
     def append(self, ev):
         &#34;&#34;&#34;
@@ -245,7 +259,7 @@ should already be in proper time order.</dd>
         &#34;&#34;&#34;
         return [func(x) for x in self]
 
-    def print(self, start=0, end=None, hints=True):
+    def print(self, start=0, end=None):
         &#34;&#34;&#34;
         Prints the contents of the sequence to the standard output.
         
@@ -260,9 +274,23 @@ should already be in proper time order.</dd>
         &#34;&#34;&#34;
         if end is None:
             end = len(self.events)
+        _printer = self._midiprinter if isinstance(self.events[0], me.MidiEvent) else self._defaultprinter
         for i in range(start, end):
             e = self.events[i]
-            print(i, e.time, e, sep=&#39;\t&#39;)
+            _printer(i, e)
+
+    @staticmethod
+    def _defaultprinter(index, event):
+        print(index, event.time, event, sep=&#39;\t&#39;)
+
+    @staticmethod
+    def _midiprinter(index, event):
+        time = event.time
+        str1 = f&#39;{index:4}&#39;    # index position of event in seq
+        str2 = f&#39;{time:7.3f}&#39;  # seconds rounded to 3 places in a 7 character pad
+        str3 = event.tostring(hint=True) # hint
+        print(str1 + &#34;  &#34; + str2 + &#34;  &#34; + str3)
+
 
     def append(self, ev):
         &#34;&#34;&#34;
@@ -401,7 +429,7 @@ will be returned as a list of values.</dd>
 </details>
 </dd>
 <dt id="musx.seq.Seq.print"><code class="name flex">
-<span>def <span class="ident">print</span></span>(<span>self, start=0, end=None, hints=True)</span>
+<span>def <span class="ident">print</span></span>(<span>self, start=0, end=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prints the contents of the sequence to the standard output.</p>
@@ -418,7 +446,7 @@ will be returned as a list of values.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def print(self, start=0, end=None, hints=True):
+<pre><code class="python">def print(self, start=0, end=None):
     &#34;&#34;&#34;
     Prints the contents of the sequence to the standard output.
     
@@ -433,9 +461,10 @@ will be returned as a list of values.</dd>
     &#34;&#34;&#34;
     if end is None:
         end = len(self.events)
+    _printer = self._midiprinter if isinstance(self.events[0], me.MidiEvent) else self._defaultprinter
     for i in range(start, end):
         e = self.events[i]
-        print(i, e.time, e, sep=&#39;\t&#39;)</code></pre>
+        _printer(i, e)</code></pre>
 </details>
 </dd>
 <dt id="musx.seq.Seq.serialize"><code class="name flex">

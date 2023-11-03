@@ -6,7 +6,7 @@ The Interval class supports the standard interval names and classification
 system, including the notion of descending or ascending intervals and simple
 or compound intervals.  Intervals can be numerically compared for their size
 (span+quality) and can be used to transpose Pitches while preserving correct
-accidental spelling."
+accidental spelling.
 """
 __pdoc__ = {'IntervalBase': False}
 

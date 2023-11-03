@@ -4,18 +4,11 @@ music information. It contains a large set of compositional tools adapted from
 my Common Music and Grace systems, including support for complex pattern generation,
 randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
 scores. The musx package currently provides back ends to read and write midi files
-and Csound (thank you Michael Gogins!) and it is straightforward to add other
-backends to connect to different systems, for example to send data to an app via
-portmidi or to SuperCollider via osc. If you are new to musx or Python the place to
-start is by reading this documentation and trying out the material in the demos and
-tutorials directories. After restoring the demos, you can generate output by
-running them as scripts or using the jupyter notebook versions:
-
-```bash
-python -m demos.gamelan
-
-jupyter notebook demos/gamelan.ipynb
-```
+and Csound and it is straightforward to add other backends to connect to different 
+systems, for example to send data to an app via portmidi or to SuperCollider via osc. 
+If you are new to musx or Python, consult this documentation and try out all the
+Jupyter Notebooks shipped in musx pip package. Consult the INSTALL.md file for how
+to access and install the notebook directories.
 """
 
 # Do not alter this version line, it is automatically replaced by the correct

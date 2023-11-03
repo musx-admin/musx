@@ -2,7 +2,7 @@
 """
 Functions and classes for working with microtonality, the harmonic series, and
 spectra.  For examples of generating microtonal music using midi see the demos
-micro.py, gamelan.py, fm.py, and rm.py.
+and tutorials directories.
 """
 
 import math
@@ -122,20 +122,21 @@ def untemper(interval, div=12):
 
 
 class Spectrum (list):
+    """
+    A structured list of frequency and amplitude pairs with methods for compositional purposes.
+    Spectrums are produced by the fmspectum() and rmspectum() functions, or by loading datafiles created by
+    the <a href="https://www.klingbeil.com/spear/">SPEAR</a> application.
 
+    Parameters
+    ----------
+    pairs : list
+        A sorted list of [frequency, amplitude] pairs with lower
+        frequency pairs to the left.
+
+    Returns:
+    A Spectrum.
+    """
     def __new__(cls, pairs):
-        """
-        Creates a Spectrum out of a list of frequency/amplitude pairs.
-
-        Parameters
-        ----------
-        pairs : list
-            A sorted list of [frequency, amplitude] pairs with lower
-            frequency pairs to the left.
-
-        Returns:
-        A Spectrum.
-        """
         z = 0
         for t in pairs:
             if not isinstance(t, list) or len(t) != 2: 
@@ -231,7 +232,9 @@ class Spectrum (list):
             func = lambda x: quantize(x, quant)
         else:
             raise TypeError("quant value not a callable, number, or None: {quant}.")
-        keys = [keynum(x[0], func) for x in self if x[1] >= thresh]
+        # drop freqs less than C00 or greater than G9
+        inbounds = lambda x: 8.175798915643707 <= x <= 12543.853951415975
+        keys = [keynum(x[0], func) for x in self if x[1] >= thresh and inbounds(x[0])]
         for i in range(len(keys)):
             while keys[i] < minkey: keys[i] += 12
             while keys[i] > maxkey: keys[i] -= 12

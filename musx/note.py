@@ -43,6 +43,12 @@ class Event:
         else:
             raise ValueError(f"Invalid Note time: {val}.")
 
+    def __str__(self):
+        return f'<Event: {self.time} {hex(id(self))}>)'
+    
+    def __repr__(self):
+        return f'Event({self.time})'
+
 
 class Note (Event):
     """
@@ -252,7 +258,7 @@ class Note (Event):
         return ":".join([str(c.pitch) for c in self.chord()]) if self.is_chord() else str(self.pitch)
 
     def __str__(self):
-        name = "Chord" if self.is_chord() else "Note"
+        name = "Note" #"Chord" if self.is_chord() else "Note"
         pstr = self._tagged_pitch_str()
         mxml = ", ".join(f"{str(k)}={v}" for k,v in self._mxml.items())
         if mxml:
