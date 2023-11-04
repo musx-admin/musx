@@ -24,11 +24,11 @@ variety of interesting textures and music. The `brush()` composer …" />
 </header>
 <section id="section-intro">
 <p>The paint.py module provides two high-level composers that can produce a wide
-variety of interesting textures and music. The <code><a title="musx.paint.brush" href="#musx.paint.brush">brush()</a></code> composer outputs Notes
+variety of interesting textures and music. The <code><a title="musx.paint.brush" href="#musx.paint.brush">brush()</a></code> composer outputs notes
 in sequential order, similar to how a paint brush makes lines on a canvas. In
-contrast, the <code><a title="musx.paint.spray" href="#musx.paint.spray">spray()</a></code> composer generates Notes by applying random selection
+contrast, the <code><a title="musx.paint.spray" href="#musx.paint.spray">spray()</a></code> composer generates notes by applying random selection
 to its input parameters.</p>
-<p>For examples of using paint.py see gamelan.py, blues.py and messiaen.py in
+<p>For examples of using paint.py see gamelan.ipynb, blues.ipynb and messiaen.ipynb in
 the demos directory.</p>
 <details class="source">
 <summary>
@@ -37,17 +37,17 @@ the demos directory.</p>
 <pre><code class="python">###############################################################################
 &#34;&#34;&#34;
 The paint.py module provides two high-level composers that can produce a wide
-variety of interesting textures and music. The `brush()` composer outputs Notes
+variety of interesting textures and music. The `brush()` composer outputs notes
 in sequential order, similar to how a paint brush makes lines on a canvas. In
-contrast, the `spray()` composer generates Notes by applying random selection
+contrast, the `spray()` composer generates notes by applying random selection
 to its input parameters.
 
-For examples of using paint.py see gamelan.py, blues.py and messiaen.py in
+For examples of using paint.py see gamelan.ipynb, blues.ipynb and messiaen.ipynb in
 the demos directory.
 &#34;&#34;&#34;
 
 
-from musx import Note, cycle, choose
+from musx import Note, Cycle, Choose
 
 
 def brush(score, *, length=None, end=None, rhythm=.5, duration=None, pitch=60, amplitude=.5, instrument=0, microdivs=1):
@@ -100,7 +100,7 @@ def brush(score, *, length=None, end=None, rhythm=.5, duration=None, pitch=60, a
         stopitr = end
         thisitr = (lambda: score.elapsed)
     # convert all values into cycles
-    cyc = (lambda x: cycle(x if type(x) is list else [x]))
+    cyc = (lambda x: Cycle(x if type(x) is list else [x]))
     rhy = cyc(rhythm)
     dur = cyc(duration)
     key = cyc(pitch)
@@ -109,11 +109,11 @@ def brush(score, *, length=None, end=None, rhythm=.5, duration=None, pitch=60, a
     while (thisitr() &lt; stopitr):
         t = score.now
         #print(&#34;counter=&#34;, counter, &#34;now=&#34;, t)
-        r = next(rhy)
-        d = next(dur)
-        k = next(key)
-        a = next(amp)
-        c = next(chan)
+        r = rhy.next()
+        d = dur.next()
+        k = key.next()
+        a = amp.next()
+        c = chan.next()
         if r &gt; 0:
             if not d: d = r
             if type(k) is list:
@@ -161,22 +161,22 @@ def spray(score, *, length=None, end=None, rhythm=.5, duration=None, pitch= 60, 
         stopitr = end
         thisitr = (lambda: score.elapsed)
     # convert each param into a chooser pattern.
-    ran = (lambda x: choose(x if type(x) is list else [x]))
+    ran = (lambda x: Choose(x if type(x) is list else [x]))
     rhy = ran(rhythm)
     dur = ran(duration)
     key = ran(pitch)
     amp = ran(amplitude)
     chan = ran(instrument)
-    band = choose( [i for i in range(-band, band+1)] if type(band) is int else band )
+    band = Choose( [i for i in range(-band, band+1)] if type(band) is int else band )
     while (thisitr() &lt; stopitr):
         t = score.now
         #print(&#34;counter=&#34;, counter, &#34;now=&#34;, t)
-        r = next(rhy)
-        d = next(dur)
-        k = next(key)
-        a = next(amp)
-        c = next(chan)
-        b = next(band)
+        r = rhy.next()
+        d = dur.next()
+        k = key.next()
+        a = amp.next()
+        c = chan.next()
+        b = band.next()
         if type(b) is list:
             k = [k+i for i in b]
         else:
@@ -296,7 +296,7 @@ micro.py demo file for more information.</dd>
         stopitr = end
         thisitr = (lambda: score.elapsed)
     # convert all values into cycles
-    cyc = (lambda x: cycle(x if type(x) is list else [x]))
+    cyc = (lambda x: Cycle(x if type(x) is list else [x]))
     rhy = cyc(rhythm)
     dur = cyc(duration)
     key = cyc(pitch)
@@ -305,11 +305,11 @@ micro.py demo file for more information.</dd>
     while (thisitr() &lt; stopitr):
         t = score.now
         #print(&#34;counter=&#34;, counter, &#34;now=&#34;, t)
-        r = next(rhy)
-        d = next(dur)
-        k = next(key)
-        a = next(amp)
-        c = next(chan)
+        r = rhy.next()
+        d = dur.next()
+        k = key.next()
+        a = amp.next()
+        c = chan.next()
         if r &gt; 0:
             if not d: d = r
             if type(k) is list:
@@ -384,22 +384,22 @@ added to the current key and performed simultaneously.</dd>
         stopitr = end
         thisitr = (lambda: score.elapsed)
     # convert each param into a chooser pattern.
-    ran = (lambda x: choose(x if type(x) is list else [x]))
+    ran = (lambda x: Choose(x if type(x) is list else [x]))
     rhy = ran(rhythm)
     dur = ran(duration)
     key = ran(pitch)
     amp = ran(amplitude)
     chan = ran(instrument)
-    band = choose( [i for i in range(-band, band+1)] if type(band) is int else band )
+    band = Choose( [i for i in range(-band, band+1)] if type(band) is int else band )
     while (thisitr() &lt; stopitr):
         t = score.now
         #print(&#34;counter=&#34;, counter, &#34;now=&#34;, t)
-        r = next(rhy)
-        d = next(dur)
-        k = next(key)
-        a = next(amp)
-        c = next(chan)
-        b = next(band)
+        r = rhy.next()
+        d = dur.next()
+        k = key.next()
+        a = amp.next()
+        c = chan.next()
+        b = band.next()
         if type(b) is list:
             k = [k+i for i in b]
         else:

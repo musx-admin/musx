@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.patterns API documentation</title>
-<meta name="description" content="An object-orientated implemention of python iterators that yield patterns in data,
+<meta name="description" content="An object-orientated implemention of Python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -23,27 +23,25 @@ from simple looping and randomness to more complex processes such …" />
 <h1 class="title">Module <code>musx.patterns</code></h1>
 </header>
 <section id="section-intro">
-<p>An object-orientated implemention of python iterators that yield patterns in data,
+<p>An object-orientated implemention of Python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such as markov
 chains, cellular automata and chaos.
 Many of these patterns allow subpatterns and
 expressions to be embedded inside parent patterns and processed seamlessly by the
-parent's <code>next()</code> method.
-For more information see pattern documentation,
-the patterns.ipynb tutorial and the demos folder for many examples of using musx
-patterns to generate music.</p>
+Pattern's <code>next()</code> method.
+For more information see the patterns.ipynb tutorial
+and the demos folder for many examples of using musx patterns to generate music.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-An object-orientated implemention of python iterators that yield patterns in data,
+An object-orientated implemention of Python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such as markov
 chains, cellular automata and chaos.  Many of these patterns allow subpatterns and
 expressions to be embedded inside parent patterns and processed seamlessly by the 
-parent&#39;s `next()` method.  For more information see pattern documentation,
-the patterns.ipynb tutorial and the demos folder for many examples of using musx
-patterns to generate music.
+Pattern&#39;s `next()` method.  For more information see the patterns.ipynb tutorial 
+and the demos folder for many examples of using musx patterns to generate music.
 &#34;&#34;&#34;
 
 from collections.abc import Iterator
@@ -268,14 +266,13 @@ class Palindrome(Pattern):
 
 class Range(Pattern):
     &#34;&#34;&#34;
-    Range is similar in syntax to python&#39;s range() generator, but its start,
-    stop and step parameters will accept integers, patterns, or thunks 
-    (lambda expressions or functions of zero arguments). Unlike python&#39;s 
+    Range is similar in syntax to Python&#39;s range() generator, but its *start*,
+    *stop* and *step* parameters will accept integers, patterns, or thunks 
+    (lambda expressions or functions of zero arguments). Unlike Python&#39;s 
     range() the Range pattern does not terminate: once the step is out-of-bounds 
     the pattern will reset itself to its next start, stop and step values
     as determined by the range values passed in.  Another difference is that
-    pythons range will return Since patterns always return 
-    something, an incompatible start, stop and step specifications will raise
+    patterns always return   something, so incompatible start, stop and step specifications will raise
     an error rather than return nothing.
 
     Parameters
@@ -580,7 +577,7 @@ class Graph (Pattern):
     
     Example
     -------
-    a cycle of A B C as a graph (the first node is
+    A cycle of A B C as a graph (the first node is
     always followed by node 2, the second node by node 3, and node 3
     returns to node 1:
     ```python
@@ -758,7 +755,8 @@ class Markov(Pattern):
 
     `{(past,...): [[outcome, weight], [outcome, weight], ...],  ...}`
     
-    There are two shortcuts available when specifying rules: 
+    There are two shortcuts available when specifying rules:
+
     * If the rules use only one past value (markov order 1) then you can provide
     values as keys instead of tuples.
     * If an outcome has a probability weight of 1 then you can specify just the
@@ -1059,20 +1057,7 @@ class States(Pattern):
         return cells[row][col]
 
 if __name__ == &#39;__main__&#39;:
-    from musx.gens import markov, markov_analyze
-    from musx.patterns import Markov
-
-    melody = [60, 60, 62, 60, 65, 64, 60, 60, 62, 60, 67, 65,
-          60, 60, 72, 69, 65, 64, 62, 70, 70, 69, 65, 67, 65]
-    
-    rules = {(): [[60, 0.32], [62, 0.44], [65, 0.64], [64, 0.72], 
-                [67, 0.7999999999999999], [72, 0.84], [69, 0.9199999999999999], 
-                [70, 0.9999999999999999]]}
-    print(f&#34;rules: {rules}&#34;)
-    m = markov(rules)
-    print( [next(m) for _ in range(10)])
-
-    #print(Markov.analyze(melody, order=0).items)</code></pre>
+    pass</code></pre>
 </details>
 </section>
 <section>
@@ -1384,7 +1369,7 @@ or thunk. The node's <em>link</em> is the identifier for the next node to
 visit, and <em>id</em> is this node's unique id in the graph. If no id is given
 it will be set to the 1-based position of the node in the node list.</p>
 <h2 id="example">Example</h2>
-<p>a cycle of A B C as a graph (the first node is
+<p>A cycle of A B C as a graph (the first node is
 always followed by node 2, the second node by node 3, and node 3
 returns to node 1:</p>
 <pre><code class="language-python">Graph( [('a', 2), ('b', 3), ('c', Cycle([1, 2])])
@@ -1404,7 +1389,7 @@ returns to node 1:</p>
     
     Example
     -------
-    a cycle of A B C as a graph (the first node is
+    A cycle of A B C as a graph (the first node is
     always followed by node 2, the second node by node 3, and node 3
     returns to node 1:
     ```python
@@ -1483,11 +1468,13 @@ rules, each rule associates a tuple of one or more past outcomes with a
 list of weighted potential outcomes:</p>
 <p><code>{(past,...): [[outcome, weight], [outcome, weight], ...],
 ...}</code></p>
-<p>There are two shortcuts available when specifying rules:
-* If the rules use only one past value (markov order 1) then you can provide
-values as keys instead of tuples.
-* If an outcome has a probability weight of 1 then you can specify just the
-value instead of a two element list containing the value and 1.</p>
+<p>There are two shortcuts available when specifying rules:</p>
+<ul>
+<li>If the rules use only one past value (markov order 1) then you can provide
+values as keys instead of tuples.</li>
+<li>If an outcome has a probability weight of 1 then you can specify just the
+value instead of a two element list containing the value and 1.</li>
+</ul>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>rules</code></strong> :&ensp;<code>list</code></dt>
@@ -1535,7 +1522,8 @@ cabacbabaccbabaccaca
 
     `{(past,...): [[outcome, weight], [outcome, weight], ...],  ...}`
     
-    There are two shortcuts available when specifying rules: 
+    There are two shortcuts available when specifying rules:
+
     * If the rules use only one past value (markov order 1) then you can provide
     values as keys instead of tuples.
     * If an outcome has a probability weight of 1 then you can specify just the
@@ -2176,15 +2164,15 @@ end of periods invisibly and provides more flexibility for accessing the data.</
 <span>(</span><span>start, stop=None, step=None, period=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Range is similar in syntax to python's range() generator, but its start,
-stop and step parameters will accept integers, patterns, or thunks
-(lambda expressions or functions of zero arguments). Unlike python's
+<div class="desc"><p>Range is similar in syntax to Python's range() generator, but its <em>start</em>,
+<em>stop</em> and <em>step</em> parameters will accept integers, patterns, or thunks
+(lambda expressions or functions of zero arguments). Unlike Python's
 range() the Range pattern does not terminate: once the step is out-of-bounds
 the pattern will reset itself to its next start, stop and step values
 as determined by the range values passed in.
 Another difference is that
-pythons range will return Since patterns always return
-something, an incompatible start, stop and step specifications will raise
+patterns always return
+something, so incompatible start, stop and step specifications will raise
 an error rather than return nothing.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -2206,14 +2194,13 @@ period length will be the distance between start and stop.</dd>
 </summary>
 <pre><code class="python">class Range(Pattern):
     &#34;&#34;&#34;
-    Range is similar in syntax to python&#39;s range() generator, but its start,
-    stop and step parameters will accept integers, patterns, or thunks 
-    (lambda expressions or functions of zero arguments). Unlike python&#39;s 
+    Range is similar in syntax to Python&#39;s range() generator, but its *start*,
+    *stop* and *step* parameters will accept integers, patterns, or thunks 
+    (lambda expressions or functions of zero arguments). Unlike Python&#39;s 
     range() the Range pattern does not terminate: once the step is out-of-bounds 
     the pattern will reset itself to its next start, stop and step values
     as determined by the range values passed in.  Another difference is that
-    pythons range will return Since patterns always return 
-    something, an incompatible start, stop and step specifications will raise
+    patterns always return   something, so incompatible start, stop and step specifications will raise
     an error rather than return nothing.
 
     Parameters

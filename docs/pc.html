@@ -28,7 +28,7 @@ equal …" />
 A pitch class (pc) is an integer 0-11 representing one of twelve
 equal steps in the chromatic octave from C=0 to B=11. A pitch class set is
 a tuple containing pitch classes. A matrix is a 2D array of pitch class sets,
-that can be referenced by row type, e.g. "p3", "i9", "ri2" "r11".</p>
+that can be referenced by row type, e.g. 'p3', 'i9', 'ri2' 'r11'.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -39,7 +39,7 @@ Implements operations on pitch classes, pitch class sets, and set matrices.
 A pitch class (pc) is an integer 0-11 representing one of twelve
 equal steps in the chromatic octave from C=0 to B=11. A pitch class set is
 a tuple containing pitch classes. A matrix is a 2D array of pitch class sets,
-that can be referenced by row type, e.g. &#34;p3&#34;, &#34;i9&#34;, &#34;ri2&#34; &#34;r11&#34;.
+that can be referenced by row type, e.g. &#39;p3&#39;, &#39;i9&#39;, &#39;ri2&#39; &#39;r11&#39;.
 &#34;&#34;&#34;
 
 # __pdoc__ = {
@@ -260,7 +260,7 @@ class Matrix (_MatrixBase):
         ----------
         rowform : string
             A string concatentation of a row type (p, i, r, ri) and a
-            transposition level (0 ... 11). Examples: &#34;p9&#34; &#34;ri0&#34; &#34;i6&#34; &#34;r11&#34;.   
+            transposition level (0 ... 11). Examples: &#39;p9&#39; &#39;ri0&#39; &#39;i6&#39; &#39;r11&#39;.   
         &#34;&#34;&#34;
         try:
             # splits a rowform label like &#34;I5&#34; into a tuple of two values: (&#34;i&#34;, 5)
@@ -559,7 +559,7 @@ if __name__ == &#39;__main__&#39;:
         ----------
         rowform : string
             A string concatentation of a row type (p, i, r, ri) and a
-            transposition level (0 ... 11). Examples: &#34;p9&#34; &#34;ri0&#34; &#34;i6&#34; &#34;r11&#34;.   
+            transposition level (0 ... 11). Examples: &#39;p9&#39; &#39;ri0&#39; &#39;i6&#39; &#39;r11&#39;.   
         &#34;&#34;&#34;
         try:
             # splits a rowform label like &#34;I5&#34; into a tuple of two values: (&#34;i&#34;, 5)
@@ -677,7 +677,7 @@ if __name__ == &#39;__main__&#39;:
 <dl>
 <dt><strong><code>rowform</code></strong> :&ensp;<code>string</code></dt>
 <dd>A string concatentation of a row type (p, i, r, ri) and a
-transposition level (0 &hellip; 11). Examples: "p9" "ri0" "i6" "r11".</dd>
+transposition level (0 &hellip; 11). Examples: 'p9' 'ri0' 'i6' 'r11'.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -691,7 +691,7 @@ transposition level (0 &hellip; 11). Examples: "p9" "ri0" "i6" "r11".</dd>
     ----------
     rowform : string
         A string concatentation of a row type (p, i, r, ri) and a
-        transposition level (0 ... 11). Examples: &#34;p9&#34; &#34;ri0&#34; &#34;i6&#34; &#34;r11&#34;.   
+        transposition level (0 ... 11). Examples: &#39;p9&#39; &#39;ri0&#39; &#39;i6&#39; &#39;r11&#39;.   
     &#34;&#34;&#34;
     try:
         # splits a rowform label like &#34;I5&#34; into a tuple of two values: (&#34;i&#34;, 5)

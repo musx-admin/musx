@@ -28,16 +28,11 @@ music information. It contains a large set of compositional tools adapted from
 my Common Music and Grace systems, including support for complex pattern generation,
 randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
 scores. The musx package currently provides back ends to read and write midi files
-and Csound (thank you Michael Gogins!) and it is straightforward to add other
-backends to connect to different systems, for example to send data to an app via
-portmidi or to SuperCollider via osc. If you are new to musx or Python the place to
-start is by reading this documentation and trying out the material in the demos and
-tutorials directories. After restoring the demos, you can generate output by
-running them as scripts or using the jupyter notebook versions:</p>
-<pre><code class="language-bash">python -m demos.gamelan
-
-jupyter notebook demos/gamelan.ipynb
-</code></pre>
+and Csound and it is straightforward to add other backends to connect to different
+systems, for example to send data to an app via portmidi or to SuperCollider via osc.
+If you are new to musx or Python, consult this documentation and try out all the
+Jupyter Notebooks shipped in musx pip package. Consult the INSTALL.md file for how
+to access and install the notebook directories.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -48,18 +43,11 @@ music information. It contains a large set of compositional tools adapted from
 my Common Music and Grace systems, including support for complex pattern generation,
 randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
 scores. The musx package currently provides back ends to read and write midi files
-and Csound (thank you Michael Gogins!) and it is straightforward to add other
-backends to connect to different systems, for example to send data to an app via
-portmidi or to SuperCollider via osc. If you are new to musx or Python the place to
-start is by reading this documentation and trying out the material in the demos and
-tutorials directories. After restoring the demos, you can generate output by
-running them as scripts or using the jupyter notebook versions:
-
-```bash
-python -m demos.gamelan
-
-jupyter notebook demos/gamelan.ipynb
-```
+and Csound and it is straightforward to add other backends to connect to different 
+systems, for example to send data to an app via portmidi or to SuperCollider via osc. 
+If you are new to musx or Python, consult this documentation and try out all the
+Jupyter Notebooks shipped in musx pip package. Consult the INSTALL.md file for how
+to access and install the notebook directories.
 &#34;&#34;&#34;
 
 # Do not alter this version line, it is automatically replaced by the correct
@@ -73,7 +61,7 @@ from .midi.midimsg import *
 from .midi.midievent import *
 from .midi.midifile import *
 from .seq import *
-from .gens import *
+#from .gens import *
 from .patterns import *
 from .paint import *
 from .pitch import *
@@ -109,11 +97,6 @@ on them.</p></div>
 <div class="desc"><p>Adds methods to python's Fraction class for representing exact time, mensural tuples,<br>
 tuning ratios, etc.</p></div>
 </dd>
-<dt><code class="name"><a title="musx.gens" href="gens.html">musx.gens</a></code></dt>
-<dd>
-<div class="desc"><p>A collection of python generators that produce many different patterns in data,
-from simple looping and randomness to more complex processes such as …</p></div>
-</dd>
 <dt><code class="name"><a title="musx.interval" href="interval.html">musx.interval</a></code></dt>
 <dd>
 <div class="desc"><p>A class that implements musical intervals …</p></div>
@@ -140,7 +123,7 @@ variety of interesting textures and music. The <code>brush()</code> composer …
 </dd>
 <dt><code class="name"><a title="musx.patterns" href="patterns.html">musx.patterns</a></code></dt>
 <dd>
-<div class="desc"><p>An object-orientated implemention of python iterators that yield patterns in data,
+<div class="desc"><p>An object-orientated implemention of Python iterators that yield patterns in data,
 from simple looping and randomness to more complex processes such …</p></div>
 </dd>
 <dt><code class="name"><a title="musx.pc" href="pc.html">musx.pc</a></code></dt>
@@ -167,8 +150,7 @@ values: fractions, rhythmic symbols, lists of the same or strings of the …</p>
 <dt><code class="name"><a title="musx.score" href="score.html">musx.score</a></code></dt>
 <dd>
 <div class="desc"><p>This module implements a scheduling queue for generating musical scores.
-The Score runs 'composers' (python generators) that output musical events
-to …</p></div>
+The Score runs 'part composers' (Python generators) that output musical …</p></div>
 </dd>
 <dt><code class="name"><a title="musx.seq" href="seq.html">musx.seq</a></code></dt>
 <dd>
@@ -206,7 +188,6 @@ rescaling, arithmetic, etc.</p></div>
 <li><code><a title="musx.csound" href="csound.html">musx.csound</a></code></li>
 <li><code><a title="musx.envs" href="envs.html">musx.envs</a></code></li>
 <li><code><a title="musx.frac" href="frac.html">musx.frac</a></code></li>
-<li><code><a title="musx.gens" href="gens.html">musx.gens</a></code></li>
 <li><code><a title="musx.interval" href="interval.html">musx.interval</a></code></li>
 <li><code><a title="musx.midi" href="midi/index.html">musx.midi</a></code></li>
 <li><code><a title="musx.mxml" href="mxml/index.html">musx.mxml</a></code></li>

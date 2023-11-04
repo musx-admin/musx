@@ -22,7 +22,7 @@ from .midi.midimsg import *
 from .midi.midievent import *
 from .midi.midifile import *
 from .seq import *
-from .gens import *
+#from .gens import *
 from .patterns import *
 from .paint import *
 from .pitch import *

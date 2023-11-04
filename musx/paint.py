@@ -11,7 +11,7 @@ the demos directory.
 """
 
 
-from musx import Note, cycle, choose
+from musx import Note, Cycle, Choose
 
 
 def brush(score, *, length=None, end=None, rhythm=.5, duration=None, pitch=60, amplitude=.5, instrument=0, microdivs=1):
@@ -64,7 +64,7 @@ def brush(score, *, length=None, end=None, rhythm=.5, duration=None, pitch=60, a
         stopitr = end
         thisitr = (lambda: score.elapsed)
     # convert all values into cycles
-    cyc = (lambda x: cycle(x if type(x) is list else [x]))
+    cyc = (lambda x: Cycle(x if type(x) is list else [x]))
     rhy = cyc(rhythm)
     dur = cyc(duration)
     key = cyc(pitch)
@@ -73,11 +73,11 @@ def brush(score, *, length=None, end=None, rhythm=.5, duration=None, pitch=60, a
     while (thisitr() < stopitr):
         t = score.now
         #print("counter=", counter, "now=", t)
-        r = next(rhy)
-        d = next(dur)
-        k = next(key)
-        a = next(amp)
-        c = next(chan)
+        r = rhy.next()
+        d = dur.next()
+        k = key.next()
+        a = amp.next()
+        c = chan.next()
         if r > 0:
             if not d: d = r
             if type(k) is list:
@@ -125,22 +125,22 @@ def spray(score, *, length=None, end=None, rhythm=.5, duration=None, pitch= 60, 
         stopitr = end
         thisitr = (lambda: score.elapsed)
     # convert each param into a chooser pattern.
-    ran = (lambda x: choose(x if type(x) is list else [x]))
+    ran = (lambda x: Choose(x if type(x) is list else [x]))
     rhy = ran(rhythm)
     dur = ran(duration)
     key = ran(pitch)
     amp = ran(amplitude)
     chan = ran(instrument)
-    band = choose( [i for i in range(-band, band+1)] if type(band) is int else band )
+    band = Choose( [i for i in range(-band, band+1)] if type(band) is int else band )
     while (thisitr() < stopitr):
         t = score.now
         #print("counter=", counter, "now=", t)
-        r = next(rhy)
-        d = next(dur)
-        k = next(key)
-        a = next(amp)
-        c = next(chan)
-        b = next(band)
+        r = rhy.next()
+        d = dur.next()
+        k = key.next()
+        a = amp.next()
+        c = chan.next()
+        b = band.next()
         if type(b) is list:
             k = [k+i for i in b]
         else:

@@ -1020,18 +1020,5 @@ class States(Pattern):
         return cells[row][col]
 
 if __name__ == '__main__':
-    from musx.gens import markov, markov_analyze
-    from musx.patterns import Markov
-
-    melody = [60, 60, 62, 60, 65, 64, 60, 60, 62, 60, 67, 65,
-          60, 60, 72, 69, 65, 64, 62, 70, 70, 69, 65, 67, 65]
-    
-    rules = {(): [[60, 0.32], [62, 0.44], [65, 0.64], [64, 0.72], 
-                [67, 0.7999999999999999], [72, 0.84], [69, 0.9199999999999999], 
-                [70, 0.9999999999999999]]}
-    print(f"rules: {rules}")
-    m = markov(rules)
-    print( [next(m) for _ in range(10)])
-
-    #print(Markov.analyze(melody, order=0).items)
+    pass
 

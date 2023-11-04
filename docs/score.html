@@ -6,8 +6,7 @@
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.score API documentation</title>
 <meta name="description" content="This module implements a scheduling queue for generating musical scores.
-The Score runs &#39;composers&#39; (python generators) that output musical events
-to …" />
+The Score runs &#39;part composers&#39; (Python generators) that output musical …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -25,19 +24,19 @@ to …" />
 </header>
 <section id="section-intro">
 <p>This module implements a scheduling queue for generating musical scores.
-The Score runs 'composers' (python generators) that output musical events
+The Score runs 'part composers' (Python generators) that output musical events
 to sequences and score files.</p>
 <h2 id="example">Example</h2>
 <pre><code class="language-py">seq = Seq()
 sco = Score(out=seq)
-def bach(sco, num):
+def bach(score, num):
     for i in range(num):
-        n = Note(time=queue.now, key=60+i)
-        sco.add(n)
+        n = Note(time=score.now, key=60+i)
+        score.add(n)
         yield .125
 sco.compose(bach(sco, 10))
 </code></pre>
-<p>See the examples directory for many examples of composing!</p>
+<p>See the demos directory for many examples of part composers!</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -45,7 +44,7 @@ sco.compose(bach(sco, 10))
 <pre><code class="python">###############################################################################
 &#34;&#34;&#34;
 This module implements a scheduling queue for generating musical scores.
-The Score runs &#39;composers&#39; (python generators) that output musical events
+The Score runs &#39;part composers&#39; (Python generators) that output musical events
 to sequences and score files.
 
 Example
@@ -53,15 +52,15 @@ Example
 ```py
 seq = Seq()
 sco = Score(out=seq)
-def bach(sco, num):
+def bach(score, num):
     for i in range(num):
-        n = Note(time=queue.now, key=60+i)
-        sco.add(n)
+        n = Note(time=score.now, key=60+i)
+        score.add(n)
         yield .125
 sco.compose(bach(sco, 10))
 ```
 
-See the examples directory for many examples of composing!
+See the demos directory for many examples of part composers!
 &#34;&#34;&#34;
 
 import types
@@ -69,13 +68,12 @@ import types
 
 class Score:
     &#34;&#34;&#34;
-    Runs composers in time sorted order. A composer is a python generator
-    that is evaluated by the Score. When a composer executes it
-    can add musical events or new composers to the score. To continue
-    running a composer yields back a delta time indicating the next time
-    point that the composer should compose 
-    something. A composer stops running when it stops yielding delta
-    times or it yields a negative delta time.
+    Runs part composers in time sorted order. A part composer is a Python generator
+    that is evaluated by the Score. When a part composer executes it
+    can add musical events or new part composers to the score. To continue
+    running a part composer must yield back a delta time that specifies the next time
+    point at which the composer should run again. A part composer stops 
+    running when it stops yielding delta times or it yields a negative delta time.
     &#34;&#34;&#34;
 
     _queue = []
@@ -236,8 +234,8 @@ class Score:
 
     def compose(self, composer):
         &#34;&#34;&#34;
-        Starts running one or more composer generators. This function can be
-        called at the top level and also by composers that are already running.
+        Starts running one or more part composers. This function can be
+        called at the top level and also by composers that are running.
 
         Parameters
         ----------
@@ -245,7 +243,7 @@ class Score:
             If composer is a generator it is added to the queue at the current
             time. Otherwise composer can be a list [*ahead*, *composer*]
             or a list of the same [[*ahead*, *composer*], ...]  where
-            *ahead* is a future time and *composer* is a composer generator.
+            *ahead* is a future start time and *composer* is a part composer.
 
         Example
         -------
@@ -413,26 +411,24 @@ if __name__ == &#39;__main__&#39;:
 <span>(</span><span>out=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Runs composers in time sorted order. A composer is a python generator
-that is evaluated by the Score. When a composer executes it
-can add musical events or new composers to the score. To continue
-running a composer yields back a delta time indicating the next time
-point that the composer should compose
-something. A composer stops running when it stops yielding delta
-times or it yields a negative delta time.</p></div>
+<div class="desc"><p>Runs part composers in time sorted order. A part composer is a Python generator
+that is evaluated by the Score. When a part composer executes it
+can add musical events or new part composers to the score. To continue
+running a part composer must yield back a delta time that specifies the next time
+point at which the composer should run again. A part composer stops
+running when it stops yielding delta times or it yields a negative delta time.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Score:
     &#34;&#34;&#34;
-    Runs composers in time sorted order. A composer is a python generator
-    that is evaluated by the Score. When a composer executes it
-    can add musical events or new composers to the score. To continue
-    running a composer yields back a delta time indicating the next time
-    point that the composer should compose 
-    something. A composer stops running when it stops yielding delta
-    times or it yields a negative delta time.
+    Runs part composers in time sorted order. A part composer is a Python generator
+    that is evaluated by the Score. When a part composer executes it
+    can add musical events or new part composers to the score. To continue
+    running a part composer must yield back a delta time that specifies the next time
+    point at which the composer should run again. A part composer stops 
+    running when it stops yielding delta times or it yields a negative delta time.
     &#34;&#34;&#34;
 
     _queue = []
@@ -593,8 +589,8 @@ times or it yields a negative delta time.</p></div>
 
     def compose(self, composer):
         &#34;&#34;&#34;
-        Starts running one or more composer generators. This function can be
-        called at the top level and also by composers that are already running.
+        Starts running one or more part composers. This function can be
+        called at the top level and also by composers that are running.
 
         Parameters
         ----------
@@ -602,7 +598,7 @@ times or it yields a negative delta time.</p></div>
             If composer is a generator it is added to the queue at the current
             time. Otherwise composer can be a list [*ahead*, *composer*]
             or a list of the same [[*ahead*, *composer*], ...]  where
-            *ahead* is a future time and *composer* is a composer generator.
+            *ahead* is a future start time and *composer* is a part composer.
 
         Example
         -------
@@ -699,8 +695,8 @@ does not examine the contents this variable.</p></div>
 <span>def <span class="ident">compose</span></span>(<span>self, composer)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Starts running one or more composer generators. This function can be
-called at the top level and also by composers that are already running.</p>
+<div class="desc"><p>Starts running one or more part composers. This function can be
+called at the top level and also by composers that are running.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>composer</code></strong> :&ensp;<code>generator | list</code></dt>
@@ -708,7 +704,7 @@ called at the top level and also by composers that are already running.</p>
 time. Otherwise composer can be a list [<em>ahead</em>, <em>composer</em>]
 or a list of the same [[<em>ahead</em>, <em>composer</em>], &hellip;]
 where
-<em>ahead</em> is a future time and <em>composer</em> is a composer generator.</dd>
+<em>ahead</em> is a future start time and <em>composer</em> is a part composer.</dd>
 </dl>
 <h2 id="example">Example</h2>
 <pre><code class="language-py">def simp(q, num, rate, key):
@@ -734,8 +730,8 @@ q.compose(simp2(q, num))
 </summary>
 <pre><code class="python">def compose(self, composer):
     &#34;&#34;&#34;
-    Starts running one or more composer generators. This function can be
-    called at the top level and also by composers that are already running.
+    Starts running one or more part composers. This function can be
+    called at the top level and also by composers that are running.
 
     Parameters
     ----------
@@ -743,7 +739,7 @@ q.compose(simp2(q, num))
         If composer is a generator it is added to the queue at the current
         time. Otherwise composer can be a list [*ahead*, *composer*]
         or a list of the same [[*ahead*, *composer*], ...]  where
-        *ahead* is a future time and *composer* is a composer generator.
+        *ahead* is a future start time and *composer* is a part composer.
 
     Example
     -------
