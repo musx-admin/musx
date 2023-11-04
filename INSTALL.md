@@ -11,7 +11,7 @@ This document explains how to install musx in a Python [virtual environment](htt
   $ cd ~/projects/mymusx
   ```
 
-2. Call Python 3.10 or higher and create a virtual environment for  musx. You can use any name, this document calls it *musxenv* :
+2. Call Python 3.10 or higher and create a virtual environment for musx. You can use any name, this document calls it *musxenv* :
 
   ``` 
   $ python3.10 -m venv musxenv
@@ -53,19 +53,13 @@ This document explains how to install musx in a Python [virtual environment](htt
   Installed kernelspec musxvenv in /Users/taube/Library/Jupyter/kernels/musxenv
   ```
 
-8. Finally, install musx and (optionally) copy its support directories into your mymusx working directory for easy access:
-
+8. Install musx and (optionally) download its support directories into your mymusx working directory for easy access:
   ```
 (musxenv) $ python -m pip install musx
-
-(musxenv) $ cp -r musxenv/site-packages/musx/doc ./doc
-
-(musxenv) $ cp -r musxenv/site-packages/musx/demos ./demos
-
-(musxenv) $ cp -r musxenv/site-packages/musx/tutorials ./tutorials
-
-
   ```
+  * [Documentation (HTML)](https://github.com/musx-admin/musx/tree/main/docs)
+  * [Tutorials (Jupyter Notebook)](https://github.com/musx-admin/musx/tree/main/tutorials)
+  * [Demos (Jupyter Notebook)](https://github.com/musx-admin/musx/tree/main/demos)
 
 9. To test that musx is working, start up python, import the musx package, and call a function:
 
@@ -79,23 +73,17 @@ This document explains how to install musx in a Python [virtual environment](htt
   >>> exit()
   (musxenv) $
   ```
+
+
 ___
 
-That's it! 🤗  The best way to learn about the musx system is to read the documentation in the docs/ folder and run the scripts in demos/ and tutorials/.  To run a demo, you can use the jupyter notebook version or the python script version:
-
-Run a Jupyter notebook demo:
+That's it! 🤗  The best way to learn about the musx system is to read the documentation in the docs/ folder and run the scripts in demos/ and tutorials/, e.g.:
 
   ```
   (musxenv) $ jupyter notebook demos/gamelan.ipynb
   ```
 
-Run a Python script demo:
-
-  ```
-  (musxenv) $ python -m demos.gamelan
-  ```
-
-When you are done with your musx session you can type 'deactivate' to shut down your virtural environment. Once deactivated your terminal prompt will no longer display the virtual envronment name:
+When you are done with your musx session type 'deactivate' to shut down your virtural environment. Once deactivated your terminal prompt will no longer display the virtual envronment name:
 
   ```
   (musxenv) $ deactivate
@@ -138,7 +126,7 @@ When you are done with your musx session you can type 'deactivate' to shut down 
 
 ​	—Rick Taube
 
-​		Emeritus Professor, Composition/Theory/CS+Music  
+​		Emeritus Professor, Composition/Theory/CS+Music/MusicTech  
 ​		School of Music  
 ​		University of Illinois Urbana-Champaign  
 ​		Email: taube@illinois.edu
