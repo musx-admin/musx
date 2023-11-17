@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx API documentation</title>
-<meta name="description" content="musx (pronounced *muse ex*) is a package for composing and processing symbolic
-music information. It contains a large set of compositional tools …" />
+<meta name="description" content="musx
+musx (pronounced *muse ex*) is a package for composing and processing symbolic music information. It contains a large set of compositional tools …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,31 +23,35 @@ music information. It contains a large set of compositional tools …" />
 <h1 class="title">Package <code>musx</code></h1>
 </header>
 <section id="section-intro">
-<p>musx (pronounced <em>muse ex</em>) is a package for composing and processing symbolic
-music information. It contains a large set of compositional tools adapted from
-my Common Music and Grace systems, including support for complex pattern generation,
-randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
-scores. The musx package currently provides back ends to read and write midi files
-and Csound and it is straightforward to add other backends to connect to different
-systems, for example to send data to an app via portmidi or to SuperCollider via osc.
-If you are new to musx or Python, consult this documentation and try out all the
-Jupyter Notebooks shipped in musx pip package. Consult the INSTALL.md file for how
-to access and install the notebook directories.</p>
+<h1 id="musx">musx</h1>
+<p>musx (pronounced <em>muse ex</em>) is a package for composing and processing symbolic music information. It contains a large set of compositional tools adapted from my Common Music and Grace systems, including support for complex pattern generation, randomness, mapping, enveloping, spectral composition, and microtonality. The musx package currently provides back ends to read and write midi or audio files and it is straightforward to connect to 'realtime' systems via Open Sound Control or portmidi. If you are new to musx or Python, you will find <a href="https://github.com/musx-admin/musx/blob/main/INSTALL.md">installation instructions</a>, <a href="https://musx-admin.github.io/musx/">documentation</a>, <a href="https://github.com/musx-admin/musx/tree/main/tutorials">tutorials</a>, and <a href="https://github.com/musx-admin/musx/tree/main/demos">demos</a> on the <a href="https://github.com/ricktaube/musx">website</a>.</p>
+<p>Rick Taube</p>
+<p>Emeritus Professor, Composition/Theory/CS+Music<br>
+School of Music<br>
+University of Illinois Urbana-Champaign<br>
+Email: taube@illinois.edu
+</p>
+<p>President, Illiac Software Inc.<br>
+<a href="https://harmonia.cloud/">https://harmonia.cloud/</a><br>
+Email: taube@illiacsoftware.com</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-musx (pronounced *muse ex*) is a package for composing and processing symbolic
-music information. It contains a large set of compositional tools adapted from
-my Common Music and Grace systems, including support for complex pattern generation,
-randomness, mapping, enveloping, spectral composition, microtonality, and musicxml
-scores. The musx package currently provides back ends to read and write midi files
-and Csound and it is straightforward to add other backends to connect to different 
-systems, for example to send data to an app via portmidi or to SuperCollider via osc. 
-If you are new to musx or Python, consult this documentation and try out all the
-Jupyter Notebooks shipped in musx pip package. Consult the INSTALL.md file for how
-to access and install the notebook directories.
+# musx
+musx (pronounced *muse ex*) is a package for composing and processing symbolic music information. It contains a large set of compositional tools adapted from my Common Music and Grace systems, including support for complex pattern generation, randomness, mapping, enveloping, spectral composition, and microtonality. The musx package currently provides back ends to read and write midi or audio files and it is straightforward to connect to &#39;realtime&#39; systems via Open Sound Control or portmidi. If you are new to musx or Python, you will find [installation instructions](https://github.com/musx-admin/musx/blob/main/INSTALL.md), [documentation](https://musx-admin.github.io/musx/), [tutorials](https://github.com/musx-admin/musx/tree/main/tutorials), and [demos](https://github.com/musx-admin/musx/tree/main/demos) on the [website](https://github.com/ricktaube/musx).
+
+Rick Taube
+
+Emeritus Professor, Composition/Theory/CS+Music  
+School of Music  
+University of Illinois Urbana-Champaign  
+Email: taube@illinois.edu  
+
+President, Illiac Software Inc.  
+https://harmonia.cloud/  
+Email: taube@illiacsoftware.com   
 &#34;&#34;&#34;
 
 # Do not alter this version line, it is automatically replaced by the correct
@@ -180,7 +184,9 @@ rescaling, arithmetic, etc.</p></div>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#musx">musx</a></li>
+</ul>
 </div>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>

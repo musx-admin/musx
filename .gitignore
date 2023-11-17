@@ -3,6 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,linux,macos,emacs,python,pycharm,visualstudiocode,jupyternotebooks
 
 ignore/
+pysnd/
 musx/mxml/schema/
 scores/
 tutorials/ignore

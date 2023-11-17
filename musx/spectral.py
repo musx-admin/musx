@@ -11,11 +11,11 @@ from .pitch import keynum
 from .tools import quantize
 
 
-try:
-    from scipy.special import jn as bes_jn
-except ModuleNotFoundError:
-    def bes_jn(a,b):
-        raise ModuleNotFoundError("\nfmspectrum(): module scipy.special not found.")
+# try:
+#     from scipy.special import jn as bes_jn
+# except ModuleNotFoundError:
+#     def bes_jn(a,b):
+#         raise ModuleNotFoundError("\nfmspectrum(): module scipy.special not found.")
 
 
 def harmonics(h1, h2, fund=1, reverse=False):
@@ -310,6 +310,105 @@ def fmspectrum(carrier, mratio, index):
             else:
                 spectrum[frq] = amp
     return Spectrum( sorted( [f, round(abs(a), 3)] for f,a in spectrum.items()) )
+
+
+def bes_j0(x):
+    '''Translated from Common Music by https://www.codeconvert.ai/'''
+    if abs(x) < 8.0:
+        y = x * x
+        ans1 = 5.756849E+10 + y * (-1.3362591E+10 + y * (6.5161965E+8 + y * (-1.1214424E+7 + y * (77392.33 + y * -184.90524))))
+        ans2 = 5.756849E+10 + y * (1.029533E+9 + y * (9494681.0 + y * (59272.65 + y * (267.85327 + y * y))))
+        return ans1 / ans2
+    else:
+        ax = abs(x)
+        z = 8.0 / ax
+        y = z * z
+        xx = ax - 0.7853982
+        ans1 = 1.0 + y * (-0.0010986286 + y * (2.7345104E-5 + y * (-2.0733708E-6 + y * 2.0938872E-7)))
+        ans2 = -0.015625 + y * (1.4304888E-4 + y * (-6.9111475E-6 + y * (7.621095E-7 + y * -9.349451E-8)))
+        return math.sqrt(0.63661975 / ax) * (math.cos(xx) * ans1 - z * math.sin(xx) * ans2)
+
+
+def bes_j1(x):
+    '''Translated from Common Music by https://www.codeconvert.ai/'''
+    if abs(x) < 8.0:
+        y = x * x
+        ans1 = x * (7.2362615E+10 + y * (-7.8950595E+9 + y * (2.4239685E+8 + y * (-2972611.5 + y * (15704.482 + y * -30.160366)))))
+        ans2 = 1.4472523E+11 + y * (2.3005353E+9 + y * (1.8583304E+7 + y * (99447.44 + y * (376.99915 + y * y))))
+        return ans1 / ans2
+    else:
+        ax = abs(x)
+        z = 8.0 / ax
+        y = z * z
+        xx = ax - 2.3561945
+        ans1 = 1.0 + y * (0.00183105 + y * (-3.5163965E-5 + y * (2.4575202E-6 + y * -2.4033702E-7)))
+        ans2 = 0.046875 + y * (-2.0026909E-4 + y * (8.449199E-6 + y * (-8.822899E-7 + y * 1.05787414E-7)))
+        return math.copysign(math.sqrt(0.63661975 / ax) * (math.cos(xx) * ans1 - z * math.sin(xx) * ans2), x)
+
+
+def bes_jn(unn, ux):
+    '''Translated from Common Music by https://www.codeconvert.ai/'''
+    nn = unn
+    x = ux
+    n = abs(nn)
+    besn = 0.0
+    if n == 0:
+        besn = bes_j0(x)
+    elif n == 1:
+        besn = bes_j1(x)
+    elif x == 0:
+        besn = 0.0
+    else:
+        iacc = 40
+        ans = 0.0
+        bigno = 1.0E+10
+        bigni = 1.0E-10
+        if abs(x) > n:
+            tox = 2.0 / abs(x)
+            bjm = bes_j0(abs(x))
+            bj = bes_j1(abs(x))
+            j = 1
+            bjp = 0.0
+            while j != n:
+                bjp = j * tox * bj - bjm
+                bjm = bj
+                bj = bjp
+                j += 1
+            ans = bj
+        else:
+            tox = 2.0 / abs(x)
+            m = 2 * (n + int((n * iacc) ** 0.5) // 2)
+            jsum = 0.0
+            bjm = 0.0
+            sum = 0.0
+            bjp = 0.0
+            bj = 1.0
+            j = m
+            while j != 0:
+                bjm = j * tox * bj - bjp
+                bjp = bj
+                bj = bjm
+                if abs(bj) > bigno:
+                    bj *= bigni
+                    bjp *= bigni
+                    ans *= bigni
+                    sum *= bigni
+                if jsum != 0:
+                    sum += bj
+                jsum = -1 * jsum
+                if j == n:
+                    ans = bjp
+                j -= 1
+            sum = 2.0 * sum - bj
+            ans = ans / sum
+        if x < 0 and n % 2 != 0:
+            besn = -ans
+        else:
+            besn = ans
+    if nn < 0 and nn % 2 != 0:
+        return -besn
+    else:
+        return besn
 
 
 def rmspectrum(freqs1, freqs2, asfreqs=False):
