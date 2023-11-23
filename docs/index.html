@@ -6,7 +6,8 @@
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx API documentation</title>
 <meta name="description" content="musx
-musx (pronounced *muse ex*) is a package for composing and processing symbolic music information. It contains a large set of compositional tools …" />
+musx (pronounced *muse ex*) is a package for composing and processing symbolic
+music information. It was originaly created for teaching my …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -24,10 +25,27 @@ musx (pronounced *muse ex*) is a package for composing and processing symbolic m
 </header>
 <section id="section-intro">
 <h1 id="musx">musx</h1>
-<p>musx (pronounced <em>muse ex</em>) is a package for composing and processing symbolic music information. It contains a large set of compositional tools adapted from my Common Music and Grace systems, including support for complex pattern generation, randomness, mapping, enveloping, spectral composition, and microtonality. The musx package currently provides back ends to read and write midi or audio files and it is straightforward to connect to 'realtime' systems via Open Sound Control or portmidi. If you are new to musx or Python, you will find <a href="https://github.com/musx-admin/musx/blob/main/INSTALL.md">installation instructions</a>, <a href="https://musx-admin.github.io/musx/">documentation</a>, <a href="https://github.com/musx-admin/musx/tree/main/tutorials">tutorials</a>, and <a href="https://github.com/musx-admin/musx/tree/main/demos">demos</a> on the <a href="https://github.com/ricktaube/musx">website</a>.</p>
+<p>musx (pronounced <em>muse ex</em>) is a package for composing and processing symbolic
+music information. It was originaly created for teaching my CS+Music classes
+and it now contains all the compositional tools developed in my Common Music
+and Grace systems, including support for complex pattern generation, randomness,
+mapping, enveloping, spectral composition, and microtonality. The 'base' musx
+package provides a back end to read/write midi files and MusicXML; to compose
+with audio files or send/receive real time midi or osc, see the 'Additional
+support and customizations' section of
+<a href="https://github.com/musx-admin/musx/blob/main/INSTALL.md">INSTALL.md</a>.</p>
+<p>musx requires the <a href="https://pypi.org/project/lxml/">lxml</a>,
+<a href="https://pypi.org/project/numpy/">numpy</a>,
+<a href="https://matplotlib.org/">matplotlib</a>,
+and <a href="https://pypi.org/project/jupyter/">jupyter</a> packages.</p>
+<p>musx <a href="https://musx-admin.github.io/musx/">documentation</a>,
+<a href="https://github.com/musx-admin/musx/tree/main/tutorials">tutorials</a>,
+and <a href="https://github.com/musx-admin/musx/tree/main/demos">demos</a>
+are available on the github <a href="https://github.com/ricktaube/musx">website</a>.</p>
+<hr>
 <p>Rick Taube</p>
 <p>Emeritus Professor, Composition/Theory/CS+Music<br>
-School of Music<br>
+School of Music
 University of Illinois Urbana-Champaign<br>
 Email: taube@illinois.edu
 </p>
@@ -40,12 +58,32 @@ Email: taube@illiacsoftware.com</p>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
 # musx
-musx (pronounced *muse ex*) is a package for composing and processing symbolic music information. It contains a large set of compositional tools adapted from my Common Music and Grace systems, including support for complex pattern generation, randomness, mapping, enveloping, spectral composition, and microtonality. The musx package currently provides back ends to read and write midi or audio files and it is straightforward to connect to &#39;realtime&#39; systems via Open Sound Control or portmidi. If you are new to musx or Python, you will find [installation instructions](https://github.com/musx-admin/musx/blob/main/INSTALL.md), [documentation](https://musx-admin.github.io/musx/), [tutorials](https://github.com/musx-admin/musx/tree/main/tutorials), and [demos](https://github.com/musx-admin/musx/tree/main/demos) on the [website](https://github.com/ricktaube/musx).
+musx (pronounced *muse ex*) is a package for composing and processing symbolic
+music information. It was originaly created for teaching my CS+Music classes
+and it now contains all the compositional tools developed in my Common Music
+and Grace systems, including support for complex pattern generation, randomness,
+mapping, enveloping, spectral composition, and microtonality. The &#39;base&#39; musx
+package provides a back end to read/write midi files and MusicXML; to compose
+with audio files or send/receive real time midi or osc, see the &#39;Additional
+support and customizations&#39; section of
+[INSTALL.md](https://github.com/musx-admin/musx/blob/main/INSTALL.md).
+
+musx requires the [lxml](https://pypi.org/project/lxml/),
+[numpy](https://pypi.org/project/numpy/),
+[matplotlib](https://matplotlib.org/),
+and [jupyter](https://pypi.org/project/jupyter/) packages.
+
+musx [documentation](https://musx-admin.github.io/musx/),
+[tutorials](https://github.com/musx-admin/musx/tree/main/tutorials), 
+and [demos](https://github.com/musx-admin/musx/tree/main/demos)
+are available on the github [website](https://github.com/ricktaube/musx).
+
+----
 
 Rick Taube
 
 Emeritus Professor, Composition/Theory/CS+Music  
-School of Music  
+School of Music 
 University of Illinois Urbana-Champaign  
 Email: taube@illinois.edu  
 
@@ -87,6 +125,11 @@ from .frac import *</code></pre>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="musx.audio" href="audio.html">musx.audio</a></code></dt>
+<dd>
+<div class="desc"><p>A module providing support for reading and writing audio files using
+Todd Ingall's <a href="https://pypi.org/project/pysndlib/">pysndlib package</a>: …</p></div>
+</dd>
 <dt><code class="name"><a title="musx.csound" href="csound.html">musx.csound</a></code></dt>
 <dd>
 <div class="desc"><p>Author: Michael Gogins …</p></div>
@@ -191,6 +234,7 @@ rescaling, arithmetic, etc.</p></div>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="musx.audio" href="audio.html">musx.audio</a></code></li>
 <li><code><a title="musx.csound" href="csound.html">musx.csound</a></code></li>
 <li><code><a title="musx.envs" href="envs.html">musx.envs</a></code></li>
 <li><code><a title="musx.frac" href="frac.html">musx.frac</a></code></li>

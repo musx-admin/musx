@@ -125,7 +125,7 @@ class Mark (IntEnum):
 <dl>
 <dt id="musx.mxml.mark.Mark"><code class="flex name class">
 <span>class <span class="ident">Mark</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>The Mark class inherits from IntEnum to enumerate various types
@@ -221,6 +221,7 @@ TEMPORAL as their upper byte and their lower byte holds their rank value 0-2.</p
 <ul class="hlist">
 <li>enum.IntEnum</li>
 <li>builtins.int</li>
+<li>enum.ReprEnum</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>

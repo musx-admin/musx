@@ -72,10 +72,10 @@ class Mode (IntEnum):
 <dl>
 <dt id="musx.mxml.mode.Mode"><code class="flex name class">
 <span>class <span class="ident">Mode</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>An enumeration.</p></div>
+<div class="desc"><p>Enum where members are also (and must be) ints</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -104,6 +104,7 @@ class Mode (IntEnum):
 <ul class="hlist">
 <li>enum.IntEnum</li>
 <li>builtins.int</li>
+<li>enum.ReprEnum</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>
