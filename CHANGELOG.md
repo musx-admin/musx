@@ -1,5 +1,20 @@
 # Change Log
 
+## musx 3.1.0
+
+### Added
+
+* New musx.audio module adds support for working with Todd Ingall's [pysndlib](https://pypi.org/project/pysndlib/) and musx together. This module is not automatically loaded into the musx namespace, use an explict `import musx.audio` to access it.
+* New jupyter notebook tutorial 'audio.ipynb' introduces working with pysndlib and musx. The notebook starts with basic instrument design and moves up thru more advanced concepts. 
+* New jupyter notebook demo 'birds.ipynb' explores Bill Schottstaedt's bird calls. For each bird you can access its python code, play the bird call at different speeds to study the transients, and visit a Cornell website page to learn about the critter.
+* New function `rescalenv()` rescales an x,y envelope list.
+* New function `interp()` interpolates values from an x,y envelope or in-line x,y pairs.
+
+### Changed
+
+* The musx.env module is no longer auto-loaded. To use it provide an explicit 'import musx.env' statement.
+* Updated text in all .md files.
+
 ## musx 3.0.0
 
 ### Added

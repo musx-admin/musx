@@ -1,13 +1,14 @@
 ###############################################################################
 """
-An assortmant of music composition tools for working with randomness, 
-rescaling, arithmetic, etc.
+An assortmant of tools for working with envlopes, randomness, rescaling, 
+arithmetic, etc.
 """
 
 import types
 import math
 import random
 import subprocess
+from functools import reduce
 
 __pdoc__ = {
     'parse_string_sequence': False
@@ -85,7 +86,6 @@ def rescale(x, x1, x2, y1, y2, mode='lin'):
         # m = math.log(y2 / y1) / (x2 - x1)
         # k = y1 * math.pow(math.e, -m * x1)
         # return k * math.pow(math.e, m * x)
-
         # a base that yields a slope that is not too steep or shallow...
         b = 512
         if mode == 'exp':
@@ -95,9 +95,150 @@ def rescale(x, x1, x2, y1, y2, mode='lin'):
     raise ValueError(f"mode {mode} is not 'lin', 'cos', 'exp', or '-exp'.")
 
 
+def interp(x, *xys, mode='lin', mul=None, add=None):
+    """
+    A function that interpolates a y value for a given x in a
+    series of x,y coordinate pairs. If x is not within bounds
+    then the first or last y value is returned.
+
+    Parameters
+    ----------
+    x : int | float
+        The x value to interpolate in the sequence of x y values. 
+    xys : series of int or float | list
+        Either a series of in-line x, y values representing the envelope
+        or a single list of x y coordinate pairs.
+    mode : 'lin' | 'cos' | 'exp' | '-exp'
+        A string that specifies the type of interpolation performed;
+        'lin' is linear, 'cos' is cosine, 'exp' is exponential and 
+        '-exp' is inverted exponential. The default is 'lin'. Note
+        that if specified the value must provided as an explicit
+        keyword arg, e.g. mode='cos'.
+    mul : None | number
+        A value to multiply the result by.
+    add : None | number
+        A value to add to the result after any multiplication.
+    Returns
+    -------
+    The interpolated value of x.
+    """
+    if len(xys) == 1 and isinstance(xys[0], (tuple,list)):
+        xys = xys[0]
+    if not xys or len(xys) & 1:
+        raise ValueError(f"coordinates not x y pairs: {xys}.")
+    # find the segment in the coordinates that contains the given x
+    xr,yr = xys[0:2]
+    xl,yl = xr,yr
+    # iterate remaining pairs of x y values stepping by 2
+    for wx,wy in zip(xys[2::2], xys[3::2]):
+        if xr > x: break
+        xl,yl = xr,yr
+        xr,yr = wx,wy
+    # print(x, xl, xr, yl, yr, mode)
+    val = rescale(x, xl, xr, yl, yr, mode)
+    if mul: val *= mul
+    if add: val += add
+    return val
+
+
+def rescalenv(env, newxmin=None, newxmax=None, newymin=None, newymax=None,*, mode=None):
+    '''
+    Rescales the current x and/or y envelope coordinates of the given envelope to proportional
+    values lying between the given new minima and maxima. If newxmin or newxmax are unspecified
+    they inherit the current x minimum and maximum values. The same is true for y values.
+    If mode is specfied it is applied to the y values only. See
+    `rescale()` for information about mode.
+
+    Parameters:
+    -----------
+    env : list 
+        A list of x y coordinate values: [x1,y1,x2,y2,...xn,yn] where
+        x values are monotoniclly increasing values from left to right.
+    newxmin : int | float | None
+        The new minimum x value. If None it defaults to the current minimum x value.
+    newxmax : int | float | None
+        The new maximum x value. If None it defaults to the current maximum x value.
+    newymin : int | float | None
+        The new minimum y value. If None it defaults to the current minimum y value.
+    newymax : int | float | None
+        The new maximum y value. If None it defaults to the current maximum y value.
+    mode : string
+        See `rescale()` for possible mode values.
+
+    Returns
+    -------
+    A rescaled x,y envelope.
+    '''
+    #print(f"env:  {env}")
+    if len(env) % 2 != 0:
+        raise ValueError(f"env {env} does not have an even number of values.")
+    xdata, ydata = env[::2], env[1::2]
+    #print(f"xdata: {xdata}, ydata: {ydata}")
+    for x1,x2 in zip(xdata,xdata[1:]):
+        if x2<x1:
+            raise ValueError(f"x value {x2} out of order in xdata: {xdata}.")
+    oldxmin, oldxmax = xdata[0], xdata[-1]
+    ##print(f"oldxmin: {oldxmin}, oldxmax: {oldxmax}")
+    if newxmin is None: newxmin = oldxmin
+    if newxmax is None: newxmax = oldxmax
+    if not newxmin < newxmax:
+        raise ValueError(f"newxmin value {newxmin} is not less than newxmax value {newxmax}.")
+    #print(f"oldxmin: {oldxmin}, oldxmax: {oldxmax}, newxmin: {newxmin} newxmax: {newxmax}")
+    oldymin = reduce(lambda a, b: a if a < b else b, ydata)
+    oldymax = reduce(lambda a, b: a if a > b else b, ydata)
+    ##print(f"oldymin: {oldymin}, oldymax: {oldymax}")
+    if newymin is None: newymin = oldymin
+    if newymax is None: newymax = oldymax
+    if mode is None: mode = "lin"
+    #print(f"oldymin: {oldymin}, oldymax: {oldymax}, newymin: {newymin}, newymax: {newymax}")
+    res = []
+    for x,y in zip(xdata,ydata):
+       res.extend([rescale(x, oldxmin, oldxmax, newxmin, newxmax),
+                   rescale(y, oldymin, oldymax, newymin, newymax, mode)])
+    return res
+
+
+def expenv(segments = 10, base = 2, flip = False, reverse = False):
+    """
+    Returns a normalized exponential envelope, e.g. both axes range 0 to 1.
+    As x goes from 0 to segments, y is assigned 1/base**x
+    
+    Parameters
+    ----------
+    segments : int
+        The number of segments in the envelope, defaults to 10.
+    base : int | float
+        The base for the exponential, defaults to 2. 
+    flip : boolean
+        If flip is true y values are inverted.
+    reverse : boolean
+        If reverse is true x values are retrograded.
+    
+    Returns
+    -------
+    An exponential x,y envelope with both axes ranging 0 -> 1.
+    """
+    xvalues = [x/segments for x in range(0, segments+1, 1)]
+    #print("xvalues:", xvalues)
+    yvalues = [1/(base**(x)) for x in range(segments+1)]
+    if flip:
+        for i in range(len(yvalues)):
+            yvalues[i] = 1 - yvalues[i]
+    if reverse:
+        for i in range(len(xvalues)):
+            xvalues[i] = 1 - xvalues[i]
+    #yvalues[-1] = 0.0
+    #print("yvalues:", yvalues)
+    env = []
+    for x,y in zip(xvalues, yvalues):
+        env.extend([x,y])
+    #print("expenv:", env)
+    return env
+
+
 def frange(start, stop=None, step=None):
     """
-    Returns an iterator produceing a series of floats from start (inclusive)
+    Returns an iterator producing a series of floats from start (inclusive)
     to stop (exclusive) by step.
 
     Parameters
