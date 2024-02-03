@@ -40,24 +40,25 @@ alternate representations of frequency: </p>
 <li><code><a title="musx.pitch.pitch" href="#musx.pitch.pitch">pitch()</a></code> : converts a hertz value, key number or pitch name into a Pitch.</li>
 <li><code><a title="musx.pitch.hertz" href="#musx.pitch.hertz">hertz()</a></code> : converts a pitch name or key number into a hertz value.</li>
 </ul>
-<p>The functions can map individual values, lists of values, and string
-sequences of values.</p>
 <p><strong>Lists and string sequences:</strong></p>
-<p>The three functions convert individual values, lists of values and string
-sequences containing values. In a string sequence use spaces
-to delimit the items:</p>
+<p>The functions can map individual values, lists of values, string
+sequences of values and lists of string sequences of values.</p>
+<p>In a string sequence use spaces to delimit the items:</p>
 <ul>
 <li>A string sequence of key numbers: '0 40 21 33 87 12'</li>
 <li>A string sequence of hertz values: '440 880 220.12'</li>
 <li>A string sequence of pitch names: 'c4 d4 eb4 f#4 g3'</li>
 </ul>
 <p>In any string sequence you can repeat an item by appending
-one or more commas to its rightside. For example, the motive of Beethoven's 5th Symphony
-'G4 G4 G4 Eb4' can be written as a pitch sequence 'G4,, Eb4',
-a key number sequence '67,, 63', or a hertz sequence '392,, 311'. </p>
-<p>A string sequence of pitches also supports "sticky" octave numbers: once
-an octave number is provided it remains in effect until a different octave is given.
-For example a diatonic scale from A3 to A4 is 'a3 b c4 d e f g a'.</p>
+an expansion factor _<em>n_ to it, where <em>n</em> is the number of times
+the item should occur in succession. For example, the motive of
+Beethoven's 5th Symphony 'G4 G4 G4 Eb4' can be written as a
+pitch sequence 'G4</em>3 Eb4', a key number sequence '67<em>3 63',
+or a hertz sequence '392</em>3 311'. </p>
+<p>In a string sequence of pitches octave numbers are "sticky", i.e. when
+an octave number is provided it remains in effect until a different octave
+number is specified. For example a diatonic scale from A3 to A4 is
+'a3 b c4 d e f g a'.</p>
 <p><strong>Rests:</strong></p>
 <p>The special string name 'R' or 'r' represents a musical rest. The key number of
 a rest is -1, its hertz value is 0.0 and its Pitch is an empty pitch: Pitch().</p>
@@ -83,27 +84,28 @@ alternate representations of frequency:
 * `pitch()` : converts a hertz value, key number or pitch name into a Pitch.
 * `hertz()` : converts a pitch name or key number into a hertz value.
 
-The functions can map individual values, lists of values, and string 
-sequences of values.
-
 **Lists and string sequences:**
 
-The three functions convert individual values, lists of values and string
-sequences containing values. In a string sequence use spaces
-to delimit the items:
+The functions can map individual values, lists of values, string 
+sequences of values and lists of string sequences of values.
+
+In a string sequence use spaces to delimit the items:
 
 * A string sequence of key numbers: &#39;0 40 21 33 87 12&#39;
 * A string sequence of hertz values: &#39;440 880 220.12&#39;
 * A string sequence of pitch names: &#39;c4 d4 eb4 f#4 g3&#39;
 
 In any string sequence you can repeat an item by appending
-one or more commas to its rightside. For example, the motive of Beethoven&#39;s 5th Symphony
-&#39;G4 G4 G4 Eb4&#39; can be written as a pitch sequence &#39;G4,, Eb4&#39;, 
-a key number sequence &#39;67,, 63&#39;, or a hertz sequence &#39;392,, 311&#39;. 
+an expansion factor _*n_ to it, where _n_ is the number of times
+the item should occur in succession. For example, the motive of 
+Beethoven&#39;s 5th Symphony &#39;G4 G4 G4 Eb4&#39; can be written as a
+pitch sequence &#39;G4*3 Eb4&#39;, a key number sequence &#39;67*3 63&#39;,
+or a hertz sequence &#39;392*3 311&#39;. 
 
-A string sequence of pitches also supports &#34;sticky&#34; octave numbers: once 
-an octave number is provided it remains in effect until a different octave is given.
-For example a diatonic scale from A3 to A4 is &#39;a3 b c4 d e f g a&#39;.
+In a string sequence of pitches octave numbers are &#34;sticky&#34;, i.e. when
+an octave number is provided it remains in effect until a different octave
+number is specified. For example a diatonic scale from A3 to A4 is
+&#39;a3 b c4 d e f g a&#39;.
 
 **Rests:**
 
@@ -726,6 +728,8 @@ def keynum(ref, filt=round):
     [43, 43, 55, 55, 62]
     ```
     &#34;&#34;&#34;
+    # test if original input is a list (not a string).
+    refislist = isinstance(ref, list)
     if isinstance(ref, str):
         ref = ref.strip() # remove whitespace from start and end
         if ref:
@@ -733,18 +737,20 @@ def keynum(ref, filt=round):
                 try: # try to return a single keynum
                     return chromatic_scale[ref][0] 
                 except KeyError:
-                    # ref was not a single pitch. if ref contains a 
-                    # space then take it to be a list of pitch names
-                    # otherwise its an error
-                    if &#39; &#39; in ref:
-                        ref = parse_pitch_sequence(ref)
+                    pass
+                ref = parse_pitch_sequence(ref)
+                for i in range(len(ref)):
+                    ref[i] = ref[i].keynum()
+                if not refislist:
+                    if len(ref) == 1: return ref[0]
+                return ref
             elif ref[0].isdigit():  # should be hertz
-                    # if ref contains a space then take it to be a list
-                    # of hertz values otherwise convert to a float.
-                    if &#39; &#39; in ref:
-                        ref = parse_number_sequence(ref)
-                    else:
-                        ref = float(ref) 
+                # if ref contains a space then take it to be a list
+                # of hertz values otherwise convert to a float.
+                if &#39; &#39; in ref:
+                    ref = parse_number_sequence(ref)
+                else:
+                    ref = float(ref) 
     # ref is hertz and so not in the hashtable
     if isinstance(ref, (float, int)):
         keyn = 69 + math.log2(ref / 440.0) * 12
@@ -809,6 +815,7 @@ def hertz(ref, filt=round):
     [130.8127826502993, 130.8127826502993, 261.6255653005986]
     ```
     &#34;&#34;&#34;
+    refislist = isinstance(ref, list)
     if isinstance(ref, str):
         ref = ref.strip()
         if ref:
@@ -818,6 +825,12 @@ def hertz(ref, filt=round):
                 except KeyError:  # keep going if string isnt a pitch
                     pass
                 ref = parse_pitch_sequence(ref)
+#                return [p.hertz() for p in ref]
+                for i in range(len(ref)):
+                    ref[i] = ref[i].hertz()
+                if not refislist:
+                    if len(ref) == 1: return ref[0]
+                return ref            
             elif ref[0].isdigit():  # should be a keynum
                 ref = parse_number_sequence(ref)
     if isinstance(ref, float):
@@ -828,20 +841,37 @@ def hertz(ref, filt=round):
         return [hertz(x, filt) for x in ref]
     raise ValueError(f&#34;invalid hertz input: &#39;{ref}&#39;.&#34;)
 
+&#39;&#39;&#39;
+&gt;&gt;&gt; musx.pitch([&#34;C5 D E&#34;, &#34;F4 D E&#34;])
+[[Pitch(&#34;C5&#34;), Pitch(&#34;D5&#34;), Pitch(&#34;E5&#34;)], [Pitch(&#34;F4&#34;), Pitch(&#34;D4&#34;), Pitch(&#34;E4&#34;)]]
+&gt;&gt;&gt; musx.pitch(&#34;C&#34;)
+Pitch(&#34;C4&#34;)
+&gt;&gt;&gt; musx.pitch([&#34;C&#34;])
+[Pitch(&#34;C4&#34;)]
+# correct: octave 4 resets on every new string.
+&gt;&gt;&gt; musx.pitch([&#34;C&#34;,&#34;D5&#34;,&#34;E&#34;])
+[Pitch(&#34;C4&#34;), Pitch(&#34;D5&#34;), Pitch(&#34;E4&#34;)]
+# correct: explict [] around string sequence
+&gt;&gt;&gt; musx.pitch([&#34;C D5 E&#34;])
+[[Pitch(&#34;C4&#34;), Pitch(&#34;D5&#34;), Pitch(&#34;E5&#34;)]]
+# correct
+musx.pitch([&#34;C5 D E&#34;, &#34;F4 D E&#34;, &#34;c3 d e f g5*2&#34;])
+[[Pitch(&#34;C5&#34;), Pitch(&#34;D5&#34;), Pitch(&#34;E5&#34;)], [Pitch(&#34;F4&#34;), Pitch(&#34;D4&#34;), Pitch(&#34;E4&#34;)], [Pitch(&#34;C3&#34;), Pitch(&#34;D3&#34;), Pitch(&#34;E3&#34;), Pitch(&#34;F3&#34;), Pitch(&#34;G5&#34;), Pitch(&#34;G5&#34;)]]
+&#39;&#39;&#39;
 
 def pitch(ref, filt=round, *, hz=False, acc=[]):
     &#34;&#34;&#34;
-    Returns the pitch name from a hertz value, key number, a 
-    list of the same, or a string sequence of the same.
+    Returns a Pitch object given a pitch name, hertz value, key
+    number, a list of the same, or a string of the same.
     
     Parameters
     ----------
-    ref : int or float
-        A key number or hertz value, depending on the value of the
-        hz parameter.
+    ref : string | int | float
+        A pitch name, key number or hertz value. For a hertz value
+        you must pass True to the hz parameter.
     filt : function | None
-        A function of one argument that maps a floating point key number
-        to an integer.
+        A function of one argument that maps a floating point ref
+        to an integer. The default filter rounds to the nearest integer.
     hz : True | False
         If True then ref is accepted as a hertz value otherwise it is
         assumed to be a key number. The default value is False.
@@ -849,21 +879,6 @@ def pitch(ref, filt=round, *, hz=False, acc=[]):
         An ordered preference list of accidentals to use in the pitch spelling.
         Values range from -2 (double flat) to 2 (double sharp) with 0 being
         no accidental.
-
-    Returns 
-    -------
-    If ref is a key number its hash table value is returned.
-
-    If ref is a hertz value its key number is calculated, filtered
-    to an int value and its hash table value is returned.
-
-    If ref is a python list of key numbers their hash values are returned.
-
-    If ref is a python list of hertz values they are converted to
-    key numbers and then processed as described in the previous point.
-    
-    If ref is a string sequence of hertz values or key numbers they are
-    converted to a python list and treated as described above.
 
     Examples
     --------
@@ -880,7 +895,8 @@ def pitch(ref, filt=round, *, hz=False, acc=[]):
     &gt;&gt;&gt; pitch(&#34;67,, 63&#34;)
     [Pitch(&#34;G4&#34;), Pitch(&#34;G4&#34;), Pitch(&#34;G4&#34;), Pitch(&#34;Eb4&#34;)]
     &#34;&#34;&#34;
-    #print(&#39;** in pitch: &#39;,ref)
+    # cache if incoming ref is a list or not
+    refislist = isinstance(ref, list)
     # if parsing hertz first convert to keynum or list of keynums
     if hz:
         ref = keynum(ref)
@@ -907,43 +923,44 @@ def pitch(ref, filt=round, *, hz=False, acc=[]):
             raise ValueError(f&#34;no table entry for midi note {ref}.&#34;) from err
     # ref is a string sequence of keynums, a string sequence 
     # of pitch names, or a pitch name.
-    if isinstance(ref, str):
-        #print(&#39;** is str, ref=&#39;, ref)
+    if isinstance(ref, str):        
         ref = ref.strip()
         if ref:
             if ref[0].isalpha():  # should be a pitch
                 try: 
-                    #print(&#39;** trying&#39;)
-                    ##return chromatic_scale[ref][1] # try to return a single pitch
                     return chromatic_scale[ref][2] # try to return a single pitch
                 except KeyError:
                     pass
-                #print(&#39;** parse pitch seq&#39;)
                 ref = parse_pitch_sequence(ref)
+                # if the input was not a list, then if there is only one element
+                # in the list return the element without the list. if the input
+                # was a list then continue to the list check below.
+                if not refislist:
+                    if len(ref) == 1: return ref[0]
+                return ref
             elif ref[0].isdigit():  # should be a hertz
-                #print(&#39;** parse number seq&#39;)
                 ref = parse_number_sequence(ref)
-    # ref is a list of keynums or a list of pitch names
+    # ref is a list of keynums hertz values
     if isinstance(ref, list):
-        #print(&#39;** processing list:&#39;, ref)
         return [pitch(x, filt, hz=False, acc=acc) for x in ref]
-
     raise ValueError(f&#34;invalid keynum input: &#39;{ref}&#39;.&#34;)
 
 
 def parse_pitch_sequence(string):
     seq = tools.parse_string_sequence(string)
     oct = &#39;4&#39;
+    pitches = []
     for i,p in enumerate(seq):
-        if not (p[0] in &#39;CcDdEeFfGgAaBbRr&#39;):
-            raise ValueError(f&#34;invalid pitch: &#39;{p}&#39;.&#34;)
-        # o holds octave number, or &#39;&#39; if no octave
         o = p[len(p.rstrip(&#39;0123456789&#39;)):]
-        if o: 
-            oct = o         # update octave to carry forward
-        else: 
+        if o:
+            oct = o 
+        else:
             seq[i] = p+oct  # add octave to pitch 
-    return seq
+        try:
+            pitches.append( chromatic_scale[seq[i]][2] ) 
+        except KeyError:
+            raise ValueError(f&#34;invalid pitch: &#39;{seq[i]}&#39;.&#34;)
+    return pitches
 
 
 def parse_number_sequence(string):
@@ -1222,6 +1239,7 @@ the middle C octave (4) is used as the inital octave.</p>
     [130.8127826502993, 130.8127826502993, 261.6255653005986]
     ```
     &#34;&#34;&#34;
+    refislist = isinstance(ref, list)
     if isinstance(ref, str):
         ref = ref.strip()
         if ref:
@@ -1231,6 +1249,12 @@ the middle C octave (4) is used as the inital octave.</p>
                 except KeyError:  # keep going if string isnt a pitch
                     pass
                 ref = parse_pitch_sequence(ref)
+#                return [p.hertz() for p in ref]
+                for i in range(len(ref)):
+                    ref[i] = ref[i].hertz()
+                if not refislist:
+                    if len(ref) == 1: return ref[0]
+                return ref            
             elif ref[0].isdigit():  # should be a keynum
                 ref = parse_number_sequence(ref)
     if isinstance(ref, float):
@@ -1356,6 +1380,8 @@ is used as the inital octave.</p>
     [43, 43, 55, 55, 62]
     ```
     &#34;&#34;&#34;
+    # test if original input is a list (not a string).
+    refislist = isinstance(ref, list)
     if isinstance(ref, str):
         ref = ref.strip() # remove whitespace from start and end
         if ref:
@@ -1363,18 +1389,20 @@ is used as the inital octave.</p>
                 try: # try to return a single keynum
                     return chromatic_scale[ref][0] 
                 except KeyError:
-                    # ref was not a single pitch. if ref contains a 
-                    # space then take it to be a list of pitch names
-                    # otherwise its an error
-                    if &#39; &#39; in ref:
-                        ref = parse_pitch_sequence(ref)
+                    pass
+                ref = parse_pitch_sequence(ref)
+                for i in range(len(ref)):
+                    ref[i] = ref[i].keynum()
+                if not refislist:
+                    if len(ref) == 1: return ref[0]
+                return ref
             elif ref[0].isdigit():  # should be hertz
-                    # if ref contains a space then take it to be a list
-                    # of hertz values otherwise convert to a float.
-                    if &#39; &#39; in ref:
-                        ref = parse_number_sequence(ref)
-                    else:
-                        ref = float(ref) 
+                # if ref contains a space then take it to be a list
+                # of hertz values otherwise convert to a float.
+                if &#39; &#39; in ref:
+                    ref = parse_number_sequence(ref)
+                else:
+                    ref = float(ref) 
     # ref is hertz and so not in the hashtable
     if isinstance(ref, (float, int)):
         keyn = 69 + math.log2(ref / 440.0) * 12
@@ -1391,16 +1419,16 @@ is used as the inital octave.</p>
 <span>def <span class="ident">pitch</span></span>(<span>ref, filt=&lt;built-in function round&gt;, *, hz=False, acc=[])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the pitch name from a hertz value, key number, a
-list of the same, or a string sequence of the same.</p>
+<div class="desc"><p>Returns a Pitch object given a pitch name, hertz value, key
+number, a list of the same, or a string of the same.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>ref</code></strong> :&ensp;<code>int</code> or <code>float</code></dt>
-<dd>A key number or hertz value, depending on the value of the
-hz parameter.</dd>
+<dt><strong><code>ref</code></strong> :&ensp;<code>string | int | float</code></dt>
+<dd>A pitch name, key number or hertz value. For a hertz value
+you must pass True to the hz parameter.</dd>
 <dt><strong><code>filt</code></strong> :&ensp;<code>function | None</code></dt>
-<dd>A function of one argument that maps a floating point key number
-to an integer.</dd>
+<dd>A function of one argument that maps a floating point ref
+to an integer. The default filter rounds to the nearest integer.</dd>
 <dt><strong><code>hz</code></strong> :&ensp;<code>True | False</code></dt>
 <dd>If True then ref is accepted as a hertz value otherwise it is
 assumed to be a key number. The default value is False.</dd>
@@ -1409,15 +1437,6 @@ assumed to be a key number. The default value is False.</dd>
 Values range from -2 (double flat) to 2 (double sharp) with 0 being
 no accidental.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>If ref is a key number its hash table value is returned.</p>
-<p>If ref is a hertz value its key number is calculated, filtered
-to an int value and its hash table value is returned.</p>
-<p>If ref is a python list of key numbers their hash values are returned.</p>
-<p>If ref is a python list of hertz values they are converted to
-key numbers and then processed as described in the previous point.</p>
-<p>If ref is a string sequence of hertz values or key numbers they are
-converted to a python list and treated as described above.</p>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; pitch(60)
 Pitch(&quot;C4&quot;)
@@ -1438,17 +1457,17 @@ Pitch(&quot;E5&quot;)
 </summary>
 <pre><code class="python">def pitch(ref, filt=round, *, hz=False, acc=[]):
     &#34;&#34;&#34;
-    Returns the pitch name from a hertz value, key number, a 
-    list of the same, or a string sequence of the same.
+    Returns a Pitch object given a pitch name, hertz value, key
+    number, a list of the same, or a string of the same.
     
     Parameters
     ----------
-    ref : int or float
-        A key number or hertz value, depending on the value of the
-        hz parameter.
+    ref : string | int | float
+        A pitch name, key number or hertz value. For a hertz value
+        you must pass True to the hz parameter.
     filt : function | None
-        A function of one argument that maps a floating point key number
-        to an integer.
+        A function of one argument that maps a floating point ref
+        to an integer. The default filter rounds to the nearest integer.
     hz : True | False
         If True then ref is accepted as a hertz value otherwise it is
         assumed to be a key number. The default value is False.
@@ -1456,21 +1475,6 @@ Pitch(&quot;E5&quot;)
         An ordered preference list of accidentals to use in the pitch spelling.
         Values range from -2 (double flat) to 2 (double sharp) with 0 being
         no accidental.
-
-    Returns 
-    -------
-    If ref is a key number its hash table value is returned.
-
-    If ref is a hertz value its key number is calculated, filtered
-    to an int value and its hash table value is returned.
-
-    If ref is a python list of key numbers their hash values are returned.
-
-    If ref is a python list of hertz values they are converted to
-    key numbers and then processed as described in the previous point.
-    
-    If ref is a string sequence of hertz values or key numbers they are
-    converted to a python list and treated as described above.
 
     Examples
     --------
@@ -1487,7 +1491,8 @@ Pitch(&quot;E5&quot;)
     &gt;&gt;&gt; pitch(&#34;67,, 63&#34;)
     [Pitch(&#34;G4&#34;), Pitch(&#34;G4&#34;), Pitch(&#34;G4&#34;), Pitch(&#34;Eb4&#34;)]
     &#34;&#34;&#34;
-    #print(&#39;** in pitch: &#39;,ref)
+    # cache if incoming ref is a list or not
+    refislist = isinstance(ref, list)
     # if parsing hertz first convert to keynum or list of keynums
     if hz:
         ref = keynum(ref)
@@ -1514,27 +1519,26 @@ Pitch(&quot;E5&quot;)
             raise ValueError(f&#34;no table entry for midi note {ref}.&#34;) from err
     # ref is a string sequence of keynums, a string sequence 
     # of pitch names, or a pitch name.
-    if isinstance(ref, str):
-        #print(&#39;** is str, ref=&#39;, ref)
+    if isinstance(ref, str):        
         ref = ref.strip()
         if ref:
             if ref[0].isalpha():  # should be a pitch
                 try: 
-                    #print(&#39;** trying&#39;)
-                    ##return chromatic_scale[ref][1] # try to return a single pitch
                     return chromatic_scale[ref][2] # try to return a single pitch
                 except KeyError:
                     pass
-                #print(&#39;** parse pitch seq&#39;)
                 ref = parse_pitch_sequence(ref)
+                # if the input was not a list, then if there is only one element
+                # in the list return the element without the list. if the input
+                # was a list then continue to the list check below.
+                if not refislist:
+                    if len(ref) == 1: return ref[0]
+                return ref
             elif ref[0].isdigit():  # should be a hertz
-                #print(&#39;** parse number seq&#39;)
                 ref = parse_number_sequence(ref)
-    # ref is a list of keynums or a list of pitch names
+    # ref is a list of keynums hertz values
     if isinstance(ref, list):
-        #print(&#39;** processing list:&#39;, ref)
         return [pitch(x, filt, hz=False, acc=acc) for x in ref]
-
     raise ValueError(f&#34;invalid keynum input: &#39;{ref}&#39;.&#34;)</code></pre>
 </details>
 </dd>

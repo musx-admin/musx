@@ -125,7 +125,7 @@ class Seq:
 
     @staticmethod
     def _defaultprinter(index, event):
-        print(index, event.time, event, sep=&#39;\t&#39;)
+        print(index, f&#39;{event.time:7.3f}&#39;, event, sep=&#39;\t&#39;)
 
     @staticmethod
     def _midiprinter(index, event):
@@ -281,7 +281,7 @@ should already be in proper time order.</dd>
 
     @staticmethod
     def _defaultprinter(index, event):
-        print(index, event.time, event, sep=&#39;\t&#39;)
+        print(index, f&#39;{event.time:7.3f}&#39;, event, sep=&#39;\t&#39;)
 
     @staticmethod
     def _midiprinter(index, event):

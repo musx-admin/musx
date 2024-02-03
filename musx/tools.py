@@ -141,7 +141,7 @@ def interp(x, *xys, mode='lin', mul=None, add=None):
     return val
 
 
-def rescalenv(env, newxmin=None, newxmax=None, newymin=None, newymax=None,*, mode=None):
+def rescale_env(env, newxmin=None, newxmax=None, newymin=None, newymax=None,*, mode=None):
     '''
     Rescales the current x and/or y envelope coordinates of the given envelope to proportional
     values lying between the given new minima and maxima. If newxmin or newxmax are unspecified
@@ -198,7 +198,7 @@ def rescalenv(env, newxmin=None, newxmax=None, newymin=None, newymax=None,*, mod
     return res
 
 
-def expenv(segments = 10, base = 2, flip = False, reverse = False):
+def exp_env(segments = 10, base = 2, flip = False, reverse = False, scaler=1, offset=0):
     """
     Returns a normalized exponential envelope, e.g. both axes range 0 to 1.
     As x goes from 0 to segments, y is assigned 1/base**x
@@ -231,8 +231,55 @@ def expenv(segments = 10, base = 2, flip = False, reverse = False):
     #print("yvalues:", yvalues)
     env = []
     for x,y in zip(xvalues, yvalues):
-        env.extend([x,y])
+        env.extend([x,y * scaler + offset])
     #print("expenv:", env)
+    return env
+
+
+def segment_env(env, dur, attack, release=[]):
+    '''
+    Returns a version of env with attack and (optionally) decay segments lasting specific amounts of time.
+
+    Parameters
+    ----------
+    env : list
+        The x,y envelope.
+    dur : int | float
+        The total duration in seconds of the envelope.
+    attack : [ _attack_x, attack_dur_ ]
+        The ending x coordinate and duration of the attack segment. 
+    release : [ _release_x, release_dur_ ] | []
+        The starting x coordinate and duration of the release segment.
+    '''    
+    # maximum x value in envelope.
+    x_max = env[-2]
+    # get the index positions of the attack and release segments.
+    # divides by 2 because x_values will be half the length of env.
+    try: 
+        attack_index = int(env.index(attack[0])/2)
+        attack_dur = attack[1]
+    except ValueError as e: 
+        raise Exception(f"Attack coordinate {attack[0]} is not in {env}.") from e
+    if release:
+        try: 
+            release_index = int(env.index(release[0])/2)
+            release_dur = release[1]
+        except ValueError as e:
+            raise Exception(f"Release coordinate {release[0]} is not in {env}.") from e     
+    # split x and y coords into separate lists with x_values converted to time.
+    x_values, y_values = [(x / x_max) * dur for x in env[::2]], env[1::2]
+    # rescale x coords from index 0 to att_index to fit in attack_dur time.
+    for i in range(0, attack_index+1):
+         x_values[i] = rescale(x_values[i], x_values[0], x_values[attack_index], x_values[0], attack_dur)
+    # rescale backwards for release values.
+    if release:
+        end_time = x_values[-1]
+        for i in range(len(x_values)-1, release_index-1, -1):
+             x_values[i] = rescale(x_values[i], x_values[release_index], end_time, end_time - release_dur, end_time)
+    # return new envelope with durations converted back to user's original coordinates.
+    env = []
+    for x,y in zip(x_values, y_values):
+        env.extend([(x / dur) * x_max, y])
     return env
 
 
@@ -601,21 +648,33 @@ def playfile(file, wait=False):
             help += f" file type not found in musx.midiextensions or musx.audioextensions."
         print(help)
 
+# musx.tools.parse_string_sequence("e*3")
+# musx.tools.parse_string_sequence("e fs*3")
+#musx.pitch("a4, g3*3 e f")  $ BUG (RECURSION)
 
 def parse_string_sequence(string):
-    # split string at blank spaces, replace each repeat token ',' by
+    # split string at blank spaces, by
     # repeated value, check for dangling and undelimited repeats.
     seq = []
     for raw in string.split():
-        tok = raw.rstrip(',')
-        if tok:
-            if ',' not in tok:
-                for _ in range(len(raw) - len(tok) + 1):
-                    seq.append(tok)
+        pos = raw.rfind('*')
+        if pos > -1:    # string has * somewhere
+            split = raw.split('*')
+            if '' in split or len(split) != 2:
+                raise SyntaxError(f"Invalid expansion  '{raw}'.")
+            sym, rep = split[0], split[1]
+            try:
+                val = int(rep)
+            except Exception as ve:
+                ve.args = (f"Invalid expansion factor '{rep}' in '{raw}'.",)
+                raise
+            if val < 1 or val > 32:
+                raise ValueError(f"Expansion factor '{val}' is not between 1 and 32.")
             else:
-                raise SyntaxError(f"undelimited ',' in '{tok}'.")
+                for _ in range(val):
+                    seq.append(sym)
         else:
-            raise SyntaxError(f"dangling repeat ',' in '{string}'.")
+            seq.append(raw)
     return seq
 
 

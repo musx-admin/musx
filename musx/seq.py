@@ -94,7 +94,7 @@ class Seq:
 
     @staticmethod
     def _defaultprinter(index, event):
-        print(index, event.time, event, sep='\t')
+        print(index, f'{event.time:7.3f}', event, sep='\t')
 
     @staticmethod
     def _midiprinter(index, event):

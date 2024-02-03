@@ -111,8 +111,6 @@ file = AudioFile(&#34;test.wav&#34;, score.out).write(play=True)
 ```
 &#34;&#34;&#34;
 
-import inspect
-
 try: 
     import pysndlib.clm as CLM 
 except ModuleNotFoundError as err:
@@ -122,6 +120,10 @@ except ModuleNotFoundError as err:
     print(f&#34;{pad}musx.audio requires the pysndlib package.&#34;)
     print(f&#34;{pad}Type &#39;pip install pysndlib&#39; in your terminal to install it.&#34;)
     exit()
+
+
+import inspect
+from .seq import Seq
 
 
 class AudioFile:
@@ -138,12 +140,11 @@ class AudioFile:
     def __init__(self, path, seq):
         if not isinstance(path, str) or len(path) == 0:
             raise TypeError(f&#34;SoundFile(): &#39;{path}&#39; is not a valid pathname string.&#34;)
-        self.path = path
+        self.pathname = path
         
         if not isinstance(seq, Seq):
             raise TypeError(f&#34;SoundFile(): &#39;{seq}&#39; is not a sequence.&#34;)
         self.seq = seq
-
 
     def read(self):
         &#34;&#34;&#34;Implement me!&#34;&#34;&#34;
@@ -159,33 +160,35 @@ class AudioFile:
             Any keywords that are supported by pysndlib&#39;s 
             [Sound Context](https://testcase.github.io/pysndlib/with_sound.html)
         &#39;&#39;&#39;
-        with CLM.Sound(self.path, **kwargs):
+        with CLM.Sound(self.pathname, **kwargs):
             for note in self.seq:
-                note.write()
+                note._write()
         return self
 
     def __str__(self):
         name = self.__class__.__name__
-        path = self.path
         seq = f&#39;&lt;Seq: len={len(self.seq)}, endtime={self.seq.endtime()}&gt;&#39;
-        return f&#39;&lt;{name}: path=&#34;{path}&#34;, seq={seq}&gt;&#39;
+        return f&#39;&lt;{name}: path=&#34;{self.pathname}&#34;, seq={seq}&gt;&#39;
     
     __repr__ = __str__
 
 
-def AudioNote(ins):
+def AudioNote(ins, classname=&#39;&#39;):
     &#34;&#34;&#34;
-    Defines a note class for a given CLM instrument (function). Once defined,
+    Defines a note class given a pysndlib instrument (function). Once defined,
     instances of the new note class can be added to Score and Seq objects and 
-    will generate audio when rendered by AudioFile.write(). The name of the
-    new note class will be the capitalized instrument name with &#34;Note&#34; 
-    appended to it. 
+    will generate audio when rendered by AudioFile.write(). 
 
     Parameters
     ----------
     ins : function
         The CLM instrument (function) to create the new note class for. The first
         parameter to the instrument must contain the start time of the instrument call.
+    classname : string 
+        An optional argument providing the full name for the new Note class. 
+        Defaults to &#39;&#39;, in which case the name will be the capitalized instrument name
+        with all &#34;_&#34; removed and appended with &#34;Note&#34;. For example, if the instrument is
+        hi_ho() the default name for the new note class will be HiHoNote.
  
     Return
     ------
@@ -203,31 +206,34 @@ def AudioNote(ins):
     ```
     &#34;&#34;&#34;
     if not callable(ins): raise TypeError(f&#34;Not a function: {ins}&#34;)
-    insname = ins.__name__
-    classname = insname.capitalize() + &#34;Note&#34;
+    if not classname: 
+        for n in f&#34;{ins.__name__}_Note&#34;.split(&#39;_&#39;):
+            if n == &#39;&#39;: continue
+            classname += n.capitalize()
     # dictionary of function parameters with default values or None.
-    params = {n: None if v.default==inspect._empty else v.default
+    params = {n: inspect.Parameter.empty if v.default==inspect._empty else v.default
               for n, v in inspect.signature(ins).parameters.items()}
     # define the init method for the new note class.
     def __init__(self, *args, **kwargs):
         ###print(f&#34;args: {args}, kwargs: {kwargs}&#34;)
-        self.params = params
         ###print(f&#34;params: {self.params}&#34;)
+        # cache the list of function parameter names
+        self._params = list(params)
         # define an attribute for each instrument parameter and initialize
         # it to the parameter&#39;s default value or None
-        for p in self.params.items():
+        for p in params.items():
             setattr(self, p[0], p[1])
         # keep a record of how many times each arg receives a value
-        counts = {p:0 for p in self.params}
+        counts = {p:0 for p in params}
         ###print(f&#39;counts: {counts}&#39;)
         # collect ordered list of insturment&#39;s parameter names (strings)
-        names = list(self.params)
+        names = list(params)
         ###print(f&#39;names: {names}&#39;)
         # parse the positional arguments, signal error if more arguments than parameters,
         # create the attribute and increment arg&#39;s count.
         for index, value in enumerate(args):
             if index == len(params): 
-                raise TypeError(f&#34;{classname}() takes {len(self.params)} positional arguments but {len(args)} were given.&#34;)
+                raise TypeError(f&#34;{classname}() takes {len(params)} positional arguments but {len(args)} were given.&#34;)
             name = names[index]
             setattr(self, name, value)
             counts[name] += 1            
@@ -246,7 +252,7 @@ def AudioNote(ins):
         unassigned = []
         for name, count in counts.items():
             if count == 0:
-                if params[name] is not None:
+                if params[name] is not inspect.Parameter.empty:
                     setattr(self, name, params[name])
                     counts[name] += 1
                 else:
@@ -263,52 +269,91 @@ def AudioNote(ins):
         # Event.__init__(self, getattr(self, params[0][0]))
         self.time = getattr(self, names[0])
     
-    # repr() and str() will print like an instrument call
+    # repr() and str() will print like an instrument call, floats will be
+    #    trucated to 3 places.
     def __repr__(self):
-        text = self.__class__.__name__
-        return text + &#39;(&#39; + &#34;, &#34;.join(f&#34;{getattr(self,p)}&#34; for p in self.params) + &#39;)&#39;
+        &#34;&#34;&#34;
+        Both repr() and str() print like an instrument call. To save space floats are
+        rounded to three places and lists of more than 10 elements are elided. To see
+        exact values in the object use it&#39;s self.params() method.
+        &#34;&#34;&#34;
+        def paramstr(val):
+            if isinstance(val, float):
+                #return f&#34;{val:.3f}&#34;
+                return f&#34;{round(val,3)}&#34;
+            if isinstance(val, list):
+                val = [paramstr(v) for v in val]      
+                if len(val) &gt; 10:
+                    val = val[:4] + [&#34;...&#34;] + val[-4:]
+                return &#34;[&#34; + &#34;, &#34;.join(val) + &#34;]&#34;
+            return f&#34;{val}&#34;
 
-    # the write() method generates audio inside a with Sound context.
-    def write(self):
-        args = [getattr(self, p) for p in self.params]
+        text = self.__class__.__name__
+        #return text + &#39;(&#39; + &#34;, &#34;.join(f&#34;{getattr(self,p)}&#34; for p in self.params) + &#39;)&#39;
+        return text + &#39;(&#39; + &#34;, &#34;.join(f&#34;{paramstr(getattr(self,p))}&#34;
+                                      for p in self._params) + &#39;)&#39;
+    
+    def __eq__(self, other):
+        &#39;&#39;&#39;
+        Returns True if parameter values in two instances are all equal (==).
+        &#39;&#39;&#39;
+        if type(self) is not type(other):
+            return False
+        for p in self._params:
+            if getattr(self, p) != getattr(other, p):
+                return False
+        return True
+
+    def _write(self):
+        &#39;&#39;&#39;
+        Internal function called by AudioFile().write() to render
+        audio samples inside a &#39;with Sound:&#39; construct.
+        &#39;&#39;&#39;
+        args = [getattr(self, p) for p in self._params]
         #print(f&#34;{ins} writing args: {args}&#34;)
         ins(*args)
+
+    def parameters(self):
+        &#34;&#34;&#34;Returns an ordered dictionary of the note&#39;s attributes and their values.&#34;&#34;&#34;
+        return {p: getattr(self, p) for p in self._params}
 
     return type(classname, (), {&#34;__init__&#34;: __init__,
                                 &#34;__repr__&#34;: __repr__,
                                 &#34;__str__&#34;: __repr__,
-                                # ARRRG caching instrument in an 
-                                # instance attr doesnt work
+                                # ARRRG caching instrument in an instance attr doesn&#39;t work
                                 #&#34;ins&#34;: ins, 
-                                &#34;write&#34;: write})
+                                &#34;__eq__&#34;: __eq__,
+                                &#34;_write&#34;: _write,
+                                &#34;parameters&#34;: parameters
+                                })
+
     
-
 if __name__ == &#39;__main__&#39;:
+    pass
+    # from musx import Seq, Score, between
 
-    from musx import Seq, Score, between
+    # def simp(start, dur, freq, amp=.5):
+    #     #print(f&#34;simp: start={start}, dur={dur}, freq={freq}, amp={amp}&#34;)
+    #     start = CLM.seconds2samples(start)
+    #     end = start + CLM.seconds2samples(dur) 
+    #     osc = CLM.make_oscil(freq)
+    #     for i in range(start, end):
+    #         CLM.outa(i, amp * CLM.oscil(osc))
 
-    def simp(start, dur, freq, amp=.5):
-        #print(f&#34;simp: start={start}, dur={dur}, freq={freq}, amp={amp}&#34;)
-        start = CLM.seconds2samples(start)
-        end = start + CLM.seconds2samples(dur) 
-        osc = CLM.make_oscil(freq)
-        for i in range(start, end):
-            CLM.outa(i, amp * CLM.oscil(osc))
+    # SimpNote = AudioNote(simp)
 
-    SimpNote = AudioNote(simp)
+    # def playsimp(score, num, rate, dur, low, high, amp):
+    #     for _ in range(num):
+    #         freq = between(low, high)
+    #         score.add(SimpNote(score.now, dur, freq, amp)) 
+    #         yield rate           
 
-    def playsimp(score, num, rate, dur, low, high, amp):
-        for _ in range(num):
-            freq = between(low, high)
-            score.add(SimpNote(score.now, dur, freq, amp)) 
-            yield rate           
-
-    score = Score(out=Seq())
-    score.compose(playsimp(score, 10, .3, .3, 200, 440, .2))
-    score.out.print()
-    file = AudioFile(&#34;test.wav&#34;, score.out) #.write(play=True)
-    print(f&#34;Writing {file}&#34;)
-    file.write(play=True)
+    # score = Score(out=Seq())
+    # score.compose(playsimp(score, 10, .3, .3, 200, 440, .2))
+    # score.out.print()
+    # file = AudioFile(&#34;test.wav&#34;, score.out) #.write(play=True)
+    # print(f&#34;Writing {file}&#34;)
+    # file.write(play=True)
 
     #======================================================== 
     # def testnote(*args, **kwargs):
@@ -341,19 +386,22 @@ if __name__ == &#39;__main__&#39;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="musx.audio.AudioNote"><code class="name flex">
-<span>def <span class="ident">AudioNote</span></span>(<span>ins)</span>
+<span>def <span class="ident">AudioNote</span></span>(<span>ins, classname='')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Defines a note class for a given CLM instrument (function). Once defined,
+<div class="desc"><p>Defines a note class given a pysndlib instrument (function). Once defined,
 instances of the new note class can be added to Score and Seq objects and
-will generate audio when rendered by AudioFile.write(). The name of the
-new note class will be the capitalized instrument name with "Note"
-appended to it. </p>
+will generate audio when rendered by AudioFile.write(). </p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>ins</code></strong> :&ensp;<code>function</code></dt>
 <dd>The CLM instrument (function) to create the new note class for. The first
 parameter to the instrument must contain the start time of the instrument call.</dd>
+<dt><strong><code>classname</code></strong> :&ensp;<code>string </code></dt>
+<dd>An optional argument providing the full name for the new Note class.
+Defaults to '', in which case the name will be the capitalized instrument name
+with all "_" removed and appended with "Note". For example, if the instrument is
+hi_ho() the default name for the new note class will be HiHoNote.</dd>
 </dl>
 <h2 id="return">Return</h2>
 <p>The function returns a Python class whose instances hold parameter values
@@ -370,19 +418,22 @@ SimpNote(1,2,3,4)
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def AudioNote(ins):
+<pre><code class="python">def AudioNote(ins, classname=&#39;&#39;):
     &#34;&#34;&#34;
-    Defines a note class for a given CLM instrument (function). Once defined,
+    Defines a note class given a pysndlib instrument (function). Once defined,
     instances of the new note class can be added to Score and Seq objects and 
-    will generate audio when rendered by AudioFile.write(). The name of the
-    new note class will be the capitalized instrument name with &#34;Note&#34; 
-    appended to it. 
+    will generate audio when rendered by AudioFile.write(). 
 
     Parameters
     ----------
     ins : function
         The CLM instrument (function) to create the new note class for. The first
         parameter to the instrument must contain the start time of the instrument call.
+    classname : string 
+        An optional argument providing the full name for the new Note class. 
+        Defaults to &#39;&#39;, in which case the name will be the capitalized instrument name
+        with all &#34;_&#34; removed and appended with &#34;Note&#34;. For example, if the instrument is
+        hi_ho() the default name for the new note class will be HiHoNote.
  
     Return
     ------
@@ -400,31 +451,34 @@ SimpNote(1,2,3,4)
     ```
     &#34;&#34;&#34;
     if not callable(ins): raise TypeError(f&#34;Not a function: {ins}&#34;)
-    insname = ins.__name__
-    classname = insname.capitalize() + &#34;Note&#34;
+    if not classname: 
+        for n in f&#34;{ins.__name__}_Note&#34;.split(&#39;_&#39;):
+            if n == &#39;&#39;: continue
+            classname += n.capitalize()
     # dictionary of function parameters with default values or None.
-    params = {n: None if v.default==inspect._empty else v.default
+    params = {n: inspect.Parameter.empty if v.default==inspect._empty else v.default
               for n, v in inspect.signature(ins).parameters.items()}
     # define the init method for the new note class.
     def __init__(self, *args, **kwargs):
         ###print(f&#34;args: {args}, kwargs: {kwargs}&#34;)
-        self.params = params
         ###print(f&#34;params: {self.params}&#34;)
+        # cache the list of function parameter names
+        self._params = list(params)
         # define an attribute for each instrument parameter and initialize
         # it to the parameter&#39;s default value or None
-        for p in self.params.items():
+        for p in params.items():
             setattr(self, p[0], p[1])
         # keep a record of how many times each arg receives a value
-        counts = {p:0 for p in self.params}
+        counts = {p:0 for p in params}
         ###print(f&#39;counts: {counts}&#39;)
         # collect ordered list of insturment&#39;s parameter names (strings)
-        names = list(self.params)
+        names = list(params)
         ###print(f&#39;names: {names}&#39;)
         # parse the positional arguments, signal error if more arguments than parameters,
         # create the attribute and increment arg&#39;s count.
         for index, value in enumerate(args):
             if index == len(params): 
-                raise TypeError(f&#34;{classname}() takes {len(self.params)} positional arguments but {len(args)} were given.&#34;)
+                raise TypeError(f&#34;{classname}() takes {len(params)} positional arguments but {len(args)} were given.&#34;)
             name = names[index]
             setattr(self, name, value)
             counts[name] += 1            
@@ -443,7 +497,7 @@ SimpNote(1,2,3,4)
         unassigned = []
         for name, count in counts.items():
             if count == 0:
-                if params[name] is not None:
+                if params[name] is not inspect.Parameter.empty:
                     setattr(self, name, params[name])
                     counts[name] += 1
                 else:
@@ -460,24 +514,63 @@ SimpNote(1,2,3,4)
         # Event.__init__(self, getattr(self, params[0][0]))
         self.time = getattr(self, names[0])
     
-    # repr() and str() will print like an instrument call
+    # repr() and str() will print like an instrument call, floats will be
+    #    trucated to 3 places.
     def __repr__(self):
-        text = self.__class__.__name__
-        return text + &#39;(&#39; + &#34;, &#34;.join(f&#34;{getattr(self,p)}&#34; for p in self.params) + &#39;)&#39;
+        &#34;&#34;&#34;
+        Both repr() and str() print like an instrument call. To save space floats are
+        rounded to three places and lists of more than 10 elements are elided. To see
+        exact values in the object use it&#39;s self.params() method.
+        &#34;&#34;&#34;
+        def paramstr(val):
+            if isinstance(val, float):
+                #return f&#34;{val:.3f}&#34;
+                return f&#34;{round(val,3)}&#34;
+            if isinstance(val, list):
+                val = [paramstr(v) for v in val]      
+                if len(val) &gt; 10:
+                    val = val[:4] + [&#34;...&#34;] + val[-4:]
+                return &#34;[&#34; + &#34;, &#34;.join(val) + &#34;]&#34;
+            return f&#34;{val}&#34;
 
-    # the write() method generates audio inside a with Sound context.
-    def write(self):
-        args = [getattr(self, p) for p in self.params]
+        text = self.__class__.__name__
+        #return text + &#39;(&#39; + &#34;, &#34;.join(f&#34;{getattr(self,p)}&#34; for p in self.params) + &#39;)&#39;
+        return text + &#39;(&#39; + &#34;, &#34;.join(f&#34;{paramstr(getattr(self,p))}&#34;
+                                      for p in self._params) + &#39;)&#39;
+    
+    def __eq__(self, other):
+        &#39;&#39;&#39;
+        Returns True if parameter values in two instances are all equal (==).
+        &#39;&#39;&#39;
+        if type(self) is not type(other):
+            return False
+        for p in self._params:
+            if getattr(self, p) != getattr(other, p):
+                return False
+        return True
+
+    def _write(self):
+        &#39;&#39;&#39;
+        Internal function called by AudioFile().write() to render
+        audio samples inside a &#39;with Sound:&#39; construct.
+        &#39;&#39;&#39;
+        args = [getattr(self, p) for p in self._params]
         #print(f&#34;{ins} writing args: {args}&#34;)
         ins(*args)
+
+    def parameters(self):
+        &#34;&#34;&#34;Returns an ordered dictionary of the note&#39;s attributes and their values.&#34;&#34;&#34;
+        return {p: getattr(self, p) for p in self._params}
 
     return type(classname, (), {&#34;__init__&#34;: __init__,
                                 &#34;__repr__&#34;: __repr__,
                                 &#34;__str__&#34;: __repr__,
-                                # ARRRG caching instrument in an 
-                                # instance attr doesnt work
+                                # ARRRG caching instrument in an instance attr doesn&#39;t work
                                 #&#34;ins&#34;: ins, 
-                                &#34;write&#34;: write})</code></pre>
+                                &#34;__eq__&#34;: __eq__,
+                                &#34;_write&#34;: _write,
+                                &#34;parameters&#34;: parameters
+                                })</code></pre>
 </details>
 </dd>
 </dl>
@@ -516,12 +609,11 @@ SimpNote(1,2,3,4)
     def __init__(self, path, seq):
         if not isinstance(path, str) or len(path) == 0:
             raise TypeError(f&#34;SoundFile(): &#39;{path}&#39; is not a valid pathname string.&#34;)
-        self.path = path
+        self.pathname = path
         
         if not isinstance(seq, Seq):
             raise TypeError(f&#34;SoundFile(): &#39;{seq}&#39; is not a sequence.&#34;)
         self.seq = seq
-
 
     def read(self):
         &#34;&#34;&#34;Implement me!&#34;&#34;&#34;
@@ -537,16 +629,15 @@ SimpNote(1,2,3,4)
             Any keywords that are supported by pysndlib&#39;s 
             [Sound Context](https://testcase.github.io/pysndlib/with_sound.html)
         &#39;&#39;&#39;
-        with CLM.Sound(self.path, **kwargs):
+        with CLM.Sound(self.pathname, **kwargs):
             for note in self.seq:
-                note.write()
+                note._write()
         return self
 
     def __str__(self):
         name = self.__class__.__name__
-        path = self.path
         seq = f&#39;&lt;Seq: len={len(self.seq)}, endtime={self.seq.endtime()}&gt;&#39;
-        return f&#39;&lt;{name}: path=&#34;{path}&#34;, seq={seq}&gt;&#39;
+        return f&#39;&lt;{name}: path=&#34;{self.pathname}&#34;, seq={seq}&gt;&#39;
     
     __repr__ = __str__</code></pre>
 </details>
@@ -591,9 +682,9 @@ SimpNote(1,2,3,4)
         Any keywords that are supported by pysndlib&#39;s 
         [Sound Context](https://testcase.github.io/pysndlib/with_sound.html)
     &#39;&#39;&#39;
-    with CLM.Sound(self.path, **kwargs):
+    with CLM.Sound(self.pathname, **kwargs):
         for note in self.seq:
-            note.write()
+            note._write()
     return self</code></pre>
 </details>
 </dd>

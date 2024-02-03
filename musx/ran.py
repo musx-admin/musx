@@ -108,6 +108,38 @@ def vary(value, variance, shift=None):
     raise ValueError("shift should be None, '+', or '-' ({shift})")
 
 
+def shuffle (*args, **kwargs):
+    """
+    Returns a new list containing the random reordering of an input
+    list, tuple or variadic sequence of values. The optional keyword
+    arguments 'start' and 'end' allow just a sub-sequence of the
+    input values to be shuffled.
+
+    Parameters
+    ----------
+    args : list | tuple | variadic
+        The values to shuffle 
+    start : int
+        Starting position in the list to shuffle, defaults to 0.
+    end : int
+        Inclusive ending position in the list to shuffle,
+        defaults to the length of the input.
+    """
+    # print("args:", args, "numargs:", len(args), "kwargs:", kwargs)
+    if isinstance(args[0], list):
+        args = args[0].copy()
+    else:
+        args = list(args)
+    arglen = len(args)
+    start =  kwargs.get('start', 0)
+    end = kwargs.get('end', arglen)
+    width = end - start
+    for i in range(start, end):
+        j = start + random.randrange(width)
+        args[i], args[j] = args[j], args[i]
+    return args
+
+
 def ransegs(num, mapto, rangen=None):
     """
     Returns a list of random number segments.

@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>musx.tools API documentation</title>
-<meta name="description" content="An assortmant of music composition tools for working with randomness,
-rescaling, arithmetic, etc." />
+<meta name="description" content="An assortmant of tools for working with envlopes, randomness, rescaling,
+arithmetic, etc." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,22 +23,23 @@ rescaling, arithmetic, etc." />
 <h1 class="title">Module <code>musx.tools</code></h1>
 </header>
 <section id="section-intro">
-<p>An assortmant of music composition tools for working with randomness,
-rescaling, arithmetic, etc.</p>
+<p>An assortmant of tools for working with envlopes, randomness, rescaling,
+arithmetic, etc.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">###############################################################################
 &#34;&#34;&#34;
-An assortmant of music composition tools for working with randomness, 
-rescaling, arithmetic, etc.
+An assortmant of tools for working with envlopes, randomness, rescaling, 
+arithmetic, etc.
 &#34;&#34;&#34;
 
 import types
 import math
 import random
 import subprocess
+from functools import reduce
 
 __pdoc__ = {
     &#39;parse_string_sequence&#39;: False
@@ -116,7 +117,6 @@ def rescale(x, x1, x2, y1, y2, mode=&#39;lin&#39;):
         # m = math.log(y2 / y1) / (x2 - x1)
         # k = y1 * math.pow(math.e, -m * x1)
         # return k * math.pow(math.e, m * x)
-
         # a base that yields a slope that is not too steep or shallow...
         b = 512
         if mode == &#39;exp&#39;:
@@ -126,9 +126,197 @@ def rescale(x, x1, x2, y1, y2, mode=&#39;lin&#39;):
     raise ValueError(f&#34;mode {mode} is not &#39;lin&#39;, &#39;cos&#39;, &#39;exp&#39;, or &#39;-exp&#39;.&#34;)
 
 
+def interp(x, *xys, mode=&#39;lin&#39;, mul=None, add=None):
+    &#34;&#34;&#34;
+    A function that interpolates a y value for a given x in a
+    series of x,y coordinate pairs. If x is not within bounds
+    then the first or last y value is returned.
+
+    Parameters
+    ----------
+    x : int | float
+        The x value to interpolate in the sequence of x y values. 
+    xys : series of int or float | list
+        Either a series of in-line x, y values representing the envelope
+        or a single list of x y coordinate pairs.
+    mode : &#39;lin&#39; | &#39;cos&#39; | &#39;exp&#39; | &#39;-exp&#39;
+        A string that specifies the type of interpolation performed;
+        &#39;lin&#39; is linear, &#39;cos&#39; is cosine, &#39;exp&#39; is exponential and 
+        &#39;-exp&#39; is inverted exponential. The default is &#39;lin&#39;. Note
+        that if specified the value must provided as an explicit
+        keyword arg, e.g. mode=&#39;cos&#39;.
+    mul : None | number
+        A value to multiply the result by.
+    add : None | number
+        A value to add to the result after any multiplication.
+    Returns
+    -------
+    The interpolated value of x.
+    &#34;&#34;&#34;
+    if len(xys) == 1 and isinstance(xys[0], (tuple,list)):
+        xys = xys[0]
+    if not xys or len(xys) &amp; 1:
+        raise ValueError(f&#34;coordinates not x y pairs: {xys}.&#34;)
+    # find the segment in the coordinates that contains the given x
+    xr,yr = xys[0:2]
+    xl,yl = xr,yr
+    # iterate remaining pairs of x y values stepping by 2
+    for wx,wy in zip(xys[2::2], xys[3::2]):
+        if xr &gt; x: break
+        xl,yl = xr,yr
+        xr,yr = wx,wy
+    # print(x, xl, xr, yl, yr, mode)
+    val = rescale(x, xl, xr, yl, yr, mode)
+    if mul: val *= mul
+    if add: val += add
+    return val
+
+
+def rescale_env(env, newxmin=None, newxmax=None, newymin=None, newymax=None,*, mode=None):
+    &#39;&#39;&#39;
+    Rescales the current x and/or y envelope coordinates of the given envelope to proportional
+    values lying between the given new minima and maxima. If newxmin or newxmax are unspecified
+    they inherit the current x minimum and maximum values. The same is true for y values.
+    If mode is specfied it is applied to the y values only. See
+    `rescale()` for information about mode.
+
+    Parameters:
+    -----------
+    env : list 
+        A list of x y coordinate values: [x1,y1,x2,y2,...xn,yn] where
+        x values are monotoniclly increasing values from left to right.
+    newxmin : int | float | None
+        The new minimum x value. If None it defaults to the current minimum x value.
+    newxmax : int | float | None
+        The new maximum x value. If None it defaults to the current maximum x value.
+    newymin : int | float | None
+        The new minimum y value. If None it defaults to the current minimum y value.
+    newymax : int | float | None
+        The new maximum y value. If None it defaults to the current maximum y value.
+    mode : string
+        See `rescale()` for possible mode values.
+
+    Returns
+    -------
+    A rescaled x,y envelope.
+    &#39;&#39;&#39;
+    #print(f&#34;env:  {env}&#34;)
+    if len(env) % 2 != 0:
+        raise ValueError(f&#34;env {env} does not have an even number of values.&#34;)
+    xdata, ydata = env[::2], env[1::2]
+    #print(f&#34;xdata: {xdata}, ydata: {ydata}&#34;)
+    for x1,x2 in zip(xdata,xdata[1:]):
+        if x2&lt;x1:
+            raise ValueError(f&#34;x value {x2} out of order in xdata: {xdata}.&#34;)
+    oldxmin, oldxmax = xdata[0], xdata[-1]
+    ##print(f&#34;oldxmin: {oldxmin}, oldxmax: {oldxmax}&#34;)
+    if newxmin is None: newxmin = oldxmin
+    if newxmax is None: newxmax = oldxmax
+    if not newxmin &lt; newxmax:
+        raise ValueError(f&#34;newxmin value {newxmin} is not less than newxmax value {newxmax}.&#34;)
+    #print(f&#34;oldxmin: {oldxmin}, oldxmax: {oldxmax}, newxmin: {newxmin} newxmax: {newxmax}&#34;)
+    oldymin = reduce(lambda a, b: a if a &lt; b else b, ydata)
+    oldymax = reduce(lambda a, b: a if a &gt; b else b, ydata)
+    ##print(f&#34;oldymin: {oldymin}, oldymax: {oldymax}&#34;)
+    if newymin is None: newymin = oldymin
+    if newymax is None: newymax = oldymax
+    if mode is None: mode = &#34;lin&#34;
+    #print(f&#34;oldymin: {oldymin}, oldymax: {oldymax}, newymin: {newymin}, newymax: {newymax}&#34;)
+    res = []
+    for x,y in zip(xdata,ydata):
+       res.extend([rescale(x, oldxmin, oldxmax, newxmin, newxmax),
+                   rescale(y, oldymin, oldymax, newymin, newymax, mode)])
+    return res
+
+
+def exp_env(segments = 10, base = 2, flip = False, reverse = False, scaler=1, offset=0):
+    &#34;&#34;&#34;
+    Returns a normalized exponential envelope, e.g. both axes range 0 to 1.
+    As x goes from 0 to segments, y is assigned 1/base**x
+    
+    Parameters
+    ----------
+    segments : int
+        The number of segments in the envelope, defaults to 10.
+    base : int | float
+        The base for the exponential, defaults to 2. 
+    flip : boolean
+        If flip is true y values are inverted.
+    reverse : boolean
+        If reverse is true x values are retrograded.
+    
+    Returns
+    -------
+    An exponential x,y envelope with both axes ranging 0 -&gt; 1.
+    &#34;&#34;&#34;
+    xvalues = [x/segments for x in range(0, segments+1, 1)]
+    #print(&#34;xvalues:&#34;, xvalues)
+    yvalues = [1/(base**(x)) for x in range(segments+1)]
+    if flip:
+        for i in range(len(yvalues)):
+            yvalues[i] = 1 - yvalues[i]
+    if reverse:
+        for i in range(len(xvalues)):
+            xvalues[i] = 1 - xvalues[i]
+    #yvalues[-1] = 0.0
+    #print(&#34;yvalues:&#34;, yvalues)
+    env = []
+    for x,y in zip(xvalues, yvalues):
+        env.extend([x,y * scaler + offset])
+    #print(&#34;expenv:&#34;, env)
+    return env
+
+
+def segment_env(env, dur, attack, release=[]):
+    &#39;&#39;&#39;
+    Returns a version of env with attack and (optionally) decay segments lasting specific amounts of time.
+
+    Parameters
+    ----------
+    env : list
+        The x,y envelope.
+    dur : int | float
+        The total duration in seconds of the envelope.
+    attack : [ _attack_x, attack_dur_ ]
+        The ending x coordinate and duration of the attack segment. 
+    release : [ _release_x, release_dur_ ] | []
+        The starting x coordinate and duration of the release segment.
+    &#39;&#39;&#39;    
+    # maximum x value in envelope.
+    x_max = env[-2]
+    # get the index positions of the attack and release segments.
+    # divides by 2 because x_values will be half the length of env.
+    try: 
+        attack_index = int(env.index(attack[0])/2)
+        attack_dur = attack[1]
+    except ValueError as e: 
+        raise Exception(f&#34;Attack coordinate {attack[0]} is not in {env}.&#34;) from e
+    if release:
+        try: 
+            release_index = int(env.index(release[0])/2)
+            release_dur = release[1]
+        except ValueError as e:
+            raise Exception(f&#34;Release coordinate {release[0]} is not in {env}.&#34;) from e     
+    # split x and y coords into separate lists with x_values converted to time.
+    x_values, y_values = [(x / x_max) * dur for x in env[::2]], env[1::2]
+    # rescale x coords from index 0 to att_index to fit in attack_dur time.
+    for i in range(0, attack_index+1):
+         x_values[i] = rescale(x_values[i], x_values[0], x_values[attack_index], x_values[0], attack_dur)
+    # rescale backwards for release values.
+    if release:
+        end_time = x_values[-1]
+        for i in range(len(x_values)-1, release_index-1, -1):
+             x_values[i] = rescale(x_values[i], x_values[release_index], end_time, end_time - release_dur, end_time)
+    # return new envelope with durations converted back to user&#39;s original coordinates.
+    env = []
+    for x,y in zip(x_values, y_values):
+        env.extend([(x / dur) * x_max, y])
+    return env
+
+
 def frange(start, stop=None, step=None):
     &#34;&#34;&#34;
-    Returns an iterator produceing a series of floats from start (inclusive)
+    Returns an iterator producing a series of floats from start (inclusive)
     to stop (exclusive) by step.
 
     Parameters
@@ -491,21 +679,33 @@ def playfile(file, wait=False):
             help += f&#34; file type not found in musx.midiextensions or musx.audioextensions.&#34;
         print(help)
 
+# musx.tools.parse_string_sequence(&#34;e*3&#34;)
+# musx.tools.parse_string_sequence(&#34;e fs*3&#34;)
+#musx.pitch(&#34;a4, g3*3 e f&#34;)  $ BUG (RECURSION)
 
 def parse_string_sequence(string):
-    # split string at blank spaces, replace each repeat token &#39;,&#39; by
+    # split string at blank spaces, by
     # repeated value, check for dangling and undelimited repeats.
     seq = []
     for raw in string.split():
-        tok = raw.rstrip(&#39;,&#39;)
-        if tok:
-            if &#39;,&#39; not in tok:
-                for _ in range(len(raw) - len(tok) + 1):
-                    seq.append(tok)
+        pos = raw.rfind(&#39;*&#39;)
+        if pos &gt; -1:    # string has * somewhere
+            split = raw.split(&#39;*&#39;)
+            if &#39;&#39; in split or len(split) != 2:
+                raise SyntaxError(f&#34;Invalid expansion  &#39;{raw}&#39;.&#34;)
+            sym, rep = split[0], split[1]
+            try:
+                val = int(rep)
+            except Exception as ve:
+                ve.args = (f&#34;Invalid expansion factor &#39;{rep}&#39; in &#39;{raw}&#39;.&#34;,)
+                raise
+            if val &lt; 1 or val &gt; 32:
+                raise ValueError(f&#34;Expansion factor &#39;{val}&#39; is not between 1 and 32.&#34;)
             else:
-                raise SyntaxError(f&#34;undelimited &#39;,&#39; in &#39;{tok}&#39;.&#34;)
+                for _ in range(val):
+                    seq.append(sym)
         else:
-            raise SyntaxError(f&#34;dangling repeat &#39;,&#39; in &#39;{string}&#39;.&#34;)
+            seq.append(raw)
     return seq
 
 
@@ -635,6 +835,67 @@ they must be of the same length.</p></div>
     return _map_lists(lambda l,r: l/r, left, right)</code></pre>
 </details>
 </dd>
+<dt id="musx.tools.exp_env"><code class="name flex">
+<span>def <span class="ident">exp_env</span></span>(<span>segments=10, base=2, flip=False, reverse=False, scaler=1, offset=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a normalized exponential envelope, e.g. both axes range 0 to 1.
+As x goes from 0 to segments, y is assigned 1/base**x</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>segments</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of segments in the envelope, defaults to 10.</dd>
+<dt><strong><code>base</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The base for the exponential, defaults to 2.</dd>
+<dt><strong><code>flip</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>If flip is true y values are inverted.</dd>
+<dt><strong><code>reverse</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>If reverse is true x values are retrograded.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>An exponential x,y envelope with both axes ranging 0 -&gt; 1.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exp_env(segments = 10, base = 2, flip = False, reverse = False, scaler=1, offset=0):
+    &#34;&#34;&#34;
+    Returns a normalized exponential envelope, e.g. both axes range 0 to 1.
+    As x goes from 0 to segments, y is assigned 1/base**x
+    
+    Parameters
+    ----------
+    segments : int
+        The number of segments in the envelope, defaults to 10.
+    base : int | float
+        The base for the exponential, defaults to 2. 
+    flip : boolean
+        If flip is true y values are inverted.
+    reverse : boolean
+        If reverse is true x values are retrograded.
+    
+    Returns
+    -------
+    An exponential x,y envelope with both axes ranging 0 -&gt; 1.
+    &#34;&#34;&#34;
+    xvalues = [x/segments for x in range(0, segments+1, 1)]
+    #print(&#34;xvalues:&#34;, xvalues)
+    yvalues = [1/(base**(x)) for x in range(segments+1)]
+    if flip:
+        for i in range(len(yvalues)):
+            yvalues[i] = 1 - yvalues[i]
+    if reverse:
+        for i in range(len(xvalues)):
+            xvalues[i] = 1 - xvalues[i]
+    #yvalues[-1] = 0.0
+    #print(&#34;yvalues:&#34;, yvalues)
+    env = []
+    for x,y in zip(xvalues, yvalues):
+        env.extend([x,y * scaler + offset])
+    #print(&#34;expenv:&#34;, env)
+    return env</code></pre>
+</details>
+</dd>
 <dt id="musx.tools.explsegs"><code class="name flex">
 <span>def <span class="ident">explsegs</span></span>(<span>num, summ, base=2)</span>
 </code></dt>
@@ -738,7 +999,7 @@ If mode is 'wrap' then num will be the remainder of num % boundaries.</dd>
 <span>def <span class="ident">frange</span></span>(<span>start, stop=None, step=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns an iterator produceing a series of floats from start (inclusive)
+<div class="desc"><p>Returns an iterator producing a series of floats from start (inclusive)
 to stop (exclusive) by step.</p>
 <h2 id="parameters">Parameters</h2>
 <p>frange can be called with one, two or three arguments:</p>
@@ -763,7 +1024,7 @@ to stop (exclusive) by step.</p>
 </summary>
 <pre><code class="python">def frange(start, stop=None, step=None):
     &#34;&#34;&#34;
-    Returns an iterator produceing a series of floats from start (inclusive)
+    Returns an iterator producing a series of floats from start (inclusive)
     to stop (exclusive) by step.
 
     Parameters
@@ -866,6 +1127,83 @@ to stop (exclusive) by step.</p>
             except: hist[d] = 1
         return hist
     raise TypeError (&#34;Histogram data is not a list.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.interp"><code class="name flex">
+<span>def <span class="ident">interp</span></span>(<span>x, *xys, mode='lin', mul=None, add=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A function that interpolates a y value for a given x in a
+series of x,y coordinate pairs. If x is not within bounds
+then the first or last y value is returned.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The x value to interpolate in the sequence of x y values.</dd>
+<dt><strong><code>xys</code></strong> :&ensp;<code>series</code> of <code>int</code> or <code>float | list</code></dt>
+<dd>Either a series of in-line x, y values representing the envelope
+or a single list of x y coordinate pairs.</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>'lin' | 'cos' | 'exp' | '-exp'</code></dt>
+<dd>A string that specifies the type of interpolation performed;
+'lin' is linear, 'cos' is cosine, 'exp' is exponential and
+'-exp' is inverted exponential. The default is 'lin'. Note
+that if specified the value must provided as an explicit
+keyword arg, e.g. mode='cos'.</dd>
+<dt><strong><code>mul</code></strong> :&ensp;<code>None | number</code></dt>
+<dd>A value to multiply the result by.</dd>
+<dt><strong><code>add</code></strong> :&ensp;<code>None | number</code></dt>
+<dd>A value to add to the result after any multiplication.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The interpolated value of x.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def interp(x, *xys, mode=&#39;lin&#39;, mul=None, add=None):
+    &#34;&#34;&#34;
+    A function that interpolates a y value for a given x in a
+    series of x,y coordinate pairs. If x is not within bounds
+    then the first or last y value is returned.
+
+    Parameters
+    ----------
+    x : int | float
+        The x value to interpolate in the sequence of x y values. 
+    xys : series of int or float | list
+        Either a series of in-line x, y values representing the envelope
+        or a single list of x y coordinate pairs.
+    mode : &#39;lin&#39; | &#39;cos&#39; | &#39;exp&#39; | &#39;-exp&#39;
+        A string that specifies the type of interpolation performed;
+        &#39;lin&#39; is linear, &#39;cos&#39; is cosine, &#39;exp&#39; is exponential and 
+        &#39;-exp&#39; is inverted exponential. The default is &#39;lin&#39;. Note
+        that if specified the value must provided as an explicit
+        keyword arg, e.g. mode=&#39;cos&#39;.
+    mul : None | number
+        A value to multiply the result by.
+    add : None | number
+        A value to add to the result after any multiplication.
+    Returns
+    -------
+    The interpolated value of x.
+    &#34;&#34;&#34;
+    if len(xys) == 1 and isinstance(xys[0], (tuple,list)):
+        xys = xys[0]
+    if not xys or len(xys) &amp; 1:
+        raise ValueError(f&#34;coordinates not x y pairs: {xys}.&#34;)
+    # find the segment in the coordinates that contains the given x
+    xr,yr = xys[0:2]
+    xl,yl = xr,yr
+    # iterate remaining pairs of x y values stepping by 2
+    for wx,wy in zip(xys[2::2], xys[3::2]):
+        if xr &gt; x: break
+        xl,yl = xr,yr
+        xr,yr = wx,wy
+    # print(x, xl, xr, yl, yr, mode)
+    val = rescale(x, xl, xr, yl, yr, mode)
+    if mul: val *= mul
+    if add: val += add
+    return val</code></pre>
 </details>
 </dd>
 <dt id="musx.tools.isfunc"><code class="name flex">
@@ -1135,7 +1473,6 @@ inverted exponential.</dd>
         # m = math.log(y2 / y1) / (x2 - x1)
         # k = y1 * math.pow(math.e, -m * x1)
         # return k * math.pow(math.e, m * x)
-
         # a base that yields a slope that is not too steep or shallow...
         b = 512
         if mode == &#39;exp&#39;:
@@ -1143,6 +1480,159 @@ inverted exponential.</dd>
         b = 1/b
         return y1 + ( ((y2 - y1) / (b - 1)) * (math.pow(b, mu) - 1) )
     raise ValueError(f&#34;mode {mode} is not &#39;lin&#39;, &#39;cos&#39;, &#39;exp&#39;, or &#39;-exp&#39;.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.rescale_env"><code class="name flex">
+<span>def <span class="ident">rescale_env</span></span>(<span>env, newxmin=None, newxmax=None, newymin=None, newymax=None, *, mode=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Rescales the current x and/or y envelope coordinates of the given envelope to proportional
+values lying between the given new minima and maxima. If newxmin or newxmax are unspecified
+they inherit the current x minimum and maximum values. The same is true for y values.
+If mode is specfied it is applied to the y values only. See
+<code><a title="musx.tools.rescale" href="#musx.tools.rescale">rescale()</a></code> for information about mode.</p>
+<h2 id="parameters">Parameters:</h2>
+<p>env : list
+A list of x y coordinate values: [x1,y1,x2,y2,&hellip;xn,yn] where
+x values are monotoniclly increasing values from left to right.
+newxmin : int | float | None
+The new minimum x value. If None it defaults to the current minimum x value.
+newxmax : int | float | None
+The new maximum x value. If None it defaults to the current maximum x value.
+newymin : int | float | None
+The new minimum y value. If None it defaults to the current minimum y value.
+newymax : int | float | None
+The new maximum y value. If None it defaults to the current maximum y value.
+mode : string
+See <code><a title="musx.tools.rescale" href="#musx.tools.rescale">rescale()</a></code> for possible mode values.</p>
+<h2 id="returns">Returns</h2>
+<p>A rescaled x,y envelope.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rescale_env(env, newxmin=None, newxmax=None, newymin=None, newymax=None,*, mode=None):
+    &#39;&#39;&#39;
+    Rescales the current x and/or y envelope coordinates of the given envelope to proportional
+    values lying between the given new minima and maxima. If newxmin or newxmax are unspecified
+    they inherit the current x minimum and maximum values. The same is true for y values.
+    If mode is specfied it is applied to the y values only. See
+    `rescale()` for information about mode.
+
+    Parameters:
+    -----------
+    env : list 
+        A list of x y coordinate values: [x1,y1,x2,y2,...xn,yn] where
+        x values are monotoniclly increasing values from left to right.
+    newxmin : int | float | None
+        The new minimum x value. If None it defaults to the current minimum x value.
+    newxmax : int | float | None
+        The new maximum x value. If None it defaults to the current maximum x value.
+    newymin : int | float | None
+        The new minimum y value. If None it defaults to the current minimum y value.
+    newymax : int | float | None
+        The new maximum y value. If None it defaults to the current maximum y value.
+    mode : string
+        See `rescale()` for possible mode values.
+
+    Returns
+    -------
+    A rescaled x,y envelope.
+    &#39;&#39;&#39;
+    #print(f&#34;env:  {env}&#34;)
+    if len(env) % 2 != 0:
+        raise ValueError(f&#34;env {env} does not have an even number of values.&#34;)
+    xdata, ydata = env[::2], env[1::2]
+    #print(f&#34;xdata: {xdata}, ydata: {ydata}&#34;)
+    for x1,x2 in zip(xdata,xdata[1:]):
+        if x2&lt;x1:
+            raise ValueError(f&#34;x value {x2} out of order in xdata: {xdata}.&#34;)
+    oldxmin, oldxmax = xdata[0], xdata[-1]
+    ##print(f&#34;oldxmin: {oldxmin}, oldxmax: {oldxmax}&#34;)
+    if newxmin is None: newxmin = oldxmin
+    if newxmax is None: newxmax = oldxmax
+    if not newxmin &lt; newxmax:
+        raise ValueError(f&#34;newxmin value {newxmin} is not less than newxmax value {newxmax}.&#34;)
+    #print(f&#34;oldxmin: {oldxmin}, oldxmax: {oldxmax}, newxmin: {newxmin} newxmax: {newxmax}&#34;)
+    oldymin = reduce(lambda a, b: a if a &lt; b else b, ydata)
+    oldymax = reduce(lambda a, b: a if a &gt; b else b, ydata)
+    ##print(f&#34;oldymin: {oldymin}, oldymax: {oldymax}&#34;)
+    if newymin is None: newymin = oldymin
+    if newymax is None: newymax = oldymax
+    if mode is None: mode = &#34;lin&#34;
+    #print(f&#34;oldymin: {oldymin}, oldymax: {oldymax}, newymin: {newymin}, newymax: {newymax}&#34;)
+    res = []
+    for x,y in zip(xdata,ydata):
+       res.extend([rescale(x, oldxmin, oldxmax, newxmin, newxmax),
+                   rescale(y, oldymin, oldymax, newymin, newymax, mode)])
+    return res</code></pre>
+</details>
+</dd>
+<dt id="musx.tools.segment_env"><code class="name flex">
+<span>def <span class="ident">segment_env</span></span>(<span>env, dur, attack, release=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a version of env with attack and (optionally) decay segments lasting specific amounts of time.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>env</code></strong> :&ensp;<code>list</code></dt>
+<dd>The x,y envelope.</dd>
+<dt><strong><code>dur</code></strong> :&ensp;<code>int | float</code></dt>
+<dd>The total duration in seconds of the envelope.</dd>
+<dt><strong><code>attack</code></strong> :&ensp;<code>[ _attack_x, attack_dur_ ]</code></dt>
+<dd>The ending x coordinate and duration of the attack segment.</dd>
+<dt><strong><code>release</code></strong> :&ensp;<code>[ _release_x, release_dur_ ] | []</code></dt>
+<dd>The starting x coordinate and duration of the release segment.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def segment_env(env, dur, attack, release=[]):
+    &#39;&#39;&#39;
+    Returns a version of env with attack and (optionally) decay segments lasting specific amounts of time.
+
+    Parameters
+    ----------
+    env : list
+        The x,y envelope.
+    dur : int | float
+        The total duration in seconds of the envelope.
+    attack : [ _attack_x, attack_dur_ ]
+        The ending x coordinate and duration of the attack segment. 
+    release : [ _release_x, release_dur_ ] | []
+        The starting x coordinate and duration of the release segment.
+    &#39;&#39;&#39;    
+    # maximum x value in envelope.
+    x_max = env[-2]
+    # get the index positions of the attack and release segments.
+    # divides by 2 because x_values will be half the length of env.
+    try: 
+        attack_index = int(env.index(attack[0])/2)
+        attack_dur = attack[1]
+    except ValueError as e: 
+        raise Exception(f&#34;Attack coordinate {attack[0]} is not in {env}.&#34;) from e
+    if release:
+        try: 
+            release_index = int(env.index(release[0])/2)
+            release_dur = release[1]
+        except ValueError as e:
+            raise Exception(f&#34;Release coordinate {release[0]} is not in {env}.&#34;) from e     
+    # split x and y coords into separate lists with x_values converted to time.
+    x_values, y_values = [(x / x_max) * dur for x in env[::2]], env[1::2]
+    # rescale x coords from index 0 to att_index to fit in attack_dur time.
+    for i in range(0, attack_index+1):
+         x_values[i] = rescale(x_values[i], x_values[0], x_values[attack_index], x_values[0], attack_dur)
+    # rescale backwards for release values.
+    if release:
+        end_time = x_values[-1]
+        for i in range(len(x_values)-1, release_index-1, -1):
+             x_values[i] = rescale(x_values[i], x_values[release_index], end_time, end_time - release_dur, end_time)
+    # return new envelope with durations converted back to user&#39;s original coordinates.
+    env = []
+    for x,y in zip(x_values, y_values):
+        env.extend([(x / dur) * x_max, y])
+    return env</code></pre>
 </details>
 </dd>
 <dt id="musx.tools.setaudioplayer"><code class="name flex">
@@ -1258,11 +1748,13 @@ they must be of the same length.</p></div>
 <li><code><a title="musx.tools.add" href="#musx.tools.add">add</a></code></li>
 <li><code><a title="musx.tools.deltas" href="#musx.tools.deltas">deltas</a></code></li>
 <li><code><a title="musx.tools.divide" href="#musx.tools.divide">divide</a></code></li>
+<li><code><a title="musx.tools.exp_env" href="#musx.tools.exp_env">exp_env</a></code></li>
 <li><code><a title="musx.tools.explsegs" href="#musx.tools.explsegs">explsegs</a></code></li>
 <li><code><a title="musx.tools.fit" href="#musx.tools.fit">fit</a></code></li>
 <li><code><a title="musx.tools.frange" href="#musx.tools.frange">frange</a></code></li>
 <li><code><a title="musx.tools.geosegs" href="#musx.tools.geosegs">geosegs</a></code></li>
 <li><code><a title="musx.tools.histo" href="#musx.tools.histo">histo</a></code></li>
+<li><code><a title="musx.tools.interp" href="#musx.tools.interp">interp</a></code></li>
 <li><code><a title="musx.tools.isfunc" href="#musx.tools.isfunc">isfunc</a></code></li>
 <li><code><a title="musx.tools.isgen" href="#musx.tools.isgen">isgen</a></code></li>
 <li><code><a title="musx.tools.isnum" href="#musx.tools.isnum">isnum</a></code></li>
@@ -1272,6 +1764,8 @@ they must be of the same length.</p></div>
 <li><code><a title="musx.tools.quantize" href="#musx.tools.quantize">quantize</a></code></li>
 <li><code><a title="musx.tools.rand" href="#musx.tools.rand">rand</a></code></li>
 <li><code><a title="musx.tools.rescale" href="#musx.tools.rescale">rescale</a></code></li>
+<li><code><a title="musx.tools.rescale_env" href="#musx.tools.rescale_env">rescale_env</a></code></li>
+<li><code><a title="musx.tools.segment_env" href="#musx.tools.segment_env">segment_env</a></code></li>
 <li><code><a title="musx.tools.setaudioplayer" href="#musx.tools.setaudioplayer">setaudioplayer</a></code></li>
 <li><code><a title="musx.tools.setmidiplayer" href="#musx.tools.setmidiplayer">setmidiplayer</a></code></li>
 <li><code><a title="musx.tools.subtract" href="#musx.tools.subtract">subtract</a></code></li>

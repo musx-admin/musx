@@ -136,6 +136,38 @@ def vary(value, variance, shift=None):
     raise ValueError(&#34;shift should be None, &#39;+&#39;, or &#39;-&#39; ({shift})&#34;)
 
 
+def shuffle (*args, **kwargs):
+    &#34;&#34;&#34;
+    Returns a new list containing the random reordering of an input
+    list, tuple or variadic sequence of values. The optional keyword
+    arguments &#39;start&#39; and &#39;end&#39; allow just a sub-sequence of the
+    input values to be shuffled.
+
+    Parameters
+    ----------
+    args : list | tuple | variadic
+        The values to shuffle 
+    start : int
+        Starting position in the list to shuffle, defaults to 0.
+    end : int
+        Inclusive ending position in the list to shuffle,
+        defaults to the length of the input.
+    &#34;&#34;&#34;
+    # print(&#34;args:&#34;, args, &#34;numargs:&#34;, len(args), &#34;kwargs:&#34;, kwargs)
+    if isinstance(args[0], list):
+        args = args[0].copy()
+    else:
+        args = list(args)
+    arglen = len(args)
+    start =  kwargs.get(&#39;start&#39;, 0)
+    end = kwargs.get(&#39;end&#39;, arglen)
+    width = end - start
+    for i in range(start, end):
+        j = start + random.randrange(width)
+        args[i], args[j] = args[j], args[i]
+    return args
+
+
 def ransegs(num, mapto, rangen=None):
     &#34;&#34;&#34;
     Returns a list of random number segments.
@@ -1022,6 +1054,60 @@ otherwise uniform random numbers between are generated.</dd>
     return segs</code></pre>
 </details>
 </dd>
+<dt id="musx.ran.shuffle"><code class="name flex">
+<span>def <span class="ident">shuffle</span></span>(<span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a new list containing the random reordering of an input
+list, tuple or variadic sequence of values. The optional keyword
+arguments 'start' and 'end' allow just a sub-sequence of the
+input values to be shuffled.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>list | tuple | variadic</code></dt>
+<dd>The values to shuffle</dd>
+<dt><strong><code>start</code></strong> :&ensp;<code>int</code></dt>
+<dd>Starting position in the list to shuffle, defaults to 0.</dd>
+<dt><strong><code>end</code></strong> :&ensp;<code>int</code></dt>
+<dd>Inclusive ending position in the list to shuffle,
+defaults to the length of the input.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def shuffle (*args, **kwargs):
+    &#34;&#34;&#34;
+    Returns a new list containing the random reordering of an input
+    list, tuple or variadic sequence of values. The optional keyword
+    arguments &#39;start&#39; and &#39;end&#39; allow just a sub-sequence of the
+    input values to be shuffled.
+
+    Parameters
+    ----------
+    args : list | tuple | variadic
+        The values to shuffle 
+    start : int
+        Starting position in the list to shuffle, defaults to 0.
+    end : int
+        Inclusive ending position in the list to shuffle,
+        defaults to the length of the input.
+    &#34;&#34;&#34;
+    # print(&#34;args:&#34;, args, &#34;numargs:&#34;, len(args), &#34;kwargs:&#34;, kwargs)
+    if isinstance(args[0], list):
+        args = args[0].copy()
+    else:
+        args = list(args)
+    arglen = len(args)
+    start =  kwargs.get(&#39;start&#39;, 0)
+    end = kwargs.get(&#39;end&#39;, arglen)
+    width = end - start
+    for i in range(start, end):
+        j = start + random.randrange(width)
+        args[i], args[j] = args[j], args[i]
+    return args</code></pre>
+</details>
+</dd>
 <dt id="musx.ran.uniran"><code class="name flex">
 <span>def <span class="ident">uniran</span></span>(<span>)</span>
 </code></dt>
@@ -1157,6 +1243,7 @@ value returned.</dd>
 <li><code><a title="musx.ran.pink" href="#musx.ran.pink">pink</a></code></li>
 <li><code><a title="musx.ran.poisson" href="#musx.ran.poisson">poisson</a></code></li>
 <li><code><a title="musx.ran.ransegs" href="#musx.ran.ransegs">ransegs</a></code></li>
+<li><code><a title="musx.ran.shuffle" href="#musx.ran.shuffle">shuffle</a></code></li>
 <li><code><a title="musx.ran.uniran" href="#musx.ran.uniran">uniran</a></code></li>
 <li><code><a title="musx.ran.vary" href="#musx.ran.vary">vary</a></code></li>
 <li><code><a title="musx.ran.white" href="#musx.ran.white">white</a></code></li>
